@@ -27,7 +27,7 @@ from semantic_router import Route, RouteLayer
 from semantic_router.encoders import OpenAIEncoder
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.chains import ConversationChain
-
+import openai
 #for the optimized scenario chat with a bit of flexible chat and working langchain memory
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 openai.api_key = os.getenv('OPENAI_API_KEY')
