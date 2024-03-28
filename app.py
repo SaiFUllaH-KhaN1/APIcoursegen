@@ -82,3 +82,7 @@ def process_data():
 #             json_output = graphml_chain.run(text=response_to_convert)
 #             # response_data = json.loads(data['response'])
 #         return Response(json_output, mimetype='text/plain')
+
+if __name__ == '__main__':
+    app.run()
+#         return Response(json_output, mimetype='text/plain')
