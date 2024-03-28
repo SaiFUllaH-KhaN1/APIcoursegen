@@ -32,7 +32,7 @@ from langchain.chains import ConversationChain
 client = OpenAI()
 import io
 import os
-os.environ["OPENAI_API_KEY"] = "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"
+
 
 
 app = Flask(__name__)
