@@ -27,8 +27,9 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.chains import ConversationChain
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
-# # Set the API key for OpenAI
+# Set the API key for OpenAI
 openai.api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI()
 
 import io
 import os
