@@ -26,13 +26,13 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.chains import ConversationChain
-# load_dotenv(dotenv_path="E:\downloads\THINGLINK\dante\HUGGINGFACEHUB_API_TOKEN.env")
+load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 # # Set the API key for OpenAI
-# openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = os.getenv('OPENAI_API_KEY')
 client = OpenAI()
 import io
 import os
-os.environ["OPENAI_API_KEY"] = "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"
+
 
 
 app = Flask(__name__)
@@ -82,4 +82,3 @@ def process_data():
 #             json_output = graphml_chain.run(text=response_to_convert)
 #             # response_data = json.loads(data['response'])
 #         return Response(json_output, mimetype='text/plain')
-
