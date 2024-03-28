@@ -31,7 +31,7 @@ from langchain.chains import ConversationChain
 #for the optimized scenario chat with a bit of flexible chat and working langchain memory
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
-encoder = OpenAIEncoder()
+
 # llm = ChatOpenAI(model="gpt-3.5-turbo-16k-0613", temperature=0.1, streaming=True, callbacks=[StreamingStdOutCallbackHandler()])
 # template = """You are a chatbot having a conversation with a human.
 
@@ -1629,6 +1629,7 @@ def TALK_WITH_RAG(query, docsearch, llm,scenario):
         )
 
         routes = [linear_select, escaperoom_select, simulation_select, selfexploratory_select]
+        encoder = OpenAIEncoder()
         rl = RouteLayer(encoder=encoder, routes=routes,llm=llm_auto)
         selected = rl(title_scenario_output)
         print("Semantic Scenario Selected of NAME",selected.name)
