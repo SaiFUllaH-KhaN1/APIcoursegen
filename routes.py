@@ -49,8 +49,8 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 app.config['BASIC_AUTH_REALM'] = 'realm'
-app.config['BASIC_AUTH_USERNAME'] = 'alexey'
-app.config['BASIC_AUTH_PASSWORD'] = 'solomatin'
+app.config['BASIC_AUTH_USERNAME'] = os.getenv('BASIC_AUTH_USERNAME')
+app.config['BASIC_AUTH_PASSWORD'] = os.getenv('BASIC_AUTH_PASSWORD')
 basic_auth = BasicAuth(app)
 
 app.config['CACHE_TYPE'] = 'FileSystemCache' 
