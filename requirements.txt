@@ -50,7 +50,7 @@ emoji==2.10.0
 et-xmlfile==1.1.0
 exceptiongroup==1.2.0
 faiss-cpu==1.7.4
-fastapi==0.109.0
+fastapi
 fastavro==1.9.3
 filelock==3.13.1
 filetype==1.2.0
