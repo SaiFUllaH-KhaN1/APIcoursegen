@@ -5,8 +5,11 @@ langsmith
 langchain-community
 langchain-core
 langchain-cli
+langchain
+langchain-experimental
+langchain-text-splitters
 python-dotenv==1.0.0
-lxml==4.9.4
+lxml
 uvicorn
 aiohttp==3.9.1
 aiosignal==1.3.1
@@ -83,14 +86,7 @@ jsonpath-python==1.0.6
 jsonpointer==2.4
 kiwisolver==1.4.5
 kubernetes==29.0.0
-langchain==0.1.14
-langchain-community==0.0.31
-langchain-core==0.1.40
-langchain-experimental==0.0.56
-langchain-text-splitters==0.0.1
 langdetect==1.0.9
-langsmith==0.1.41
-lxml==5.1.0
 MarkupSafe==2.1.3
 marshmallow==3.20.2
 matplotlib==3.8.2
