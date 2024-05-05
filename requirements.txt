@@ -31,9 +31,6 @@ certifi==2023.11.17
 cffi==1.16.0
 chardet==5.2.0
 charset-normalizer==3.3.2
-Chroma==0.2.0
-chroma-hnswlib==0.7.3
-chromadb==0.4.22
 click==8.1.7
 cohere==4.42
 colorama==0.4.6
