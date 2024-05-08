@@ -313,6 +313,7 @@ prompt_linear = PromptTemplate(
 
 
 
+
 # prompt_gamified_original = PromptTemplate(
 #     input_variables=["input_documents","human_input","content_areas","learning_obj"],
 #     template="""
@@ -1108,19 +1109,20 @@ prompt_gamified_setup = PromptTemplate(
 prompt_gamified_json = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
     template="""
-    You are an education course creator that creates engaging courses in a Gamified Scenario Format using
+    You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
     where you give a story situation to the student to escape from. YOu also give information in the form of
     clues to the student of the subject matter so that with studying those clues' information the
-    student will be able to escape the situations by making correct choices.
+    student will be able to escape the situations by making correct choices. This type of game is
+    also known as Exit Game and you are tasked with making Exit Game Scenarios.
 
     ***WHAT TO DO***
-    To accomplish course creation, YOU will:
+    To accomplish Exit Game creation, YOU will:
 
-    1. Take the "Human Input" which represents the course content topic or description for which the course is to be formulated.
+    1. Take the "Human Input" which represents the Exit Game content topic or description for which the Exit Game is to be formulated.
     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
-    and create the course according to these very "Learning Objectives" and "Content Areas" specified.
-    3. Generate a JSON-formatted course structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
+    and create the Exit Game according to these very "Learning Objectives" and "Content Areas" specified.
+    3. Generate a JSON-formatted Exit Game structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
     
     'Human Input': {human_input};
     'Input Documents': {response_of_bot};
@@ -1128,7 +1130,7 @@ prompt_gamified_json = PromptTemplate(
     'Content Areas': {content_areas};
     ***WHAT TO DO END***
 
-    The courses are built using blocks, each having its own parameters.
+    The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
     'Text Block': with timer, title, and description
     'Media Block': with timer, title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
@@ -1144,7 +1146,7 @@ prompt_gamified_json = PromptTemplate(
     'Jump Block': with title, Proceed To Block___
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Gamified Scenario: A type of course structure in which multiple or single TextBlocks, MediaBlocks will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks (Simple or Conditional). These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
+    Gamified Scenario: A type of Exit Game scenario structure in which multiple or single TextBlocks, MediaBlocks will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks (Simple or Conditional). These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
     The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
     The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
     The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Branching Block' (Simple or Conditional). This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
@@ -1162,22 +1164,22 @@ prompt_gamified_json = PromptTemplate(
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks are NOT used in complimentary manner to the information in TextBlocks.
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your course.
+    The Example below is just for your concept and do not absolutely produce the same example in your Exit Game.
     Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks and MediaBlocks, and are tested via QuestionBlocks.
     You are creatively free to choose the placements of Branching Blocks (Simple or Conditional) and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
     Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
     The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
-    You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the course you are creating. 
+    You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the Exit Game gamified scenario you are creating. 
     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
     
-    \nOverview structure of the Course\n
+    \nOverview structure of the Exit Game\n
     ScenarioType
     LearningObjectives
     ContentAreas
     Start
-    TextBlock (Welcome to the course)
+    TextBlock (Welcome to the Exit Game)
     TextBlock/s (Information elaborated/ subject matter described in detail)
     MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. To give such information, that needs illustrated explaination.)
     QuestionBlock/s
@@ -1190,16 +1192,16 @@ prompt_gamified_json = PromptTemplate(
 {{
     "ScenarioType": "Gamified Scenario",
     "LearningObjectives": [
-        "This mandatory block is where you !Give users single or multiple learning objectives of the course!"
+        "This mandatory block is where you !Give users single or multiple learning objectives of the Exit Game!"
     ],
     "ContentAreas": [
-        "This mandatory block is where you !Give users Content Areas of the course single or multiple!"
+        "This mandatory block is where you !Give users Content Areas of the Exit Game single or multiple!"
     ],
-    "Start": "A course name here",
+    "Start": "A Exit Game name here",
     "Blocks": [
         {{
             "id": "1",
-            "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in the course) is where you !Begin by giving welcome message to the course. In further Text Blocks down the course in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final course to be produced having an extremely detailed information in it.",
+            "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in this gamified senario) is where you !Begin by giving welcome message to the Exit Game. In further Text Blocks down this scenario in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final Exit Game to be produced having an extremely detailed information in it.",
             "timer": "optional value 00:00 mm:ss, for example 00:30",
             "type": "Text Block",
             "title": "Write for every Text Block a fitting title here",
@@ -1224,7 +1226,7 @@ prompt_gamified_json = PromptTemplate(
         }},
         {{
             "id": "3",
-            "Purpose": "This block is where you !Divide the course content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.!",
+            "Purpose": "This block is where you !Divide the Exit Game content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.!",
             "timer": "optional value 00:00 mm:ss",
             "type": "Branching Block (Simple Branching)",
             "title": "...",
@@ -1282,7 +1284,7 @@ prompt_gamified_json = PromptTemplate(
                 }},
                 {{
                     "id": "3.2.4",
-                    "Purpose": "This block is where you !Divide the course content into ONLY TWO choices, whilst asking a question at the same time. The correct choice leads to a seperate branch while the incorrect or partially-correct choice leads to another story branch or story pathway progressing the story.",   
+                    "Purpose": "This block is where you !Divide the Exit Game content into ONLY TWO choices, whilst asking a question at the same time. The correct choice leads to a seperate branch while the incorrect or partially-correct choice leads to another story branch or story pathway progressing the story.",   
                     "timer": "optional value 00:00 mm:ss",
                     "type": "Branching Block (Conditional Branching)",
                     "title": "...",
@@ -1338,7 +1340,7 @@ prompt_gamified_json = PromptTemplate(
                 }},
                 {{
                     "id": "3.2.4.2.2",
-                    "Purpose": "This Question Block (Single or Multiple QuestionBlocks) is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand",
+                    "Purpose": "This Question Block (Single or Multiple QuestionBlocks) is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the Exit Game's content and importance at hand",
                     "type": "Question Block",
                     "questionText": "...",
                     "answers": [
@@ -1359,7 +1361,7 @@ prompt_gamified_json = PromptTemplate(
                 }},
                 {{
                     "id": "3.2.4.2.4",
-                    "Purpose": "This block is where you !Divide the course content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.!",
+                    "Purpose": "This block is where you !Divide the Exit Game content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.!",
                     "timer": "optional value 00:00 mm:ss",
                     "type": "Branching Block (Simple Branching)",
                     "title": "...",
@@ -1510,8 +1512,12 @@ prompt_gamified_json = PromptTemplate(
     Moreover, it is absolutley mandatory and necessary for you to generate a complete JSON response such that the JSON generated from you must enclose all the parenthesis at the end of your response
     and all it's parameters are also closed in the required syntax rules of JSON and all the blocks be included in it since we want our JSON
     to be compilable.  
-    Give concise, relevant, clear, and descriptive instructions as you are a course creator that has expertise 
+    Give concise, relevant, clear, and descriptive instructions as you are a Exit Game creator that has expertise 
     in molding asked information into the Gamified scenario structure.
+
+    !!IMPORTANT NOTE REGARDING CREATIVITY: Know that you are creative to use as many or as little
+    Text Blocks, Media Blocks, Question Blocks, Branching Blocks as you deem reasonable and fitting to the
+    content and aim of the subject scenario.
 
     NEGATIVE PROMPT: Do not respond outside the JSON format.     
     
@@ -2556,7 +2562,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
         # response2 = chain2({"response_of_bot_simple": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
         # print("Response 2 is::",response2['text'])
 
-        chain = LLMChain(prompt=prompt_gamified_json,llm=llm_setup)
+        chain = LLMChain(prompt=prompt_gamified_json,llm=llm)
         response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
         print("Response 3 is::",response['text'])
 
@@ -2626,7 +2632,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
             # response2 = chain({"response_of_bot_simple": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
             # print("Response 2 is::",response2['text'])
 
-            chain = LLMChain(prompt=prompt_gamified_json,llm=llm_setup)
+            chain = LLMChain(prompt=prompt_gamified_json,llm=llm)
             response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
             print("Response 3 is::",response['text'])
 
