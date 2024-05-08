@@ -312,8 +312,801 @@ prompt_linear = PromptTemplate(
 )
 
 
-prompt_gamified = PromptTemplate(
+
+# prompt_gamified_original = PromptTemplate(
+#     input_variables=["input_documents","human_input","content_areas","learning_obj"],
+#     template="""
+#     You are an education course creator that creates engaging courses in a Gamified Scenario Format using
+#     a system of blocks. You formulate from the given data, an Escape Room type scenario
+#     where you give a story situation to the student to escape from. YOu also give information in the form of
+#     clues to the student of the subject matter so that with studying those clues' information the
+#     student will be able to escape the situations by making correct choices.
+
+#     ***WHAT TO DO***
+#     To accomplish course creation, YOU will:
+
+#     1. Take the "Human Input" which represents the course content topic or description for which the course is to be formulated.
+#     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
+#     and create the course according to these very "Learning Objectives" and "Content Areas" specified.
+#     3. Generate a JSON-formatted course structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
+    
+#     'Human Input': {human_input};
+#     'Input Documents': {input_documents};
+#     'Learning Objectives': {learning_obj};
+#     'Content Areas': {content_areas};
+#     ***WHAT TO DO END***
+
+#     The courses are built using blocks, each having its own parameters.
+#     Block types include: 
+#     'Text Block': with timer, title, and description
+#     'Media Block': with timer, title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
+#     'Branching Block'(includes two types, choose one of the two): 
+#     'Simple Branching' with Title, Timer, Proceed To Branch List  
+#     'Conditional Branching' with Title, Timer, Question text, answers, Proceed To Brach for each answer
+#     'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+#     “You are good at this…”. “You can't do this because...”. Then also give:
+#     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
+    
+#     'Goal Block': Title, Score
+#     'QuestionBlock' with Question text, answers, correct answer, wrong answer message
+#     'Jump Block': with title, Proceed To Block___
+
+#     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
+#     Gamified Scenario: A type of course structure in which multiple or single TextBlocks, MediaBlocks will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks (Simple or Conditional). These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
+#     The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
+#     The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
+#     The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Branching Block' (Simple or Conditional). This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
+#     ***
+#     ***YOU WILL BE REWARD IF:
+#     All the TextBlocks in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
+#     TextBlocks should provide extremely specific and detailed information so user can get as much knowledge and facts as there is available.
+#     The MediaBlocks are there to further elaborate or clarify the already discussed knowledge in TextBlocks, so 
+#     user interest is kept. The MediaBlocks visually elaborates, Gives overlayTags that are used by student to click on them and get tons of Clues information to be able to select the Correct Choice when given in the subsequent Branching Blocks. 
+#     The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
+#     Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
+#     so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+#     ***
+#     ***YOU WILL BE PENALISED IF:
+#     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
+#     The MediaBlocks are NOT used in complimentary manner to the information in TextBlocks.
+#     ***
+#     The Example below is just for your concept and do not absolutely produce the same example in your course.
+#     Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
+#     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
+#     Make sure students learn from these TextBlocks and MediaBlocks, and are tested via QuestionBlocks.
+#     You are creatively free to choose the placements of Branching Blocks (Simple or Conditional) and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
+#     Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
+#     The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
+#     You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the course you are creating. 
+#     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
+    
+#     \nOverview structure of the Course\n
+#     ScenarioType
+#     LearningObjectives
+#     ContentAreas
+#     Start
+#     TextBlock (Welcome to the course)
+#     TextBlock/s (Information elaborated/ subject matter described in detail)
+#     MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. To give such information, that needs illustrated explaination.)
+#     QuestionBlock/s
+#     FeedbackAndFeedforwardBlock
+#     SelfAssessmentTextBlock
+#     TestBlocks => QuestionBlock/s, GoalBlock
+#     \nEnd of Overview structure\n
+
+#     \n\nSAMPLE EXAMPLE\n\n
+# {{
+#     "ScenarioType": "Gamified Scenario",
+#     "LearningObjectives": [
+#         "This mandatory block is where you !Give users single or multiple learning objectives of the course!"
+#     ],
+#     "ContentAreas": [
+#         "This mandatory block is where you !Give users Content Areas of the course single or multiple!"
+#     ],
+#     "Start": "A course name here",
+#     "Blocks": [
+#         {{
+#             "id": "1",
+#             "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in the course) is where you !Begin by giving welcome message to the course. In further Text Blocks down the course in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final course to be produced having an extremely detailed information in it.",
+#             "timer": "optional value 00:00 mm:ss, for example 00:30",
+#             "type": "Text Block",
+#             "title": "Write for every Text Block a fitting title here",
+#             "description": "You write detailed descriptions here and try your best to educate the students on the subject matter, leaving no details untouched and undescribed."
+#         }},
+#         {{
+#             "id": "2",
+#             "Purpose": "This block (can be used single or multiple times or None  depends on the content to be covered in the Text Blocks relevant to this Media Block) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them. The media blocks gives great clues using overlayTags",
+#             "timer": "optional value 00:00 mm:ss, for example 02:00",
+#             "type": "Media Block",
+#             "title": "...",
+#             "mediaType": "360-image/Image (Preferred)/Video etc",
+#             "description": "...",
+#             "overlayTags": [
+#                 {{
+#                     "textTag/imageTag/videoTag": "Explain and teach the students, using these overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these medias, what information are they elaborating based on the information present in Text Blocks. The overlayTags are a great way to give clues to the students to gain valuable information before they are given a choice in the later Branching Block to choose a choice in the story situation. There they will have knowledge gained by these overlayTags at various points in the various branches to help them select the correct choice"
+#                 }},
+#                 {{
+#                     "textTag/imageTag/videoTag": "..."
+#                 }}
+#             ]
+#         }},
+#         {{
+#             "id": "3",
+#             "Purpose": "This block is where you !Divide the course content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.!",
+#             "timer": "optional value 00:00 mm:ss",
+#             "type": "Branching Block (Simple Branching)",
+#             "title": "...",
+#             "branches": {{
+#                 "3.1": "text (Partially-Correct Choice or Incorrect Choice)",
+#                 "3.2": "text (Correct Choice)",
+#         }},
+#         {{
+#             "id": "3.1",
+#             "Purpose": "An Incorrect choice selected moves the user to the Jump Block to route the user back to original Decision point branch or Block 3 Branching Block (Simple Branching) in this example sample",
+#             "blocks": [
+#             {{
+#             "id": "3.1.1",
+#             "Purpose": "Mandatory for every branch. In this example it is before Jump Block which is end block for this branch.",
+#             "type": "FeedbackAndFeedforwardBlock",
+#             "Feedback": "Better to be at slower speed, hence brake would not require immediate application",
+#             "Feedforward": "Try to be slower next time"
+#             }},
+#             {{
+#             "id": "3.1.2",
+#             "type": "Jump Block",
+#             "title": "Reevaluate Your Choices",
+#             "proceedToBlock": "3"
+#             }}
+#         ]}},
+#         {{
+#             "id": "3.2",
+#             "blocks": [
+#                 {{
+#                     "id": "3.2.1",
+#                     "timer": "optional value 00:00 mm:ss",
+#                     "type": "Text Block",
+#                     "title": "...",
+#                     "description": "..."
+#                 }},
+#                 {{
+#                     "id": "3.2.2",
+#                     "timer": "optional value 00:00 mm:ss",
+#                     "type": "Media Block",
+#                     "title": "Waiting at intersection after red light stop",
+#                     "mediaType": "Image",
+#                     "description": "An image of cars standing at the red light, waiting and preferably turning off the engines while wait is about a minute long. Instructions to produce the image: Take a picture of busy intersection with rows of cars and bikes waiting at red light.",
+#                     "overlayTags": [
+#                         {{
+#                             "textTag": "Keep an eye for yellow light to turn on, there you want to start the engines and get ready to move on. "
+#                         }}
+#                     ]
+#                 }},
+#                 {{
+#                     "id": "3.2.3",
+#                     "Purpose": "Mandatory for every branch. In this example it is before Branching Block which is end block for this branch.",
+#                     "type": "FeedbackAndFeedforwardBlock",
+#                     "Feedback": "...",
+#                     "Feedforward": ""
+#                 }},
+#                 {{
+#                     "id": "3.2.4",
+#                     "Purpose": "This block is where you !Divide the course content into ONLY TWO choices, whilst asking a question at the same time. The correct choice leads to a seperate branch while the incorrect or partially-correct choice leads to another story branch or story pathway progressing the story.",   
+#                     "timer": "optional value 00:00 mm:ss",
+#                     "type": "Branching Block (Conditional Branching)",
+#                     "title": "...",
+#                     "questionText": "...",
+#                     "proceedToBranchForEachAnswer": [
+#                         {{
+#                             "text": "... (Partially-Correct Choice or Incorrect Choice)",
+#                             "proceedToBlock": "3.2.4.1"
+#                         }},
+#                         {{
+#                             "text": "... (Correct Choice)",
+#                             "proceedToBlock": "3.2.4.2"
+#                         }}
+#                     ]
+#                 }}
+#             ]
+#         }},
+#         {{
+#             "id": "3.2.4.1",
+#             "Purpose": "In the case of Partially-Correct choice, this branch includes a Goal Block and a Jump Block(that merges the current branch and story progression with the other correct path branch since both of them have same conclusion as seen below blocks of this very branch)",
+#             "blocks": [
+#             {{
+#                 "id": "3.2.4.1.1",
+#                 "type": "Goal Block",
+#                 "title": "A messsage of confirmation",
+#                 "score": "Integer number here based on number of questions, smaller score then the standard Correct option score"
+#             }},
+#             {{
+#                 "id": "3.2.4.1.2",
+#                 "Purpose": "Mandatory for every branch. In this example it is before Jump Block which is end block for this branch.",
+#                 "type": "FeedbackAndFeedforwardBlock",
+#                 "Feedback": "...",
+#                 "Feedforward": "..."
+#             }},
+#             {{
+#                 "id": "3.2.4.1.3",
+#                 "Purpose": "A Partially-Correct choice leads the story to merge with the Correct choice branch or story path, but the difference is that it merges by giving user the Score less than if the correct path chosen."
+#                 "type": "Jump Block",
+#                 "title": "...",
+#                 "proceedToBlock": "3.2.4.2.2"
+#             }}
+#             ]
+#         }},
+#         {{
+#             "id": "3.2.4.2",
+#             "blocks": [
+#                 {{
+#                     "id": "3.2.4.2.1",
+#                     "timer": "optional value 00:00 mm:ss",
+#                     "type": "Text Block",
+#                     "title": "...",
+#                     "description": "..."
+#                 }},
+#                 {{
+#                     "id": "3.2.4.2.2",
+#                     "Purpose": "This Question Block (Single or Multiple QuestionBlocks) is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand",
+#                     "type": "Question Block",
+#                     "questionText": "...",
+#                     "answers": [
+#                         "...",
+#                         "...",
+#                         "...",
+#                         "..."
+#                     ],
+#                     "correctAnswer": "...",
+#                     "wrongAnswerMessage": "..."
+#                 }},
+#                 {{
+#                     "id": "3.2.4.2.3",
+#                     "Purpose": "Mandatory for every branch. In this example it is before Branching Block which is end block for this branch.",
+#                     "type": "FeedbackAndFeedforwardBlock",
+#                     "Feedback": "...",
+#                     "Feedforward": "..."
+#                 }},
+#                 {{
+#                     "id": "3.2.4.2.4",
+#                     "Purpose": "This block is where you !Divide the course content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.!",
+#                     "timer": "optional value 00:00 mm:ss",
+#                     "type": "Branching Block (Simple Branching)",
+#                     "title": "...",
+#                     "branches": {{
+#                         "3.2.4.2.4.1": "text (Partially-Correct Choice or Incorrect Choice)",
+#                         "3.2.4.2.4.2": "text (Correct Choice)",
+#                 }},
+#                 {{
+#                     "id": "3.2.4.2.4.1",
+#                     "Purpose": "An Incorrect choice selected moves the user to the Jump Block to route the user back to original Decision point branch or Block 3 Branching Block (Simple Branching) in this example sample",
+#                     "blocks": [
+#                     {{
+#                         "id": "3.2.4.2.4.1.1",
+#                         "Purpose": "Mandatory for every branch. In this example it is before Jump block which is end block for this branch.",
+#                         "type": "FeedbackAndFeedforwardBlock",
+#                         "Feedback": "...",
+#                         "Feedforward": "..."
+#                     }},
+#                     {{
+#                     "id": "3.2.4.2.4.1.2",
+#                     "type": "Jump Block",
+#                     "title": "Reevaluate Your Choices",
+#                     "proceedToBlock": "3.2.4"
+#                 }}]}},
+#                 {{
+#                 "id": "3.2.4.2.4.2",
+#                 "blocks": [
+#                 {{
+#                     "id": "3.2.4.2.4.2.1",
+#                     "timer": "optional value 00:00 mm:ss",
+#                     "type": "Text Block",
+#                     "title": "...",
+#                     "description": "..."
+#                 }},
+#                 {{
+#                     "id": "3.2.4.2.4.2.2",
+#                     "Purpose": "Mandatory for every branch. In this example it is before Goal block which is end block for this branch.",
+#                     "type": "FeedbackAndFeedforwardBlock",
+#                     "Feedback": "...",
+#                     "Feedforward": "..."
+#                 }},
+#                 {{
+#                     "id": "3.2.4.2.4.2.3",
+#                     "type": "Goal Block",
+#                     "title": "A messsage of conclusion of scenario here fits this block's placement here",
+#                     "score": "Integer number here"
+#                 }}
+#             ]
+#         }}
+#     ]
+# }} 
+#     \n\nEND OF SAMPLE EXAMPLE\n\n
+#     The SAMPLE EXAMPLE's structure of blocks connection is:
+#     1(Text Block) -> 2 (Media Block)
+#     2(Media Block) -> 3 (Branching Block (Simple Branching))
+#     3 (Branching Block (Simple Branching)) -> |InCorrect Choice| 3.1 
+#     3 (Branching Block (Simple Branching)) -> |Correct Choice| 3.2
+#     3.1 -> 3.1.1 (FeedbackAndFeedforwardBlock) 
+#     3.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.1.2
+#     3.1.2 (Jump Block) -> 3 (Branching Block (Simple Branching))
+#     3.2 -> 3.2.1 (Text Block)
+#     3.2.1 (Text Block) -> 3.2.2 (Media Block)
+#     3.2.2 (Media Block) -> 3.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.4 (Branching Block (Conditional Branching))
+#     3.2.4 (Branching Block (Conditional Branching)) -> |Partially-Correct Choice| 3.2.4.1
+#     3.2.4 (Branching Block (Conditional Branching)) -> |Correct Choice| 3.2.4.2
+#     3.2.4.1 -> 3.2.4.1.1 (Goal Block)
+#     3.2.4.1.1 (Goal Block) -> 3.2.4.1.2 (FeedbackAndFeedforwardBlock)
+#     3.2.4.1.2 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.4.1.3
+#     3.2.4.1.3 (Jump Block) -> 3.2.4.2.2 (Question Block)
+#     3.2.4.2 -> 3.2.4.2.1 (Text Block)
+#     3.2.4.2.1 (Text Block) -> 3.2.4.2.2 (Question Block)
+#     3.2.4.2.2 (Question Block) -> 3.2.4.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.4.2.4 (Branching Block (Simple Branching))
+#     3.2.4.2.4 (Branching Block (Simple Branching)) -> |Incorrect Choice| 3.2.4.2.4.1
+#     3.2.4.2.4 (Branching Block (Simple Branching)) -> |Correct Choice| 3.2.4.2.4.2
+#     3.2.4.2.4.1 -> 3.2.4.2.4.1.1 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.4.2.4.1.2
+#     3.2.4.2.4.1.2 (Jump Block) -> 3.2.4 (Branching Block (Conditional Branching))
+#     3.2.4.2.4.2 -> 3.2.4.2.4.2.1 (Text Block)
+#     3.2.4.2.4.2.1 (Text Block) -> 3.2.4.2.4.2.2 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.4.2.2 (FeedbackAndFeedforwardBlock) -> 3.2.4.2.4.2.3 (Goal Block)
+
+#     ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Media Block)
+#     3 (Media Block) -> 4 (Branching Block (Simple Branching))
+#     4 (Branching Block (Simple Branching)) -> |Partially-Correct choice| 4.1 
+#     4 (Branching Block (Simple Branching)) -> |Correct choice| 4.2
+#     4.1 -> 4.1.1 (FeedbackAndFeedforwardBlock)
+#     4.1.1 (FeedbackAndFeedforwardBlock) -> 4.1.2 (Goal Block)
+#     4.1.2 (Goal Block) -> |Jump Block| 4.1.2 
+#     4.1.2 (Jump Block) -> 4.2.3 (Branching Block (Simple Branching))
+#     4.2 -> 4.2.1 (Media Block)
+#     4.2.1 (Media Block) -> 4.2.2 (Question Block)
+#     4.2.2 (Question Block) -> 4.2.3 (FeedbackAndFeedforwardBlock)
+#     4.2.3 (FeedbackAndFeedforwardBlock) -> 4.2.4 (Branching Block (Simple Branching))
+#     4.2.4 (Branching Block (Simple Branching)) -> |Incorrect choice| 4.2.4.1
+#     4.2.4 (Branching Block (Simple Branching)) -> |Correct choice| 4.2.4.2
+#     4.2.4.1 -> 4.2.4.1.1 (FeedbackAndFeedforwardBlock) 
+#     4.2.4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 4.2.4.1.2
+#     4.2.4.1.2 (Jump Block) -> 4.2.4 (Branching Block (Simple Branching))
+#     4.2.4.2 -> 4.2.4.2.1 (Media Block)
+#     4.2.4.2.1 (Media Block) -> 4.2.4.2.2 (FeedbackAndFeedforwardBlock) 
+#     4.2.4.2.2 (FeedbackAndFeedforwardBlock) -> 4.2.4.2.3 (Goal Block)
+
+#     AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Media Block)
+#     3 (Media Block) -> 4 (Branching Block (Conditional Branching))
+#     4 (Branching Block (Conditional Branching)) -> |Incorrect choice| 4.1 
+#     4 (Branching Block (Conditional Branching)) -> |Correct choice| 4.2
+#     4.1 -> 4.1.1 (FeedbackAndFeedforwardBlock)
+#     4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 4.1.2
+#     4.1.2 (Jump Block) -> 4 (Branching Block (Conditional Branching))
+#     4.2 -> 4.2.1 (Text Block)
+#     4.2.1 (Text Block) -> 4.2.2 (FeedbackAndFeedforwardBlock)
+#     4.2.2 (FeedbackAndFeedforwardBlock) -> 4.2.3 (Goal Block)
+
+#     AND AN ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Branching Block (Conditional Branching))
+#     3 (Branching Block (Conditional Branching)) -> |Incorrect choice| 3.1 
+#     3 (Branching Block (Conditional Branching)) -> |Correct choice| 3.2
+#     3.1 -> 3.1.1 (FeedbackAndFeedforwardBlock)
+#     3.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.1.2
+#     3.1.2 (Jump Block) -> 3 (Branching Block (Conditional Branching))
+#     3.2 -> 3.2.1 (Text Block)
+#     3.2.1 (Text Block) -> 3.2.2 (Media Block)
+#     3.2.2 (Media Block) -> 3.2.3 (Question Block)
+#     3.2.3 (Question Block) -> 3.2.4 (Question Block)
+#     3.2.4 (Question Block) -> 3.2.5 (Question Block)
+#     3.2.5 (Question Block) -> 3.2.6 (FeedbackAndFeedforwardBlock)
+#     3.2.6 (FeedbackAndFeedforwardBlock) -> 3.2.7 (Branching Block (Simple Branching))
+#     3.2.7 (Branching Block (Simple Branching)) -> |Incorrect choice| 3.2.7.1
+#     3.2.7 (Branching Block (Simple Branching)) -> |Correct choice| 3.2.7.2
+#     3.2.7.1 -> 3.2.7.1.1 (FeedbackAndFeedforwardBlock)
+#     3.2.7.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.7.1.2
+#     3.2.7.1.2 (Jump Block) -> 3.2.7 (Branching Block (Simple Branching))
+#     3.2.7.2 ->  3.2.7.2.1 (Text Block)
+#     3.2.7.2.1 (Text Block) -> 3.2.7.2.2 (Text Block)
+#     3.2.7.2.2 (Text Block) -> 3.2.7.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.7.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.7.2.4 (Goal Block)
+
+#     The input paramters according to which you will be making the course:
+#     'Human Input': {human_input};
+#     'Input Documents': {input_documents};
+#     'Learning Objectives': {learning_obj};
+#     'Content Areas': {content_areas};
+    
+#     !!!ATTENTION!!!
+#     Please note that you absolutely should not give response anything else outside the JSON format since
+#     human will be using the generated code directly into the server side to run the JSON code.
+#     Moreover, it is absolutley mandatory and necessary for you to generate a complete JSON response such that the JSON generated from you must enclose all the parenthesis at the end of your response
+#     and all it's parameters are also closed in the required syntax rules of JSON and all the blocks be included in it since we want our JSON
+#     to be compilable.  
+#     Give concise, relevant, clear, and descriptive instructions as you are a course creator that has expertise 
+#     in molding asked information into the Gamified scenario structure.
+
+#     NEGATIVE PROMPT: Do not respond outside the JSON format.     
+    
+#     Chatbot:"""
+# )
+
+#created for responding a meta-data knowledge twisted to meet escape room scene
+prompt_gamified_setup = PromptTemplate(
     input_variables=["input_documents","human_input","content_areas","learning_obj"],
+    template="""
+    Show the answer to human's input step-by-step such that you are teaching a student. 
+    The teaching should be clear, and give extremely detailed descriptions covering all aspects of the information provided to you in INPUT PARAMETERS,
+    without missing or overlooking any information.
+    
+    INPUT PARAMETERS:
+    'Human Input': {human_input};
+    'Input Documents': {input_documents};
+    'Learning Objectives': {learning_obj};
+    'Content Areas': {content_areas};
+    Chatbot:"""
+)
+
+# prompt_gamified_simple = PromptTemplate(
+#     input_variables=["response_of_bot_simple","human_input","content_areas","learning_obj"],
+#     template="""
+#     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
+#     a system of blocks. You formulate from the given data, an Escape Room type scenario
+#     where you give a story situation to the student to escape from. YOu also give information in the form of
+#     clues to the student of the subject matter so that with studying those clues' information the
+#     student will be able to escape the situations by making correct choices.
+
+#     ***WHAT TO DO***
+#     To accomplish scenario creation, YOU will:
+
+#     1. Take the "Human Input" which represents the course content topic or description for which the course is to be formulated.
+#     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
+#     and create the scenario according to these very "Learning Objectives" and "Content Areas" specified.
+   
+#     'Human Input': {human_input};
+#     'Input Documents': {response_of_bot_simple};
+#     'Learning Objectives': {learning_obj};
+#     'Content Areas': {content_areas};
+#     ***WHAT TO DO END***
+
+#     The Gamified Scenario is built using blocks, each having its own parameters.
+#     Block types include: 
+#     'Text Block': with timer, title, and description
+#     'Media Block': with timer, title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
+#     'Branching Block'(includes two types, choose one of the two): 
+#     'Simple Branching' with Title, Timer, Proceed To Branch List  
+#     'Conditional Branching' with Title, Timer, Question text, answers, Proceed To Brach for each answer
+#     'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+#     “You are good at this…”. “You can't do this because...”. Then also give:
+#     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
+    
+#     'Goal Block': Title, Score
+#     'QuestionBlock' with Question text, answers, correct answer, wrong answer message
+#     'Jump Block': with title, Proceed To Block___
+
+#     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
+#     Gamified Scenario: A type of course structure in which multiple or single TextBlocks, MediaBlocks will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks (Simple or Conditional). These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
+#     The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
+#     The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
+#     The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Branching Block' (Simple or Conditional). This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
+#     ***
+#     ***YOU WILL BE REWARD IF:
+#     All the TextBlocks in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
+#     TextBlocks should provide extremely specific and detailed information so user can get as much knowledge and facts as there is available.
+#     The MediaBlocks are there to further elaborate or clarify the already discussed knowledge in TextBlocks, so 
+#     user interest is kept. The MediaBlocks visually elaborates, Gives overlayTags that are used by student to click on them and get tons of Clues information to be able to select the Correct Choice when given in the subsequent Branching Blocks. 
+#     The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
+#     Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
+#     so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+#     ***
+#     ***YOU WILL BE PENALISED IF:
+#     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
+#     The MediaBlocks are NOT used in complimentary manner to the information in TextBlocks.
+#     ***
+#     The Example below is just for your concept and do not absolutely produce the same example in your Gamified scenario.
+#     Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
+#     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
+#     Make sure students learn from these TextBlocks and MediaBlocks, and are tested via QuestionBlocks.
+#     You are creatively free to choose the placements of Branching Blocks (Simple or Conditional) and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
+#     Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
+#     The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
+#     You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the course you are creating. 
+#     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
+    
+#     The SAMPLE EXAMPLE structure of blocks connection is (Remember to Fill out the Blocks' Parameters with details. This is just structure overview here):
+#     1(Text Block) -> 2 (Media Block)
+#     2(Media Block) -> 3 (Branching Block (Simple Branching))
+#     3 (Branching Block (Simple Branching)) -> |InCorrect Choice| 3.1 
+#     3 (Branching Block (Simple Branching)) -> |Correct Choice| 3.2
+#     3.1 -> 3.1.1 (FeedbackAndFeedforwardBlock) 
+#     3.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.1.2
+#     3.1.2 (Jump Block) -> 3 (Branching Block (Simple Branching))
+#     3.2 -> 3.2.1 (Text Block)
+#     3.2.1 (Text Block) -> 3.2.2 (Media Block)
+#     3.2.2 (Media Block) -> 3.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.4 (Branching Block (Conditional Branching))
+#     3.2.4 (Branching Block (Conditional Branching)) -> |Partially-Correct Choice| 3.2.4.1
+#     3.2.4 (Branching Block (Conditional Branching)) -> |Correct Choice| 3.2.4.2
+#     3.2.4.1 -> 3.2.4.1.1 (Goal Block)
+#     3.2.4.1.1 (Goal Block) -> 3.2.4.1.2 (FeedbackAndFeedforwardBlock)
+#     3.2.4.1.2 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.4.1.3
+#     3.2.4.1.3 (Jump Block) -> 3.2.4.2.2 (Question Block)
+#     3.2.4.2 -> 3.2.4.2.1 (Text Block)
+#     3.2.4.2.1 (Text Block) -> 3.2.4.2.2 (Question Block)
+#     3.2.4.2.2 (Question Block) -> 3.2.4.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.4.2.4 (Branching Block (Simple Branching))
+#     3.2.4.2.4 (Branching Block (Simple Branching)) -> |Incorrect Choice| 3.2.4.2.4.1
+#     3.2.4.2.4 (Branching Block (Simple Branching)) -> |Correct Choice| 3.2.4.2.4.2
+#     3.2.4.2.4.1 -> 3.2.4.2.4.1.1 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.4.2.4.1.2
+#     3.2.4.2.4.1.2 (Jump Block) -> 3.2.4 (Branching Block (Conditional Branching))
+#     3.2.4.2.4.2 -> 3.2.4.2.4.2.1 (Text Block)
+#     3.2.4.2.4.2.1 (Text Block) -> 3.2.4.2.4.2.2 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.4.2.2 (FeedbackAndFeedforwardBlock) -> 3.2.4.2.4.2.3 (Goal Block)
+
+#     ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Media Block)
+#     3 (Media Block) -> 4 (Branching Block (Simple Branching))
+#     4 (Branching Block (Simple Branching)) -> |Partially-Correct choice| 4.1 
+#     4 (Branching Block (Simple Branching)) -> |Correct choice| 4.2
+#     4.1 -> 4.1.1 (FeedbackAndFeedforwardBlock)
+#     4.1.1 (FeedbackAndFeedforwardBlock) -> 4.1.2 (Goal Block)
+#     4.1.2 (Goal Block) -> |Jump Block| 4.1.2 
+#     4.1.2 (Jump Block) -> 4.2.3 (Branching Block (Simple Branching))
+#     4.2 -> 4.2.1 (Media Block)
+#     4.2.1 (Media Block) -> 4.2.2 (Question Block)
+#     4.2.2 (Question Block) -> 4.2.3 (FeedbackAndFeedforwardBlock)
+#     4.2.3 (FeedbackAndFeedforwardBlock) -> 4.2.4 (Branching Block (Simple Branching))
+#     4.2.4 (Branching Block (Simple Branching)) -> |Incorrect choice| 4.2.4.1
+#     4.2.4 (Branching Block (Simple Branching)) -> |Correct choice| 4.2.4.2
+#     4.2.4.1 -> 4.2.4.1.1 (FeedbackAndFeedforwardBlock) 
+#     4.2.4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 4.2.4.1.2
+#     4.2.4.1.2 (Jump Block) -> 4.2.4 (Branching Block (Simple Branching))
+#     4.2.4.2 -> 4.2.4.2.1 (Media Block)
+#     4.2.4.2.1 (Media Block) -> 4.2.4.2.2 (FeedbackAndFeedforwardBlock) 
+#     4.2.4.2.2 (FeedbackAndFeedforwardBlock) -> 4.2.4.2.3 (Goal Block)
+
+#     AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Media Block)
+#     3 (Media Block) -> 4 (Branching Block (Conditional Branching))
+#     4 (Branching Block (Conditional Branching)) -> |Incorrect choice| 4.1 
+#     4 (Branching Block (Conditional Branching)) -> |Correct choice| 4.2
+#     4.1 -> 4.1.1 (FeedbackAndFeedforwardBlock)
+#     4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 4.1.2
+#     4.1.2 (Jump Block) -> 4 (Branching Block (Conditional Branching))
+#     4.2 -> 4.2.1 (Text Block)
+#     4.2.1 (Text Block) -> 4.2.2 (FeedbackAndFeedforwardBlock)
+#     4.2.2 (FeedbackAndFeedforwardBlock) -> 4.2.3 (Goal Block)
+
+#     AND AN ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Branching Block (Conditional Branching))
+#     3 (Branching Block (Conditional Branching)) -> |Incorrect choice| 3.1 
+#     3 (Branching Block (Conditional Branching)) -> |Correct choice| 3.2
+#     3.1 -> 3.1.1 (FeedbackAndFeedforwardBlock)
+#     3.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.1.2
+#     3.1.2 (Jump Block) -> 3 (Branching Block (Conditional Branching))
+#     3.2 -> 3.2.1 (Text Block)
+#     3.2.1 (Text Block) -> 3.2.2 (Media Block)
+#     3.2.2 (Media Block) -> 3.2.3 (Question Block)
+#     3.2.3 (Question Block) -> 3.2.4 (Question Block)
+#     3.2.4 (Question Block) -> 3.2.5 (Question Block)
+#     3.2.5 (Question Block) -> 3.2.6 (FeedbackAndFeedforwardBlock)
+#     3.2.6 (FeedbackAndFeedforwardBlock) -> 3.2.7 (Branching Block (Simple Branching))
+#     3.2.7 (Branching Block (Simple Branching)) -> |Incorrect choice| 3.2.7.1
+#     3.2.7 (Branching Block (Simple Branching)) -> |Correct choice| 3.2.7.2
+#     3.2.7.1 -> 3.2.7.1.1 (FeedbackAndFeedforwardBlock)
+#     3.2.7.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.7.1.2
+#     3.2.7.1.2 (Jump Block) -> 3.2.7 (Branching Block (Simple Branching))
+#     3.2.7.2 ->  3.2.7.2.1 (Text Block)
+#     3.2.7.2.1 (Text Block) -> 3.2.7.2.2 (Text Block)
+#     3.2.7.2.2 (Text Block) -> 3.2.7.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.7.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.7.2.4 (Goal Block)
+    
+#     !!!WARNING!!!
+#     Always give a complete response of the whole scenario since your response will be used in a
+#     non-conversational chatbot environment where no conversations and interaction between the chatbot
+#     and human takes place, so you need to absolutely provide a complete Gamified scenario response
+#     encompassing the fullfillment of every need available.
+#     !!!WARNING_END!!!
+#     Chatbot:"""
+# )
+
+# prompt_gamified_simple = PromptTemplate(
+#     input_variables=["response_of_bot_simple","human_input","content_areas","learning_obj"],
+#     template="""
+#     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
+#     a system of blocks. You formulate from the given data, an Escape Room type scenario
+#     where you give a story situation to the student to escape from. YOu also give information in the form of
+#     clues to the student of the subject matter so that with studying those clues' information the
+#     student will be able to escape the situations by making correct choices.
+
+#     ***WHAT TO DO***
+#     To accomplish scenario creation, YOU will:
+
+#     1. Take the "Human Input" which represents the course content topic or description for which the course is to be formulated.
+#     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
+#     and create the scenario according to these very "Learning Objectives" and "Content Areas" specified.
+#     3. Output your structured response in Mermaid Code Flowchart.
+
+#     'Human Input': {human_input};
+#     'Input Documents': {response_of_bot_simple};
+#     'Learning Objectives': {learning_obj};
+#     'Content Areas': {content_areas};
+#     ***WHAT TO DO END***
+
+#     The Gamified Scenario is built using blocks, each having its own parameters.
+#     Block types include: 
+#     'Text Block': with timer, title, and description
+#     'Media Block': with timer, title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
+#     'Branching Block'(includes two types, choose one of the two): 
+#     'Simple Branching' with Title, Timer, Proceed To Branch List  
+#     'Conditional Branching' with Title, Timer, Question text, answers, Proceed To Brach for each answer
+#     'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+#     “You are good at this…”. “You can't do this because...”. Then also give:
+#     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
+    
+#     'Goal Block': Title, Score
+#     'QuestionBlock' with Question text, answers, correct answer, wrong answer message
+#     'Jump Block': with title, Proceed To Block___
+
+#     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
+#     Gamified Scenario: A type of course structure in which multiple or single TextBlocks, MediaBlocks will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks (Simple or Conditional). These blocks give users only 2 choices. 1 is a Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
+#     The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
+#     The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
+#     The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Branching Block' (Simple or Conditional). This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
+#     WHENEVER YOU GIVE A CHOICE, SPECIFIY WITH THAT CHOICE IN SMALL BRACKETS IF IT IS A CORRECT, INCORRECT OR PARTIALLY-CORRECT CHOICE!
+#     ***
+#     ***YOU WILL BE REWARD IF:
+#     All the TextBlocks in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
+#     TextBlocks should provide extremely specific and detailed information so user can get as much knowledge and facts as there is available.
+#     The MediaBlocks are there to further elaborate or clarify the already discussed knowledge in TextBlocks, so 
+#     user interest is kept. The MediaBlocks visually elaborates, Gives overlayTags that are used by student to click on them and get tons of Clues information to be able to select the Correct Choice when given in the subsequent Branching Blocks. 
+#     The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
+#     Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
+#     so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+#     ***
+#     ***YOU WILL BE PENALISED IF:
+#     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
+#     The MediaBlocks are NOT used in complimentary manner to the information in TextBlocks.
+#     ***
+#     The Example below is just for your concept and do not absolutely produce the same example in your Gamified scenario.
+#     Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
+#     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
+#     Make sure students learn from these TextBlocks and MediaBlocks, and are tested via QuestionBlocks.
+#     You are creatively free to choose the placements of Branching Blocks (Simple or Conditional) and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
+#     Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
+#     The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
+#     You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the course you are creating. 
+#     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
+    
+#     The SAMPLE EXAMPLE structure of blocks connection is (Remember to Fill out the Blocks' Parameters with details. This is just structure overview here):
+#     1(Text Block) -> 2 (Media Block)
+#     2(Media Block) -> 3 (Branching Block (Simple Branching))
+#     3 (Branching Block (Simple Branching)) -> |InCorrect Choice| 3.1 
+#     3 (Branching Block (Simple Branching)) -> |Correct Choice| 3.2
+#     3.1 -> 3.1.1 (FeedbackAndFeedforwardBlock) 
+#     3.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.1.2
+#     3.1.2 (Jump Block) -> 3 (Branching Block (Simple Branching))
+#     3.2 -> 3.2.1 (Text Block)
+#     3.2.1 (Text Block) -> 3.2.2 (Media Block)
+#     3.2.2 (Media Block) -> 3.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.4 (Branching Block (Conditional Branching))
+#     3.2.4 (Branching Block (Conditional Branching)) -> |Partially-Correct Choice| 3.2.4.1
+#     3.2.4 (Branching Block (Conditional Branching)) -> |Correct Choice| 3.2.4.2
+#     3.2.4.1 -> 3.2.4.1.1 (Goal Block)
+#     3.2.4.1.1 (Goal Block) -> 3.2.4.1.2 (FeedbackAndFeedforwardBlock)
+#     3.2.4.1.2 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.4.1.3
+#     3.2.4.1.3 (Jump Block) -> 3.2.4.2.2 (Question Block)
+#     3.2.4.2 -> 3.2.4.2.1 (Text Block)
+#     3.2.4.2.1 (Text Block) -> 3.2.4.2.2 (Question Block)
+#     3.2.4.2.2 (Question Block) -> 3.2.4.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.4.2.4 (Branching Block (Simple Branching))
+#     3.2.4.2.4 (Branching Block (Simple Branching)) -> |Incorrect Choice| 3.2.4.2.4.1
+#     3.2.4.2.4 (Branching Block (Simple Branching)) -> |Correct Choice| 3.2.4.2.4.2
+#     3.2.4.2.4.1 -> 3.2.4.2.4.1.1 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.4.2.4.1.2
+#     3.2.4.2.4.1.2 (Jump Block) -> 3.2.4 (Branching Block (Conditional Branching))
+#     3.2.4.2.4.2 -> 3.2.4.2.4.2.1 (Text Block)
+#     3.2.4.2.4.2.1 (Text Block) -> 3.2.4.2.4.2.2 (FeedbackAndFeedforwardBlock)
+#     3.2.4.2.4.2.2 (FeedbackAndFeedforwardBlock) -> 3.2.4.2.4.2.3 (Goal Block)
+
+#     ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Media Block)
+#     3 (Media Block) -> 4 (Branching Block (Simple Branching))
+#     4 (Branching Block (Simple Branching)) -> |Partially-Correct choice| 4.1 
+#     4 (Branching Block (Simple Branching)) -> |Correct choice| 4.2
+#     4.1 -> 4.1.1 (FeedbackAndFeedforwardBlock)
+#     4.1.1 (FeedbackAndFeedforwardBlock) -> 4.1.2 (Goal Block)
+#     4.1.2 (Goal Block) -> |Jump Block| 4.1.2 
+#     4.1.2 (Jump Block) -> 4.2.3 (Branching Block (Simple Branching))
+#     4.2 -> 4.2.1 (Media Block)
+#     4.2.1 (Media Block) -> 4.2.2 (Question Block)
+#     4.2.2 (Question Block) -> 4.2.3 (FeedbackAndFeedforwardBlock)
+#     4.2.3 (FeedbackAndFeedforwardBlock) -> 4.2.4 (Branching Block (Simple Branching))
+#     4.2.4 (Branching Block (Simple Branching)) -> |Incorrect choice| 4.2.4.1
+#     4.2.4 (Branching Block (Simple Branching)) -> |Correct choice| 4.2.4.2
+#     4.2.4.1 -> 4.2.4.1.1 (FeedbackAndFeedforwardBlock) 
+#     4.2.4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 4.2.4.1.2
+#     4.2.4.1.2 (Jump Block) -> 4.2.4 (Branching Block (Simple Branching))
+#     4.2.4.2 -> 4.2.4.2.1 (Media Block)
+#     4.2.4.2.1 (Media Block) -> 4.2.4.2.2 (FeedbackAndFeedforwardBlock) 
+#     4.2.4.2.2 (FeedbackAndFeedforwardBlock) -> 4.2.4.2.3 (Goal Block)
+
+#     AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Media Block)
+#     3 (Media Block) -> 4 (Branching Block (Conditional Branching))
+#     4 (Branching Block (Conditional Branching)) -> |Incorrect choice| 4.1 
+#     4 (Branching Block (Conditional Branching)) -> |Correct choice| 4.2
+#     4.1 -> 4.1.1 (FeedbackAndFeedforwardBlock)
+#     4.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 4.1.2
+#     4.1.2 (Jump Block) -> 4 (Branching Block (Conditional Branching))
+#     4.2 -> 4.2.1 (Text Block)
+#     4.2.1 (Text Block) -> 4.2.2 (FeedbackAndFeedforwardBlock)
+#     4.2.2 (FeedbackAndFeedforwardBlock) -> 4.2.3 (Goal Block)
+
+#     AND AN ANOTHER SAMPLE EXAMPLE STRUCTURE IS:
+#     1 (Text Block) -> 2 (Text Block)
+#     2 (Text Block) -> 3 (Branching Block (Conditional Branching))
+#     3 (Branching Block (Conditional Branching)) -> |Incorrect choice| 3.1 
+#     3 (Branching Block (Conditional Branching)) -> |Correct choice| 3.2
+#     3.1 -> 3.1.1 (FeedbackAndFeedforwardBlock)
+#     3.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.1.2
+#     3.1.2 (Jump Block) -> 3 (Branching Block (Conditional Branching))
+#     3.2 -> 3.2.1 (Text Block)
+#     3.2.1 (Text Block) -> 3.2.2 (Media Block)
+#     3.2.2 (Media Block) -> 3.2.3 (Question Block)
+#     3.2.3 (Question Block) -> 3.2.4 (Question Block)
+#     3.2.4 (Question Block) -> 3.2.5 (Question Block)
+#     3.2.5 (Question Block) -> 3.2.6 (FeedbackAndFeedforwardBlock)
+#     3.2.6 (FeedbackAndFeedforwardBlock) -> 3.2.7 (Branching Block (Simple Branching))
+#     3.2.7 (Branching Block (Simple Branching)) -> |Incorrect choice| 3.2.7.1
+#     3.2.7 (Branching Block (Simple Branching)) -> |Correct choice| 3.2.7.2
+#     3.2.7.1 -> 3.2.7.1.1 (FeedbackAndFeedforwardBlock)
+#     3.2.7.1.1 (FeedbackAndFeedforwardBlock) -> |Jump Block| 3.2.7.1.2
+#     3.2.7.1.2 (Jump Block) -> 3.2.7 (Branching Block (Simple Branching))
+#     3.2.7.2 ->  3.2.7.2.1 (Text Block)
+#     3.2.7.2.1 (Text Block) -> 3.2.7.2.2 (Text Block)
+#     3.2.7.2.2 (Text Block) -> 3.2.7.2.3 (FeedbackAndFeedforwardBlock)
+#     3.2.7.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.7.2.4 (Goal Block)
+    
+#     Your MERMAID code response can look like this for each block (It will compile when you for each block you avoid parenthesis of {{ and [ types and avoid " commas):
+#     flowchart TD
+#     A(
+#             id:2,
+#             type: Media Block, 
+#             title: Identifying Your Resources,
+#             mediaType: 360-image,
+#             description: A 360-degree view of your surroundings in the forest. You can see various materials that could be useful for starting a fire.,
+#             overlayTags:      
+#                     textTag: Dry Leaves - Potential tinder.,
+#                     textTag: Twigs and Branches - Small and medium-sized for kindling.,
+#                     textTag: Large Logs - For sustaining the fire once started.
+#     )
+
+#     So make the mermaid flowchart of the above json reply of yours please.
+
+#     Also remember where jumpblocks and branchingblocks takes the flowchart to. 
+
+#     A complete Mermaid Code Response would have Blocks defined first and then the Interconnection written
+#     after when all the Blocks having their complete paramters and values defined!
+
+#     !!!WARNING!!!
+#     Always give a complete response of the whole scenario since your response will be used in a
+#     non-conversational chatbot environment where no conversations and interaction between the chatbot
+#     and human takes place, so you need to absolutely provide a complete Gamified scenario response
+#     encompassing the fullfillment of every need available.
+#     !!!WARNING_END!!!
+#     Chatbot:"""
+# )
+
+prompt_gamified_json = PromptTemplate(
+    input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
     template="""
     You are an education course creator that creates engaging courses in a Gamified Scenario Format using
     a system of blocks. You formulate from the given data, an Escape Room type scenario
@@ -330,7 +1123,7 @@ prompt_gamified = PromptTemplate(
     3. Generate a JSON-formatted course structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
     
     'Human Input': {human_input};
-    'Input Documents': {input_documents};
+    'Input Documents': {response_of_bot};
     'Learning Objectives': {learning_obj};
     'Content Areas': {content_areas};
     ***WHAT TO DO END***
@@ -710,12 +1503,6 @@ prompt_gamified = PromptTemplate(
     3.2.7.2.1 (Text Block) -> 3.2.7.2.2 (Text Block)
     3.2.7.2.2 (Text Block) -> 3.2.7.2.3 (FeedbackAndFeedforwardBlock)
     3.2.7.2.3 (FeedbackAndFeedforwardBlock) -> 3.2.7.2.4 (Goal Block)
-
-    The input paramters according to which you will be making the course:
-    'Human Input': {human_input};
-    'Input Documents': {input_documents};
-    'Learning Objectives': {learning_obj};
-    'Content Areas': {content_areas};
     
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -1300,7 +2087,7 @@ prompt_simulation_pedagogy = PromptTemplate(
                     "id": "3.1.5",
                     "Purpose": "Mandatory",
                     "type": "Reflection",
-                    "Reflection": ""
+                    "description": ""
                 }}
             ]
         }},
@@ -1370,7 +2157,7 @@ prompt_simulation_pedagogy = PromptTemplate(
                             "id": "3.2.2.1.5",
                             "Purpose": "Mandatory",
                             "type": "Reflection",
-                            "Reflection": ""
+                            "description": ""
                         }}
                     ]
                 }},
@@ -1411,7 +2198,7 @@ prompt_simulation_pedagogy = PromptTemplate(
                             "id": "3.2.2.2.5",
                             "Purpose": "Mandatory",
                             "type": "Reflection",
-                            "Reflection": ""
+                            "description": ""
                         }}
                     ]
                 }}
@@ -1580,7 +2367,7 @@ prompt_simulation_pedagogy = PromptTemplate(
                             "id": "3.2.2.1.6",
                             "Purpose": "Mandatory",
                             "type": "Reflection",
-                            "Reflection": ""
+                            "description": ""
                         }}
                     ]
                 }},
@@ -1641,7 +2428,7 @@ prompt_simulation_pedagogy = PromptTemplate(
                             "id": "3.2.2.2.7",
                             "Purpose": "Mandatory",
                             "type": "Reflection",
-                            "Reflection": ""
+                            "description": ""
                         }}
                     ]
                 }}
@@ -1730,25 +2517,10 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
     # docs = docsearch.similarity_search(query, k=3)
     # docs_main = " ".join([d.page_content for d in docs])
 
-    # chain = load_qa_chain(
-    #     llm=llm, chain_type="stuff", prompt=prompt
-    # )
-
-    #Memory Make
-    memory = ConversationBufferWindowMemory(memory_key="chat_history",input_key="human_input",k=5,return_messages=True)
-    # Iterate over each pair of user and bot messages
-    # for pair in chating_history:
-    #     user_message = pair['user']
-    #     bot_message = pair['bot']
-    #     # Save the context of each conversation pair to memory
-    #     # memory.save_context({"input": user_message}, {"output": bot_message})
-    #     memory.chat_memory.add_user_message(user_message)
-    #     memory.chat_memory.add_ai_message(bot_message)
-    # # llm_memory = memory.load_memory_variables({})
          
     if scenario == "linear":
         print("SCENARIO ====prompt_linear",scenario)
-        chain = LLMChain(prompt=prompt_linear, llm=llm,memory=memory)
+        chain = LLMChain(prompt=prompt_linear, llm=llm)
         response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
 
     elif scenario == "branched":
@@ -1775,15 +2547,23 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
 
     elif scenario == "gamified":
         print("SCENARIO ====prompt_gamified",scenario)
-        llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.5)
-        chain = LLMChain(prompt=prompt_gamified, llm=llm)
-        response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
-    
+        llm_setup = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+        chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+        response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        print("Response 1 is::",response1['text'])
+
+        # chain2 = LLMChain(prompt=prompt_gamified_simple,llm=llm_setup)
+        # response2 = chain2({"response_of_bot_simple": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        # print("Response 2 is::",response2['text'])
+
+        chain = LLMChain(prompt=prompt_gamified_json,llm=llm_setup)
+        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        print("Response 3 is::",response['text'])
+
     elif scenario == "auto":
         print("SCENARIO ====PROMPT",scenario)
         # chain = prompt | llm | {f"{llm_memory}": RunnablePassthrough()}
         
-        print(memory.load_memory_variables({}))
 
         ### SEMANTIC ROUTES LOGIC ###
         llm_auto = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.4, max_tokens=32)
@@ -1836,11 +2616,22 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
         ############################
 
         if selected.name == 'gamified':
-            chain = LLMChain(prompt=prompt_gamified, llm=llm)
-            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
-        
+
+            llm_setup = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+            chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            print("Response 1 is::",response1['text'])
+
+            # chain = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+            # response2 = chain({"response_of_bot_simple": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            # print("Response 2 is::",response2['text'])
+
+            chain = LLMChain(prompt=prompt_gamified_json,llm=llm_setup)
+            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            print("Response 3 is::",response['text'])
+
         elif selected.name == 'linear':
-            chain = LLMChain(prompt=prompt_linear, llm=llm,memory=memory)
+            chain = LLMChain(prompt=prompt_linear, llm=llm)
             response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
 
         elif selected.name == 'simulation':
