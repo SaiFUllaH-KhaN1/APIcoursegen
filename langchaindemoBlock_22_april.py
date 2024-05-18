@@ -1551,7 +1551,7 @@ prompt_branched_setup = PromptTemplate(
 prompt_branched = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
     template="""
-    You are an educational bot creator that creates engaging educational and informative content in a Micro Learning Format using
+    You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You give explanations and provide detailed information such that you are teaching a student.
     !!!WARNING!!!
     Explain the material itself, Please provide detailed, informative explanations that align closely with the learning objectives and content areas provided. Each response should not just direct the learner but educate them by elaborating on the historical, technical, or practical details mentioned in the 'Input Documents'. Use simple and engaging language to enhance understanding and retention. Ensure that each explanation directly supports the learners' ability to meet the learning objectives by providing comprehensive insights into the topics discussed.
