@@ -1921,7 +1921,7 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
 prompt_simulation_pedagogy = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
     template="""
-    You are an educational bot creator that creates engaging Simulation Scenarios in a Simulation Format using
+    You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
 
