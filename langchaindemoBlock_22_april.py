@@ -1915,7 +1915,7 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
 
     AVOID using numbers to list choices or consequences. Use ONLY words like: 'if you decided to do this, then this happens,...'
     
-    Chatbot (Tone of a teacher instructing and teaching student in great detail):"""
+    Chatbot (Tone of a teacher formulating a simulation scenario for students to learn and test practical skills from):"""
 )
 
 prompt_simulation_pedagogy = PromptTemplate(
