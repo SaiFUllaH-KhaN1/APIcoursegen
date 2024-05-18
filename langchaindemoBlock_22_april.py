@@ -142,16 +142,16 @@ promptSelector = PromptTemplate(
 prompt_linear = PromptTemplate(
     input_variables=["input_documents","human_input","content_areas","learning_obj"],
     template="""
-    You are an education course creator that creates engaging courses in a Linear Scenario Format using
+    You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
     ***WHAT TO DO***
-    To accomplish course creation, YOU will:
+    To accomplish educational Linear Scenario creation, YOU will:
 
-    1. Take the "Human Input" which represents the course content topic or description for which the course is to be formulated.
+    1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
-    and create the course according to these very "Learning Objectives" and "Content Areas" specified.
-    3. Generate a JSON-formatted course structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
+    and create the scenario according to these very "Learning Objectives" and "Content Areas" specified.
+    3. Generate a JSON-formatted in Linear Scenario structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
     
     'Human Input': {human_input};
     'Input Documents': {input_documents};
@@ -160,7 +160,7 @@ prompt_linear = PromptTemplate(
     ***WHAT TO DO END***
 
     
-    The courses are built using blocks, each having its own parameters.
+    The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
@@ -172,7 +172,7 @@ prompt_linear = PromptTemplate(
     'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Linear Scenario: A type of course structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
+    Linear Scenario: A type of educational structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
     used to give detailed information to users based on "Learning Objectives", "Content Areas" and "Input Documents". The use of TextBlocks and MediaBlocks actually act as segregating various aspects of the subject matter, by giving information of the various concepts of subject matter in detailed and dedicated way. For each of the concept or aspect of the subject, a detailed information, illustrative elaboration (if needed) and Question are asked for testing. At the end of covering all aspects of the subject, there will be FeedbackAndFeedforwardBlock and SelfAssessmentTextBlock followed by the TestBlocks having series or single QuestionBlock/s to test user's knowledge and GoalBlock for scoring users.
     ***
     ***YOU WILL BE REWARD IF:
@@ -188,17 +188,17 @@ prompt_linear = PromptTemplate(
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks are NOT used in complimentary manner to the information in TextBlocks.
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your course.
+    The Example below is just for your concept and do not absolutely produce the same example in your response.
     Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks and MediaBlocks, and are tested via QuestionBlocks.
 
-    \nOverview structure of the Course\n
+    \nOverview structure of the Linear Scenario\n
     ScenarioType
     LearningObjectives
     ContentAreas
     Start
-    TextBlock (Welcome to the course)
+    TextBlock (Welcome message to the scenario and proceedings)
     TextBlock/s (Information elaborated/ subject matter described in detail)
     MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. To give such information, that needs illustrated explaination.)
     QuestionBlock/s
@@ -211,23 +211,23 @@ prompt_linear = PromptTemplate(
 {{
     "ScenarioType": "Linear Scenario",
     "LearningObjectives": [
-        "This mandatory block is where you !Give users single or multiple learning objectives of the course!"
+        "This mandatory block is where you !Give users single or multiple learning objectives of the Linear Scenario!"
     ],
     "ContentAreas": [
-        "This mandatory block is where you !Give users Content Areas of the course single or multiple!"
+        "This mandatory block is where you !Give users Content Areas of the Linear Scenario single or multiple!"
     ],
     "Start": "Introduction to Renewable Energy",
     "Blocks": [
         {{
             "id": "1",
-            "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per course.) is where you !Begin by giving welcome message to the course. In further Text Blocks down the course you use these blocks to give detailed information on every aspect of various subject matters as asked.",
+            "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
             "type": "Text Block",
             "title": "",
             "description": "You write detailed descriptions here and try your best to educate the students on the subject matter, leaving no details untouched and undescribed"
         }},
         {{
             "id": "2",
-            "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per course. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the course's subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+            "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
             "type": "Media Block",
             "title": "",
             "mediaType": "360-image/Image (Preferred)/Video etc",
@@ -243,7 +243,7 @@ prompt_linear = PromptTemplate(
         }},
         {{
             "id": "3",
-            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand",
+            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
             "type": "Question Block",
             "questionText": "",
             "answers": [
@@ -273,7 +273,7 @@ prompt_linear = PromptTemplate(
             "TestBlocks": [
                 {{
                     "id": "6.1",
-                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand",
+                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
                     "type": "Question Block",
                     "questionText": "",
                     "answers": [
@@ -303,7 +303,7 @@ prompt_linear = PromptTemplate(
     Moreover, it is absolutley mandatory and necessary for you to generate a complete JSON response such that the JSON generated from you must enclose all the parenthesis at the end of your response
     and all it's parameters are also closed in the required syntax rules of JSON and all the blocks be included in it since we want our JSON
     to be compilable. 
-    Give concise, relevant, clear, and descriptive information as you are a course creator that has expertise 
+    Give concise, relevant, clear, and descriptive information as you are an education provider that has expertise 
     in molding asked information into the said block structure to teach the students.     
 
     NEGATIVE PROMPT: Responding outside the JSON format.   
@@ -1512,7 +1512,7 @@ prompt_gamified_json = PromptTemplate(
     Moreover, it is absolutley mandatory and necessary for you to generate a complete JSON response such that the JSON generated from you must enclose all the parenthesis at the end of your response
     and all it's parameters are also closed in the required syntax rules of JSON and all the blocks be included in it since we want our JSON
     to be compilable.  
-    Give concise, relevant, clear, and descriptive instructions as you are a Exit Game creator that has expertise 
+    Give concise, relevant, clear, and descriptive instructions as you are an Exit Game creator that has expertise 
     in molding asked information into the Gamified scenario structure.
 
     !!IMPORTANT NOTE REGARDING CREATIVITY: Know that you are creative to use as many or as little
@@ -1530,7 +1530,7 @@ prompt_branched_setup = PromptTemplate(
     template="""
     You are an educational bot which is designed to take the inputs of Parameters and using the information
     and context of these parameters, you create subtopics from the main subject of interest set by these parameters.
-    For each of the subtopic that contributes to the main subject, you create a detailed course of every possible information available
+    For each of the subtopic that contributes to the main subject, you create a detailed information-database of every possible information available
     using the Parameters.
     Input Paramters:
     'Human Input': {human_input};
@@ -1551,19 +1551,19 @@ prompt_branched_setup = PromptTemplate(
 prompt_branched = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
     template="""
-    You are an education course creator that creates engaging courses in a Micro Learning Format using
+    You are an educational bot creator that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You give explanations and provide detailed information such that you are teaching a student.
     !!!WARNING!!!
     Explain the material itself, Please provide detailed, informative explanations that align closely with the learning objectives and content areas provided. Each response should not just direct the learner but educate them by elaborating on the historical, technical, or practical details mentioned in the 'Input Documents'. Use simple and engaging language to enhance understanding and retention. Ensure that each explanation directly supports the learners' ability to meet the learning objectives by providing comprehensive insights into the topics discussed.
     !!!WARNING END!!!
 
     ***WHAT TO DO***
-    To accomplish course creation, YOU will:
+    To accomplish Micro Learning Scenario creation, YOU will:
 
-    1. Take the "Human Input" which represents the course content topic or description for which the course is to be formulated.
+    1. Take the "Human Input" which represents the subject content topic or description for which the Micro Learning Scenario is to be formulated.
     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
-    and create the course according to these very "Learning Objectives" and "Content Areas" specified.
-    3. Generate a JSON-formatted course structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
+    and create the Micro Learning Scenario according to these very "Learning Objectives" and "Content Areas" specified.
+    3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the Micro Learning Scenario content efficiently and logically.
     
     'Human Input': {human_input};
     'Input Documents': {response_of_bot};
@@ -1572,7 +1572,7 @@ prompt_branched = PromptTemplate(
     ***WHAT TO DO END***
 
     
-    The courses are built using blocks, each having its own parameters.
+    The Micro Learning Scenario are built using blocks, each having its own parameters.
     Block types include: 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Mandatory Overlay tags used as hotspots on the Media as text, video or audio
@@ -1586,8 +1586,8 @@ prompt_branched = PromptTemplate(
     'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Micro Learning Scenario: A type of course structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
-    used to give detailed explanations to users based on "Learning Objectives", "Content Areas" and "Input Documents". The SimpleBranchingBlock is used to divide the course into subtopics. Each subtopic having its own multiple or single TextBlocks, MediaBlocks and QuestionBlocks to train user. At the end of each branch, there will be FeedbackAndFeedforwardBlock and after it a TestBlocks Array is used that encompasses a single or series of QuestionBlock/s to test user knowledge of the Branch, followed by the JumpBlock at the very end to move the user to the SimpleBranchingBlock for being able to begin and access another branch to learn.
+    Micro Learning Scenario: A type of educational, information providing and testing structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
+    used to give detailed explanations to users based on "Learning Objectives", "Content Areas" and "Input Documents". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic having its own multiple or single TextBlocks, MediaBlocks and QuestionBlocks to train user. At the end of each branch, there will be FeedbackAndFeedforwardBlock and after it a TestBlocks Array is used that encompasses a single or series of QuestionBlock/s to test user knowledge of the Branch, followed by the JumpBlock at the very end to move the user to the SimpleBranchingBlock for being able to begin and access another branch to learn.
     ***
     ***YOU WILL BE REWARD IF:
     All the TextBlocks in the branches, has valid step-by-step and detailed information of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
@@ -1602,18 +1602,18 @@ prompt_branched = PromptTemplate(
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks are NOT used in complimentary manner to the information in TextBlocks.
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your course.
-    The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of course content needed to be covered in 'Input Documents'.
+    The Example below is just for your concept and do not absolutely produce the same example in your response.
+    The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered in 'Input Documents'.
     Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks and MediaBlocks to give best quality information to students. In each branch you are free to choose TextBlocks or MediaBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks and MediaBlocks.
 
-    \nOverview structure of the Course\n
+    \nOverview structure of the Micro Learning Scenario\n
     ScenarioType
     LearningObjectives
     ContentAreas
     Start
-    TextBlock (Welcome to the course)
+    TextBlock (Welcome message to the Micro Learning Scenario and proceedings)
     MediaBlock (To give visualized option to select learning path with pertinent overlayTags if any)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective)
     Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content),QuestionBlock/s or None,FeedbackAndFeedforwardBlock,TestBlocks Array encompassing a single or series of QuestionBlock/s,JumpBlock
@@ -1623,16 +1623,16 @@ prompt_branched = PromptTemplate(
 {{
     "ScenarioType": "Branched Scenario",
     "LearningObjectives": [
-        "This mandatory block is where you !Give users single or multiple learning objectives of the course!"
+        "This mandatory block is where you !Give users single or multiple learning objectives of the scenario!"
     ],
     "ContentAreas": [
-        "This mandatory block is where you !Give users Content Areas of the course single or multiple!"
+        "This mandatory block is where you !Give users Content Areas of the scenario single or multiple!"
     ],
-    "Start": "A course name here",
+    "Start": "A Micro Learning Scenario name here",
     "Blocks": [
         {{
             "id": "1",
-            "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in the course) is where you !Begin by giving welcome message to the course. In further Text Blocks down the course in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final course to be produced having an extremely detailed information in it.",
+            "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in the scenario) is where you !Begin by giving welcome message to the user. In further Text Blocks down the structure in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final Micro Learning Scenario to be produced having an extremely detailed information in it.",
             "type": "Text Block",
             "title": "",
             "description": "You write detailed descriptions here and try your best to educate the students on the subject matter, leaving no details untouched and undescribed."
@@ -1655,7 +1655,7 @@ prompt_branched = PromptTemplate(
         }},
         {{
             "id": "3",
-            "Purpose": "This mandatory block is where you !Divide the course content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches!",
+            "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches!",
             "type": "Branching Block (Simple Branching)",
             "title": "Choose Your Renewable Energy Path",
             "branches": {{
@@ -1696,7 +1696,7 @@ prompt_branched = PromptTemplate(
                         }},
                         {{
                             "id": "3.1.4",
-                            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the course content and importance at hand",
+                            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand",
                             "type": "Question Block",
                             "questionText": "",
                             "answers": [
@@ -1720,7 +1720,7 @@ prompt_branched = PromptTemplate(
                             "TestBlocks": [
                                 {{
                                     "id": "3.1.6.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand.",
+                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
                                     "type": "Question Block",
                                     "questionText": "",
                                     "answers": [
@@ -1770,7 +1770,7 @@ prompt_branched = PromptTemplate(
                             "TestBlocks": [
                                 {{
                                     "id": "3.2.6.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand.",
+                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
                                     "type": "Question Block",
                                     "questionText": "",
                                     "answers": [
@@ -1784,7 +1784,7 @@ prompt_branched = PromptTemplate(
                                 }},
                                 {{
                                     "id": "3.2.6.2",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand.",
+                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
                                     "type": "Question Block",
                                     "questionText": "",
                                     "answers": [
@@ -1843,7 +1843,7 @@ prompt_branched = PromptTemplate(
                             "TestBlocks": [
                                 {{
                                     "id": "3.3.4.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand.",
+                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
                                     "type": "Question Block",
                                     "questionText": "",
                                     "answers": [
@@ -1878,8 +1878,8 @@ prompt_branched = PromptTemplate(
     Moreover, it is absolutley mandatory and necessary for you to generate a complete JSON response such that the JSON generated from you must enclose all the parenthesis at the end of your response
     and all it's parameters are also closed in the required syntax rules of JSON and all the blocks be included in it since we want our JSON
     to be compilable. 
-    Give concise, relevant, clear, and descriptive explanations as you are a course creator that has expertise 
-    in molding asked information into the said block structure to teach students.     
+    Give concise, relevant, clear, and descriptive information as you are an education provider that has expertise 
+    in molding asked information into the said block structure to teach the students. 
 
     NEGATIVE PROMPT: Do not respond outside the JSON format.   
 
@@ -1921,18 +1921,18 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
 prompt_simulation_pedagogy = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
     template="""
-    You are an education course creator that creates engaging courses in a Simulation Format using
+    You are an educational bot creator that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
 
     ***WHAT TO DO***
-    To accomplish course creation, YOU will:
+    To accomplish Simulation Scenarios creation, YOU will:
 
-    1. Take the "Human Input" which represents the course content topic or description for which the course is to be formulated.
+    1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
-    and create the course according to these very "Learning Objectives" and "Content Areas" specified.
+    and create the scenario according to these very "Learning Objectives" and "Content Areas" specified.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
-    3. Generate a JSON-formatted course structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
+    3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
     
     'Human Input': {human_input};
     'Input Documents': {response_of_bot};
@@ -1941,7 +1941,7 @@ prompt_simulation_pedagogy = PromptTemplate(
     ***WHAT TO DO END***
 
     
-    The courses are built using blocks, each having its own parameters.
+    The Simulation Scenario are built using blocks, each having its own parameters.
     Block types include: 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
@@ -1956,13 +1956,13 @@ prompt_simulation_pedagogy = PromptTemplate(
     'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Simulation Pedagogy Scenario: A type of course structure which takes the student on a simulated story where 
+    Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is given choices based on which they face consequences. The simulation is based on the information in 
     "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)'/'Branching Block (Conditional Branching)'  
-    is used to divide the choices for the student to take. Then, for selected choices, branches the course into 
+    is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
     consequence branches. Each consequence branch can have its own branches that can divide further 
     to have their own branches, untill the simulation story ends covering all aspects of the information
-    for course creation. The start of the course has Briefing. The end of each of that branch that ends the simulation story and
+    for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
     give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
     There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)'/'Branching Block (Conditional Branching)' and this 
     branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
@@ -1990,18 +1990,18 @@ prompt_simulation_pedagogy = PromptTemplate(
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks are NOT used in complimentary manner to the information in TextBlocks.
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your course.
+    The Example below is just for your concept and do not absolutely produce the same example in your response.
     Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks and MediaBlocks to give best quality information to students. In each branch you are free to choose TextBlocks or MediaBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks and MediaBlocks.
 
-    \nOverview Sample structure of the Course\n
+    \nOverview Sample structure of the Simulation Scenario\n
     ScenarioType
     LearningObjectives
     ContentAreas
     Briefing
     Start
-    TextBlock (Welcome to the course)
+    TextBlock (Welcome message to the scenario)
     MediaBlock (To give visualized option to select simulation choices path)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
     Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its TextBlock/s or None,MediaBlock/s or None, Branching Block (Conditional Branching) / Branching Block (Simple Branching)
@@ -2025,7 +2025,7 @@ prompt_simulation_pedagogy = PromptTemplate(
         {{
             "id": "1",
             "type": "Briefing",
-            "title": "Welcome to the course",
+            "title": "Welcome message to the scenario",
             "description": "Formulate a comprehensive Briefing about what is coming in the simulation, why and purpose of all this. Guide the student with this Brieifing block."
         }},
         {{
@@ -2230,7 +2230,7 @@ prompt_simulation_pedagogy = PromptTemplate(
         {{
             "id": "1",
             "type": "Briefing",
-            "title": "Welcome to the course",
+            "title": "Welcome to the scenario and proceedings",
             "description": "Formulate a comprehensive Briefing about what is coming in the simulation, why and purpose of all this. Guide the student with this Brieifing block."
         }},
         {{
@@ -2450,7 +2450,7 @@ prompt_simulation_pedagogy = PromptTemplate(
     and all it's parameters are also closed in the required syntax rules of JSON and all the blocks be included in it since we want our JSON
     to be compilable. 
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
-    Give concise, relevant, clear, and descriptive instructions as you are a course creator that has expertise 
+    Give concise, relevant, clear, and descriptive instructions as you are an educational provider that has expertise 
     in molding asked information into the said block structure to teach and instruct students.     
 
     NEGATIVE PROMPT: Do not respond outside the JSON format.   
