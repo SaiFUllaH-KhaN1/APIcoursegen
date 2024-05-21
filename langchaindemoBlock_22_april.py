@@ -11,14 +11,21 @@ from langchain.prompts import BaseChatPromptTemplate, PromptTemplate
 from langchain.agents import initialize_agent, Tool, load_tools, AgentType
 from dotenv import load_dotenv
 from openai import OpenAI
+import base64
+from langchain.prompts import PromptTemplate
+from langchain.schema.messages import HumanMessage, SystemMessage
 from langchain.prompts import PromptTemplate, ChatPromptTemplate, HumanMessagePromptTemplate
 from PyPDF2 import PdfReader
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
 from reportlab.pdfgen import canvas 
 import matplotlib
 import os
+import shutil
+import json
+from langchain.schema.document import Document
 from flask import Flask, render_template, request, session, flash, get_flashed_messages
 from io import BytesIO
 from semantic_router import Route, RouteLayer
@@ -28,24 +35,108 @@ from langchain.chains import ConversationChain
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain.document_loaders import UnstructuredExcelLoader, UnstructuredWordDocumentLoader, UnstructuredPowerPointLoader, TextLoader
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import PromptTemplate
+from langchain_core.pydantic_v1 import BaseModel, Field
+from typing import List, Dict, Any
+from docx2python import docx2python
+import shutil
+import re
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
 
-def RAG(file_content,embeddings,file):
+def RAG(file_content,embeddings,file,session_var):
     print("file is:",file)
     
     filename = file.filename
+    print(filename)
     extension = filename.rsplit('.', 1)[1].lower()
+    filename_without_extension = filename.rsplit('.', 1)[0].lower()
+    output_path_byfile = f"./imagefolder_{session_var}/images_{session_var}_{filename_without_extension}"
+    if not os.path.exists(output_path_byfile):
+        os.makedirs(output_path_byfile) 
     print("Extension is:",extension)
     raw_text = ''
+    texts = '' # for pdf image path only!
+    text_merged = '' # for pdf image path only!
     if extension=="pdf":
-        doc_reader = PdfReader(file_content)
 
-        for i, page in enumerate(doc_reader.pages):
-            text = page.extract_text()
-            if text:
-                raw_text += text
+        # For Image processing
+        if f'extracted_content{session_var}.pdf' not in filename:
+            pdf_reader = PdfReader(file_content)
+            pgcount=0
+            for i, page in enumerate(pdf_reader.pages):
+                text_instant = page.extract_text()
+                pgcount += 1
+                imgcount = 1
+                text_instant = f"\nThe Content of PageNumber:{pgcount} of file name:{filename_without_extension} is:\n{text_instant}.\nEnd of PageNumber:{pgcount} of file name:{filename_without_extension}\n"
+                for image_file_object in page.images:
+                    # base_name = os.path.splitext(os.path.basename(image_file_object.name))[0]  # Get the base file name without extension
+                    extension = os.path.splitext(image_file_object.name)[1]  # Get the file extension
+                    image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}{extension}"  # Construct new file name with count
+                    image_path = os.path.join(output_path_byfile, image_name)  # Construct the full output path
+                    imgcount += 1
+                    with open(image_path, "wb") as fp:
+                        fp.write(image_file_object.data)
+                        
+                if text_instant:
+                    texts += text_instant
+            # at this point we got text and images extracted, stored in ./images folder, lets summarize images
+
+            # Get image summaries
+            # image_elements = []
+            # image_summaries = []
+            # image_path = output_path_byfile
+
+            # def encode_image(image_path):
+            #     with open(image_path, "rb") as f:
+            #         return base64.b64encode(f.read()).decode('utf-8')
+
+            # def summarize_image(encoded_image, basename):
+            #     prompt = [
+            #         SystemMessage(content="You are a bot that is good at analyzing images."),
+            #         HumanMessage(content=[
+            #             {
+            #                 "type": "text",
+            #                 "text": f"Describe the contents of this image. Tell what FileName, PageNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...'"
+            #             },
+            #             {
+            #                 "type": "image_url",
+            #                 "image_url": {
+            #                     "url": f"data:image/jpeg;base64,{encoded_image}"
+            #                 },
+            #             },
+            #         ])
+            #     ]
+            #     response = ChatOpenAI(model="gpt-4o", max_tokens=128).invoke(prompt)
+            #     return response.content
+
+            # for i in os.listdir(output_path_byfile):
+            #     if i.endswith(('.png', '.jpg', '.jpeg')):
+            #         image_path = os.path.join(output_path_byfile, i)
+            #         basename = os.path.basename(image_path) 
+            #         print(os.path.basename(image_path))
+            #         encoded_image = encode_image(image_path)
+            #         image_elements.append(encoded_image)
+            #         summary = summarize_image(encoded_image,basename)
+            #         image_summaries.append(summary)
+
+            # print("Image Summary is::",image_summaries)
+
+            # text_merged = texts + "\n" + str(image_summaries)
+            # print(text_merged) # Will be used onwards to create the faiss_index text database
+            
+        else:
+            print("We are processing for url or youtube's extracted_content.pdf")
+            # Without the Image Processing
+            doc_reader = PdfReader(file_content)
+
+            for i, page in enumerate(doc_reader.pages):
+                text = page.extract_text()
+
+                if text:
+                    raw_text += text
 
     elif extension=="csv":
         temp_path = os.path.join(filename)
@@ -66,13 +157,63 @@ def RAG(file_content,embeddings,file):
         os.remove(temp_path)
 
     elif extension=="docx":
-        temp_path = os.path.join(filename)
-        file.seek(0)
-        file.save(temp_path)
-        loader = UnstructuredWordDocumentLoader(temp_path)
-        data = loader.load()
-        raw_text = raw_text.join(document.page_content for document in data)
-        os.remove(temp_path)
+        # temp_path = os.path.join(filename)
+        # file.seek(0)
+        # file.save(temp_path)
+        # loader = UnstructuredWordDocumentLoader(temp_path)
+        # data = loader.load()
+        # raw_text = raw_text.join(document.page_content for document in data)
+        # os.remove(temp_path)
+        def extract_and_rename_images(docx_path, output_dir):
+            # Extract the contents of the DOCX file
+            content = docx2python(docx_path, extract_image=True,  image_folder=output_dir)
+            print(content)
+            # Flatten the list of lists containing the images
+            images = content.images
+            image_info = []
+            for image_name in images.keys():
+                base_name, ext = os.path.splitext(image_name)
+                print(f"Base Name: {base_name}, Extension: {ext}")
+                image_info.append((base_name, ext))
+            # Rename images based on their location
+            image_count = 1
+            i = 0
+            texts = ""
+            for section_index, section in enumerate(content.body):
+                for row_index, row in enumerate(section):
+                    for cell_index, cell in enumerate(row):
+                        for paragraph_index, paragraph in enumerate(cell):
+                            if '----media/' in paragraph:
+                                # Extract the image filename from the placeholder
+                                start_index = paragraph.find('----media/') + len('----media/')
+                                end_index = paragraph.find('----', start_index)
+                                image_filename = paragraph[start_index:end_index]
+
+                                # Construct the original image path
+                                original_image_path = os.path.join(output_dir, image_filename)
+                                # base_name = os.path.splitext(os.path.basename(image_file_object.name))[0]  # Get the base file name without extension
+                                # extension = os.path.splitext(image_file_object.name)[1]  # Get the file extension
+                                # Create a new image name based on its location
+                                base_name,ext = image_info[i]
+                                new_image_name = f"FileName {filename_without_extension} PageNumber Null ImageNumber {image_count}{ext}"
+                                new_image_path = os.path.join(output_dir, new_image_name)
+
+                                # Rename the image
+                                if os.path.exists(original_image_path):
+                                    shutil.move(original_image_path, new_image_path)
+
+                                    # Update the placeholder in the paragraph
+                                    new_placeholder = f"----media/ImageNumber:{image_count} PageNumber:Null of FileName:{filename_without_extension}----"
+                                    paragraph = paragraph.replace(f"----media/{image_filename}----", new_placeholder)
+                                    cell[paragraph_index] = paragraph
+                                    image_count += 1
+                                    i += 1
+                            # print(paragraph)
+                            texts += paragraph + "\n"
+            return texts
+
+        texts = extract_and_rename_images(file_content, output_path_byfile)
+        print("texts is:::",texts)
 
     elif extension=="pptx":
         temp_path = os.path.join(filename)
@@ -93,7 +234,6 @@ def RAG(file_content,embeddings,file):
         raw_text = raw_text.join(document.page_content for document in data)
         os.remove(temp_path)
 
-
     # chunking recursively without semantic search, this does not uses openai embeddings for chunking
     text_splitter = RecursiveCharacterTextSplitter(
     chunk_size = 1536,
@@ -103,9 +243,19 @@ def RAG(file_content,embeddings,file):
     # uses openai embeddings for chunking, costs time and money but gives good performances, not ideal for real-time
     # text_splitter = SemanticChunker(OpenAIEmbeddings(), breakpoint_threshold_type="percentile", number_of_chunks= 10000)
     print("Before Embeddings!")
-    texts = text_splitter.split_text(raw_text)
+    
     print("Now Doing Embeddings!")
-    docsearch = FAISS.from_texts(texts, embeddings)
+    
+    if texts:
+        print("Running Text Merged (Pdfs other than extractedcontent.pdf)")
+        text_splitter_formerged = RecursiveCharacterTextSplitter(chunk_size=1536, chunk_overlap=128, length_function=len,)
+        text = text_splitter_formerged.split_text(texts)
+        docsearch = FAISS.from_texts(text, embeddings)
+
+    elif raw_text:
+        raw_text_splitted = text_splitter.split_text(raw_text)
+        docsearch = FAISS.from_texts(raw_text_splitted, embeddings)
+
     print("docsearch made")
     return docsearch
 
@@ -142,16 +292,16 @@ promptSelector = PromptTemplate(
 prompt_linear = PromptTemplate(
     input_variables=["input_documents","human_input","content_areas","learning_obj"],
     template="""
-    You are an educational bot that creates engaging educational content in a Linear Scenario Format using
+    You are an education course creator that creates engaging courses in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
     ***WHAT TO DO***
-    To accomplish educational Linear Scenario creation, YOU will:
+    To accomplish course creation, YOU will:
 
-    1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
+    1. Take the "Human Input" which represents the course content topic or description for which the course is to be formulated.
     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
-    and create the scenario according to these very "Learning Objectives" and "Content Areas" specified.
-    3. Generate a JSON-formatted in Linear Scenario structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
+    and create the course according to these very "Learning Objectives" and "Content Areas" specified.
+    3. Generate a JSON-formatted course structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
     
     'Human Input': {human_input};
     'Input Documents': {input_documents};
@@ -160,7 +310,7 @@ prompt_linear = PromptTemplate(
     ***WHAT TO DO END***
 
     
-    The Linear Scenarios are built using blocks, each having its own parameters.
+    The courses are built using blocks, each having its own parameters.
     Block types include: 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
@@ -172,7 +322,7 @@ prompt_linear = PromptTemplate(
     'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Linear Scenario: A type of educational structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
+    Linear Scenario: A type of course structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
     used to give detailed information to users based on "Learning Objectives", "Content Areas" and "Input Documents". The use of TextBlocks and MediaBlocks actually act as segregating various aspects of the subject matter, by giving information of the various concepts of subject matter in detailed and dedicated way. For each of the concept or aspect of the subject, a detailed information, illustrative elaboration (if needed) and Question are asked for testing. At the end of covering all aspects of the subject, there will be FeedbackAndFeedforwardBlock and SelfAssessmentTextBlock followed by the TestBlocks having series or single QuestionBlock/s to test user's knowledge and GoalBlock for scoring users.
     ***
     ***YOU WILL BE REWARD IF:
@@ -188,19 +338,19 @@ prompt_linear = PromptTemplate(
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks are NOT used in complimentary manner to the information in TextBlocks.
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your response.
+    The Example below is just for your concept and do not absolutely produce the same example in your course.
     Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks and MediaBlocks, and are tested via QuestionBlocks.
 
-    \nOverview structure of the Linear Scenario\n
+    \nOverview structure of the Course\n
     ScenarioType
     LearningObjectives
     ContentAreas
     Start
-    TextBlock (Welcome message to the scenario and proceedings)
+    TextBlock (Welcome to the course)
     TextBlock/s (Information elaborated/ subject matter described in detail)
-    MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. To give such information, that needs illustrated explaination.)
+    MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. If no relevant image data with FileName, PageNumber, and ImageNumber is found in the 'Input Documents', provide a recommendation for a media type (such as Image, 360-Image, or Video) based on the subject matter discussed in the text. Alternatively if a relevant Image information is present in the 'Input Documents' with the FileName, PageNumber and ImageNumber then use refer that Image and use that image information in the Media Block (Example format is "In this Media Block, you might want to use FileName: ..., PageNumber: ..., ImageNumber: ... because ..."). If that Image description is not related to the subject matter than you should avoid it and suggest other Media types and guide the user how to shoot these Media and what information they should have in them!)
     QuestionBlock/s
     FeedbackAndFeedforwardBlock
     SelfAssessmentTextBlock
@@ -211,30 +361,30 @@ prompt_linear = PromptTemplate(
 {{
     "ScenarioType": "Linear Scenario",
     "LearningObjectives": [
-        "This mandatory block is where you !Give users single or multiple learning objectives of the Linear Scenario!"
+        "This mandatory block is where you !Give users single or multiple learning objectives of the course!"
     ],
     "ContentAreas": [
-        "This mandatory block is where you !Give users Content Areas of the Linear Scenario single or multiple!"
+        "This mandatory block is where you !Give users Content Areas of the course single or multiple!"
     ],
     "Start": "Introduction to Renewable Energy",
     "Blocks": [
         {{
             "id": "1",
-            "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
+            "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per course.) is where you !Begin by giving welcome message to the course. In further Text Blocks down the course you use these blocks to give detailed information on every aspect of various subject matters as asked.",
             "type": "Text Block",
             "title": "",
             "description": "You write detailed descriptions here and try your best to educate the students on the subject matter, leaving no details untouched and undescribed"
         }},
         {{
             "id": "2",
-            "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+            "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per course. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the course's subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
             "type": "Media Block",
             "title": "",
-            "mediaType": "360-image/Image (Preferred)/Video etc",
+            "mediaType": "360-image/Image (Preferred)/Video etc.",
             "description": "",
             "overlayTags": [
                 {{
-                    "textTag/imageTag/videoTag": "Explain and teach the students, using these overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these medias, what information are they elaborating based on the information present in Text Blocks."
+                    "textTag/imageTag/videoTag": "Explain and teach the students, using one or mutliple overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these overlayTags if they are othen than text. Elaborate the overlayTags based on the information present in Text Blocks."
                 }},
                 {{
                     "textTag/imageTag/videoTag": ""
@@ -243,7 +393,7 @@ prompt_linear = PromptTemplate(
         }},
         {{
             "id": "3",
-            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
+            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand",
             "type": "Question Block",
             "questionText": "",
             "answers": [
@@ -273,7 +423,7 @@ prompt_linear = PromptTemplate(
             "TestBlocks": [
                 {{
                     "id": "6.1",
-                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
+                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the course content and importance at hand",
                     "type": "Question Block",
                     "questionText": "",
                     "answers": [
@@ -303,15 +453,13 @@ prompt_linear = PromptTemplate(
     Moreover, it is absolutley mandatory and necessary for you to generate a complete JSON response such that the JSON generated from you must enclose all the parenthesis at the end of your response
     and all it's parameters are also closed in the required syntax rules of JSON and all the blocks be included in it since we want our JSON
     to be compilable. 
-    Give concise, relevant, clear, and descriptive information as you are an education provider that has expertise 
+    Give concise, relevant, clear, and descriptive information as you are a course creator that has expertise 
     in molding asked information into the said block structure to teach the students.     
 
     NEGATIVE PROMPT: Responding outside the JSON format.   
 
     Chatbot (Tone of a teacher teaching student in great detail):"""
 )
-
-
 
 
 # prompt_gamified_original = PromptTemplate(
@@ -740,7 +888,9 @@ prompt_gamified_setup = PromptTemplate(
     Show the answer to human's input step-by-step such that you are teaching a student. 
     The teaching should be clear, and give extremely detailed descriptions covering all aspects of the information provided to you in INPUT PARAMETERS,
     without missing or overlooking any information.
-    
+    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and citing the image or images in format of "FileName: ..., PageNumber: ..., ImageNumber: ... and Description ..." .  
+    Else if the images are NOT relevant then you have the option to not use those images.
+
     INPUT PARAMETERS:
     'Human Input': {human_input};
     'Input Documents': {input_documents};
@@ -1181,7 +1331,7 @@ prompt_gamified_json = PromptTemplate(
     Start
     TextBlock (Welcome to the Exit Game)
     TextBlock/s (Information elaborated/ subject matter described in detail)
-    MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. To give such information, that needs illustrated explaination.)
+    MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. If no relevant image data with FileName, PageNumber, and ImageNumber is found in the 'Input Documents', provide a recommendation for a media type (such as Image, 360-Image, or Video) based on the subject matter discussed in the text. Alternatively if a relevant Image information is present in the 'Input Documents' with the FileName, PageNumber and ImageNumber then use refer that Image and use that image information in the Media Block. Example format is "In this Media Block, you might want to use FileName: ..., PageNumber: ..., ImageNumber: ... because ...". If that Image description is not related to the subject matter than you should avoid it and suggest other Media types and guide the user how to shoot these Media and what information they should have in them!)
     QuestionBlock/s
     FeedbackAndFeedforwardBlock
     SelfAssessmentTextBlock
@@ -1217,7 +1367,7 @@ prompt_gamified_json = PromptTemplate(
             "description": "...",
             "overlayTags": [
                 {{
-                    "textTag/imageTag/videoTag": "Explain and teach the students, using these overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these medias, what information are they elaborating based on the information present in Text Blocks. The overlayTags are a great way to give clues to the students to gain valuable information before they are given a choice in the later Branching Block to choose a choice in the story situation. There they will have knowledge gained by these overlayTags at various points in the various branches to help them select the correct choice"
+                    "textTag/imageTag/videoTag": "Explain and teach the students, using one or mutliple overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these overlayTags if they are othen than text. Elaborate the overlayTags based on the information present in Text Blocks. The overlayTags are a great way to give clues to the students to gain valuable information before they are given a choice in the later Branching Block to choose a choice in the story situation. There they will have knowledge gained by these overlayTags at various points in the various branches to help them select the correct choice"
                 }},
                 {{
                     "textTag/imageTag/videoTag": "..."
@@ -1512,7 +1662,7 @@ prompt_gamified_json = PromptTemplate(
     Moreover, it is absolutley mandatory and necessary for you to generate a complete JSON response such that the JSON generated from you must enclose all the parenthesis at the end of your response
     and all it's parameters are also closed in the required syntax rules of JSON and all the blocks be included in it since we want our JSON
     to be compilable.  
-    Give concise, relevant, clear, and descriptive instructions as you are an Exit Game creator that has expertise 
+    Give concise, relevant, clear, and descriptive instructions as you are a Exit Game creator that has expertise 
     in molding asked information into the Gamified scenario structure.
 
     !!IMPORTANT NOTE REGARDING CREATIVITY: Know that you are creative to use as many or as little
@@ -1532,6 +1682,9 @@ prompt_branched_setup = PromptTemplate(
     and context of these parameters, you create subtopics from the main subject of interest set by these parameters.
     For each of the subtopic that contributes to the main subject, you create a detailed information-database of every possible information available
     using the Parameters.
+    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and citing the image or images in format of "FileName: ..., PageNumber: ..., ImageNumber: ... and Description ..." .  
+    Else if the images are NOT relevant then you have the option to not use those images.
+
     Input Paramters:
     'Human Input': {human_input};
     'Input Documents': {input_documents};
@@ -1614,7 +1767,7 @@ prompt_branched = PromptTemplate(
     ContentAreas
     Start
     TextBlock (Welcome message to the Micro Learning Scenario and proceedings)
-    MediaBlock (To give visualized option to select learning path with pertinent overlayTags if any)
+    MediaBlock (To give visualized option to select learning path with pertinent overlayTags if any. See if you can use the already available images to you to give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. If no relevant image data with FileName, PageNumber, and ImageNumber is found in the 'Input Documents', provide a recommendation for a media type (such as Image, 360-Image, or Video) based on the subject matter discussed in the text. Alternatively, if a relevant Image information is present in the 'Input Documents' with the FileName, PageNumber and ImageNumber then use refer that Image and use that image information in the Media Block. Format of citing to the available image or images is "In this Media Block, you might want to use FileName: ..., PageNumber: ..., ImageNumber: ... because ...". If that Image description is not related to the subject matter than you should avoid it and suggest other Media types and guide the user how to shoot these Media and what information they should have in them!)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective)
     Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content),QuestionBlock/s or None,FeedbackAndFeedforwardBlock,TestBlocks Array encompassing a single or series of QuestionBlock/s,JumpBlock
     \nEnd of Overview structure\n
@@ -1646,7 +1799,7 @@ prompt_branched = PromptTemplate(
             "description": "",
             "overlayTags": [
                 {{
-                    "textTag/imageTag/videoTag": "Explain and teach the students, using these overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these medias, what information are they elaborating based on the information present in Text Blocks."
+                    "textTag/imageTag/videoTag": "Explain and teach the students, using one or mutliple overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these overlayTags if they are othen than text. Elaborate the overlayTags based on the information present in Text Blocks. Preference is for using different overlayTags for each of the subtopic."
                 }},
                 {{
                     "textTag/imageTag/videoTag": ""
@@ -1900,6 +2053,10 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
     taken by the student. The consequence can lead to further choices, ultimately to the end of the story.
     Henceforth, this kind of story will have multiple endings based on user choices. Some choices can even merge 
     with the same conclusion at the end or at the intermediate stages of the story.
+    
+    Optionally, if there are images available in the 'Input Documents' which are relevant to the story and can compliment to it's explanation you should add that image information into your explanation of the story as well and citing the image or images in format of "FileName: ..., PageNumber: ..., ImageNumber: ... and Description ..." .  
+    Else if the images are NOT relevant then you have the option to not use those images.
+    
     Input Paramters:
     'Human Input': {human_input};
     'Input Documents': {input_documents};
@@ -2002,7 +2159,7 @@ prompt_simulation_pedagogy = PromptTemplate(
     Briefing
     Start
     TextBlock (Welcome message to the scenario)
-    MediaBlock (To give visualized option to select simulation choices path)
+    MediaBlock (To give visualized option to select simulation choices path. If no relevant image data with FileName, PageNumber, and ImageNumber is found in the 'Input Documents', provide a recommendation for a media type (such as Image, 360-Image, or Video) based on the subject matter discussed in the text. Alternatively, if a relevant Image information is present in the 'Input Documents' with the FileName, PageNumber and ImageNumber then use refer that Image and use that image information in the Media Block. Example format is "In this Media Block, you might want to use FileName: ..., PageNumber: ..., ImageNumber: ... because ...". If that Image description is not related to the subject matter than you should avoid it and suggest other Media types and guide the user how to shoot these Media and what information they should have in them!)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
     Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its TextBlock/s or None,MediaBlock/s or None, Branching Block (Conditional Branching) / Branching Block (Simple Branching)
     Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its TextBlock/s or None,MediaBlock/s or None, Goal Block, FeedbackAndFeedforwardBlock, Debriefing, Reflection
@@ -2037,7 +2194,7 @@ prompt_simulation_pedagogy = PromptTemplate(
             "description": "Visualize the emergency scenario on the 5th floor with escape options outlined through interactive tags.",
             "overlayTags": [
                 {{
-                    "textTag/imageTag/videoTag e.g.textTag": "Explain and teach the students using this tag the different aspects of the information for this media block. Also give instructions here of how to shoot these medias e.g.Main Elevator: An arrow pointing towards the elevator with a caption: 'To the Ground Floor'."
+                    "textTag/imageTag/videoTag e.g.textTag": "Explain and teach the students, using one or mutliple overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these overlayTags if they are othen than text. Elaborate the overlayTags based on the information present in Text Blocks. e.g.Main Elevator: An arrow pointing towards the elevator with a caption: 'To the Ground Floor'."
                 }},
                 {{
                     "textTag/imageTag/videoTag e.g.textTag": "e.g.Staircase: An arrow pointing left with a caption: 'To the Lower Floors'."
@@ -2242,7 +2399,7 @@ prompt_simulation_pedagogy = PromptTemplate(
             "description": "Visualize the emergency scenario on the 5th floor with escape options outlined through interactive tags.",
             "overlayTags": [
                 {{
-                    "textTag/imageTag/videoTag e.g.textTag": "Explain and teach the students using this tag the different aspects of the information for this media block. Also give instructions here of how to shoot these medias e.g.Main Elevator: An arrow pointing towards the elevator with a caption: 'To the Ground Floor'."
+                    "textTag/imageTag/videoTag e.g.textTag": "Explain and teach the students, using one or mutliple overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these overlayTags if they are othen than text. Elaborate the overlayTags based on the information present in Text Blocks. e.g.Main Elevator: An arrow pointing towards the elevator with a caption: 'To the Ground Floor'."
                 }},
                 {{
                     "textTag/imageTag/videoTag e.g.textTag": "e.g.Staircase: An arrow pointing left with a caption: 'To the Lower Floors'."
@@ -2508,12 +2665,89 @@ def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm):
 
     return chain, docs_main, query
 
-def RE_SIMILARITY_SEARCH(query, docsearch):
+def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
     print("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
     docs = docsearch.similarity_search(query, k=3)
-    docs_main = " ".join([d.page_content for d in docs])
+    PageNumberList = []
+    for relevant_doc in docs:
+        relevant_doc = relevant_doc.page_content
+        print(relevant_doc)
 
-    return docs_main
+        pattern_this_doc = r'----media/ImageNumber:(\d+) PageNumber:Null of FileName:(.+)----'
+        matches_this_doc = re.findall(pattern_this_doc, relevant_doc)
+        
+        pattern_end = r'End of PageNumber:(\d+) of file name:(.+)\n'
+        pattern_this_page = r'The Content of PageNumber:(\d+) of file name:(.+) is:\n'
+        # Find all matches for "End of PageNumber:"
+        matches_end = re.findall(pattern_end, relevant_doc)
+
+        # Find all matches for "[This Page is PageNumber:]"
+        matches_this_page = re.findall(pattern_this_page, relevant_doc)
+
+        # Combine the matches
+        for num in matches_this_page + matches_end + matches_this_doc:
+            PageNumberList.append(num)
+
+        PageNumberList = list(set(PageNumberList))
+        print("PageNumberList",PageNumberList)
+
+    image_elements = []
+    image_summaries = []
+
+    def encode_image(image_path):
+        with open(image_path, "rb") as f:
+            return base64.b64encode(f.read()).decode('utf-8')
+
+    def summarize_image(encoded_image, basename):
+        prompt = [
+            SystemMessage(content="You are a bot that is good at analyzing images."),
+            HumanMessage(content=[
+                {
+                    "type": "text",
+                    "text": f"Describe the contents of this image. Tell what FileName, PageNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...'"
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{encoded_image}"
+                    },
+                },
+            ])
+        ]
+        response = ChatOpenAI(model="gpt-4o", max_tokens=128, temperature=0).invoke(prompt)
+        return response.content
+
+    for root, dirs, files in os.walk(output_path):
+        for i in files:
+            if i.endswith(('.png', '.jpg', '.jpeg')):
+                for page_number, file in PageNumberList:
+                    if f"FileName {file} PageNumber {page_number}" in i:
+                        image_path = os.path.join(root, i)
+                        basename = os.path.basename(image_path)
+                        print(os.path.basename(image_path))
+                        encoded_image = encode_image(image_path)
+                        image_elements.append(encoded_image)
+                        summary = summarize_image(encoded_image,basename)
+                        image_summaries.append(summary)
+                    elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
+                        image_path = os.path.join(root, i)
+                        basename = os.path.basename(image_path)
+                        print(os.path.basename(image_path))
+                        encoded_image = encode_image(image_path)
+                        image_elements.append(encoded_image)
+                        summary = summarize_image(encoded_image,basename)
+                        image_summaries.append(summary)
+
+    print("image_summaries::",image_summaries)
+
+    combined_list = []
+    for doc, string in zip(docs, image_summaries):
+        combined_content = f"{doc.page_content} \n\n [Useful Image/s:: {string}]"
+        combined_list.append(combined_content)
+
+    # docs_main = " ".join([d.page_content for d in docs])
+
+    return combined_list
 
 
 def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
@@ -2543,7 +2777,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
     elif scenario == "simulation":
         print("SCENARIO ====prompt_simulation_pedagogy",scenario)
         # summarized first, then response
-        llm_setup = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+        llm_setup = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.3)
         chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
         response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
         print("Response 1 is::",response1['text'])
@@ -2641,7 +2875,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
             response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
 
         elif selected.name == 'simulation':
-            llm_setup = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+            llm_setup = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.3)
             chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
             response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
             print("Response 1 is::",response1['text'])
@@ -2689,3 +2923,86 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
  
     return response
 
+def ANSWER_IMG(response_text, llm,db_text):
+    # prompt_template_img =PromptTemplate( 
+    # input_variables=["response_text","context"],
+    # template="""
+    # Provided the context, look at the Images that are mentioned in the 'response_text': {response_text}. Provide a brief summary of those 
+    # images stored in the 'context': {context}.
+    # Format of Reply (The number of Images and their description may vary, depends on what is instructed in the
+    # 'response_text'. If only one image is mentioned in the 'response_text', then you should include Image1 only. If there are 2 or more images then your reply should
+    # also have same images as mentioned in the 'response_text'!):
+    # {{"Image1": "file_name_..._page_..._image_...",
+    # "Description1": "...",
+    # "Image2": "file_name_..._page_..._image_...",
+    # "Description2": "..."
+    # and so on
+    # }}
+    # Warning: Include the complete schema of name defined. The complete schema of name includes
+    # "file_name_..._page_..._image_..."
+    # Take great care for the underscores. They are to be used exactly as defined. Also take 
+    # extreme caution at the file_name since the file might be having its own - and _ which is not to be
+    # tampered with in any way and should remain exactly the same!
+    # [WARNING: The ... presents page number as int and image number as int. But, for the file_name_ it represents
+    # as the file name itself which may have its own dashes or underscores or brackets. Whatever the file name
+    # you found in the 'context', make sure you use the same name. ]
+    # Answer():
+    # """
+    # )
+    
+    relevant_doc = db_text.similarity_search(response_text)
+    print("relevant_doc",relevant_doc)
+
+
+    # chain = LLMChain(prompt=prompt_template_img,llm=llm)
+    # img_response = chain.run({"response_text": response_text, "context": relevant_doc})
+    # print("img_response is::",img_response)
+###
+
+    class image_loc(BaseModel):
+        FileName: str = Field(description="Exact File name of the image as mentioned in the 'Context'. ")
+        PageNumber: str = Field(description="page number of the image. 'Null' if not available.")
+        ImageNumber: int = Field(description="image number of the image")
+        Description: str = Field(description="Description detail of the image")
+
+    class image(BaseModel):
+        Image: List[image_loc] = Field(description="image_loc")
+
+    parser = JsonOutputParser(pydantic_object=image)
+
+    prompt = PromptTemplate(
+    template="""
+    Search for those image or images only which is/are cited in the 'Response Text' for which 
+    File Name, page number and image number is mentioned in the Media Blocks of the 'Response Text' strictly.
+    You then get the summary or description of these images
+    from the 'Context' data provided to you.
+    \n{format_instructions}\n'Response Text': {response_text}\n'Context': {context}""",
+    input_variables=["response_text","context"],
+    partial_variables={"format_instructions": parser.get_format_instructions()},
+    )
+
+    chain = prompt | llm | parser
+
+    img_response = chain.invoke({"response_text": response_text, "context": relevant_doc})
+    print("img_response is::",img_response)
+    format_instructions = parser.get_format_instructions()
+    print("format_instructions",format_instructions)
+    print("response_text",response_text)
+
+###
+    def create_structured_json(img_response):
+        result = {}
+        for index, img in enumerate(img_response['Image'], start=1):
+            # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+            image_key = f"FileName {img['FileName']} PageNumber {img['PageNumber']} ImageNumber {img['ImageNumber']}"
+            # Add the image key and description to the result dictionary
+            result[f"Image{index}"] = image_key
+            result[f"Description{index}"] = img['Description']
+        
+        return json.dumps(result, indent=4)
+
+    # Using the function to transform the data
+    structured_response = create_structured_json(img_response)
+    print(structured_response)
+
+    return str(structured_response)
