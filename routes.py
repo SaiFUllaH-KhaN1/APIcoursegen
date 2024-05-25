@@ -144,7 +144,7 @@ def process_data():
                     pdf_bytes.seek(0)
                     # with open('extracted_content.pdf', 'wb') as pdf_file:
                     #     pdf_file.write(pdf_bytes.getvalue())
-                    pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf')
+                    pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf') #still not unique for the same session so either url or youtube url processed at the same time
                     pdf_file_wrapper.seek(0)
                     f.append(pdf_file_wrapper)
                 
@@ -285,7 +285,7 @@ def find_images():
         if response_text:
             try:
                 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-                llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.1, streaming=True, verbose= True)
+                llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0, streaming=True, verbose= True)
                 db_text = FAISS.load_local(f"faiss_index_{user_id_cache}", embeddings,allow_dangerous_deserialization=True)
 
                 img_response = LCD.ANSWER_IMG(response_text, llm,db_text)
