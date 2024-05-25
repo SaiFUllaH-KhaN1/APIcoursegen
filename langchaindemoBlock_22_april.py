@@ -38,8 +38,10 @@ from langchain.document_loaders import UnstructuredExcelLoader, UnstructuredWord
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from docx2python import docx2python
+from pptx import Presentation
+from pptx.enum.shapes import MSO_SHAPE_TYPE
 import shutil
 import re
 
@@ -59,7 +61,6 @@ def RAG(file_content,embeddings,file,session_var):
     print("Extension is:",extension)
     raw_text = ''
     texts = '' # for pdf image path only!
-    text_merged = '' # for pdf image path only!
     if extension=="pdf":
 
         # For Image processing
@@ -139,7 +140,7 @@ def RAG(file_content,embeddings,file,session_var):
                     raw_text += text
 
     elif extension=="csv":
-        temp_path = os.path.join(filename)
+        temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         file.save(temp_path)
         loader = CSVLoader(file_path=temp_path)
@@ -148,7 +149,7 @@ def RAG(file_content,embeddings,file,session_var):
         os.remove(temp_path)
 
     elif extension=="xlsx" or extension=="xls":
-        temp_path = os.path.join(filename)
+        temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         file.save(temp_path)
         loader = UnstructuredExcelLoader(temp_path)
@@ -216,17 +217,89 @@ def RAG(file_content,embeddings,file,session_var):
         print("texts is:::",texts)
 
     elif extension=="pptx":
-        temp_path = os.path.join(filename)
+        # temp_path = os.path.join(filename)
+        # file.seek(0)
+        # file.save(temp_path)
+        # loader = UnstructuredPowerPointLoader(temp_path)
+        # data = loader.load()
+        # raw_text = raw_text.join(document.page_content for document in data)
+        # os.remove(temp_path)
+        def iter_picture_shapes(prs):
+            slide_number = 1
+            # image_number = 1
+            # img_names = []
+            for slide in prs.slides:
+                image_number = 1
+                print("slide",slide)
+                for shape in slide.shapes:
+                    if shape.shape_type == MSO_SHAPE_TYPE.GROUP:
+                        for s in shape.shapes:
+                            if s.shape_type == MSO_SHAPE_TYPE.PICTURE:
+                                image = shape.image
+                                print("image_number",image_number)
+                                image_filename = f'FileName {filename_without_extension} SlideNumber {slide_number} ImageNumber {image_number}.{image.ext}'
+                                # img = f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
+                                image_number += 1
+                                print(image_filename)
+                                # img_names.append(img)
+
+                                image_path = os.path.join(output_path_byfile, image_filename)
+                                with open(image_path, "wb") as fp:
+                                    fp.write(image.blob)
+
+                    if shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
+                        image = shape.image
+                        print("image_number",image_number)
+                        image_filename = f'FileName {filename_without_extension} SlideNumber {slide_number} ImageNumber {image_number}.{image.ext}'
+                        # img = f'SlideNumber:{slide_number} of FileName:{filename_without_extension} with ImageNumber:{image_number}\n'
+                        image_number += 1
+                        print(image_filename)
+                        # img_names.append(img)
+                        image_path = os.path.join(output_path_byfile, image_filename)
+                        with open(image_path, "wb") as fp:
+                            fp.write(image.blob)
+                slide_number += 1  
+
+
+        iter_picture_shapes(Presentation(file_content))
+
+        # langchain unstructuredworddoc method
+        temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         file.save(temp_path)
-        loader = UnstructuredPowerPointLoader(temp_path)
+        loader = UnstructuredPowerPointLoader(temp_path,mode='elements')
         data = loader.load()
-        raw_text = raw_text.join(document.page_content for document in data)
+        print("data",data)
+
+        # Step 1: Collect content for each page number
+        page_contents = {}
+        for doc in data:
+            # Access the metadata and page content correctly
+            page_number = doc.metadata.get('page_number')
+            if page_number is not None:
+                if page_number not in page_contents:
+                    page_contents[page_number] = []
+                page_contents[page_number].append(doc.page_content)
+
+        # Step 2: Combine the content for each page number
+        # combined_page_contents = [{'page_number': page,'filename': filename, 'page_content': ' '.join(contents)} for page, contents in page_contents.items()]
+
+        combined_page_contents = [
+            {
+                'SlideNumber': page,
+                'FileName': filename_without_extension,
+                'page_content': f"{' '.join(contents)} End of SlideNumber:{page} with Filename:{filename_without_extension} ----"
+            }
+            for page, contents in page_contents.items()
+        ]
+
+        texts = str(combined_page_contents)
+        print(texts)
         os.remove(temp_path)
 
     elif extension=="txt":
         print(f"TExt file name is ::{filename}")
-        temp_path = os.path.join(filename)
+        temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         file.save(temp_path)
         loader = TextLoader(temp_path)
@@ -2673,6 +2746,15 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
         relevant_doc = relevant_doc.page_content
         print(relevant_doc)
 
+        pattern_this_pptx = r"'SlideNumber': (\d+), 'FileName': '(.+?)'"        # f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
+        # Find all matches for "[This Page is PageNumber:]"
+        matches_this_pptx = re.findall(pattern_this_pptx, relevant_doc)
+
+        pattern_this_end_pptx = r"End of SlideNumber:(\d+) with Filename:(.+?) ----"        # f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
+        # Find all matches for "[This Page is PageNumber:]"
+        matches_this_end_pptx = re.findall(pattern_this_end_pptx, relevant_doc)
+
+
         pattern_this_doc = r'----media/ImageNumber:(\d+) PageNumber:Null of FileName:(.+)----'
         matches_this_doc = re.findall(pattern_this_doc, relevant_doc)
         
@@ -2685,7 +2767,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
         matches_this_page = re.findall(pattern_this_page, relevant_doc)
 
         # Combine the matches
-        for num in matches_this_page + matches_end + matches_this_doc:
+        for num in matches_this_page + matches_end + matches_this_doc + matches_this_pptx + matches_this_end_pptx:
             PageNumberList.append(num)
 
         PageNumberList = list(set(PageNumberList))
@@ -2704,7 +2786,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
             HumanMessage(content=[
                 {
                     "type": "text",
-                    "text": f"Describe the contents of this image. Tell what FileName, PageNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...'"
+                    "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...'"
                 },
                 {
                     "type": "image_url",
@@ -2730,6 +2812,14 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
                         summary = summarize_image(encoded_image,basename)
                         image_summaries.append(summary)
                     elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
+                        image_path = os.path.join(root, i)
+                        basename = os.path.basename(image_path)
+                        print(os.path.basename(image_path))
+                        encoded_image = encode_image(image_path)
+                        image_elements.append(encoded_image)
+                        summary = summarize_image(encoded_image,basename)
+                        image_summaries.append(summary)
+                    elif f"FileName {file} SlideNumber {page_number}" in i:
                         image_path = os.path.join(root, i)
                         basename = os.path.basename(image_path)
                         print(os.path.basename(image_path))
@@ -2961,7 +3051,8 @@ def ANSWER_IMG(response_text, llm,db_text):
 
     class image_loc(BaseModel):
         FileName: str = Field(description="Exact File name of the image as mentioned in the 'Context'. ")
-        PageNumber: str = Field(description="page number of the image. 'Null' if not available.")
+        PageNumber: Optional[str] = Field(description="If available, write page number of the image. 'Null' if not available.")
+        SlideNumber: Optional[str] = Field(description="If available, slide number of the image.")
         ImageNumber: int = Field(description="image number of the image")
         Description: str = Field(description="Description detail of the image")
 
@@ -2972,10 +3063,9 @@ def ANSWER_IMG(response_text, llm,db_text):
 
     prompt = PromptTemplate(
     template="""
-    Search for those image or images only which is/are cited in the 'Response Text' for which 
-    File Name, page number and image number is mentioned in the Media Blocks of the 'Response Text' strictly.
-    You then get the summary or description of these images
-    from the 'Context' data provided to you.
+    Search for those image or images only, whose descriptions in the Media Blocks of the 'Response Text' matches
+    with the descriptions in the 'Context' data. Output only those image's or images' description from the 
+    'Context' data. 
     \n{format_instructions}\n'Response Text': {response_text}\n'Context': {context}""",
     input_variables=["response_text","context"],
     partial_variables={"format_instructions": parser.get_format_instructions()},
@@ -2993,11 +3083,19 @@ def ANSWER_IMG(response_text, llm,db_text):
     def create_structured_json(img_response):
         result = {}
         for index, img in enumerate(img_response['Image'], start=1):
-            # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
-            image_key = f"FileName {img['FileName']} PageNumber {img['PageNumber']} ImageNumber {img['ImageNumber']}"
-            # Add the image key and description to the result dictionary
-            result[f"Image{index}"] = image_key
-            result[f"Description{index}"] = img['Description']
+            print("img",img)
+            if img['PageNumber'] is not None:
+                # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+                image_key = f"FileName {img['FileName']} PageNumber {img['PageNumber']} ImageNumber {img['ImageNumber']}"
+                # Add the image key and description to the result dictionary
+                result[f"Image{index}"] = image_key
+                result[f"Description{index}"] = img['Description']
+            else:
+                # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+                image_key = f"FileName {img['FileName']} SlideNumber {img['SlideNumber']} ImageNumber {img['ImageNumber']}"
+                # Add the image key and description to the result dictionary
+                result[f"Image{index}"] = image_key
+                result[f"Description{index}"] = img['Description']
         
         return json.dumps(result, indent=4)
 
