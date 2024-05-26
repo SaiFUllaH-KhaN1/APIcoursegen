@@ -2739,8 +2739,9 @@ def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm):
     return chain, docs_main, query
 
 def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
-    print("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
+    print("RE_SIMILARITY_SEARCH Initiated!")
     docs = docsearch.similarity_search(query, k=3)
+    print("docs from RE_SIMILARITY_SEARCH",docs)
     PageNumberList = []
     for relevant_doc in docs:
         relevant_doc = relevant_doc.page_content
@@ -2786,7 +2787,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
             HumanMessage(content=[
                 {
                     "type": "text",
-                    "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...'"
+                    "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!"
                 },
                 {
                     "type": "image_url",
@@ -2830,14 +2831,10 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
 
     print("image_summaries::",image_summaries)
 
-    combined_list = []
-    for doc, string in zip(docs, image_summaries):
-        combined_content = f"{doc.page_content} \n\n [Useful Image/s:: {string}]"
-        combined_list.append(combined_content)
+    image_summaries_string = "\n".join(image_summaries) #convert list to string to add in the langchain Document data type
+    docs.append(Document(page_content=f"Useful Image/s for all the above content::\n{image_summaries_string}"))
 
-    # docs_main = " ".join([d.page_content for d in docs])
-
-    return combined_list
+    return docs
 
 
 def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
@@ -3013,7 +3010,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm):
  
     return response
 
-def ANSWER_IMG(response_text, llm,db_text):
+def ANSWER_IMG(response_text, llm,relevant_doc):
     # prompt_template_img =PromptTemplate( 
     # input_variables=["response_text","context"],
     # template="""
@@ -3039,9 +3036,7 @@ def ANSWER_IMG(response_text, llm,db_text):
     # Answer():
     # """
     # )
-    
-    relevant_doc = db_text.similarity_search(response_text)
-    print("relevant_doc",relevant_doc)
+
 
 
     # chain = LLMChain(prompt=prompt_template_img,llm=llm)
@@ -3050,8 +3045,8 @@ def ANSWER_IMG(response_text, llm,db_text):
 ###
 
     class image_loc(BaseModel):
-        FileName: str = Field(description="Exact File name of the image as mentioned in the 'Context'. ")
-        PageNumber: Optional[str] = Field(description="If available, write page number of the image. 'Null' if not available.")
+        FileName: str = Field(description="Exact, absolutely Unchanged File name of the image as mentioned in the 'Context'. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others.")
+        PageNumber: Optional[str] = Field(description="If available, write page number of the image. 'Null' if not available. !!!DO NOT USE PageNumber if SlideNumber is available.!!!")
         SlideNumber: Optional[str] = Field(description="If available, slide number of the image.")
         ImageNumber: int = Field(description="image number of the image")
         Description: str = Field(description="Description detail of the image")
