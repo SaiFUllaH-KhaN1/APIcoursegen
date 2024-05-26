@@ -261,10 +261,12 @@ def generate_course():
                 docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path)
                 print("2nd Docs_main:",docs_main)
                 print("combined_prompt",combined_prompt)
-
+            # doc_main has all the unfiltered meta image summaries appended with and not in vectorstore, however...
+            # ... it has been list of images are chosen to be atleast reletive to the topic at hand
                 llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.1, streaming=True, verbose= True)
                 response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm)
                 
+                cache.set(f"docs_main_{user_id_cache}", docs_main, timeout=0)
                 cache.set(f"response_text_{user_id_cache}", response['text'], timeout=0)
                 return Response(response['text'], mimetype='text/plain')
             except Exception as e:
@@ -281,14 +283,13 @@ def find_images():
     if request.method == 'POST':
         user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
         response_text = cache.get(f"response_text_{user_id_cache}")
+        docs_main = cache.get(f"docs_main_{user_id_cache}")
         output_path = f"./imagefolder_{user_id_cache}"
-        if response_text:
+        if response_text and docs_main:
             try:
-                embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
                 llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0, streaming=True, verbose= True)
-                db_text = FAISS.load_local(f"faiss_index_{user_id_cache}", embeddings,allow_dangerous_deserialization=True)
 
-                img_response = LCD.ANSWER_IMG(response_text, llm,db_text)
+                img_response = LCD.ANSWER_IMG(response_text, llm,docs_main)
 
                 json_img_response = json.loads(img_response)
                 print("json_img_response is::",json_img_response)
@@ -341,6 +342,7 @@ def find_images():
             print("None")
         
         return Response("Nothing", mimetype='text/plain')
+
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
