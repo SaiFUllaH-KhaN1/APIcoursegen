@@ -42,6 +42,7 @@ from typing import List, Dict, Any, Optional
 from docx2python import docx2python
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE_TYPE
+from PIL import Image
 import shutil
 import re
 
@@ -2778,8 +2779,34 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path):
     image_summaries = []
 
     def encode_image(image_path):
-        with open(image_path, "rb") as f:
-            return base64.b64encode(f.read()).decode('utf-8')
+        basename = os.path.basename(image_path)
+        with Image.open(image_path) as img:
+            width, height = img.size
+            print(f"{basename} size is {width},{height}")
+            if width*height > 262144:
+                # Resize the image
+                img = img.resize((512, 512))
+                # Save the resized image to a temporary file
+                basenama = os.path.basename(image_path)
+                extensiona = basenama.rsplit('.', 1)[1].lower()
+
+                temp_patha = image_path + f"_temp_img.{extensiona}"
+                img.save(temp_patha)
+            
+                # Encode the resized image
+                with open(temp_patha, "rb") as f:
+                    encoded_image = base64.b64encode(f.read()).decode('utf-8')
+
+                # Remove the temporary file
+                os.remove(temp_patha)
+            else:
+                print(f"{basename} is less than 262144 having {width}, {height}")
+                with open(image_path, "rb") as f:
+                    encoded_image = base64.b64encode(f.read()).decode('utf-8')
+
+            return encoded_image
+
+
 
     def summarize_image(encoded_image, basename):
         prompt = [
