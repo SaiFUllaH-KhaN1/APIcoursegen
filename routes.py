@@ -33,12 +33,15 @@ from flask_basicauth import BasicAuth
 import base64
 import time
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+import google.generativeai as genai
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 # Set the API key for OpenAI
 openai.api_key = os.getenv('OPENAI_API_KEY')
+api_key = os.getenv('GOOGLE_API_KEY')
+genai.configure(api_key=api_key)
 client = OpenAI()
 
 import io
