@@ -32,6 +32,7 @@ from langchain_community.document_loaders import YoutubeLoader
 from flask_basicauth import BasicAuth
 import base64
 import time
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -114,11 +115,12 @@ def process_data():
 
     if request.method == 'POST':
         session_var = session['user_id']
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        
+        # getting requests from frontend
+        model_type = request.args.get('model', 'openai') # to set default model
+        model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
         prompt = request.form.get("prompt")
-
         url_doc = request.form.get('url_doc')
-
         f = request.files.getlist('file')
         print("There is a file")
 
@@ -180,6 +182,11 @@ def process_data():
             # file_content = [io.BytesIO(fs.read()) for fs in f]
             print("LCD initiated!")
             try:
+                if model_type == 'gemini':
+                    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                else:
+                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+                print(f"Using embeddings of {embeddings}")
                 docsearch = LCD.RAG(file_content,embeddings,file,session_var)
             except Exception as e:
                 docsearch = None
@@ -210,6 +217,8 @@ def decide():
     if request.method == 'POST':
         scenario = request.form.get('scenario')
         print("Scenario type:",scenario)
+        model_type = request.args.get('model', 'openai') # to set default model
+        model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
 
         if scenario:
             user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
@@ -219,12 +228,19 @@ def decide():
             print("Prompt loaded!:",prompt)
 
             try:
-                llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0, streaming=True, verbose= True)
-                embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+                if model_type == "gemini":
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                else:
+                    llm = ChatOpenAI(model=model_name, temperature=0, streaming=True, verbose= True)
+                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+                print(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
+
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id_cache}",embeddings,allow_dangerous_deserialization=True)
                 
-                chain, docs_main, query = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm)
-                print("1st Docs_main:",docs_main)
+                chain, docs_main, query = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type)
+                print("1st Docs_main of /Decide route:",docs_main)
                 response_LO_CA = chain({"input_documents": docs_main,"human_input": query})
 
                 cache.set(f"scenario_{user_id_cache}", scenario,timeout=0)
@@ -243,6 +259,8 @@ def generate_course():
     if request.method == 'POST':
         learning_obj = request.form.get("learning_obj")
         content_areas = request.form.get("content_areas")
+        model_type = request.args.get('model', 'openai') # to set default model
+        model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
 
         if learning_obj and content_areas:
             user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
@@ -254,21 +272,27 @@ def generate_course():
             print("scenario loaded!:",scenario)
 
             try:
-                embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+                if model_type == 'gemini':
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1, max_output_tokens=8000)
+                    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                else:
+                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+                    llm = ChatOpenAI(model=model_name, temperature=0.1, streaming=True, verbose= True)
+
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id_cache}",embeddings,allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
                 output_path = f"./imagefolder_{user_id_cache}"
-                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path)
+                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type)
                 print("2nd Docs_main:",docs_main)
                 print("combined_prompt",combined_prompt)
             # doc_main has all the unfiltered meta image summaries appended with and not in vectorstore, however...
             # ... it has been list of images are chosen to be atleast reletive to the topic at hand
-                llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.1, streaming=True, verbose= True)
-                response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm)
+                
+                response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name)
                 
                 cache.set(f"docs_main_{user_id_cache}", docs_main, timeout=0)
-                cache.set(f"response_text_{user_id_cache}", response['text'], timeout=0)
-                return Response(response['text'], mimetype='text/plain')
+                cache.set(f"response_text_{user_id_cache}", response, timeout=0)
+                return Response(response, mimetype='text/plain')
             except Exception as e:
                 print(f"An error occurred: {e}")
         
@@ -281,13 +305,19 @@ def generate_course():
 @app.route("/find_images", methods=["GET", "POST"])
 def find_images():
     if request.method == 'POST':
+        model_type = request.args.get('model', 'openai') # default select openai
+        model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
+        
         user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
         response_text = cache.get(f"response_text_{user_id_cache}")
         docs_main = cache.get(f"docs_main_{user_id_cache}")
         output_path = f"./imagefolder_{user_id_cache}"
         if response_text and docs_main:
             try:
-                llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0, streaming=True, verbose= True)
+                if model_type == 'gemini':
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                else:
+                    llm = ChatOpenAI(model=model_name, temperature=0, streaming=True, verbose= True)
 
                 img_response = LCD.ANSWER_IMG(response_text, llm,docs_main)
 
@@ -342,7 +372,6 @@ def find_images():
             print("None")
         
         return Response("Nothing", mimetype='text/plain')
-
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
