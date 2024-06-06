@@ -72,7 +72,7 @@ app.config['CACHE_THRESHOLD'] = 1000
 cache = Cache(app)
 
 ### MANUAL DELETION OF all folders starting with faiss_index_ ###
-def delete_faiss_indexes():
+def delete_indexes():
     """
     Deletes directories starting with 'faiss_index_' in the root directory of the app.
     """
@@ -80,15 +80,18 @@ def delete_faiss_indexes():
     for item in os.listdir(base_path):
         dir_path = os.path.join(base_path, item)
         if os.path.isdir(dir_path) and item.startswith("faiss_index_"):
-            print(f"Deleting directory: {dir_path}")
+            print(f"Deleting Faiss directory: {dir_path}")
+            shutil.rmtree(dir_path)
+        elif os.path.isdir(dir_path) and item.startswith("imagefolder_"):
+            print(f"Deleting image directory: {dir_path}")
             shutil.rmtree(dir_path)
 
 @app.route("/cron", methods=['POST'])
 @basic_auth.required
 def cron():
-    delete_faiss_indexes()
+    delete_indexes()
     print("Deleted FAISS index")
-    return "FAISS index directories deleted", 200
+    return "FAISS and imagefolder index directories deleted", 200
 ###     ###     ### 
 
 ### SCHEDULED DELETION OF folders of imagefolder_ and faiss_index_ ###
