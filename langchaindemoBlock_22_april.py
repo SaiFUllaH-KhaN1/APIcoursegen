@@ -419,14 +419,13 @@ prompt_linear = PromptTemplate(
     ScenarioType
     LearningObjectives
     ContentAreas
-    Start
     TextBlock (Welcome message to the scenario and proceedings)
     TextBlock/s (Information elaborated/ subject matter described in detail)
     MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. Firstly, see if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to.)
     FeedbackAndFeedforwardBlock
     SelfAssessmentTextBlock
-    TestBlocks => QuestionBlock/s, GoalBlock
+    GoalBlock
     \nEnd of Overview structure\n
 
     Problem to overcome: 
@@ -435,91 +434,103 @@ prompt_linear = PromptTemplate(
 
     \n\nEXAMPLE START: LINEAR SCENARIO:\n\n
 {{
-    "ScenarioType": "Linear Scenario",
-    "LearningObjectives": [
-        "This mandatory block is where you !Give users single or multiple learning objectives of the Linear Scenario!"
+  "LinearScenario": {{
+    "nodes": [
+            {{
+                "id": "B1",
+                "type": "TextBlock",
+                "title": "Learning_Objectives",
+                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+            }},
+            {{
+                "id": "B2",
+                "type": "TextBlock",
+                "title": "Content_Areas",
+                "description": "1. (Insert Text Here) and so on"
+            }},
+      {{
+        "id": "B3",
+        "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
+        "type": "TextBlock",
+        "title": "(Insert Text Here)",
+        "description": "(Insert Text Here)"
+      }},
+      {{
+        "id": "B4",
+        "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+        "type": "MediaBlock",
+        "title": "(Insert Text Here)",
+        "mediaType": "Image(Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+        "description": "(Insert Text Here)",
+        "overlayTags": [
+          "(Insert Text Here)",
+          "(Insert Text Here)"
+        ]
+      }},
+      {{
+        "id": "B5",
+        "type": "TextBlock",
+        "title": "Feedback_And_Feedforward",
+        "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+      }},
+      {{
+        "id": "B6",
+        "type": "TextBlock",
+        "title": "Self_Assessment",
+        "description": "Self Assessment=(Insert Text Here)"
+      }},
+      {{
+        "id": "QB1",
+        "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
+        "type": "QuestionBlock",
+        "questionText": "(Insert Text Here)",
+        "answers": [
+          "(Insert Text Here)",
+          "(Insert Text Here)",
+          "(Insert Text Here)",
+          "(Insert Text Here)"
+        ],
+        "correctAnswer": "(Insert Text Here)",
+        "wrongAnswerMessage": "(Insert Text Here)"
+      }},
+      {{
+        "id": "GB",
+        "type": "GoalBlock",
+        "title": "Congratulations!",
+        "score": 3
+      }}
     ],
-    "ContentAreas": [
-        "This mandatory block is where you !Give users Content Areas of the Linear Scenario single or multiple!"
-    ],
-    "Start": "Introduction to Renewable Energy",
-    "Blocks": [
-        {{
-            "id": "1",
-            "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
-            "type": "Text Block",
-            "title": "",
-            "description": "You write detailed descriptions here and try your best to educate the students on the subject matter, leaving no details untouched and undescribed"
-        }},
-        {{
-            "id": "2",
-            "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
-            "type": "Media Block",
-            "title": "",
-            "mediaType": "360-image/Image (Preferred)/Video etc",
-            "description": "",
-            "overlayTags": [
-                {{
-                    "textTag/imageTag/videoTag": "Explain and teach the students, using these overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these medias, what information are they elaborating based on the information present in Text Blocks."
-                }},
-                {{
-                    "textTag/imageTag/videoTag": ""
-                }}
-            ]
-        }},
-        {{
-            "id": "3",
-            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
-            "type": "Question Block",
-            "questionText": "",
-            "answers": [
-                "",
-                "",
-                "",
-                ""
-            ],
-            "correctAnswer": "",
-            "wrongAnswerMessage": ""
-        }},
-        {{
-            "id": "4",
-            "Purpose": "Mandatory",
-            "type": "FeedbackAndFeedforwardBlock",
-            "Feedback": "",
-            "Feedforward": ""
-        }},
-        {{
-            "id": "5",
-            "Purpose": "Mandatory",
-            "type": "SelfAssessmentTextBlock",
-            "description": ""
-        }},
-        {{
-            "id": "6",
-            "TestBlocks": [
-                {{
-                    "id": "6.1",
-                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
-                    "type": "Question Block",
-                    "questionText": "",
-                    "answers": [
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "correctAnswer": "",
-                    "wrongAnswerMessage": ""
-                }},
-                {{
-                    "id": "6.2",
-                    "type": "Goal Block",
-                    "title": "A messsage of confirmation",
-                    "score": "Integer number here based on number of questions"
-                }}
-            ]
-        }}
+    "edges": [
+      {{
+        "source": "B1",
+        "target": "B2"
+      }},
+      {{
+        "source": "B2",
+        "target": "B3"
+      }},
+      {{
+        "source": "B3",
+        "target": "B4"
+      }},
+      {{
+        "source": "B4",
+        "target": "B5"
+      }},
+      {{
+        "source": "B5",
+        "target": "B6"
+      }},
+      {{
+        "source": "B6",
+        "target": "QB1"
+      }},
+      {{
+        "source": "QB1",
+        "target": "GB"
+      }},
     ]
+  }}
 }}
     \n\nEND OF EXAMPLE\n\n
 
@@ -572,14 +583,13 @@ prompt_linear_retry = PromptTemplate(
     ScenarioType
     LearningObjectives
     ContentAreas
-    Start
     TextBlock (Welcome message to the scenario and proceedings)
     TextBlock/s (Information elaborated/ subject matter described in detail)
-    MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in a particular Text Block/s. Generate MediaBlock/s to complement the information provided in Text Block/s. Firstly, see if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. Firstly, see if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to.)
     FeedbackAndFeedforwardBlock
     SelfAssessmentTextBlock
-    TestBlocks => QuestionBlock/s, GoalBlock
+    GoalBlock
     \nEnd of Overview structure\n
       
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
@@ -647,14 +657,13 @@ prompt_linear_simplify = PromptTemplate(
     ScenarioType
     LearningObjectives
     ContentAreas
-    Start
     TextBlock (Welcome message to the scenario and proceedings)
     TextBlock/s (Information elaborated/ subject matter described in detail)
     MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. Firstly, see if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to.)
     FeedbackAndFeedforwardBlock
     SelfAssessmentTextBlock
-    TestBlocks => QuestionBlock/s, GoalBlock
+    GoalBlock
     \nEnd of Overview structure\n
 
     Problem to overcome: 
@@ -663,91 +672,103 @@ prompt_linear_simplify = PromptTemplate(
 
     \n\nEXAMPLE START: LINEAR SCENARIO:\n\n
 {{
-    "ScenarioType": "Linear Scenario",
-    "LearningObjectives": [
-        "This mandatory block is where you !Give users single or multiple learning objectives of the Linear Scenario!"
+  "LinearScenario": {{
+    "nodes": [
+            {{
+                "id": "B1",
+                "type": "TextBlock",
+                "title": "Learning_Objectives",
+                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+            }},
+            {{
+                "id": "B2",
+                "type": "TextBlock",
+                "title": "Content_Areas",
+                "description": "1. (Insert Text Here) and so on"
+            }},
+      {{
+        "id": "B3",
+        "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
+        "type": "TextBlock",
+        "title": "(Insert Text Here)",
+        "description": "(Insert Text Here)"
+      }},
+      {{
+        "id": "B4",
+        "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+        "type": "MediaBlock",
+        "title": "(Insert Text Here)",
+        "mediaType": "Image(Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+        "description": "(Insert Text Here)",
+        "overlayTags": [
+          "(Insert Text Here)",
+          "(Insert Text Here)"
+        ]
+      }},
+      {{
+        "id": "B5",
+        "type": "TextBlock",
+        "title": "Feedback_And_Feedforward",
+        "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+      }},
+      {{
+        "id": "B6",
+        "type": "TextBlock",
+        "title": "Self_Assessment",
+        "description": "Self Assessment=(Insert Text Here)"
+      }},
+      {{
+        "id": "QB1",
+        "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
+        "type": "QuestionBlock",
+        "questionText": "(Insert Text Here)",
+        "answers": [
+          "(Insert Text Here)",
+          "(Insert Text Here)",
+          "(Insert Text Here)",
+          "(Insert Text Here)"
+        ],
+        "correctAnswer": "(Insert Text Here)",
+        "wrongAnswerMessage": "(Insert Text Here)"
+      }},
+      {{
+        "id": "GB",
+        "type": "GoalBlock",
+        "title": "Congratulations!",
+        "score": 3
+      }}
     ],
-    "ContentAreas": [
-        "This mandatory block is where you !Give users Content Areas of the Linear Scenario single or multiple!"
-    ],
-    "Start": "Introduction to Renewable Energy",
-    "Blocks": [
-        {{
-            "id": "1",
-            "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
-            "type": "Text Block",
-            "title": "",
-            "description": "You write detailed descriptions here and try your best to educate the students on the subject matter, leaving no details untouched and undescribed"
-        }},
-        {{
-            "id": "2",
-            "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
-            "type": "Media Block",
-            "title": "",
-            "mediaType": "360-image/Image (Preferred)/Video etc",
-            "description": "",
-            "overlayTags": [
-                {{
-                    "textTag/imageTag/videoTag": "Explain and teach the students, using these overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these medias, what information are they elaborating based on the information present in Text Blocks."
-                }},
-                {{
-                    "textTag/imageTag/videoTag": ""
-                }}
-            ]
-        }},
-        {{
-            "id": "3",
-            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
-            "type": "Question Block",
-            "questionText": "",
-            "answers": [
-                "",
-                "",
-                "",
-                ""
-            ],
-            "correctAnswer": "",
-            "wrongAnswerMessage": ""
-        }},
-        {{
-            "id": "4",
-            "Purpose": "Mandatory",
-            "type": "FeedbackAndFeedforwardBlock",
-            "Feedback": "",
-            "Feedforward": ""
-        }},
-        {{
-            "id": "5",
-            "Purpose": "Mandatory",
-            "type": "SelfAssessmentTextBlock",
-            "description": ""
-        }},
-        {{
-            "id": "6",
-            "TestBlocks": [
-                {{
-                    "id": "6.1",
-                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
-                    "type": "Question Block",
-                    "questionText": "",
-                    "answers": [
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "correctAnswer": "",
-                    "wrongAnswerMessage": ""
-                }},
-                {{
-                    "id": "6.2",
-                    "type": "Goal Block",
-                    "title": "A messsage of confirmation",
-                    "score": "Integer number here based on number of questions"
-                }}
-            ]
-        }}
+    "edges": [
+      {{
+        "source": "B1",
+        "target": "B2"
+      }},
+      {{
+        "source": "B2",
+        "target": "B3"
+      }},
+      {{
+        "source": "B3",
+        "target": "B4"
+      }},
+      {{
+        "source": "B4",
+        "target": "B5"
+      }},
+      {{
+        "source": "B5",
+        "target": "B6"
+      }},
+      {{
+        "source": "B6",
+        "target": "QB1"
+      }},
+      {{
+        "source": "QB1",
+        "target": "GB"
+      }},
     ]
+  }}
 }}
     \n\nEND OF EXAMPLE\n\n
 
@@ -2606,263 +2627,235 @@ prompt_branched = PromptTemplate(
     ScenarioType
     LearningObjectives
     ContentAreas
-    Start
     TextBlock (Welcome message to the Micro Learning Scenario and proceedings)
     MediaBlock/s (To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. Used also to compliment the Text Blocks for illustrated experience by placing Media Block/s after those TextBlock/s that might need visuall elaboration. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective)
-    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content),QuestionBlock/s or None,FeedbackAndFeedforwardBlock,TestBlocks Array encompassing a single or series of QuestionBlock/s,JumpBlock
+    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, FeedbackAndFeedforwardBlock, a single or series of QuestionBlock/s, GoalBlock, JumpBlock
     \nEnd of Overview structure\n
 
     \nSAMPLE EXAMPLE START: MICRO LEARNING SCENARIO:\n
 {{
-    "ScenarioType": "Branched Scenario",
-    "LearningObjectives": [
-        "This mandatory block is where you !Give users single or multiple learning objectives of the scenario!"
-    ],
-    "ContentAreas": [
-        "This mandatory block is where you !Give users Content Areas of the scenario single or multiple!"
-    ],
-    "Start": "A Micro Learning Scenario name here",
-    "Blocks": [
-        {{
-            "id": "1",
-            "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in the scenario) is where you !Begin by giving welcome message to the user. In further Text Blocks down the structure in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final Micro Learning Scenario to be produced having an extremely detailed information in it.",
-            "type": "Text Block",
-            "title": "",
-            "description": "You write detailed descriptions here and try your best to educate the students on the subject matter, leaving no details untouched and undescribed."
-        }},
-        {{
-            "id": "2",
-            "Purpose": "This block (can be used single or multiple times or None  depends on the content to be covered in the Text Blocks relevant to this Media Block) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
-            "type": "Media Block",
-            "title": "",
-            "mediaType": "360-image/Image (Preferred)/Video etc",
-            "description": "",
-            "overlayTags": [
-                {{
-                    "textTag/imageTag/videoTag": "Explain and teach the students, using one or mutliple overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these overlayTags if they are othen than text. Elaborate the overlayTags based on the information present in Text Blocks. Preference is for using different overlayTags for each of the subtopic."
-                }},
-                {{
-                    "textTag/imageTag/videoTag": ""
-                }}
-            ]
-        }},
-        {{
-            "id": "3",
-            "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches!",
-            "type": "Branching Block (Simple Branching)",
-            "title": "Choose Your Renewable Energy Path",
-            "branches": {{
-                "3.1": "A Micro learning subtopic based on each Learning Objective",
-                "3.2": "A Micro learning subtopic based on each Learning Objective",
-                "3.3": "and so on..."
+    "BranchedScenario": {{
+        "nodes": [
+            {{
+                "id": "B1",
+                "type": "TextBlock",
+                "title": "Learning_Objectives",
+                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
             }},
-            "blocks": [
-                {{
-                    "id": "3.1",
-                    "blocks": [
-                        {{
-                            "id": "3.1.1",
-                            "LearningObjective": [
-                                "This mandatory block is where you !Write the Learning objective for this specific branch!"
-                            ]
-                        }},
-                        {{
-                            "id": "3.1.2",
-                            "type": "Text Block",
-                            "title": "",
-                            "description": ""
-                        }},
-                        {{
-                            "id": "3.1.3",
-                            "type": "Media Block",
-                            "title": "",
-                            "mediaType": "360-image/Image (Preferred)/Video etc",
-                            "description": "",
-                            "overlayTags": [
-                                {{
-                                    "textTag/imageTag/videoTag": ""
-                                }},
-                                {{
-                                    "textTag/imageTag/videoTag": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.1.4",
-                            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand",
-                            "type": "Question Block",
-                            "questionText": "",
-                            "answers": [
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "correctAnswer": "",
-                            "wrongAnswerMessage": ""
-                        }},
-                        {{
-                            "id": "3.1.5",
-                            "Purpose": "Mandatory",
-                            "type": "FeedbackAndFeedforwardBlock",
-                            "Feedback": "",
-                            "Feedforward": ""
-                        }},
-                        {{
-                            "id": "3.1.6",
-                            "TestBlocks": [
-                                {{
-                                    "id": "3.1.6.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
-                                    "type": "Question Block",
-                                    "questionText": "",
-                                    "answers": [
-                                        "",
-                                        "",
-                                        "",
-                                        ""
-                                    ],
-                                    "correctAnswer": "",
-                                    "wrongAnswerMessage": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.1.7",
-                            "Purpose": "Mandatory",
-                            "type": "JumpBlock",
-                            "title": "Return to Topic Selection",
-                            "proceedToBlock": "3"
-                        }}
-                    ]
-                }},
-                {{
-                    "id": "3.2",
-                    "blocks": [
-                        {{
-                            "id": "3.2.1",
-                            "LearningObjective": [
-                                "This mandatory block is where you !Write the Learning objective for this specific branch!"
-                            ]
-                        }},
-                        {{
-                            "id": "3.1.2",
-                            "type": "Text Block",
-                            "title": "",
-                            "description": ""
-                        }},
-                        {{
-                            "id": "3.2.5",
-                            "Purpose": "Mandatory",
-                            "type": "FeedbackAndFeedforwardBlock",
-                            "Feedback": "",
-                            "Feedforward": ""
-                        }},
-                        {{
-                            "id": "3.2.6",
-                            "TestBlocks": [
-                                {{
-                                    "id": "3.2.6.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
-                                    "type": "Question Block",
-                                    "questionText": "",
-                                    "answers": [
-                                        "",
-                                        "",
-                                        "",
-                                        ""
-                                    ],
-                                    "correctAnswer": "",
-                                    "wrongAnswerMessage": ""
-                                }},
-                                {{
-                                    "id": "3.2.6.2",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
-                                    "type": "Question Block",
-                                    "questionText": "",
-                                    "answers": [
-                                        "",
-                                        "",
-                                        "",
-                                        ""
-                                    ],
-                                    "correctAnswer": "",
-                                    "wrongAnswerMessage": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.2.7",
-                            "Purpose": "Mandatory",
-                            "type": "JumpBlock",
-                            "title": "Return to Topic Selection",
-                            "proceedToBlock": "3"
-                        }}
-                    ]
-                }},
-                {{
-                    "id": "3.3 and so on branches depending upon learning objectives",
-                    "blocks": [
-                        {{
-                            "id": "3.3.1",
-                            "LearningObjective": [
-                                "This mandatory block is where you !Write the Learning objective for this specific branch!"
-                            ]
-                        }},
-                        {{
-                            "id": "3.3.2",
-                            "type": "Media Block",
-                            "title": "",
-                            "mediaType": "360-image/Image (Preferred)/Video etc",
-                            "description": "",
-                            "overlayTags": [
-                                {{
-                                    "textTag/imageTag/videoTag": ""
-                                }},
-                                {{
-                                    "textTag/imageTag/videoTag": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.3.3",
-                            "Purpose": "Mandatory",
-                            "type": "FeedbackAndFeedforwardBlock",
-                            "Feedback": "",
-                            "Feedforward": ""
-                        }},
-                        {{
-                            "id": "3.3.4",
-                            "TestBlocks": [
-                                {{
-                                    "id": "3.3.4.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
-                                    "type": "Question Block",
-                                    "questionText": "",
-                                    "answers": [
-                                        "",
-                                        "",
-                                        "",
-                                        ""
-                                    ],
-                                    "correctAnswer": "",
-                                    "wrongAnswerMessage": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.3.5",
-                            "Purpose": "Mandatory",
-                            "type": "JumpBlock",
-                            "title": "Return to Topic Selection",
-                            "proceedToBlock": "3"
-                        }}
-                    ]
-                }}
-            ]
-        }}
-    ]
+            {{
+                "id": "B2",
+                "type": "TextBlock",
+                "title": "Content_Areas",
+                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+            }},
+            {{
+                "id": "B3",
+                "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in the scenario) is where you !Begin by giving welcome message to the user. In further Text Blocks down the structure in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final Micro Learning Scenario to be produced having an extremely detailed information in it.",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "B4",
+                "Purpose": "This block (can be used single or multiple times or None  depends on the content to be covered in the Text Blocks relevant to this Media Block) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "B5",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches!",
+                "type": "SimpleBranchingBlock",
+                "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "Br1": "(Insert Text Here)"
+                    }},
+                    {{
+                        "port": "2",
+                        "Br2": "(Insert Text Here)"
+                    }}
+                ]
+            }},
+            {{
+                "id": "Br1_B1",
+                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
+                "type": "TextBlock",
+                "title": "Learning_Objective",
+                "description": "1. (Insert Text Here)"
+            }},
+            {{
+                "id": "Br1_B2",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "Br1_B3",
+                "type": "TextBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "Br1_QB1",
+                "type": "QuestionBlock",
+                "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},
+            {{
+                "id": "Br1_GB",
+                "type": "GoalBlock",
+                "title": "Congratulations!",
+                "score": 3
+            }},
+            {{
+                "id": "Br1_JB",
+                "Purpose": "Mandatory at the end of each Branch",
+                "type": "JumpBlock",
+                "title": "Return to Topic Selection",
+                "proceedToBlock": "B5"
+            }},
+            {{
+                "id": "Br2_B1",
+                "type": "TextBlock",
+                "title": "Learning_Objective",
+                "description": "2. (Insert Text Here)"
+            }},
+            {{
+                "id": "Br2_B2",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "Br2_B3",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image, 360-image, Video, Audio",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "Br2_B4",
+                "type": "TextBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "Br2_QB1",
+                "type": "QuestionBlock",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},
+            {{
+                "id": "Br2_GB",
+                "type": "GoalBlock",
+                "title": "Congratulations!",
+                "score": 3
+            }},
+            {{
+                "id": "Br2_JB",
+                "type": "JumpBlock",
+                "title": "Return to Topic Selection",
+                "proceedToBlock": "B5"
+            }}
+        ],                       
+        "edges": [
+            {{
+                "source": "B1",
+                "target": "B2"
+            }},
+            {{
+                "source": "B2",
+                "target": "B3"
+            }},
+            {{
+                "source": "B3",
+                "target": "B4"
+            }},
+            {{
+                "source": "B4",
+                "target": "B5"
+            }},
+            {{
+                "source": "B5",
+                "target": "Br1_B1",
+                "sourceport": "1"
+            }},
+            {{
+                "source": "Br1_B1",
+                "target": "Br1_B2"
+            }},
+            {{
+                "source": "Br1_B2",
+                "target": "Br1_B3"
+            }},
+            {{
+                "source": "Br1_B3",
+                "target": "Br1_QB1"
+            }},
+            {{
+                "source": "Br1_QB1",
+                "target": "Br1_GB"
+            }},
+            {{
+                "source": "Br1_GB",
+                "target": "Br1_JB"
+            }},
+            {{
+                "source": "Br1_JB",
+                "target": "B5"
+            }},
+            {{
+                "source": "B5",
+                "target": "Br2_B1",
+                "sourceport": "2"
+            }},
+            {{
+                "source": "Br2_B1",
+                "target": "Br2_B2"
+            }},
+            {{
+                "source": "Br2_B2",
+                "target": "Br2_B3"
+            }},
+            {{
+                "source": "Br2_B3",
+                "target": "Br2_QB1"
+            }},
+            {{
+                "source": "Br2_QB1",
+                "target": "Br2_GB"
+            }},
+            {{
+                "source": "Br2_GB",
+                "target": "Br2_JB"
+            }},
+            {{
+                "source": "Br2_JB",
+                "target": "B5"
+            }}
+        ]
+    }}
 }}
     \n\nEND OF SAMPLE EXAMPLE\n\n
 
@@ -2923,11 +2916,10 @@ prompt_branched_retry = PromptTemplate(
     ScenarioType
     LearningObjectives
     ContentAreas
-    Start
     TextBlock (Welcome message to the Micro Learning Scenario and proceedings)
     MediaBlock/s (To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. Used also to compliment the Text Blocks for illustrated experience by placing Media Block/s after those TextBlock/s that might need visuall elaboration. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective)
-    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content),QuestionBlock/s or None,FeedbackAndFeedforwardBlock,TestBlocks Array encompassing a single or series of QuestionBlock/s,JumpBlock
+    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, FeedbackAndFeedforwardBlock, a single or series of QuestionBlock/s, GoalBlock, JumpBlock
     \nEnd of Overview structure\n
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
@@ -3001,263 +2993,235 @@ prompt_branched_simplify = PromptTemplate(
     ScenarioType
     LearningObjectives
     ContentAreas
-    Start
     TextBlock (Welcome message to the Micro Learning Scenario and proceedings)
     MediaBlock/s (To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. Used also to compliment the Text Blocks for illustrated experience by placing Media Block/s after those TextBlock/s that might need visuall elaboration. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective)
-    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content),QuestionBlock/s or None,FeedbackAndFeedforwardBlock,TestBlocks Array encompassing a single or series of QuestionBlock/s,JumpBlock
+    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, FeedbackAndFeedforwardBlock, a single or series of QuestionBlock/s, GoalBlock, JumpBlock
     \nEnd of Overview structure\n
 
     \nSAMPLE EXAMPLE START: MICRO LEARNING SCENARIO:\n
 {{
-    "ScenarioType": "Branched Scenario",
-    "LearningObjectives": [
-        "This mandatory block is where you !Give users single or multiple learning objectives of the scenario!"
-    ],
-    "ContentAreas": [
-        "This mandatory block is where you !Give users Content Areas of the scenario single or multiple!"
-    ],
-    "Start": "A Micro Learning Scenario name here",
-    "Blocks": [
-        {{
-            "id": "1",
-            "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in the scenario) is where you !Begin by giving welcome message to the user. In further Text Blocks down the structure in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final Micro Learning Scenario to be produced having an extremely detailed information in it.",
-            "type": "Text Block",
-            "title": "",
-            "description": "You write detailed descriptions here and try your best to educate the students on the subject matter, leaving no details untouched and undescribed."
-        }},
-        {{
-            "id": "2",
-            "Purpose": "This block (can be used single or multiple times or None  depends on the content to be covered in the Text Blocks relevant to this Media Block) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
-            "type": "Media Block",
-            "title": "",
-            "mediaType": "360-image/Image (Preferred)/Video etc",
-            "description": "",
-            "overlayTags": [
-                {{
-                    "textTag/imageTag/videoTag": "Explain and teach the students, using one or mutliple overlayTags, the different aspects of the information for this media block. Also give instructions here of how to shoot these overlayTags if they are othen than text. Elaborate the overlayTags based on the information present in Text Blocks. Preference is for using different overlayTags for each of the subtopic."
-                }},
-                {{
-                    "textTag/imageTag/videoTag": ""
-                }}
-            ]
-        }},
-        {{
-            "id": "3",
-            "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches!",
-            "type": "Branching Block (Simple Branching)",
-            "title": "Choose Your Renewable Energy Path",
-            "branches": {{
-                "3.1": "A Micro learning subtopic based on each Learning Objective",
-                "3.2": "A Micro learning subtopic based on each Learning Objective",
-                "3.3": "and so on..."
+    "BranchedScenario": {{
+        "nodes": [
+            {{
+                "id": "B1",
+                "type": "TextBlock",
+                "title": "Learning_Objectives",
+                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
             }},
-            "blocks": [
-                {{
-                    "id": "3.1",
-                    "blocks": [
-                        {{
-                            "id": "3.1.1",
-                            "LearningObjective": [
-                                "This mandatory block is where you !Write the Learning objective for this specific branch!"
-                            ]
-                        }},
-                        {{
-                            "id": "3.1.2",
-                            "type": "Text Block",
-                            "title": "",
-                            "description": ""
-                        }},
-                        {{
-                            "id": "3.1.3",
-                            "type": "Media Block",
-                            "title": "",
-                            "mediaType": "360-image/Image (Preferred)/Video etc",
-                            "description": "",
-                            "overlayTags": [
-                                {{
-                                    "textTag/imageTag/videoTag": ""
-                                }},
-                                {{
-                                    "textTag/imageTag/videoTag": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.1.4",
-                            "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand",
-                            "type": "Question Block",
-                            "questionText": "",
-                            "answers": [
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "correctAnswer": "",
-                            "wrongAnswerMessage": ""
-                        }},
-                        {{
-                            "id": "3.1.5",
-                            "Purpose": "Mandatory",
-                            "type": "FeedbackAndFeedforwardBlock",
-                            "Feedback": "",
-                            "Feedforward": ""
-                        }},
-                        {{
-                            "id": "3.1.6",
-                            "TestBlocks": [
-                                {{
-                                    "id": "3.1.6.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
-                                    "type": "Question Block",
-                                    "questionText": "",
-                                    "answers": [
-                                        "",
-                                        "",
-                                        "",
-                                        ""
-                                    ],
-                                    "correctAnswer": "",
-                                    "wrongAnswerMessage": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.1.7",
-                            "Purpose": "Mandatory",
-                            "type": "JumpBlock",
-                            "title": "Return to Topic Selection",
-                            "proceedToBlock": "3"
-                        }}
-                    ]
-                }},
-                {{
-                    "id": "3.2",
-                    "blocks": [
-                        {{
-                            "id": "3.2.1",
-                            "LearningObjective": [
-                                "This mandatory block is where you !Write the Learning objective for this specific branch!"
-                            ]
-                        }},
-                        {{
-                            "id": "3.1.2",
-                            "type": "Text Block",
-                            "title": "",
-                            "description": ""
-                        }},
-                        {{
-                            "id": "3.2.5",
-                            "Purpose": "Mandatory",
-                            "type": "FeedbackAndFeedforwardBlock",
-                            "Feedback": "",
-                            "Feedforward": ""
-                        }},
-                        {{
-                            "id": "3.2.6",
-                            "TestBlocks": [
-                                {{
-                                    "id": "3.2.6.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
-                                    "type": "Question Block",
-                                    "questionText": "",
-                                    "answers": [
-                                        "",
-                                        "",
-                                        "",
-                                        ""
-                                    ],
-                                    "correctAnswer": "",
-                                    "wrongAnswerMessage": ""
-                                }},
-                                {{
-                                    "id": "3.2.6.2",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
-                                    "type": "Question Block",
-                                    "questionText": "",
-                                    "answers": [
-                                        "",
-                                        "",
-                                        "",
-                                        ""
-                                    ],
-                                    "correctAnswer": "",
-                                    "wrongAnswerMessage": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.2.7",
-                            "Purpose": "Mandatory",
-                            "type": "JumpBlock",
-                            "title": "Return to Topic Selection",
-                            "proceedToBlock": "3"
-                        }}
-                    ]
-                }},
-                {{
-                    "id": "3.3 and so on branches depending upon learning objectives",
-                    "blocks": [
-                        {{
-                            "id": "3.3.1",
-                            "LearningObjective": [
-                                "This mandatory block is where you !Write the Learning objective for this specific branch!"
-                            ]
-                        }},
-                        {{
-                            "id": "3.3.2",
-                            "type": "Media Block",
-                            "title": "",
-                            "mediaType": "360-image/Image (Preferred)/Video etc",
-                            "description": "",
-                            "overlayTags": [
-                                {{
-                                    "textTag/imageTag/videoTag": ""
-                                }},
-                                {{
-                                    "textTag/imageTag/videoTag": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.3.3",
-                            "Purpose": "Mandatory",
-                            "type": "FeedbackAndFeedforwardBlock",
-                            "Feedback": "",
-                            "Feedforward": ""
-                        }},
-                        {{
-                            "id": "3.3.4",
-                            "TestBlocks": [
-                                {{
-                                    "id": "3.3.4.1",
-                                    "Purpose": "This Question Block's status in the 'Test' array here is MANDATORY(Single or Multiple QuestionBlocks) now. This is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand.",
-                                    "type": "Question Block",
-                                    "questionText": "",
-                                    "answers": [
-                                        "",
-                                        "",
-                                        "",
-                                        ""
-                                    ],
-                                    "correctAnswer": "",
-                                    "wrongAnswerMessage": ""
-                                }}
-                            ]
-                        }},
-                        {{
-                            "id": "3.3.5",
-                            "Purpose": "Mandatory",
-                            "type": "JumpBlock",
-                            "title": "Return to Topic Selection",
-                            "proceedToBlock": "3"
-                        }}
-                    ]
-                }}
-            ]
-        }}
-    ]
+            {{
+                "id": "B2",
+                "type": "TextBlock",
+                "title": "Content_Areas",
+                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+            }},
+            {{
+                "id": "B3",
+                "Purpose": "This block (can be used single or multiple times or None depends on the content to be covered in the scenario) is where you !Begin by giving welcome message to the user. In further Text Blocks down the structure in Branches, you use these blocks to give detailed information on every aspect of various subject matters belonging to each branch. The TextBlocks in branches are used either Single or Multiple Times and are bearers of detailed information and explanations that helps the final Micro Learning Scenario to be produced having an extremely detailed information in it.",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "B4",
+                "Purpose": "This block (can be used single or multiple times or None  depends on the content to be covered in the Text Blocks relevant to this Media Block) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "B5",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches!",
+                "type": "SimpleBranchingBlock",
+                "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "Br1": "(Insert Text Here)"
+                    }},
+                    {{
+                        "port": "2",
+                        "Br2": "(Insert Text Here)"
+                    }}
+                ]
+            }},
+            {{
+                "id": "Br1_B1",
+                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
+                "type": "TextBlock",
+                "title": "Learning_Objective",
+                "description": "1. (Insert Text Here)"
+            }},
+            {{
+                "id": "Br1_B2",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "Br1_B3",
+                "type": "TextBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "Br1_QB1",
+                "type": "QuestionBlock",
+                "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},
+            {{
+                "id": "Br1_GB",
+                "type": "GoalBlock",
+                "title": "Congratulations!",
+                "score": 3
+            }},
+            {{
+                "id": "Br1_JB",
+                "Purpose": "Mandatory at the end of each Branch",
+                "type": "JumpBlock",
+                "title": "Return to Topic Selection",
+                "proceedToBlock": "B5"
+            }},
+            {{
+                "id": "Br2_B1",
+                "type": "TextBlock",
+                "title": "Learning_Objective",
+                "description": "2. (Insert Text Here)"
+            }},
+            {{
+                "id": "Br2_B2",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "Br2_B3",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image, 360-image, Video, Audio",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "Br2_B4",
+                "type": "TextBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "Br2_QB1",
+                "type": "QuestionBlock",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},
+            {{
+                "id": "Br2_GB",
+                "type": "GoalBlock",
+                "title": "Congratulations!",
+                "score": 3
+            }},
+            {{
+                "id": "Br2_JB",
+                "type": "JumpBlock",
+                "title": "Return to Topic Selection",
+                "proceedToBlock": "B5"
+            }}
+        ],                       
+        "edges": [
+            {{
+                "source": "B1",
+                "target": "B2"
+            }},
+            {{
+                "source": "B2",
+                "target": "B3"
+            }},
+            {{
+                "source": "B3",
+                "target": "B4"
+            }},
+            {{
+                "source": "B4",
+                "target": "B5"
+            }},
+            {{
+                "source": "B5",
+                "target": "Br1_B1",
+                "sourceport": "1"
+            }},
+            {{
+                "source": "Br1_B1",
+                "target": "Br1_B2"
+            }},
+            {{
+                "source": "Br1_B2",
+                "target": "Br1_B3"
+            }},
+            {{
+                "source": "Br1_B3",
+                "target": "Br1_QB1"
+            }},
+            {{
+                "source": "Br1_QB1",
+                "target": "Br1_GB"
+            }},
+            {{
+                "source": "Br1_GB",
+                "target": "Br1_JB"
+            }},
+            {{
+                "source": "Br1_JB",
+                "target": "B5"
+            }},
+            {{
+                "source": "B5",
+                "target": "Br2_B1",
+                "sourceport": "2"
+            }},
+            {{
+                "source": "Br2_B1",
+                "target": "Br2_B2"
+            }},
+            {{
+                "source": "Br2_B2",
+                "target": "Br2_B3"
+            }},
+            {{
+                "source": "Br2_B3",
+                "target": "Br2_QB1"
+            }},
+            {{
+                "source": "Br2_QB1",
+                "target": "Br2_GB"
+            }},
+            {{
+                "source": "Br2_GB",
+                "target": "Br2_JB"
+            }},
+            {{
+                "source": "Br2_JB",
+                "target": "B5"
+            }}
+        ]
+    }}
 }}
     \n\nEND OF SAMPLE EXAMPLE\n\n
 
