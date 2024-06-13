@@ -1,3 +1,4 @@
+flask-cors
 langchain-google-genai
 google-ai-generativelanguage
 google-api-core
