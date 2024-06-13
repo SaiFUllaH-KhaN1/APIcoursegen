@@ -36,6 +36,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 import google.generativeai as genai
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
+from flask_cors import CORS
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 # Set the API key for OpenAI
@@ -70,7 +71,7 @@ app.config['CACHE_TYPE'] = 'FileSystemCache'
 app.config['CACHE_DIR'] = 'cache' # path to server cache folder
 app.config['CACHE_THRESHOLD'] = 1000
 cache = Cache(app)
-
+CORS(app)
 ### MANUAL DELETION OF all folders starting with faiss_index_ ###
 def delete_indexes():
     """
