@@ -70,6 +70,8 @@ basic_auth = BasicAuth(app)
 app.config['CACHE_TYPE'] = 'FileSystemCache' 
 app.config['CACHE_DIR'] = 'cache' # path to server cache folder
 app.config['CACHE_THRESHOLD'] = 1000
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 cache = Cache(app)
 allowed_origins = [
     "https://thinglink.local",
