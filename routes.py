@@ -71,10 +71,19 @@ app.config['CACHE_TYPE'] = 'FileSystemCache'
 app.config['CACHE_DIR'] = 'cache' # path to server cache folder
 app.config['CACHE_THRESHOLD'] = 1000
 cache = Cache(app)
-cors = CORS(app, resource={
-    r"/*":{
-        "origins":"*"
-    }
+allowed_origins = [
+    "https://thinglink.local",
+    "https://thinglink.local:3000",
+    "https://sandbox.thinglink.com",
+    "https://thinglink.com"
+]
+
+# Configure CORS for multiple routes with specific settings
+cors = CORS(app, supports_credentials=True, resources={
+    r"/process_data": {"origins": allowed_origins},
+    r"/decide": {"origins": allowed_origins},
+    r"/generate_course": {"origins": allowed_origins},
+     r"/find_images": {"origins": allowed_origins}
 })
 ### MANUAL DELETION OF all folders starting with faiss_index_ ###
 def delete_indexes():
