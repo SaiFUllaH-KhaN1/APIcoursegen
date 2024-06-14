@@ -71,7 +71,11 @@ app.config['CACHE_TYPE'] = 'FileSystemCache'
 app.config['CACHE_DIR'] = 'cache' # path to server cache folder
 app.config['CACHE_THRESHOLD'] = 1000
 cache = Cache(app)
-CORS(app)
+cors = CORS(app, resource={
+    r"/*":{
+        "origins":"*"
+    }
+})
 ### MANUAL DELETION OF all folders starting with faiss_index_ ###
 def delete_indexes():
     """
