@@ -107,7 +107,7 @@ def delete_indexes():
 def cron():
     delete_indexes()
     print("Deleted FAISS index")
-    return "FAISS and imagefolder index directories deleted", 200
+    return jsonify(message="FAISS and imagefolder index directories deleted")
 ###     ###     ### 
 
 ### SCHEDULED DELETION OF folders of imagefolder_ and faiss_index_ ###
@@ -213,6 +213,7 @@ def process_data():
             except Exception as e:
                 docsearch = None
                 print("Error processing file:", str(e))
+                return jsonify(message=f"Error processing file:{str(e)}")
             if base_docsearch is None:
                 base_docsearch = docsearch  # For the first file
             else:
@@ -224,7 +225,7 @@ def process_data():
             cache.set(f"user_id_cache_{session['user_id']}", session['user_id'],timeout=0)
             cache.set(f"prompt_{session['user_id']}", prompt,timeout=0)
 
-            return Response("Data processed!", mimetype='text/plain')
+            return jsonify(message="Data Processed!")
 
     else:
         f = None
@@ -232,7 +233,7 @@ def process_data():
 
     # Return the processed text in JSON format
     # return jsonify({"response": response['text']})
-    return Response("Nothing", mimetype='text/plain')
+    return jsonify(message="Nothing!")
 
 @app.route("/decide", methods=["GET", "POST"])
 def decide():
@@ -267,14 +268,16 @@ def decide():
 
                 cache.set(f"scenario_{user_id_cache}", scenario,timeout=0)
 
-                return Response(response_LO_CA['text'], mimetype='text/plain')
+                #return Response(response_LO_CA['text'], mimetype='text/plain')
+                return jsonify(message=response_LO_CA['text'])
             except Exception as e:
                 print(f"An error occurred: {e}")
+                return jsonify(message=f"An error occurred: {str(e)}")
 
         else:
             print("None")
             
-        return Response("Nothing", mimetype='text/plain')
+        return jsonify(message="Nothing!")
     
 @app.route("/generate_course", methods=["GET", "POST"])
 def generate_course():
@@ -314,15 +317,16 @@ def generate_course():
                 
                 cache.set(f"docs_main_{user_id_cache}", docs_main, timeout=0)
                 cache.set(f"response_text_{user_id_cache}", response, timeout=0)
-                return Response(response, mimetype='text/plain')
+                #return Response(response, mimetype='text/plain')
+                return jsonify(message=f"""{response}""")
             except Exception as e:
                 print(f"An error occurred: {e}")
-        
+                return jsonify(message=f"An error occurred: {str(e)}")
 
         else:
             print("None")
         
-        return Response("Nothing", mimetype='text/plain')
+        return jsonify(message="Nothing!")
     
 @app.route("/find_images", methods=["GET", "POST"])
 def find_images():
@@ -377,9 +381,11 @@ def find_images():
                     json_img_response[f"base64_Image{count_var}"] = r
                     print(json_img_response)
 
-                return Response(str(json_img_response), mimetype='text/plain')
+                #return Response(str(json_img_response), mimetype='text/plain')
+                return jsonify(message=f"""{str(json_img_response)}""")
             except Exception as e:
                 print(f"An error occurred: {e}")
+                return jsonify(message=f"An error occurred: {str(e)}")
 
 
             # shutil.rmtree(f"faiss_index_{user_id_cache}")
@@ -393,7 +399,7 @@ def find_images():
         else:
             print("None")
         
-        return Response("Nothing", mimetype='text/plain')
+        return jsonify(message="Nothing!")
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
