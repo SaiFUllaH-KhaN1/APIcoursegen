@@ -434,103 +434,110 @@ prompt_linear = PromptTemplate(
 
     \n\nEXAMPLE START: LINEAR SCENARIO:\n\n
 {{
-  "LinearScenario": {{
-    "nodes": [
-            {{
-                "id": "B1",
-                "type": "TextBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B2",
-                "type": "TextBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here) and so on"
-            }},
-      {{
-        "id": "B3",
-        "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
-        "type": "TextBlock",
-        "title": "(Insert Text Here)",
-        "description": "(Insert Text Here)"
-      }},
-      {{
-        "id": "B4",
-        "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
-        "type": "MediaBlock",
-        "title": "(Insert Text Here)",
-        "mediaType": "Image(Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-        "description": "(Insert Text Here)",
-        "overlayTags": [
-          "(Insert Text Here)",
-          "(Insert Text Here)"
-        ]
-      }},
-      {{
-        "id": "B5",
-        "type": "TextBlock",
-        "title": "Feedback_And_Feedforward",
-        "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-      }},
-      {{
-        "id": "B6",
-        "type": "TextBlock",
-        "title": "Self_Assessment",
-        "description": "Self Assessment=(Insert Text Here)"
-      }},
-      {{
-        "id": "QB1",
-        "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
-        "type": "QuestionBlock",
-        "questionText": "(Insert Text Here)",
-        "answers": [
-          "(Insert Text Here)",
-          "(Insert Text Here)",
-          "(Insert Text Here)",
-          "(Insert Text Here)"
-        ],
-        "correctAnswer": "(Insert Text Here)",
-        "wrongAnswerMessage": "(Insert Text Here)"
-      }},
-      {{
-        "id": "GB",
-        "type": "GoalBlock",
-        "title": "Congratulations!",
-        "score": 3
-      }}
-    ],
-    "edges": [
-      {{
-        "source": "B1",
-        "target": "B2"
-      }},
-      {{
-        "source": "B2",
-        "target": "B3"
-      }},
-      {{
-        "source": "B3",
-        "target": "B4"
-      }},
-      {{
-        "source": "B4",
-        "target": "B5"
-      }},
-      {{
-        "source": "B5",
-        "target": "B6"
-      }},
-      {{
-        "source": "B6",
-        "target": "QB1"
-      }},
-      {{
-        "source": "QB1",
-        "target": "GB"
-      }},
+      "title": "(Insert a fitting Title Here)",
+      "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "TextBlock",
+            "title": "Learning_Objectives",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Content_Areas",
+            "description": "1. (Insert Text Here) and so on"
+        }},
+        {{
+          "id": "B3",
+          "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
+          "type": "TextBlock",
+          "title": "(Insert Text Here)",
+          "description": "(Insert Text Here)"
+        }},
+        {{
+          "id": "B4",
+          "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+          "type": "MediaBlock",
+          "title": "(Insert Text Here)",
+          "mediaType": "Image(Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+          "description": "(Insert Text Here)",
+          "overlayTags": [
+            "(Insert Text Here)",
+            "(Insert Text Here)"
+          ]
+        }},
+        {{
+          "id": "B5",
+          "type": "TextBlock",
+          "title": "Feedback_And_Feedforward",
+          "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+          "id": "B6",
+          "type": "TextBlock",
+          "title": "Self_Assessment",
+          "description": "Self Assessment=(Insert Text Here)"
+        }},
+        {{
+          "id": "QB1",
+          "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
+          "type": "QuestionBlock",
+          "questionText": "(Insert Text Here)",
+          "answers": [
+            "(Insert Text Here)",
+            "(Insert Text Here)",
+            "(Insert Text Here)",
+            "(Insert Text Here)"
+          ],
+          "correctAnswer": "(Insert Text Here)",
+          "wrongAnswerMessage": "(Insert Text Here)"
+        }},
+        {{
+          "id": "GB",
+          "type": "GoalBlock",
+          "title": "Congratulations!",
+          "score": 3
+        }}
+      ],
+      "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+          "source": "B1",
+          "target": "B2"
+        }},
+        {{
+          "source": "B2",
+          "target": "B3"
+        }},
+        {{
+          "source": "B3",
+          "target": "B4"
+        }},
+        {{
+          "source": "B4",
+          "target": "B5"
+        }},
+        {{
+          "source": "B5",
+          "target": "B6"
+        }},
+        {{
+          "source": "B6",
+          "target": "QB1"
+        }},
+        {{
+          "source": "QB1",
+          "target": "GB"
+        }}
     ]
-  }}
 }}
     \n\nEND OF EXAMPLE\n\n
 
@@ -642,103 +649,110 @@ prompt_linear_retry = PromptTemplate(
 
     \n\nEXAMPLE START: LINEAR SCENARIO:\n\n
 {{
-  "LinearScenario": {{
-    "nodes": [
-            {{
-                "id": "B1",
-                "type": "TextBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B2",
-                "type": "TextBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here) and so on"
-            }},
-      {{
-        "id": "B3",
-        "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
-        "type": "TextBlock",
-        "title": "(Insert Text Here)",
-        "description": "(Insert Text Here)"
-      }},
-      {{
-        "id": "B4",
-        "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
-        "type": "MediaBlock",
-        "title": "(Insert Text Here)",
-        "mediaType": "Image(Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-        "description": "(Insert Text Here)",
-        "overlayTags": [
-          "(Insert Text Here)",
-          "(Insert Text Here)"
-        ]
-      }},
-      {{
-        "id": "B5",
-        "type": "TextBlock",
-        "title": "Feedback_And_Feedforward",
-        "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-      }},
-      {{
-        "id": "B6",
-        "type": "TextBlock",
-        "title": "Self_Assessment",
-        "description": "Self Assessment=(Insert Text Here)"
-      }},
-      {{
-        "id": "QB1",
-        "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
-        "type": "QuestionBlock",
-        "questionText": "(Insert Text Here)",
-        "answers": [
-          "(Insert Text Here)",
-          "(Insert Text Here)",
-          "(Insert Text Here)",
-          "(Insert Text Here)"
-        ],
-        "correctAnswer": "(Insert Text Here)",
-        "wrongAnswerMessage": "(Insert Text Here)"
-      }},
-      {{
-        "id": "GB",
-        "type": "GoalBlock",
-        "title": "Congratulations!",
-        "score": 3
-      }}
-    ],
-    "edges": [
-      {{
-        "source": "B1",
-        "target": "B2"
-      }},
-      {{
-        "source": "B2",
-        "target": "B3"
-      }},
-      {{
-        "source": "B3",
-        "target": "B4"
-      }},
-      {{
-        "source": "B4",
-        "target": "B5"
-      }},
-      {{
-        "source": "B5",
-        "target": "B6"
-      }},
-      {{
-        "source": "B6",
-        "target": "QB1"
-      }},
-      {{
-        "source": "QB1",
-        "target": "GB"
-      }},
+      "title": "(Insert a fitting Title Here)",
+      "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "TextBlock",
+            "title": "Learning_Objectives",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Content_Areas",
+            "description": "1. (Insert Text Here) and so on"
+        }},
+        {{
+          "id": "B3",
+          "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
+          "type": "TextBlock",
+          "title": "(Insert Text Here)",
+          "description": "(Insert Text Here)"
+        }},
+        {{
+          "id": "B4",
+          "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+          "type": "MediaBlock",
+          "title": "(Insert Text Here)",
+          "mediaType": "Image(Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+          "description": "(Insert Text Here)",
+          "overlayTags": [
+            "(Insert Text Here)",
+            "(Insert Text Here)"
+          ]
+        }},
+        {{
+          "id": "B5",
+          "type": "TextBlock",
+          "title": "Feedback_And_Feedforward",
+          "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+          "id": "B6",
+          "type": "TextBlock",
+          "title": "Self_Assessment",
+          "description": "Self Assessment=(Insert Text Here)"
+        }},
+        {{
+          "id": "QB1",
+          "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
+          "type": "QuestionBlock",
+          "questionText": "(Insert Text Here)",
+          "answers": [
+            "(Insert Text Here)",
+            "(Insert Text Here)",
+            "(Insert Text Here)",
+            "(Insert Text Here)"
+          ],
+          "correctAnswer": "(Insert Text Here)",
+          "wrongAnswerMessage": "(Insert Text Here)"
+        }},
+        {{
+          "id": "GB",
+          "type": "GoalBlock",
+          "title": "Congratulations!",
+          "score": 3
+        }}
+      ],
+      "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+          "source": "B1",
+          "target": "B2"
+        }},
+        {{
+          "source": "B2",
+          "target": "B3"
+        }},
+        {{
+          "source": "B3",
+          "target": "B4"
+        }},
+        {{
+          "source": "B4",
+          "target": "B5"
+        }},
+        {{
+          "source": "B5",
+          "target": "B6"
+        }},
+        {{
+          "source": "B6",
+          "target": "QB1"
+        }},
+        {{
+          "source": "QB1",
+          "target": "GB"
+        }}
     ]
-  }}
 }}
     \n\nEND OF EXAMPLE\n\n
 
@@ -835,103 +849,110 @@ prompt_linear_simplify = PromptTemplate(
 
     \n\nEXAMPLE START: LINEAR SCENARIO:\n\n
 {{
-  "LinearScenario": {{
-    "nodes": [
-            {{
-                "id": "B1",
-                "type": "TextBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B2",
-                "type": "TextBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here) and so on"
-            }},
-      {{
-        "id": "B3",
-        "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
-        "type": "TextBlock",
-        "title": "(Insert Text Here)",
-        "description": "(Insert Text Here)"
-      }},
-      {{
-        "id": "B4",
-        "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
-        "type": "MediaBlock",
-        "title": "(Insert Text Here)",
-        "mediaType": "Image(Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-        "description": "(Insert Text Here)",
-        "overlayTags": [
-          "(Insert Text Here)",
-          "(Insert Text Here)"
-        ]
-      }},
-      {{
-        "id": "B5",
-        "type": "TextBlock",
-        "title": "Feedback_And_Feedforward",
-        "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-      }},
-      {{
-        "id": "B6",
-        "type": "TextBlock",
-        "title": "Self_Assessment",
-        "description": "Self Assessment=(Insert Text Here)"
-      }},
-      {{
-        "id": "QB1",
-        "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
-        "type": "QuestionBlock",
-        "questionText": "(Insert Text Here)",
-        "answers": [
-          "(Insert Text Here)",
-          "(Insert Text Here)",
-          "(Insert Text Here)",
-          "(Insert Text Here)"
-        ],
-        "correctAnswer": "(Insert Text Here)",
-        "wrongAnswerMessage": "(Insert Text Here)"
-      }},
-      {{
-        "id": "GB",
-        "type": "GoalBlock",
-        "title": "Congratulations!",
-        "score": 3
-      }}
-    ],
-    "edges": [
-      {{
-        "source": "B1",
-        "target": "B2"
-      }},
-      {{
-        "source": "B2",
-        "target": "B3"
-      }},
-      {{
-        "source": "B3",
-        "target": "B4"
-      }},
-      {{
-        "source": "B4",
-        "target": "B5"
-      }},
-      {{
-        "source": "B5",
-        "target": "B6"
-      }},
-      {{
-        "source": "B6",
-        "target": "QB1"
-      }},
-      {{
-        "source": "QB1",
-        "target": "GB"
-      }},
+      "title": "(Insert a fitting Title Here)",
+      "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "TextBlock",
+            "title": "Learning_Objectives",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Content_Areas",
+            "description": "1. (Insert Text Here) and so on"
+        }},
+        {{
+          "id": "B3",
+          "Purpose": "This MANDATORY block (In terms of either one Text Block or multiple per scenario.) is where you !Begin by giving welcome message to the scenario. In further Text Blocks down the example format you use these blocks to give detailed information on every aspect of various subject matters as asked.",
+          "type": "TextBlock",
+          "title": "(Insert Text Here)",
+          "description": "(Insert Text Here)"
+        }},
+        {{
+          "id": "B4",
+          "Purpose": "This OPTIONAL block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that elaborates on the information given in Text Blocks and are used in a complimentary way to them.",
+          "type": "MediaBlock",
+          "title": "(Insert Text Here)",
+          "mediaType": "Image(Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+          "description": "(Insert Text Here)",
+          "overlayTags": [
+            "(Insert Text Here)",
+            "(Insert Text Here)"
+          ]
+        }},
+        {{
+          "id": "B5",
+          "type": "TextBlock",
+          "title": "Feedback_And_Feedforward",
+          "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+          "id": "B6",
+          "type": "TextBlock",
+          "title": "Self_Assessment",
+          "description": "Self Assessment=(Insert Text Here)"
+        }},
+        {{
+          "id": "QB1",
+          "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of this specific branch in regards to its information given in its TextBlocks and MediBlocks. The QuestionBlocks can be single or multiple depending on the content and importance at hand",
+          "type": "QuestionBlock",
+          "questionText": "(Insert Text Here)",
+          "answers": [
+            "(Insert Text Here)",
+            "(Insert Text Here)",
+            "(Insert Text Here)",
+            "(Insert Text Here)"
+          ],
+          "correctAnswer": "(Insert Text Here)",
+          "wrongAnswerMessage": "(Insert Text Here)"
+        }},
+        {{
+          "id": "GB",
+          "type": "GoalBlock",
+          "title": "Congratulations!",
+          "score": 3
+        }}
+      ],
+      "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+          "source": "B1",
+          "target": "B2"
+        }},
+        {{
+          "source": "B2",
+          "target": "B3"
+        }},
+        {{
+          "source": "B3",
+          "target": "B4"
+        }},
+        {{
+          "source": "B4",
+          "target": "B5"
+        }},
+        {{
+          "source": "B5",
+          "target": "B6"
+        }},
+        {{
+          "source": "B6",
+          "target": "QB1"
+        }},
+        {{
+          "source": "QB1",
+          "target": "GB"
+        }}
     ]
-  }}
 }}
     \n\nEND OF EXAMPLE\n\n
 
@@ -1482,8 +1503,12 @@ prompt_gamified_json = PromptTemplate(
 
     \n\nSAMPLE EXAMPLE\n\n
 {{
-    "GamifiedScenario": {{
+    "title": "(Insert a fitting Title Here)",
         "nodes": [
+            {{
+                "id": "StartBlock",
+                "type": "StartBlock"
+            }},
             {{
                 "id": "B1",
                 "type": "TextBlock",
@@ -1719,6 +1744,10 @@ prompt_gamified_json = PromptTemplate(
         ],                       
         "edges": [
             {{
+                "source": "StartBlock",
+                "target": "B1"
+            }},
+            {{
                 "source": "B1",
                 "target": "B2"
             }},
@@ -1845,7 +1874,6 @@ prompt_gamified_json = PromptTemplate(
                 "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB"
             }}
         ]
-    }}
 }}
     \n\nEND OF SAMPLE EXAMPLE\n\n
     An example of the abstract heirarchichal connection of another SAMPLE EXAMPLE's structure of blocks connection is (except the learning objectives and content areas textblocks):
@@ -2090,8 +2118,12 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
 
     \n\nSAMPLE EXAMPLE\n\n
 {{
-    "GamifiedScenario": {{
+    "title": "(Insert a fitting Title Here)",
         "nodes": [
+            {{
+                "id": "StartBlock",
+                "type": "StartBlock"
+            }},
             {{
                 "id": "B1",
                 "type": "TextBlock",
@@ -2327,6 +2359,10 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
         ],                       
         "edges": [
             {{
+                "source": "StartBlock",
+                "target": "B1"
+            }},
+            {{
                 "source": "B1",
                 "target": "B2"
             }},
@@ -2453,7 +2489,6 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB"
             }}
         ]
-    }}
 }}
     \n\nEND OF SAMPLE EXAMPLE\n\n
     An example of the abstract heirarchichal connection of another SAMPLE EXAMPLE's structure of blocks connection is (except the learning objectives and content areas textblocks):
@@ -2684,8 +2719,12 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
 
     \n\nSAMPLE EXAMPLE\n\n
 {{
-    "GamifiedScenario": {{
+    "title": "(Insert a fitting Title Here)",
         "nodes": [
+            {{
+                "id": "StartBlock",
+                "type": "StartBlock"
+            }},
             {{
                 "id": "B1",
                 "type": "TextBlock",
@@ -2921,6 +2960,10 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
         ],                       
         "edges": [
             {{
+                "source": "StartBlock",
+                "target": "B1"
+            }},
+            {{
                 "source": "B1",
                 "target": "B2"
             }},
@@ -3047,7 +3090,6 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB"
             }}
         ]
-    }}
 }}
     \n\nEND OF SAMPLE EXAMPLE\n\n
     An example of the abstract heirarchichal connection of another SAMPLE EXAMPLE's structure of blocks connection is (except the learning objectives and content areas textblocks):
@@ -3289,8 +3331,12 @@ prompt_branched = PromptTemplate(
 
     \nSAMPLE EXAMPLE START: MICRO LEARNING SCENARIO:\n
 {{
-    "BranchedScenario": {{
+    "title": "(Insert a fitting Title Here)",
         "nodes": [
+            {{
+                "id": "StartBlock",
+                "type": "StartBlock"
+            }},
             {{
                 "id": "B1",
                 "type": "TextBlock",
@@ -3435,6 +3481,10 @@ prompt_branched = PromptTemplate(
         ],                       
         "edges": [
             {{
+                "source": "StartBlock",
+                "target": "B1"
+            }},
+            {{
                 "source": "B1",
                 "target": "B2"
             }},
@@ -3513,7 +3563,6 @@ prompt_branched = PromptTemplate(
                 "target": "SBB"
             }}
         ]
-    }}
 }}
     \n\nEND OF SAMPLE EXAMPLE\n\n
 
@@ -3627,8 +3676,12 @@ prompt_branched_retry = PromptTemplate(
 
     \nSAMPLE EXAMPLE START: MICRO LEARNING SCENARIO:\n
 {{
-    "BranchedScenario": {{
+    "title": "(Insert a fitting Title Here)",
         "nodes": [
+            {{
+                "id": "StartBlock",
+                "type": "StartBlock"
+            }},
             {{
                 "id": "B1",
                 "type": "TextBlock",
@@ -3773,6 +3826,10 @@ prompt_branched_retry = PromptTemplate(
         ],                       
         "edges": [
             {{
+                "source": "StartBlock",
+                "target": "B1"
+            }},
+            {{
                 "source": "B1",
                 "target": "B2"
             }},
@@ -3851,7 +3908,6 @@ prompt_branched_retry = PromptTemplate(
                 "target": "SBB"
             }}
         ]
-    }}
 }}
     \n\nEND OF SAMPLE EXAMPLE\n\n
 
@@ -3951,8 +4007,12 @@ prompt_branched_simplify = PromptTemplate(
 
     \nSAMPLE EXAMPLE START: MICRO LEARNING SCENARIO:\n
 {{
-    "BranchedScenario": {{
+    "title": "(Insert a fitting Title Here)",
         "nodes": [
+            {{
+                "id": "StartBlock",
+                "type": "StartBlock"
+            }},
             {{
                 "id": "B1",
                 "type": "TextBlock",
@@ -4097,6 +4157,10 @@ prompt_branched_simplify = PromptTemplate(
         ],                       
         "edges": [
             {{
+                "source": "StartBlock",
+                "target": "B1"
+            }},
+            {{
                 "source": "B1",
                 "target": "B2"
             }},
@@ -4175,7 +4239,6 @@ prompt_branched_simplify = PromptTemplate(
                 "target": "SBB"
             }}
         ]
-    }}
 }}
     \n\nEND OF SAMPLE EXAMPLE\n\n
 
@@ -4332,309 +4395,316 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
 
     SAMPLE EXAMPLE:::
 {{
-    "SimulationScenario": {{
-        "nodes": [
-            {{
-                "id": "B1",
-                "type": "TextBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B2",
-                "type": "TextBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B3",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "Bnhiefing of this Simulation Scenario",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "B4",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
-            SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
-            {{
-                "id": "SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh1_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
-            {{
-                "id": "SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "SBB"
-            }},
-            {{
-                "id": "SBB_Bnh2_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_B3",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
-            in turn is from a Second branch that came from the very first SBB."}},
-            {{
-                "id": "SBB_Bnh2_SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
-                    }},
-                    {{
-                        "port": "3",
-                        "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_DB",
-                "type": "TextBlock",
-                "title": "Debriefing",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_RF",
-                "type": "TextBlock",
-                "title": "Reflection",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B2",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_JB",
-                "type": "JumpBlock",
-                "title": "(Insert Text Here)",
-                "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
-            }},
-            {{
-                "id": "BSBB_Bnh2_SBB_Bnh3_DB",
-                "type": "TextBlock",
-                "title": "Debriefing",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_RF",
-                "type": "TextBlock",
-                "title": "Reflection",
-                "description": "(Insert Text Here)"
-            }}
-        ],                       
-        "edges": [
-            {{
-                "source": "B1",
-                "target": "B2"
-            }},
-            {{
-                "source": "B2",
-                "target": "B3"
-            }},
-            {{
-                "source": "B3",
-                "target": "B4"
-            }},
-            {{
-                "source": "B4",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh1_B1",
-                "sourceport": "1"
-            }},
-            {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_B2"
-            }},
-            {{
-                "source": "SBB_Bnh1_B2",
-                "target": "SBB_Bnh1_JB"
-            }},
-            {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
-                "sourceport": "2"
-            }},
-            {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
-            }},
-            {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh1_B1",
-                "sourceport":"1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh1_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_GB",
-                "target": "SBB_Bnh2_SBB_Bnh1_DB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_DB",
-                "target": "SBB_Bnh2_SBB_Bnh1_RF"
-            }}
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_B1",
-                "sourceport":"2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_JB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_JB",
-                "target": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh3_B1",
-                "sourceport":"3"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_B1",
-                "target": "SBB_Bnh2_SBB_Bnh3_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_B2",
-                "target": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_GB",
-                "target": "SBB_Bnh2_SBB_Bnh3_DB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_DB",
-                "target": "SBB_Bnh2_SBB_Bnh3_RF"
-            }}
-        ]
-    }}
+    "title": "(Insert a fitting Title Here)",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "TextBlock",
+            "title": "Learning_Objectives",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Content_Areas",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B3",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "Bnhiefing of this Simulation Scenario",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B4",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
+        SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{
+            "id": "SBB",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                }},
+                {{
+                    "port": "2",
+                    "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
+                }}
+            ]
+        }},
+        {{
+            "id": "SBB_Bnh1_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh1_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
+        {{
+            "id": "SBB_Bnh1_JB",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "SBB"
+        }},
+        {{
+            "id": "SBB_Bnh2_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_B3",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
+        in turn is from a Second branch that came from the very first SBB."}},
+        {{
+            "id": "SBB_Bnh2_SBB",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                }},
+                {{
+                    "port": "2",
+                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
+                }},
+                {{
+                    "port": "3",
+                    "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
+                }}
+            ]
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_GB",
+            "type": "GoalBlock",
+            "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_DB",
+            "type": "TextBlock",
+            "title": "Debriefing",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_RF",
+            "type": "TextBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_B2",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_JB",
+            "type": "JumpBlock",
+            "title": "(Insert Text Here)",
+            "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_GB",
+            "type": "GoalBlock",
+            "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
+        }},
+        {{
+            "id": "BSBB_Bnh2_SBB_Bnh3_DB",
+            "type": "TextBlock",
+            "title": "Debriefing",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_RF",
+            "type": "TextBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
+        }}
+    ],                       
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "B3"
+        }},
+        {{
+            "source": "B3",
+            "target": "B4"
+        }},
+        {{
+            "source": "B4",
+            "target": "SBB"
+        }},
+        {{
+            "source": "SBB",
+            "target": "SBB_Bnh1_B1",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "SBB_Bnh1_B1",
+            "target": "SBB_Bnh1_B2"
+        }},
+        {{
+            "source": "SBB_Bnh1_B2",
+            "target": "SBB_Bnh1_JB"
+        }},
+        {{
+            "source": "SBB_Bnh1_JB",
+            "target": "SBB"
+        }},
+        {{
+            "source": "SBB",
+            "target": "SBB_Bnh2_B1",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB_Bnh2_B1",
+            "target": "SBB_Bnh2_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_B2",
+            "target": "SBB_Bnh2_B3"
+        }},
+        {{
+            "source": "SBB_Bnh2_B3",
+            "target": "SBB_Bnh2_SBB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh1_B1",
+            "sourceport":"1"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_B1",
+            "target": "SBB_Bnh2_SBB_Bnh1_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_GB",
+            "target": "SBB_Bnh2_SBB_Bnh1_DB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_DB",
+            "target": "SBB_Bnh2_SBB_Bnh1_RF"
+        }}
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh2_B1",
+            "sourceport":"2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_B1",
+            "target": "SBB_Bnh2_SBB_Bnh2_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_B2",
+            "target": "SBB_Bnh2_SBB_Bnh2_JB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_JB",
+            "target": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh3_B1",
+            "sourceport":"3"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_B1",
+            "target": "SBB_Bnh2_SBB_Bnh3_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_B2",
+            "target": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_GB",
+            "target": "SBB_Bnh2_SBB_Bnh3_DB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_DB",
+            "target": "SBB_Bnh2_SBB_Bnh3_RF"
+        }}
+    ]
 }}
     SAMPLE EXAMPLE END
 
@@ -4753,309 +4823,316 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
 
     SAMPLE EXAMPLE:::
 {{
-    "SimulationScenario": {{
-        "nodes": [
-            {{
-                "id": "B1",
-                "type": "TextBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B2",
-                "type": "TextBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B3",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "Bnhiefing of this Simulation Scenario",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "B4",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
-            SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
-            {{
-                "id": "SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh1_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
-            {{
-                "id": "SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "SBB"
-            }},
-            {{
-                "id": "SBB_Bnh2_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_B3",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
-            in turn is from a Second branch that came from the very first SBB."}},
-            {{
-                "id": "SBB_Bnh2_SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
-                    }},
-                    {{
-                        "port": "3",
-                        "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_DB",
-                "type": "TextBlock",
-                "title": "Debriefing",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_RF",
-                "type": "TextBlock",
-                "title": "Reflection",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B2",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_JB",
-                "type": "JumpBlock",
-                "title": "(Insert Text Here)",
-                "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
-            }},
-            {{
-                "id": "BSBB_Bnh2_SBB_Bnh3_DB",
-                "type": "TextBlock",
-                "title": "Debriefing",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_RF",
-                "type": "TextBlock",
-                "title": "Reflection",
-                "description": "(Insert Text Here)"
-            }}
-        ],                       
-        "edges": [
-            {{
-                "source": "B1",
-                "target": "B2"
-            }},
-            {{
-                "source": "B2",
-                "target": "B3"
-            }},
-            {{
-                "source": "B3",
-                "target": "B4"
-            }},
-            {{
-                "source": "B4",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh1_B1",
-                "sourceport": "1"
-            }},
-            {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_B2"
-            }},
-            {{
-                "source": "SBB_Bnh1_B2",
-                "target": "SBB_Bnh1_JB"
-            }},
-            {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
-                "sourceport": "2"
-            }},
-            {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
-            }},
-            {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh1_B1",
-                "sourceport":"1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh1_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_GB",
-                "target": "SBB_Bnh2_SBB_Bnh1_DB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_DB",
-                "target": "SBB_Bnh2_SBB_Bnh1_RF"
-            }}
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_B1",
-                "sourceport":"2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_JB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_JB",
-                "target": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh3_B1",
-                "sourceport":"3"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_B1",
-                "target": "SBB_Bnh2_SBB_Bnh3_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_B2",
-                "target": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_GB",
-                "target": "SBB_Bnh2_SBB_Bnh3_DB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_DB",
-                "target": "SBB_Bnh2_SBB_Bnh3_RF"
-            }}
-        ]
-    }}
+    "title": "(Insert a fitting Title Here)",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "TextBlock",
+            "title": "Learning_Objectives",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Content_Areas",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B3",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "Bnhiefing of this Simulation Scenario",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B4",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
+        SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{
+            "id": "SBB",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                }},
+                {{
+                    "port": "2",
+                    "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
+                }}
+            ]
+        }},
+        {{
+            "id": "SBB_Bnh1_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh1_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
+        {{
+            "id": "SBB_Bnh1_JB",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "SBB"
+        }},
+        {{
+            "id": "SBB_Bnh2_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_B3",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
+        in turn is from a Second branch that came from the very first SBB."}},
+        {{
+            "id": "SBB_Bnh2_SBB",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                }},
+                {{
+                    "port": "2",
+                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
+                }},
+                {{
+                    "port": "3",
+                    "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
+                }}
+            ]
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_GB",
+            "type": "GoalBlock",
+            "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_DB",
+            "type": "TextBlock",
+            "title": "Debriefing",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_RF",
+            "type": "TextBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_B2",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_JB",
+            "type": "JumpBlock",
+            "title": "(Insert Text Here)",
+            "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_GB",
+            "type": "GoalBlock",
+            "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
+        }},
+        {{
+            "id": "BSBB_Bnh2_SBB_Bnh3_DB",
+            "type": "TextBlock",
+            "title": "Debriefing",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_RF",
+            "type": "TextBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
+        }}
+    ],                       
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "B3"
+        }},
+        {{
+            "source": "B3",
+            "target": "B4"
+        }},
+        {{
+            "source": "B4",
+            "target": "SBB"
+        }},
+        {{
+            "source": "SBB",
+            "target": "SBB_Bnh1_B1",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "SBB_Bnh1_B1",
+            "target": "SBB_Bnh1_B2"
+        }},
+        {{
+            "source": "SBB_Bnh1_B2",
+            "target": "SBB_Bnh1_JB"
+        }},
+        {{
+            "source": "SBB_Bnh1_JB",
+            "target": "SBB"
+        }},
+        {{
+            "source": "SBB",
+            "target": "SBB_Bnh2_B1",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB_Bnh2_B1",
+            "target": "SBB_Bnh2_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_B2",
+            "target": "SBB_Bnh2_B3"
+        }},
+        {{
+            "source": "SBB_Bnh2_B3",
+            "target": "SBB_Bnh2_SBB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh1_B1",
+            "sourceport":"1"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_B1",
+            "target": "SBB_Bnh2_SBB_Bnh1_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_GB",
+            "target": "SBB_Bnh2_SBB_Bnh1_DB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_DB",
+            "target": "SBB_Bnh2_SBB_Bnh1_RF"
+        }}
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh2_B1",
+            "sourceport":"2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_B1",
+            "target": "SBB_Bnh2_SBB_Bnh2_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_B2",
+            "target": "SBB_Bnh2_SBB_Bnh2_JB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_JB",
+            "target": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh3_B1",
+            "sourceport":"3"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_B1",
+            "target": "SBB_Bnh2_SBB_Bnh3_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_B2",
+            "target": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_GB",
+            "target": "SBB_Bnh2_SBB_Bnh3_DB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_DB",
+            "target": "SBB_Bnh2_SBB_Bnh3_RF"
+        }}
+    ]
 }}
     SAMPLE EXAMPLE END
 
@@ -5192,309 +5269,316 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
 
     SAMPLE EXAMPLE:::
 {{
-    "SimulationScenario": {{
-        "nodes": [
-            {{
-                "id": "B1",
-                "type": "TextBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B2",
-                "type": "TextBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
-            }},
-            {{
-                "id": "B3",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "Bnhiefing of this Simulation Scenario",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "B4",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
-            SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
-            {{
-                "id": "SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh1_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
-            {{
-                "id": "SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "SBB"
-            }},
-            {{
-                "id": "SBB_Bnh2_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_B3",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
-            in turn is from a Second branch that came from the very first SBB."}},
-            {{
-                "id": "SBB_Bnh2_SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
-                    }},
-                    {{
-                        "port": "3",
-                        "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_DB",
-                "type": "TextBlock",
-                "title": "Debriefing",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_RF",
-                "type": "TextBlock",
-                "title": "Reflection",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B2",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_JB",
-                "type": "JumpBlock",
-                "title": "(Insert Text Here)",
-                "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_B1",
-                "type": "TextBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
-            }},
-            {{
-                "id": "BSBB_Bnh2_SBB_Bnh3_DB",
-                "type": "TextBlock",
-                "title": "Debriefing",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh3_RF",
-                "type": "TextBlock",
-                "title": "Reflection",
-                "description": "(Insert Text Here)"
-            }}
-        ],                       
-        "edges": [
-            {{
-                "source": "B1",
-                "target": "B2"
-            }},
-            {{
-                "source": "B2",
-                "target": "B3"
-            }},
-            {{
-                "source": "B3",
-                "target": "B4"
-            }},
-            {{
-                "source": "B4",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh1_B1",
-                "sourceport": "1"
-            }},
-            {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_B2"
-            }},
-            {{
-                "source": "SBB_Bnh1_B2",
-                "target": "SBB_Bnh1_JB"
-            }},
-            {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
-                "sourceport": "2"
-            }},
-            {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
-            }},
-            {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh1_B1",
-                "sourceport":"1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh1_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_GB",
-                "target": "SBB_Bnh2_SBB_Bnh1_DB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh1_DB",
-                "target": "SBB_Bnh2_SBB_Bnh1_RF"
-            }}
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_B1",
-                "sourceport":"2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_JB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_JB",
-                "target": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh3_B1",
-                "sourceport":"3"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_B1",
-                "target": "SBB_Bnh2_SBB_Bnh3_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_B2",
-                "target": "SBB_Bnh2_SBB_Bnh3_GB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_GB",
-                "target": "SBB_Bnh2_SBB_Bnh3_DB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh3_DB",
-                "target": "SBB_Bnh2_SBB_Bnh3_RF"
-            }}
-        ]
-    }}
+    "title": "(Insert a fitting Title Here)",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "TextBlock",
+            "title": "Learning_Objectives",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Content_Areas",
+            "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+        }},
+        {{
+            "id": "B3",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "Bnhiefing of this Simulation Scenario",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B4",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
+        SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{
+            "id": "SBB",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                }},
+                {{
+                    "port": "2",
+                    "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
+                }}
+            ]
+        }},
+        {{
+            "id": "SBB_Bnh1_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh1_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
+        {{
+            "id": "SBB_Bnh1_JB",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "SBB"
+        }},
+        {{
+            "id": "SBB_Bnh2_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_B3",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
+        in turn is from a Second branch that came from the very first SBB."}},
+        {{
+            "id": "SBB_Bnh2_SBB",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                }},
+                {{
+                    "port": "2",
+                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
+                }},
+                {{
+                    "port": "3",
+                    "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
+                }}
+            ]
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_GB",
+            "type": "GoalBlock",
+            "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_DB",
+            "type": "TextBlock",
+            "title": "Debriefing",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh1_RF",
+            "type": "TextBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_B2",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},
+        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh2_JB",
+            "type": "JumpBlock",
+            "title": "(Insert Text Here)",
+            "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_B1",
+            "type": "TextBlock",
+            "title": "Feedback_And_Feedforward",
+            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_B2",
+            "timer": "(Insert time in format hh:mm:ss)",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_GB",
+            "type": "GoalBlock",
+            "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
+        }},
+        {{
+            "id": "BSBB_Bnh2_SBB_Bnh3_DB",
+            "type": "TextBlock",
+            "title": "Debriefing",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "SBB_Bnh2_SBB_Bnh3_RF",
+            "type": "TextBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
+        }}
+    ],                       
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "B3"
+        }},
+        {{
+            "source": "B3",
+            "target": "B4"
+        }},
+        {{
+            "source": "B4",
+            "target": "SBB"
+        }},
+        {{
+            "source": "SBB",
+            "target": "SBB_Bnh1_B1",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "SBB_Bnh1_B1",
+            "target": "SBB_Bnh1_B2"
+        }},
+        {{
+            "source": "SBB_Bnh1_B2",
+            "target": "SBB_Bnh1_JB"
+        }},
+        {{
+            "source": "SBB_Bnh1_JB",
+            "target": "SBB"
+        }},
+        {{
+            "source": "SBB",
+            "target": "SBB_Bnh2_B1",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB_Bnh2_B1",
+            "target": "SBB_Bnh2_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_B2",
+            "target": "SBB_Bnh2_B3"
+        }},
+        {{
+            "source": "SBB_Bnh2_B3",
+            "target": "SBB_Bnh2_SBB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh1_B1",
+            "sourceport":"1"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_B1",
+            "target": "SBB_Bnh2_SBB_Bnh1_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_GB",
+            "target": "SBB_Bnh2_SBB_Bnh1_DB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh1_DB",
+            "target": "SBB_Bnh2_SBB_Bnh1_RF"
+        }}
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh2_B1",
+            "sourceport":"2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_B1",
+            "target": "SBB_Bnh2_SBB_Bnh2_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_B2",
+            "target": "SBB_Bnh2_SBB_Bnh2_JB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh2_JB",
+            "target": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB",
+            "target": "SBB_Bnh2_SBB_Bnh3_B1",
+            "sourceport":"3"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_B1",
+            "target": "SBB_Bnh2_SBB_Bnh3_B2"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_B2",
+            "target": "SBB_Bnh2_SBB_Bnh3_GB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_GB",
+            "target": "SBB_Bnh2_SBB_Bnh3_DB"
+        }},
+        {{
+            "source": "SBB_Bnh2_SBB_Bnh3_DB",
+            "target": "SBB_Bnh2_SBB_Bnh3_RF"
+        }}
+    ]
 }}
     SAMPLE EXAMPLE END
 
