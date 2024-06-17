@@ -125,7 +125,6 @@ def delete_old_directories():
                 print(f"Deleting directory: {dir_path}, it has modified date of {dir_age}")
                 shutil.rmtree(dir_path)
 ###     ###     ###
-
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
     if 'user_id' not in session:
@@ -213,7 +212,7 @@ def process_data():
             except Exception as e:
                 docsearch = None
                 print("Error processing file:", str(e))
-                return jsonify(message=f"Error processing file:{str(e)}")
+                return jsonify(error=f"Error processing file:{str(e)}")
             if base_docsearch is None:
                 base_docsearch = docsearch  # For the first file
             else:
@@ -233,7 +232,7 @@ def process_data():
 
     # Return the processed text in JSON format
     # return jsonify({"response": response['text']})
-    return jsonify(message="Nothing!")
+    return jsonify(error="Unexpected Fault or Interruption")
 
 @app.route("/decide", methods=["GET", "POST"])
 def decide():
@@ -268,16 +267,16 @@ def decide():
 
                 cache.set(f"scenario_{user_id_cache}", scenario,timeout=0)
 
-                #return Response(response_LO_CA['text'], mimetype='text/plain')
-                return jsonify(message=response_LO_CA['text'])
+                return Response(response_LO_CA['text'], mimetype='application/json')
+                # return jsonify(response_LO_CA['text'])
             except Exception as e:
                 print(f"An error occurred: {e}")
-                return jsonify(message=f"An error occurred: {str(e)}")
+                return jsonify(error=f"An error occurred: {str(e)}")
 
         else:
             print("None")
             
-        return jsonify(message="Nothing!")
+        return jsonify(error="Unexpected Fault or Interruption")
     
 @app.route("/generate_course", methods=["GET", "POST"])
 def generate_course():
@@ -317,16 +316,17 @@ def generate_course():
                 
                 cache.set(f"docs_main_{user_id_cache}", docs_main, timeout=0)
                 cache.set(f"response_text_{user_id_cache}", response, timeout=0)
-                #return Response(response, mimetype='text/plain')
-                return jsonify(message=f"""{response}""")
+
+                return Response(response, mimetype='application/json')
+                # return jsonify(message=f"""{response}""")
             except Exception as e:
                 print(f"An error occurred: {e}")
-                return jsonify(message=f"An error occurred: {str(e)}")
+                return jsonify(error=f"An error occurred: {str(e)}")
 
         else:
             print("None")
         
-        return jsonify(message="Nothing!")
+        return jsonify(error="Unexpected Fault or Interruption")
     
 @app.route("/find_images", methods=["GET", "POST"])
 def find_images():
@@ -381,11 +381,11 @@ def find_images():
                     json_img_response[f"base64_Image{count_var}"] = r
                     print(json_img_response)
 
-                #return Response(str(json_img_response), mimetype='text/plain')
-                return jsonify(message=f"""{str(json_img_response)}""")
+                return Response(json_img_response, mimetype='application/json')
+                # return jsonify(message=f"""{str(json_img_response)}""")
             except Exception as e:
                 print(f"An error occurred: {e}")
-                return jsonify(message=f"An error occurred: {str(e)}")
+                return jsonify(error=f"An error occurred: {str(e)}")
 
 
             # shutil.rmtree(f"faiss_index_{user_id_cache}")
@@ -399,7 +399,7 @@ def find_images():
         else:
             print("None")
         
-        return jsonify(message="Nothing!")
+        return jsonify(error="Unexpected Fault or Interruption")
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
