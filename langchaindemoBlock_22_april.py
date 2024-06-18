@@ -14,7 +14,7 @@ import base64
 from langchain.prompts import PromptTemplate
 from langchain.schema.messages import HumanMessage, SystemMessage
 from langchain.prompts import PromptTemplate, ChatPromptTemplate, HumanMessagePromptTemplate
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -74,11 +74,24 @@ def RAG(file_content,embeddings,file,session_var):
                 for image_file_object in page.images:
                     # base_name = os.path.splitext(os.path.basename(image_file_object.name))[0]  # Get the base file name without extension
                     extension = os.path.splitext(image_file_object.name)[1]  # Get the file extension
-                    image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}{extension}"  # Construct new file name with count
-                    image_path = os.path.join(output_path_byfile, image_name)  # Construct the full output path
-                    imgcount += 1
-                    with open(image_path, "wb") as fp:
-                        fp.write(image_file_object.data)
+                    if extension == ".jp2":
+                        print("Checking Image Extension",extension)
+                        base_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}"  # Construct new file name with count
+                        image_path = os.path.join(output_path_byfile, base_name)  # Construct the full output path
+                        imgcount += 1
+                        with open(image_path, "wb") as fp:
+                            fp.write(image_file_object.data)
+                        with Image.open(image_path) as im:
+                            new_image_name = base_name + ".png"  # New image name for PNG
+                            new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
+                            im.save(new_image_path)  # Save the image as PNG
+                            os.remove(image_path)
+                    else:
+                        image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}{extension}"  # Construct new file name with count
+                        image_path = os.path.join(output_path_byfile, image_name)  # Construct the full output path
+                        imgcount += 1
+                        with open(image_path, "wb") as fp:
+                            fp.write(image_file_object.data)
                         
                 if text_instant:
                     texts += text_instant
@@ -6497,7 +6510,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     print("Retry success", response['text'])
             else:
                 ("Parseable JSON", response['text'])
- 
+    
+    print("The output is as follows::\n",response['text'])
     return response['text']
 
 def ANSWER_IMG(response_text, llm,relevant_doc):
