@@ -77,7 +77,8 @@ allowed_origins = [
     "https://thinglink.local",
     "https://thinglink.local:3000",
     "https://sandbox.thinglink.com",
-    "https://thinglink.com"
+    "https://thinglink.com",
+    "https://www.thinglink.com"
 ]
 
 # Configure CORS for multiple routes with specific settings
