@@ -435,7 +435,7 @@ prompt_linear = PromptTemplate(
     TextBlock (Welcome message to the scenario and proceedings)
     TextBlock/s (Information elaborated/ subject matter described in detail)
     MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. Firstly, see if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to.)
+    QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to. Give atleast 5 QuestionBlocks and so the previous TextBlocks should have enough content to be covered in these 5 QuestionBlocks named as QB1,QB2 till QB5. It can be even higher depending on the course content.)
     FeedbackAndFeedforwardBlock
     SelfAssessmentTextBlock
     GoalBlock
@@ -650,7 +650,7 @@ prompt_linear_retry = PromptTemplate(
     TextBlock (Welcome message to the scenario and proceedings)
     TextBlock/s (Information elaborated/ subject matter described in detail)
     MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. Firstly, see if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to.)
+    QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to. Give atleast 5 QuestionBlocks and so the previous TextBlocks should have enough content to be covered in these 5 QuestionBlocks named as QB1,QB2 till QB5. It can be even higher depending on the course content.)
     FeedbackAndFeedforwardBlock
     SelfAssessmentTextBlock
     GoalBlock
@@ -850,7 +850,7 @@ prompt_linear_simplify = PromptTemplate(
     TextBlock (Welcome message to the scenario and proceedings)
     TextBlock/s (Information elaborated/ subject matter described in detail)
     MediaBlock/s (To give illustrated, complimentary material to elaborate on the information given in Text Blocks. Generate a MediaBlock/s to complement the information provided in Text Blocks. Firstly, see if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to.)
+    QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to. Give atleast 5 QuestionBlocks and so the previous TextBlocks should have enough content to be covered in these 5 QuestionBlocks named as QB1,QB2 till QB5. It can be even higher depending on the course content.)
     FeedbackAndFeedforwardBlock
     SelfAssessmentTextBlock
     GoalBlock
@@ -987,7 +987,7 @@ prompt_linear_simplify = PromptTemplate(
 
     Chatbot (Tone of a teacher teaching student in great detail):"""
 )
-
+    
 ###Gamified Prompts
 # prompt_gamified_original = PromptTemplate(
 #     input_variables=["input_documents","human_input","content_areas","learning_obj"],
@@ -5694,145 +5694,148 @@ def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
         chain = LLMChain(prompt=prompt_LO_CA, llm=llm)
     return chain, docs_main, query
 
-def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type):
+def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_images):
     print("RE_SIMILARITY_SEARCH Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     print("docs from RE_SIMILARITY_SEARCH",docs)
-    PageNumberList = []
-    for relevant_doc in docs:
-        relevant_doc = relevant_doc.page_content
-        print(relevant_doc)
+    if summarize_images == "on":
+        print(f"Tells me to summarize images, {summarize_images}")
+        PageNumberList = []
+        for relevant_doc in docs:
+            relevant_doc = relevant_doc.page_content
+            print(relevant_doc)
 
-        pattern_this_pptx = r"'SlideNumber': (\d+), 'FileName': '(.+?)'"        # f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
-        # Find all matches for "[This Page is PageNumber:]"
-        matches_this_pptx = re.findall(pattern_this_pptx, relevant_doc)
+            pattern_this_pptx = r"'SlideNumber': (\d+), 'FileName': '(.+?)'"        # f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
+            # Find all matches for "[This Page is PageNumber:]"
+            matches_this_pptx = re.findall(pattern_this_pptx, relevant_doc)
 
-        pattern_this_end_pptx = r"End of SlideNumber:(\d+) with Filename:(.+?) ----"        # f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
-        # Find all matches for "[This Page is PageNumber:]"
-        matches_this_end_pptx = re.findall(pattern_this_end_pptx, relevant_doc)
+            pattern_this_end_pptx = r"End of SlideNumber:(\d+) with Filename:(.+?) ----"        # f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
+            # Find all matches for "[This Page is PageNumber:]"
+            matches_this_end_pptx = re.findall(pattern_this_end_pptx, relevant_doc)
 
 
-        pattern_this_doc = r'----media/ImageNumber:(\d+) PageNumber:Null of FileName:(.+)----'
-        matches_this_doc = re.findall(pattern_this_doc, relevant_doc)
-        
-        pattern_end = r'End of PageNumber:(\d+) of file name:(.+)\n'
-        pattern_this_page = r'The Content of PageNumber:(\d+) of file name:(.+) is:\n'
-        # Find all matches for "End of PageNumber:"
-        matches_end = re.findall(pattern_end, relevant_doc)
-
-        # Find all matches for "[This Page is PageNumber:]"
-        matches_this_page = re.findall(pattern_this_page, relevant_doc)
-
-        # Combine the matches
-        for num in matches_this_page + matches_end + matches_this_doc + matches_this_pptx + matches_this_end_pptx:
-            PageNumberList.append(num)
-
-        PageNumberList = list(set(PageNumberList))
-        print("PageNumberList",PageNumberList)
-
-    image_elements = []
-    image_summaries = []
-
-    def encode_image(image_path):
-        basename = os.path.basename(image_path)
-        with Image.open(image_path) as img:
-            width, height = img.size
-            print(f"{basename} size is {width},{height}")
-            if width*height > 262144:
-                # Resize the image
-                img = img.resize((512, 512))
-                # Save the resized image to a temporary file
-                basenama = os.path.basename(image_path)
-                extensiona = basenama.rsplit('.', 1)[1].lower()
-
-                temp_patha = image_path + f"_temp_img.{extensiona}"
-                img.save(temp_patha)
+            pattern_this_doc = r'----media/ImageNumber:(\d+) PageNumber:Null of FileName:(.+)----'
+            matches_this_doc = re.findall(pattern_this_doc, relevant_doc)
             
-                # Encode the resized image
-                with open(temp_patha, "rb") as f:
-                    encoded_image = base64.b64encode(f.read()).decode('utf-8')
+            pattern_end = r'End of PageNumber:(\d+) of file name:(.+)\n'
+            pattern_this_page = r'The Content of PageNumber:(\d+) of file name:(.+) is:\n'
+            # Find all matches for "End of PageNumber:"
+            matches_end = re.findall(pattern_end, relevant_doc)
 
-                # Remove the temporary file
-                os.remove(temp_patha)
-            else:
-                print(f"{basename} is less than 262144 having {width}, {height}")
-                with open(image_path, "rb") as f:
-                    encoded_image = base64.b64encode(f.read()).decode('utf-8')
+            # Find all matches for "[This Page is PageNumber:]"
+            matches_this_page = re.findall(pattern_this_page, relevant_doc)
 
-            return encoded_image
+            # Combine the matches
+            for num in matches_this_page + matches_end + matches_this_doc + matches_this_pptx + matches_this_end_pptx:
+                PageNumberList.append(num)
+
+            PageNumberList = list(set(PageNumberList))
+            print("PageNumberList",PageNumberList)
+
+        image_elements = []
+        image_summaries = []
+
+        def encode_image(image_path):
+            basename = os.path.basename(image_path)
+            with Image.open(image_path) as img:
+                width, height = img.size
+                print(f"{basename} size is {width},{height}")
+                if width*height > 262144:
+                    # Resize the image
+                    img = img.resize((512, 512))
+                    # Save the resized image to a temporary file
+                    basenama = os.path.basename(image_path)
+                    extensiona = basenama.rsplit('.', 1)[1].lower()
+
+                    temp_patha = image_path + f"_temp_img.{extensiona}"
+                    img.save(temp_patha)
+                
+                    # Encode the resized image
+                    with open(temp_patha, "rb") as f:
+                        encoded_image = base64.b64encode(f.read()).decode('utf-8')
+
+                    # Remove the temporary file
+                    os.remove(temp_patha)
+                else:
+                    print(f"{basename} is less than 262144 having {width}, {height}")
+                    with open(image_path, "rb") as f:
+                        encoded_image = base64.b64encode(f.read()).decode('utf-8')
+
+                return encoded_image
 
 
 
-    def summarize_image(encoded_image, basename):
-        prompt = [
-            SystemMessage(content="You are a bot that is good at analyzing images."),
-            HumanMessage(content=[
-                {
-                    "type": "text",
-                    "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!"
-                },
-                {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": f"data:image/jpeg;base64,{encoded_image}"
+        def summarize_image(encoded_image, basename):
+            prompt = [
+                SystemMessage(content="You are a bot that is good at analyzing images."),
+                HumanMessage(content=[
+                    {
+                        "type": "text",
+                        "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!"
                     },
-                },
-            ])
-        ]
-
-        prompt_gemini = HumanMessage(
-            content=[
-                {
-                    "type": "text",
-                    "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!",
-                },  # You can optionally provide text parts
-                {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{encoded_image}"
+                        },
+                    },
+                ])
             ]
-        )
 
-        if model_type == 'gemini':
-            print("Gemini summarizing images NOW")
-            response = ChatGoogleGenerativeAI(model="gemini-pro-vision",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
-            return response.content
-        else:
-            response = ChatOpenAI(model="gpt-4o", max_tokens=200, temperature=0).invoke(prompt)
-            return response.content
+            prompt_gemini = HumanMessage(
+                content=[
+                    {
+                        "type": "text",
+                        "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!",
+                    },  # You can optionally provide text parts
+                    {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
+                ]
+            )
 
-    for root, dirs, files in os.walk(output_path):
-        for i in files:
-            if i.endswith(('.png', '.jpg', '.jpeg')):
-                for page_number, file in PageNumberList:
-                    if f"FileName {file} PageNumber {page_number}" in i:
-                        image_path = os.path.join(root, i)
-                        basename = os.path.basename(image_path)
-                        print(os.path.basename(image_path))
-                        encoded_image = encode_image(image_path)
-                        image_elements.append(encoded_image)
-                        summary = summarize_image(encoded_image,basename)
-                        image_summaries.append(summary)
-                    elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
-                        image_path = os.path.join(root, i)
-                        basename = os.path.basename(image_path)
-                        print(os.path.basename(image_path))
-                        encoded_image = encode_image(image_path)
-                        image_elements.append(encoded_image)
-                        summary = summarize_image(encoded_image,basename)
-                        image_summaries.append(summary)
-                    elif f"FileName {file} SlideNumber {page_number}" in i:
-                        image_path = os.path.join(root, i)
-                        basename = os.path.basename(image_path)
-                        print(os.path.basename(image_path))
-                        encoded_image = encode_image(image_path)
-                        image_elements.append(encoded_image)
-                        summary = summarize_image(encoded_image,basename)
-                        image_summaries.append(summary)
+            if model_type == 'gemini':
+                print("Gemini summarizing images NOW")
+                response = ChatGoogleGenerativeAI(model="gemini-pro-vision",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
+                return response.content
+            else:
+                response = ChatOpenAI(model="gpt-4o", max_tokens=200, temperature=0).invoke(prompt)
+                return response.content
 
-    print("image_summaries::",image_summaries)
+        for root, dirs, files in os.walk(output_path):
+            for i in files:
+                if i.endswith(('.png', '.jpg', '.jpeg')):
+                    for page_number, file in PageNumberList:
+                        if f"FileName {file} PageNumber {page_number}" in i:
+                            image_path = os.path.join(root, i)
+                            basename = os.path.basename(image_path)
+                            print(os.path.basename(image_path))
+                            encoded_image = encode_image(image_path)
+                            image_elements.append(encoded_image)
+                            summary = summarize_image(encoded_image,basename)
+                            image_summaries.append(summary)
+                        elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
+                            image_path = os.path.join(root, i)
+                            basename = os.path.basename(image_path)
+                            print(os.path.basename(image_path))
+                            encoded_image = encode_image(image_path)
+                            image_elements.append(encoded_image)
+                            summary = summarize_image(encoded_image,basename)
+                            image_summaries.append(summary)
+                        elif f"FileName {file} SlideNumber {page_number}" in i:
+                            image_path = os.path.join(root, i)
+                            basename = os.path.basename(image_path)
+                            print(os.path.basename(image_path))
+                            encoded_image = encode_image(image_path)
+                            image_elements.append(encoded_image)
+                            summary = summarize_image(encoded_image,basename)
+                            image_summaries.append(summary)
 
-    image_summaries_string = "\n".join(image_summaries) #convert list to string to add in the langchain Document data type
-    docs.append(Document(page_content=f"Useful Image/s for all the above content::\n{image_summaries_string}"))
+        print("image_summaries::",image_summaries)
+
+        image_summaries_string = "\n".join(image_summaries) #convert list to string to add in the langchain Document data type
+        docs.append(Document(page_content=f"Useful Image/s for all the above content::\n{image_summaries_string}"))
 
     return docs
+
 
 
 def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name):
