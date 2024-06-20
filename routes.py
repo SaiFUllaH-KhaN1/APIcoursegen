@@ -126,6 +126,7 @@ def delete_old_directories():
                 print(f"Deleting directory: {dir_path}, it has modified date of {dir_age}")
                 shutil.rmtree(dir_path)
 ###     ###     ###
+
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
     if 'user_id' not in session:
@@ -136,6 +137,7 @@ def process_data():
             os.makedirs(output_path) 
 
     if request.method == 'POST':
+        start_time = time.time() # Timer starts at the Post
         session_var = session['user_id']
         
         # getting requests from frontend
@@ -224,8 +226,11 @@ def process_data():
             
             cache.set(f"user_id_cache_{session['user_id']}", session['user_id'],timeout=0)
             cache.set(f"prompt_{session['user_id']}", prompt,timeout=0)
-
-            return jsonify(message="Data Processed!")
+            end_time = time.time()
+            execution_time = end_time - start_time
+            minutes, seconds = divmod(execution_time, 60)
+            formatted_time = f"{int(minutes):02}:{int(seconds):02}"
+            return jsonify(message=f"Data Processed in time {formatted_time}!")
 
     else:
         f = None
@@ -242,6 +247,7 @@ def decide():
         print("Scenario type:",scenario)
         model_type = request.args.get('model', 'openai') # to set default model
         model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
+        start_time = time.time() # Timer starts at the Post
 
         if scenario:
             user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
@@ -267,8 +273,14 @@ def decide():
                 response_LO_CA = chain({"input_documents": docs_main,"human_input": query})
 
                 cache.set(f"scenario_{user_id_cache}", scenario,timeout=0)
-
-                return Response(response_LO_CA['text'], mimetype='application/json')
+                end_time = time.time()
+                execution_time = end_time - start_time
+                minutes, seconds = divmod(execution_time, 60)
+                formatted_time = f"{int(minutes):02}:{int(seconds):02}"
+                execution_time_block = {"executionTime":f"{formatted_time}"}
+                response_with_time = json.loads(response_LO_CA['text']) 
+                response_with_time.update(execution_time_block)
+                return Response(json.dumps(response_with_time), mimetype='application/json')
                 # return jsonify(response_LO_CA['text'])
             except Exception as e:
                 print(f"An error occurred: {e}")
@@ -286,6 +298,8 @@ def generate_course():
         content_areas = request.form.get("content_areas")
         model_type = request.args.get('model', 'openai') # to set default model
         model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
+        summarize_images = request.args.get('summarizeImages', 'off') # to set default value name
+        start_route_time = time.time() # Timer starts at the Post
 
         if learning_obj and content_areas:
             user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
@@ -307,18 +321,40 @@ def generate_course():
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id_cache}",embeddings,allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
                 output_path = f"./imagefolder_{user_id_cache}"
-                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type)
+
+                start_RE_SIMILARITY_SEARCH_time = time.time()
+                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type, summarize_images)
+                end_RE_SIMILARITY_SEARCH_time = time.time()
+                execution_RE_SIMILARITY_SEARCH_time = end_RE_SIMILARITY_SEARCH_time - start_RE_SIMILARITY_SEARCH_time
+                minutes, seconds = divmod(execution_RE_SIMILARITY_SEARCH_time, 60)
+                formatted_RE_SIMILARITY_SEARCH_time = f"{int(minutes):02}:{int(seconds):02} with summarize_images switched = {summarize_images} " # for docs retreival and image summarizer
+
                 print("2nd Docs_main:",docs_main)
                 print("combined_prompt",combined_prompt)
             # doc_main has all the unfiltered meta image summaries appended with and not in vectorstore, however...
             # ... it has been list of images are chosen to be atleast reletive to the topic at hand
                 
+                start_TALK_WITH_RAG_time = time.time()
                 response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name)
-                
+                end_TALK_WITH_RAG_time = time.time()
+                execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
+                minutes, seconds = divmod(execution_TALK_WITH_RAG_time, 60)
+                formatted_TALK_WITH_RAG_time = f"{int(minutes):02}:{int(seconds):02}" # for docs JSON scenario response
+
+
                 cache.set(f"docs_main_{user_id_cache}", docs_main, timeout=0)
                 cache.set(f"response_text_{user_id_cache}", response, timeout=0)
 
-                return Response(response, mimetype='application/json')
+                end_route_time = time.time()
+                execution_route_time = end_route_time - start_route_time
+                minutes, seconds = divmod(execution_route_time, 60)
+                formatted_route_time = f"{int(minutes):02}:{int(seconds):02}"
+
+                execution_time_block = {"executionTime":f"""For whole Route is {formatted_route_time};\nFor document retreival &/or image summarizer is {formatted_RE_SIMILARITY_SEARCH_time};\nFor JSON scenario response is {formatted_TALK_WITH_RAG_time};"""}
+                response_with_time = json.loads(response) 
+                response_with_time.update(execution_time_block)
+
+                return Response(json.dumps(response_with_time), mimetype='application/json')
                 # return jsonify(message=f"""{response}""")
             except Exception as e:
                 print(f"An error occurred: {e}")
