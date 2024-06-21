@@ -1,4 +1,13 @@
-# GitHub Actions workflow snippet for passing secrets at build time
+name: Build and Push Docker image
+
+on:
+  push:
+    branches:
+      - master  # Runs on every push to the master branch
+  pull_request:
+    branches:
+      - master  # Optionally, runs on pull requests to the master branch
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
