@@ -3,7 +3,7 @@ name: Build and Push Docker image
 on:
   push:
     branches:
-      - master  # This will trigger the workflow on every push to the master branch
+      - master  # This will trigger the workflow on every push to the master branc
   pull_request:
     branches:
       - master  # This will trigger the workflow on pull requests to the master branch
