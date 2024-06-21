@@ -71,28 +71,43 @@ def RAG(file_content,embeddings,file,session_var):
                 pgcount += 1
                 imgcount = 1
                 text_instant = f"\nThe Content of PageNumber:{pgcount} of file name:{filename_without_extension} is:\n{text_instant}.\nEnd of PageNumber:{pgcount} of file name:{filename_without_extension}\n"
-                for image_file_object in page.images:
-                    # base_name = os.path.splitext(os.path.basename(image_file_object.name))[0]  # Get the base file name without extension
-                    extension = os.path.splitext(image_file_object.name)[1]  # Get the file extension
-                    if extension == ".jp2":
-                        print("Checking Image Extension",extension)
+                try:
+                    for image_file_object in page.images:
+                        # base_name = os.path.splitext(os.path.basename(image_file_object.name))[0]  # Get the base file name without extension
+                        extension = os.path.splitext(image_file_object.name)[1]  # Get the file extension
                         base_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}"  # Construct new file name with count
-                        image_path = os.path.join(output_path_byfile, base_name)  # Construct the full output path
-                        imgcount += 1
-                        with open(image_path, "wb") as fp:
-                            fp.write(image_file_object.data)
-                        with Image.open(image_path) as im:
-                            new_image_name = base_name + ".png"  # New image name for PNG
-                            new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
-                            im.save(new_image_path)  # Save the image as PNG
-                            os.remove(image_path)
-                    else:
-                        image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}{extension}"  # Construct new file name with count
-                        image_path = os.path.join(output_path_byfile, image_name)  # Construct the full output path
-                        imgcount += 1
-                        with open(image_path, "wb") as fp:
-                            fp.write(image_file_object.data)
+                        if extension == ".jp2":
+                            print("Checking Image Extension",extension)
+                            image_path = os.path.join(output_path_byfile, base_name)  # Construct the full output path
+                            imgcount += 1
+                            with open(image_path, "wb") as fp:
+                                fp.write(image_file_object.data)
+                            with Image.open(image_path) as im:
+                                new_image_name = base_name + ".png"  # New image name for PNG
+                                new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
+                                im.save(new_image_path)  # Save the image as PNG
+                                os.remove(image_path)
+                        else:
+                            image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}{extension}"  # Construct new file name with count
+                            image_path = os.path.join(output_path_byfile, image_name)  # Construct the full output path
+                            imgcount += 1
+                            with open(image_path, "wb") as fp:
+                                fp.write(image_file_object.data)
+                            with Image.open(image_path) as im:
+                                if im.mode in ["P", "PA"]:
+                                    print("Image of P or PA Mode detected:",im.mode)
+                                    im = im.convert("RGBA")  # Convert palette-based images to RGBA
+                                    new_image_name = base_name + ".png"  # New image name for PNG
+                                    new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
+                                    im.save(new_image_path)  # Save the image as PNG
+                                    os.remove(image_path)
+                                else:
+                                    pass
                         
+
+                except Exception as e:
+                    print(f"Error processing image {image_file_object.name}: {e}")
+                    continue  # Skip to the next image                        
                 if text_instant:
                     texts += text_instant
             # at this point we got text and images extracted, stored in ./images folder, lets summarize images
