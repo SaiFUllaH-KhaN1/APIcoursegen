@@ -1,0 +1,17 @@
+# Dockerfile example
+FROM python:3.9.0
+ARG OPENAI_API_KEY
+ARG GOOGLE_API_KEY
+ARG BASIC_AUTH_USERNAME
+ARG BASIC_AUTH_PASSWORD
+
+ENV OPENAI_API_KEY=${OPENAI_API_KEY}
+ENV GOOGLE_API_KEY=${GOOGLE_API_KEY}
+ENV BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
+ENV BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
+
+WORKDIR /app
+COPY . .
+RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE 5000
+CMD ["gunicorn", "-w", "2", "--timeout", "600", "routes:app", "--bind", "0.0.0.0:5000"]
