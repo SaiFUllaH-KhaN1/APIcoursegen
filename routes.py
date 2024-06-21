@@ -302,7 +302,7 @@ def generate_course():
         content_areas = request.form.get("content_areas")
         model_type = request.args.get('model', 'openai') # to set default model
         model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
-        summarize_images = request.args.get('summarizeImages', 'off') # to set default value name
+        summarize_images = request.args.get('summarizeImages', 'on') # to set default value name
         start_route_time = time.time() # Timer starts at the Post
 
         if learning_obj and content_areas:
