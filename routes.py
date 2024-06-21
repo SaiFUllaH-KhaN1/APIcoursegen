@@ -230,7 +230,11 @@ def process_data():
             execution_time = end_time - start_time
             minutes, seconds = divmod(execution_time, 60)
             formatted_time = f"{int(minutes):02}:{int(seconds):02}"
-            return jsonify(message=f"Data Processed in time {formatted_time}!")
+            execution_time_block = {"executionTime":f"{formatted_time}"}
+            messageJson = '{"message": "Data processed!"}'
+            response_with_time = json.loads(messageJson)
+            response_with_time.update(execution_time_block)
+            return Response(json.dumps(response_with_time), mimetype='application/json')
 
     else:
         f = None
