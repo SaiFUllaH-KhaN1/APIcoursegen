@@ -38,7 +38,7 @@ from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_cors import CORS
 
-load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
+load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env") # This is for render hosting service
 # Set the API key for OpenAI
 openai.api_key = os.getenv('OPENAI_API_KEY')
 api_key = os.getenv('GOOGLE_API_KEY')
