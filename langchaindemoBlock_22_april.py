@@ -44,8 +44,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 from PIL import Image
 from langchain.utils.math import cosine_similarity
 
-load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
-
 
 def RAG(file_content,embeddings,file,session_var):
     print("file is:",file)
