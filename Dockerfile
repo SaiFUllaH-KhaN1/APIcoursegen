@@ -11,8 +11,10 @@ ENV BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
 ENV BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
 
 WORKDIR /app
-COPY . .
+COPY requirements.txt
+requirements.txt
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
 EXPOSE 5000
 CMD ["gunicorn", "-w", "2", "--timeout", "600", "routes:app", "--bind", "0.0.0.0:5000"]
