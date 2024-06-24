@@ -11,8 +11,7 @@ ENV BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
 ENV BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
 
 WORKDIR /app
-COPY requirements.txt
-requirements.txt
+COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
