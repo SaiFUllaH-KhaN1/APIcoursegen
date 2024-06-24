@@ -16,4 +16,4 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 5000
-CMD ["gunicorn", "-w", "2", "--timeout", "600", "routes:app", "--bind", "0.0.0.0:5000"]
+CMD ["gunicorn", "--worker-class=gevent", "--worker-connections=1000", "--workers=4", "--timeout", "600", "routes:app", "--bind", "0.0.0.0:5000"]
