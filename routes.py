@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
+from flask import g,Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
+import jwt
 from langchain_community.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain_community.llms import OpenAI
@@ -25,6 +26,7 @@ import google.generativeai as genai
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_cors import CORS
+from functools import wraps
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env") # This is for render hosting service
 # Set the API key for OpenAI
@@ -38,7 +40,7 @@ import os
 
 
 app = Flask(__name__)
-app.secret_key = "123"
+app.secret_key = os.environ.get('SECRET_KEY')
 
 # Configuration for the cache directory
 cache_dir = 'cache'
@@ -76,6 +78,35 @@ cors = CORS(app, supports_credentials=True, resources={
     r"/generate_course": {"origins": allowed_origins},
      r"/find_images": {"origins": allowed_origins}
 })
+
+### TOKEN DECORATORS ###
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        # Extract the token from the Authorization header
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or 'Bearer ' not in auth_header:
+            return jsonify({"message": "Missing or malformed token"}), 401
+        
+        token = auth_header.split(" ")[1]
+        try:
+            # Decode the token using PyJWT's built-in expiration verification
+            decoded = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+            # Extract uuid4 from the decoded token
+            g.user_uuid = decoded['uuid4']
+            print("Token Decoded Success!:",g.user_uuid)
+
+        except jwt.ExpiredSignatureError:
+            return jsonify({"message": "Token has expired"}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"message": "Invalid token"}), 401
+        except Exception as e:
+            # Catch other exceptions, such as no 'uuid4' in token
+            return jsonify({"message": "Invalid token: " + str(e)}), 401
+        
+        return f(*args, **kwargs)
+    return decorated
+
 ### MANUAL DELETION OF all folders starting with faiss_index_ ###
 def delete_indexes():
     """
@@ -115,18 +146,18 @@ def delete_old_directories():
                 shutil.rmtree(dir_path)
 ###     ###     ###
 
+
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
-    if 'user_id' not in session:
-        session['user_id'] = str(uuid.uuid4())  # Create a unique session user_id if not exists
-        session_var = session['user_id']
-        output_path = f"./imagefolder_{session_var}"
-        if not os.path.exists(output_path):
-            os.makedirs(output_path) 
 
     if request.method == 'POST':
         start_time = time.time() # Timer starts at the Post
-        session_var = session['user_id']
+
+        # Create a unique session user_id if not exists
+        session_var = str(uuid.uuid4())
+        output_path = f"./imagefolder_{session_var}"
+        if not os.path.exists(output_path):
+            os.makedirs(output_path)
         
         # getting requests from frontend
         model_type = request.args.get('model', 'openai') # to set default model
@@ -210,18 +241,24 @@ def process_data():
                 base_docsearch.merge_from(docsearch)  # Merge subsequent indexes
 
         if base_docsearch:
-            base_docsearch.save_local(f"faiss_index_{session['user_id']}") 
+            base_docsearch.save_local(f"faiss_index_{session_var}") 
             
-            cache.set(f"user_id_cache_{session['user_id']}", session['user_id'],timeout=0)
-            cache.set(f"prompt_{session['user_id']}", prompt,timeout=0)
+            #cache.set(f"user_id_cache_{session['user_id']}", session['user_id'],timeout=0) #old cache based session storage
+            
+            cache.set(f"prompt_{session_var}", prompt,timeout=0)
             end_time = time.time()
             execution_time = end_time - start_time
             minutes, seconds = divmod(execution_time, 60)
             formatted_time = f"{int(minutes):02}:{int(seconds):02}"
             execution_time_block = {"executionTime":f"{formatted_time}"}
-            messageJson = '{"message": "Data Processed!"}'
+            messageJson = '{"message": "Data processed!"}'
             response_with_time = json.loads(messageJson)
             response_with_time.update(execution_time_block)
+
+            # Token uuid4 append
+            token = jwt.encode({'uuid4': session_var,'exp': datetime.utcnow() + timedelta(days=1)}, app.secret_key, algorithm='HS256')
+            response_with_time['token'] = token  # Add token as a string under the key 'token'
+
             return Response(json.dumps(response_with_time), mimetype='application/json')
 
     else:
@@ -233,7 +270,10 @@ def process_data():
     return jsonify(error="Unexpected Fault or Interruption")
 
 @app.route("/decide", methods=["GET", "POST"])
+@token_required
 def decide():
+    user_id = g.user_uuid
+    print("User UUID:", user_id)
     if request.method == 'POST':
         scenario = request.form.get('scenario')
         print("Scenario type:",scenario)
@@ -242,34 +282,40 @@ def decide():
         start_time = time.time() # Timer starts at the Post
 
         if scenario:
-            user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
-            print(user_id_cache)
 
-            prompt = cache.get(f"prompt_{user_id_cache}")
+            prompt = cache.get(f"prompt_{user_id}")
             print("Prompt loaded!:",prompt)
 
             try:
                 if model_type == "gemini":
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                elif model_type == "azure":
+                    llm = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
+                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
                 else:
                     llm = ChatOpenAI(model=model_name, temperature=0, streaming=True, verbose= True)
                     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
                 print(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
 
-                load_docsearch = FAISS.load_local(f"faiss_index_{user_id_cache}",embeddings,allow_dangerous_deserialization=True)
+                load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 
-                chain, docs_main, query = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type)
+                chain, docs_main, query = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm)
                 print("1st Docs_main of /Decide route:",docs_main)
-                response_LO_CA = chain({"input_documents": docs_main,"human_input": query})
 
-                cache.set(f"scenario_{user_id_cache}", scenario,timeout=0)
+                print("response_LO_CA started")
+                response_LO_CA = chain({"input_documents": docs_main,"human_input": query})
+                print(response_LO_CA)
+                print("response_LO_CA ended")
+
+                cache.set(f"scenario_{user_id}", scenario,timeout=0)
                 end_time = time.time()
                 execution_time = end_time - start_time
                 minutes, seconds = divmod(execution_time, 60)
                 formatted_time = f"{int(minutes):02}:{int(seconds):02}"
                 execution_time_block = {"executionTime":f"{formatted_time}"}
+                print(response_LO_CA['text'])
                 response_with_time = json.loads(response_LO_CA['text']) 
                 response_with_time.update(execution_time_block)
                 return Response(json.dumps(response_with_time), mimetype='application/json')
@@ -284,7 +330,10 @@ def decide():
         return jsonify(error="Unexpected Fault or Interruption")
     
 @app.route("/generate_course", methods=["GET", "POST"])
+@token_required
 def generate_course():
+    user_id = g.user_uuid
+    print("User UUID:", user_id)
     if request.method == 'POST':
         learning_obj = request.form.get("learning_obj")
         content_areas = request.form.get("content_areas")
@@ -294,25 +343,27 @@ def generate_course():
         start_route_time = time.time() # Timer starts at the Post
 
         if learning_obj and content_areas:
-            user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
 
-            prompt = cache.get(f"prompt_{user_id_cache}")
+            prompt = cache.get(f"prompt_{user_id}")
             print("Prompt loaded!:",prompt)
 
-            scenario = cache.get(f"scenario_{user_id_cache}")
+            scenario = cache.get(f"scenario_{user_id}")
             print("scenario loaded!:",scenario)
 
             try:
                 if model_type == 'gemini':
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1, max_output_tokens=8000)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                elif model_type == "azure":
+                    llm = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0.1)
+                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
                 else:
                     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
                     llm = ChatOpenAI(model=model_name, temperature=0.1, streaming=True, verbose= True)
 
-                load_docsearch = FAISS.load_local(f"faiss_index_{user_id_cache}",embeddings,allow_dangerous_deserialization=True)
+                load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
-                output_path = f"./imagefolder_{user_id_cache}"
+                output_path = f"./imagefolder_{user_id}"
 
                 start_RE_SIMILARITY_SEARCH_time = time.time()
                 docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type, summarize_images)
@@ -334,8 +385,8 @@ def generate_course():
                 formatted_TALK_WITH_RAG_time = f"{int(minutes):02}:{int(seconds):02}" # for docs JSON scenario response
 
 
-                cache.set(f"docs_main_{user_id_cache}", docs_main, timeout=0)
-                cache.set(f"response_text_{user_id_cache}", response, timeout=0)
+                cache.set(f"docs_main_{user_id}", docs_main, timeout=0)
+                cache.set(f"response_text_{user_id}", response, timeout=0)
 
                 end_route_time = time.time()
                 execution_route_time = end_route_time - start_route_time
@@ -356,17 +407,19 @@ def generate_course():
             print("None")
         
         return jsonify(error="Unexpected Fault or Interruption")
-    
+        
 @app.route("/find_images", methods=["GET", "POST"])
+@token_required
 def find_images():
+    user_id = g.user_uuid
+    print("User UUID:", user_id)
     if request.method == 'POST':
         model_type = request.args.get('model', 'openai') # default select openai
         model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
         
-        user_id_cache = cache.get(f"user_id_cache_{session['user_id']}")
-        response_text = cache.get(f"response_text_{user_id_cache}")
-        docs_main = cache.get(f"docs_main_{user_id_cache}")
-        output_path = f"./imagefolder_{user_id_cache}"
+        response_text = cache.get(f"response_text_{user_id}")
+        docs_main = cache.get(f"docs_main_{user_id}")
+        output_path = f"./imagefolder_{user_id}"
         if response_text and docs_main:
             try:
                 if model_type == 'gemini':
@@ -410,8 +463,8 @@ def find_images():
                     json_img_response[f"base64_Image{count_var}"] = r
                     print(json_img_response)
 
-                return Response(json_img_response, mimetype='application/json')
-                # return jsonify(message=f"""{str(json_img_response)}""")
+                return Response(json_img_response, mimetype='application/json') #This one prefered
+                #return jsonify(f"""{str(json_img_response)}""") #This one works
             except Exception as e:
                 print(f"An error occurred: {e}")
                 return jsonify(error=f"An error occurred: {str(e)}")
