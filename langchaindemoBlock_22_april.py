@@ -5614,47 +5614,6 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
 )
 ### Simulation Prompts End
 
-prompt_LO_CA = PromptTemplate(
-    input_variables=["input_documents","human_input"],
-    template="""
-    Based on the information provided in 'Human Input' and 'Input Documents', you are going to generate 
-    Learning Objectives and Content Areas in a JSON format. Make sure the both Learning Objectives and Content Areas
-    are specifically relevant to the query of 'Human Input'. 
-    Lets suppose the 'Human Input' asks for a course to be created for Driving a Car. 
-    And the 'Input Documents' has information for both Driving a Car and Repairing a Car. 
-    Then, you should only give the Learning Objectives and Content Areas about Driving a Car only
-    since the 'Human Input' asked you only about this topic.
-
-    Do not give any Learning Objectives or Content Areas based on information
-    not present in the 'Input Documents'. You have to just strictly keep the Learning Objectives and Content Areas
-    limited and specific to the information asked by 'Human Input' AND present in the 'Input Documents'; and nothing outside it.
-    ***Stick strictly to the information given in the 'Input Documents' provided to you.
-    The 'Human Input' decides what information to collect from the 'Input Documents' to create Learning Objectives
-    and Content Areas.***
-
-    *DIRE WARNING: The number of points of Learning Objectives and Content Areas can be different.
-    The Example below is only given for context of format and absolutely NOT for the fact that you 
-    generate same number of points as given in the Example for the Learning Objectives and Content Areas. 
-    Learning Objectives and Content Areas can have only 1 point or more points, 
-    all depends on the amount of information present in the 'Input Documents'
-    and the query pertaining to it by the human in the 'Human Input'.*
-    
-    \nExample\n
-    {{
-    "LearningObjectives": [
-        "1. Recognize the Signs and Symptoms of a Heart Attack: Learners will be able to identify both typical and atypical signs of a heart attack, understanding that symptoms can vary widely among individuals.\n2. Emergency Response Procedures: Learners will understand the steps to take in both scenarios where the patient is unconscious and conscious, including the use of DRSABCD (Danger, Response, Send for help, Airway, Breathing, CPR, Defibrillation)."
-    ],
-    "ContentAreas": [
-        "1. Introduction to Heart Attacks: Overview of what constitutes a heart attack, including the physiological underpinnings and the importance of quick response.\n2. Identifying Symptoms: Detailed review of both common and less common symptoms of heart attacks, with emphasis on variations by gender, age, and pre-existing conditions.\n3. First Aid Steps: Step-by-step guide for responding to a heart attack in various situations (unconscious vs. conscious patients)."
-    ]
-    }}
-    \nExample End\n
-
-    'Human Input': {human_input}
-    'Input Documents': {input_documents}
-    Chatbot:"""
-)
-
 prompt_LO_CA_GEMINI = PromptTemplate(
     input_variables=["input_documents","human_input"],
     template="""
@@ -5681,15 +5640,11 @@ prompt_LO_CA_GEMINI = PromptTemplate(
     """
 )
 
-def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
+def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm):
     print("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     docs_main = " ".join([d.page_content for d in docs])
-    if model_type == "gemini": 
-        print("Now processing prompt_LO_CA_GEMINI")
-        chain = LLMChain(prompt=prompt_LO_CA_GEMINI, llm=llm)
-    else:
-        chain = LLMChain(prompt=prompt_LO_CA, llm=llm)
+    chain = LLMChain(prompt=prompt_LO_CA_GEMINI, llm=llm)
     return chain, docs_main, query
 
 def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_images):
