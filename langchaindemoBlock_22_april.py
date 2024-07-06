@@ -26,6 +26,7 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 import shutil
 import re
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_community.chat_models import AzureChatOpenAI
 from PIL import Image
 from langchain.utils.math import cosine_similarity
 
@@ -572,6 +573,7 @@ prompt_linear = PromptTemplate(
 prompt_linear_retry = PromptTemplate(
     input_variables=["incomplete_response"],
     template="""
+    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response.
     Complete the response by continuing exactly from the discontinued point, which is specified by '[CONTINUE_EXACTLY_FROM_HERE]'.
@@ -580,11 +582,11 @@ prompt_linear_retry = PromptTemplate(
     Take great care into the ID heirarchy considerations while continuing the incomplete response.
     'Incomplete Response': {incomplete_response};
 
-    !!!WARNING: KEEP YOUR RESPONSE SHORT, since you have alreay reached your token limit!!! 
+    !!!WARNING: KEEP YOUR RESPONSE SHORT AS MUCH AS LOGICALLY POSSIBLE!!! 
 
     !!!NOTE: YOU HAVE TO ENCLOSE THE JSON PARENTHESIS BY KEEPING THE 'Incomplete Response' IN CONTEXT!!!
-    
-    !!!CAUTION: INCLUDE WITH NODES, ALSO RELATIVE EDGES FOR DEFINING CONNECTIONS OF BLOCKS!!!
+
+    !!!CAUTION: INCLUDE RELEVANT EDGES FOR DEFINING CONNECTIONS OF BLOCKS AFTER COMPLETELY GENERATING ALL THE NODES!!!
 
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
@@ -600,10 +602,6 @@ prompt_linear_retry = PromptTemplate(
     and create the scenario according to these very "Learning Objectives" and "Content Areas" specified.
     3. Generate a JSON-formatted in Linear Scenario structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
     
-    'Human Input': {human_input};
-    'Input Documents': {input_documents};
-    'Learning Objectives': {learning_obj};
-    'Content Areas': {content_areas};
     ***WHAT TO DO END***
 
     
@@ -2037,11 +2035,11 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     'Incomplete Response': {incomplete_response};
     'Exit Game Story': {exit_game_story};
 
-    !!!WARNING: KEEP YOUR RESPONSE SHORT, since you have alreay reached your token limit!!! 
+    !!!WARNING: KEEP YOUR RESPONSE SHORT AS MUCH AS LOGICALLY POSSIBLE!!! 
 
     !!!NOTE: YOU HAVE TO ENCLOSE THE JSON PARENTHESIS BY KEEPING THE 'Incomplete Response' IN CONTEXT!!!
 
-    !!!CAUTION: INCLUDE WITH NODES, ALSO RELATIVE EDGES FOR DEFINING CONNECTIONS OF BLOCKS!!!
+    !!!CAUTION: INCLUDE RELEVANT EDGES FOR DEFINING CONNECTIONS OF BLOCKS AFTER COMPLETELY GENERATING ALL THE NODES!!!
 
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
@@ -2639,6 +2637,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
 
     Chatbot:"""
 )
+
 
 prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
@@ -3612,11 +3611,11 @@ prompt_branched_retry = PromptTemplate(
     'Incomplete Response': {incomplete_response};
     'Micro Subtopics': {micro_subtopics};
 
-    !!!WARNING: KEEP YOUR RESPONSE SHORT, since you have alreay reached your token limit!!! 
+    !!!WARNING: KEEP YOUR RESPONSE SHORT AS MUCH AS LOGICALLY POSSIBLE!!! 
 
     !!!NOTE: YOU HAVE TO ENCLOSE THE JSON PARENTHESIS BY KEEPING THE 'Incomplete Response' IN CONTEXT!!!
 
-    !!!CAUTION: INCLUDE WITH NODES, ALSO RELATIVE EDGES FOR DEFINING CONNECTIONS OF BLOCKS!!!
+    !!!CAUTION: INCLUDE RELEVANT EDGES FOR DEFINING CONNECTIONS OF BLOCKS AFTER COMPLETELY GENERATING ALL THE NODES!!!
 
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
@@ -5181,11 +5180,11 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     'Incomplete Response': {incomplete_response};
     'Simulation Story': {simulation_story};
 
-    !!!WARNING: KEEP YOUR RESPONSE SHORT, since you have alreay reached your token limit!!! 
+    !!!WARNING: KEEP YOUR RESPONSE SHORT AS MUCH AS LOGICALLY POSSIBLE!!! 
 
     !!!NOTE: YOU HAVE TO ENCLOSE THE JSON PARENTHESIS BY KEEPING THE 'Incomplete Response' IN CONTEXT!!!
 
-    !!!CAUTION: INCLUDE WITH NODES, ALSO RELATIVE EDGES FOR DEFINING CONNECTIONS OF BLOCKS!!!
+    !!!CAUTION: INCLUDE RELEVANT EDGES FOR DEFINING CONNECTIONS OF BLOCKS AFTER COMPLETELY GENERATING ALL THE NODES!!!
 
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
@@ -5612,6 +5611,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     
     Chatbot:"""
 )
+
 ### Simulation Prompts End
 
 prompt_LO_CA_GEMINI = PromptTemplate(
@@ -5791,7 +5791,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
 
 
 
-def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name):
+def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings):
     print("TALK_WITH_RAG Initiated!")
     # if we are getting docs_main already from the process_data flask route then comment, else
     # UNcomment if you want more similarity_searching based on Learning obj and content areas!
@@ -5876,6 +5876,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+        elif model_type == 'azure':
+            llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
         else:
             llm_setup = ChatOpenAI(model=model_name, temperature=0)
 
@@ -5950,6 +5952,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
             chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
             print("prompt_simulation_pedagogy_gemini selected!")
+        elif model_type == 'azure':
+            llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0.3)
+            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
         else:
             llm_setup = ChatOpenAI(model=model_name, temperature=0.3)
             chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
@@ -6020,6 +6025,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         print("SCENARIO ====prompt_gamified",scenario)
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+        elif model_type == 'azure':
+            llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
         else:
             llm_setup = ChatOpenAI(model=model_name, temperature=0)
 
@@ -6097,9 +6104,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         ### SEMANTIC ROUTES LOGIC ###
         if model_type == 'gemini':
             llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32)
-            embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        elif model_type == 'azure':
+            llm_auto = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0.4)
         else:
-            embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
             llm_auto = ChatOpenAI(model=model_name, temperature=0.4, max_tokens=32)
         
         llm_auto_chain = LLMChain(prompt=promptSelector, llm=llm_auto)
@@ -6132,6 +6139,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             print("Gamified Auto Selected")
             if model_type == 'gemini':
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+            elif model_type == 'azure':
+                llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
             else:
                 llm_setup = ChatOpenAI(model=model_name, temperature=0)
 
@@ -6268,6 +6277,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
                 chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
                 print("prompt_simulation_pedagogy_gemini selected!")
+            elif model_type == 'azure':
+                llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0.3)
+                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
             else:
                 llm_setup = ChatOpenAI(model=model_name, temperature=0.3)
                 chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
@@ -6338,6 +6350,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             print("Branched Auto Selected")
             if model_type == 'gemini':
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+            elif model_type == 'azure':
+                llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
             else:
                 llm_setup = ChatOpenAI(model=model_name, temperature=0)
 
@@ -6466,7 +6480,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     print("Retry success", response['text'])
             else:
                 ("Parseable JSON", response['text'])
-    
+
     print("The output is as follows::\n",response['text'])
     return response['text']
 
