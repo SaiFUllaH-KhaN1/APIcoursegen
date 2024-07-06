@@ -23,6 +23,8 @@ import base64
 import time
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 import google.generativeai as genai
+from langchain_community.chat_models import AzureChatOpenAI
+from langchain_community.embeddings import AzureOpenAIEmbeddings
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_cors import CORS
@@ -146,7 +148,6 @@ def delete_old_directories():
                 shutil.rmtree(dir_path)
 ###     ###     ###
 
-
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
 
@@ -162,6 +163,7 @@ def process_data():
         # getting requests from frontend
         model_type = request.args.get('model', 'openai') # to set default model
         model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
+        azure_api_version = request.args.get('apiVersion', '2023-05-15') # to set default version name
         prompt = request.form.get("prompt")
         url_doc = request.form.get('url_doc')
         f = request.files.getlist('file')
@@ -227,6 +229,8 @@ def process_data():
             try:
                 if model_type == 'gemini':
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                elif model_type == 'azure':
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",openai_api_version=azure_api_version)
                 else:
                     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
                 print(f"Using embeddings of {embeddings}")
@@ -268,7 +272,7 @@ def process_data():
     # Return the processed text in JSON format
     # return jsonify({"response": response['text']})
     return jsonify(error="Unexpected Fault or Interruption")
-
+    
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
 def decide():
@@ -279,6 +283,7 @@ def decide():
         print("Scenario type:",scenario)
         model_type = request.args.get('model', 'openai') # to set default model
         model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
+        azure_api_version = request.args.get('apiVersion', '2023-05-15') # to set default version name
         start_time = time.time() # Timer starts at the Post
 
         if scenario:
@@ -291,8 +296,8 @@ def decide():
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
                 elif model_type == "azure":
-                    llm = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
-                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+                    llm = AzureChatOpenAI(deployment_name=model_name,api_version=azure_api_version, temperature=0)
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",openai_api_version=azure_api_version)
                 else:
                     llm = ChatOpenAI(model=model_name, temperature=0, streaming=True, verbose= True)
                     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
@@ -337,9 +342,12 @@ def generate_course():
     if request.method == 'POST':
         learning_obj = request.form.get("learning_obj")
         content_areas = request.form.get("content_areas")
+
         model_type = request.args.get('model', 'openai') # to set default model
         model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
+        azure_api_version = request.args.get('apiVersion', '2023-05-15') # to set default version name
         summarize_images = request.args.get('summarizeImages', 'on') # to set default value name
+        
         start_route_time = time.time() # Timer starts at the Post
 
         if learning_obj and content_areas:
@@ -355,8 +363,8 @@ def generate_course():
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1, max_output_tokens=8000)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
                 elif model_type == "azure":
-                    llm = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0.1)
-                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+                    llm = AzureChatOpenAI(deployment_name=model_name,api_version=azure_api_version, temperature=0.1)
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",openai_api_version=azure_api_version)
                 else:
                     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
                     llm = ChatOpenAI(model=model_name, temperature=0.1, streaming=True, verbose= True)
@@ -378,7 +386,7 @@ def generate_course():
             # ... it has been list of images are chosen to be atleast reletive to the topic at hand
                 
                 start_TALK_WITH_RAG_time = time.time()
-                response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name)
+                response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings)
                 end_TALK_WITH_RAG_time = time.time()
                 execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
                 minutes, seconds = divmod(execution_TALK_WITH_RAG_time, 60)
@@ -416,6 +424,7 @@ def find_images():
     if request.method == 'POST':
         model_type = request.args.get('model', 'openai') # default select openai
         model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
+        azure_api_version = request.args.get('apiVersion', '2023-05-15') # to set default version name
         
         response_text = cache.get(f"response_text_{user_id}")
         docs_main = cache.get(f"docs_main_{user_id}")
@@ -424,6 +433,8 @@ def find_images():
             try:
                 if model_type == 'gemini':
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                elif model_type == "azure":
+                    llm = AzureChatOpenAI(deployment_name=model_name,api_version=azure_api_version, temperature=0)
                 else:
                     llm = ChatOpenAI(model=model_name, temperature=0, streaming=True, verbose= True)
 
@@ -463,8 +474,8 @@ def find_images():
                     json_img_response[f"base64_Image{count_var}"] = r
                     print(json_img_response)
 
-                return Response(json_img_response, mimetype='application/json') #This one prefered
-                #return jsonify(f"""{str(json_img_response)}""") #This one works
+                # return Response(json_img_response, mimetype='application/json') #This one prefered
+                return jsonify(f"""{str(json_img_response)}""") #This one works
             except Exception as e:
                 print(f"An error occurred: {e}")
                 return jsonify(error=f"An error occurred: {str(e)}")
