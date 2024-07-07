@@ -1,4 +1,3 @@
-from langchain_community.chat_models import ChatOpenAI
 # from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from langchain.prompts import BaseChatPromptTemplate, PromptTemplate
@@ -8,7 +7,6 @@ from langchain.schema.messages import HumanMessage, SystemMessage
 # from PyPDF2 import PdfReader
 from pypdf import PdfReader
 from langchain_community.vectorstores import FAISS
-from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
 import os
 import shutil
@@ -5651,7 +5649,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
     print("RE_SIMILARITY_SEARCH Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     print("docs from RE_SIMILARITY_SEARCH",docs)
-    if summarize_images == "on":
+    if summarize_images == "on" and model_type == "gemini":
         print(f"Tells me to summarize images, {summarize_images}")
         PageNumberList = []
         for relevant_doc in docs:
@@ -5750,8 +5748,9 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                 response = ChatGoogleGenerativeAI(model="gemini-pro-vision",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
                 return response.content
             else:
-                response = ChatOpenAI(model="gpt-4o", max_tokens=200, temperature=0).invoke(prompt)
-                return response.content
+                print("NONE")
+                # response = ChatOpenAI(model="gpt-4o", max_tokens=200, temperature=0).invoke(prompt)
+                # return response.content
 
         for root, dirs, files in os.walk(output_path):
             for i in files:
@@ -5788,7 +5787,6 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
         docs.append(Document(page_content=f"Useful Image/s for all the above content::\n{image_summaries_string}"))
 
     return docs
-
 
 
 def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings):
@@ -5876,10 +5874,13 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-        elif model_type == 'azure':
-            llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
         else:
-            llm_setup = ChatOpenAI(model=model_name, temperature=0)
+            llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
+                                openai_api_type="azure",
+                                openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                ) 
 
         # summarized first, then response
         chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
@@ -5952,12 +5953,15 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
             chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
             print("prompt_simulation_pedagogy_gemini selected!")
-        elif model_type == 'azure':
-            llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0.3)
-            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
         else:
-            llm_setup = ChatOpenAI(model=model_name, temperature=0.3)
-            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
+            llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0.3,
+                                openai_api_type="azure",
+                                openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                )     
+            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)   
+
 
         chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
         response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
@@ -6025,10 +6029,13 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         print("SCENARIO ====prompt_gamified",scenario)
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-        elif model_type == 'azure':
-            llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
         else:
-            llm_setup = ChatOpenAI(model=model_name, temperature=0)
+            llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
+                                openai_api_type="azure",
+                                openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                )  
 
         chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
         response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
@@ -6103,11 +6110,14 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
 
         ### SEMANTIC ROUTES LOGIC ###
         if model_type == 'gemini':
-            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32)
-        elif model_type == 'azure':
-            llm_auto = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0.4)
+            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32)  
         else:
-            llm_auto = ChatOpenAI(model=model_name, temperature=0.4, max_tokens=32)
+            llm_auto = AzureChatOpenAI(deployment_name=model_name, temperature=0.4, max_tokens=32,
+                                openai_api_type="azure",
+                                openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                ) 
         
         llm_auto_chain = LLMChain(prompt=promptSelector, llm=llm_auto)
         selected = llm_auto_chain.run({"input_documents": docs_main, "human_input": query})
@@ -6138,11 +6148,14 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         if max_similarity == max(gamified_similarity):
             print("Gamified Auto Selected")
             if model_type == 'gemini':
-                llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-            elif model_type == 'azure':
-                llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
+                llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)    
             else:
-                llm_setup = ChatOpenAI(model=model_name, temperature=0)
+                llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0, 
+                                    openai_api_type="azure",
+                                    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                    )  
 
             chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
             response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
@@ -6277,12 +6290,14 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
                 chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
                 print("prompt_simulation_pedagogy_gemini selected!")
-            elif model_type == 'azure':
-                llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0.3)
-                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
             else:
-                llm_setup = ChatOpenAI(model=model_name, temperature=0.3)
-                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
+                llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0.3, 
+                                    openai_api_type="azure",
+                                    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                    )  
+                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)  
 
             chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
             response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
@@ -6350,10 +6365,13 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             print("Branched Auto Selected")
             if model_type == 'gemini':
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-            elif model_type == 'azure':
-                llm_setup = AzureChatOpenAI(deployment_name=model_name,api_version="2023-05-15", temperature=0)
             else:
-                llm_setup = ChatOpenAI(model=model_name, temperature=0)
+                llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0, 
+                                    openai_api_type="azure",
+                                    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                    ) 
 
             # summarized first, then response
             chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
