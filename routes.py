@@ -1,11 +1,9 @@
-from flask import g,Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
+from gevent import monkey
+monkey.patch_all()
+from flask import g, Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
 import jwt
 from langchain_community.vectorstores import FAISS
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain_community.llms import OpenAI
-from langchain_community.chat_models import ChatOpenAI
 import os
-from openai import OpenAI
 from dotenv import load_dotenv
 import json
 import langchaindemoBlock_22_april as LCD
@@ -24,22 +22,21 @@ import time
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 import google.generativeai as genai
 from langchain_community.chat_models import AzureChatOpenAI
-from langchain_community.embeddings import AzureOpenAIEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_cors import CORS
 from functools import wraps
+import io
+import openai
+
+openai.api_type = "azure"
+openai.api_version = "2023-05-15"
+openai.api_key = os.getenv("AZURE_OPENAI_API_KEY")
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env") # This is for render hosting service
-# Set the API key for OpenAI
-OpenAI.api_key = os.getenv('OPENAI_API_KEY')
-api_key = os.getenv('GOOGLE_API_KEY')
-genai.configure(api_key=api_key)
-client = OpenAI()
 
-import io
-import os
-
+os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
@@ -161,9 +158,8 @@ def process_data():
             os.makedirs(output_path)
         
         # getting requests from frontend
-        model_type = request.args.get('model', 'openai') # to set default model
-        model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
-        azure_api_version = request.args.get('apiVersion', '2023-05-15') # to set default version name
+        model_type = request.args.get('model', 'azure') # to set default model
+        model_name = request.args.get('modelName', 'gpt') # to set default model name
         prompt = request.form.get("prompt")
         url_doc = request.form.get('url_doc')
         f = request.files.getlist('file')
@@ -229,10 +225,13 @@ def process_data():
             try:
                 if model_type == 'gemini':
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-                elif model_type == 'azure':
-                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",openai_api_version=azure_api_version)
                 else:
-                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",
+                                                       openai_api_type="azure",
+                                                       openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                                       openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                                       azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                                       )
                 print(f"Using embeddings of {embeddings}")
                 docsearch = LCD.RAG(file_content,embeddings,file,session_var)
             except Exception as e:
@@ -260,7 +259,7 @@ def process_data():
             response_with_time.update(execution_time_block)
 
             # Token uuid4 append
-            token = jwt.encode({'uuid4': session_var,'exp': datetime.utcnow() + timedelta(days=1)}, app.secret_key, algorithm='HS256')
+            token = jwt.encode({'uuid4': session_var,'exp': datetime.utcnow() + timedelta(days=7)}, app.secret_key, algorithm='HS256')
             response_with_time['token'] = token  # Add token as a string under the key 'token'
 
             return Response(json.dumps(response_with_time), mimetype='application/json')
@@ -272,18 +271,18 @@ def process_data():
     # Return the processed text in JSON format
     # return jsonify({"response": response['text']})
     return jsonify(error="Unexpected Fault or Interruption")
-    
+
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
 def decide():
+
     user_id = g.user_uuid
     print("User UUID:", user_id)
     if request.method == 'POST':
         scenario = request.form.get('scenario')
         print("Scenario type:",scenario)
-        model_type = request.args.get('model', 'openai') # to set default model
-        model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
-        azure_api_version = request.args.get('apiVersion', '2023-05-15') # to set default version name
+        model_type = request.args.get('model', 'azure') # to set default model
+        model_name = request.args.get('modelName', 'gpt') # to set default model name
         start_time = time.time() # Timer starts at the Post
 
         if scenario:
@@ -295,12 +294,19 @@ def decide():
                 if model_type == "gemini":
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-                elif model_type == "azure":
-                    llm = AzureChatOpenAI(deployment_name=model_name,api_version=azure_api_version, temperature=0)
-                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",openai_api_version=azure_api_version)
                 else:
-                    llm = ChatOpenAI(model=model_name, temperature=0, streaming=True, verbose= True)
-                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
+                                        openai_api_type="azure",
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                        openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                        )
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",  
+                                                    openai_api_type="azure",
+                                                    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                                    )
 
                 print(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
 
@@ -337,15 +343,15 @@ def decide():
 @app.route("/generate_course", methods=["GET", "POST"])
 @token_required
 def generate_course():
+
     user_id = g.user_uuid
     print("User UUID:", user_id)
     if request.method == 'POST':
         learning_obj = request.form.get("learning_obj")
         content_areas = request.form.get("content_areas")
 
-        model_type = request.args.get('model', 'openai') # to set default model
-        model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
-        azure_api_version = request.args.get('apiVersion', '2023-05-15') # to set default version name
+        model_type = request.args.get('model', 'azure') # to set default model
+        model_name = request.args.get('modelName', 'gpt') # to set default model name
         summarize_images = request.args.get('summarizeImages', 'on') # to set default value name
         
         start_route_time = time.time() # Timer starts at the Post
@@ -362,12 +368,19 @@ def generate_course():
                 if model_type == 'gemini':
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1, max_output_tokens=8000)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-                elif model_type == "azure":
-                    llm = AzureChatOpenAI(deployment_name=model_name,api_version=azure_api_version, temperature=0.1)
-                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",openai_api_version=azure_api_version)
                 else:
-                    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-                    llm = ChatOpenAI(model=model_name, temperature=0.1, streaming=True, verbose= True)
+                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
+                                            openai_api_type="azure",
+                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                            openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                        )
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",
+                                                    openai_api_type="azure",
+                                                    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                                    )
 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
@@ -415,16 +428,15 @@ def generate_course():
             print("None")
         
         return jsonify(error="Unexpected Fault or Interruption")
-        
+    
 @app.route("/find_images", methods=["GET", "POST"])
 @token_required
 def find_images():
     user_id = g.user_uuid
     print("User UUID:", user_id)
     if request.method == 'POST':
-        model_type = request.args.get('model', 'openai') # default select openai
-        model_name = request.args.get('modelName', 'gpt-3.5-turbo-0125') # to set default model name
-        azure_api_version = request.args.get('apiVersion', '2023-05-15') # to set default version name
+        model_type = request.args.get('model', 'azure') # default select openai
+        model_name = request.args.get('modelName', 'gpt') # to set default model name
         
         response_text = cache.get(f"response_text_{user_id}")
         docs_main = cache.get(f"docs_main_{user_id}")
@@ -433,10 +445,13 @@ def find_images():
             try:
                 if model_type == 'gemini':
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                elif model_type == "azure":
-                    llm = AzureChatOpenAI(deployment_name=model_name,api_version=azure_api_version, temperature=0)
                 else:
-                    llm = ChatOpenAI(model=model_name, temperature=0, streaming=True, verbose= True)
+                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
+                                        openai_api_type="azure",
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                                        openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                                        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                        )
 
                 img_response = LCD.ANSWER_IMG(response_text, llm,docs_main)
 
@@ -493,7 +508,7 @@ def find_images():
             print("None")
         
         return jsonify(error="Unexpected Fault or Interruption")
-
+        
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
     scheduler.add_job(delete_old_directories, 'interval', hours=6)
