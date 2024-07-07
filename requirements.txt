@@ -1,3 +1,5 @@
+gevent
+langchain-openai
 PyJWT
 flask-cors
 langchain-google-genai
