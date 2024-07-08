@@ -5748,7 +5748,13 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                 response = ChatGoogleGenerativeAI(model="gemini-pro-vision",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
                 return response.content
             else:
-                response = AzureChatOpenAI(model="gpt-4o", max_tokens=200, temperature=0).invoke(prompt)
+                print("Openai summarizing images NOW")
+                response = AzureChatOpenAI(deployment_name="gpt-4o", temperature=0, max_tokens=200,
+                        openai_api_type="azure",
+                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+                        openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                    ).invoke(prompt)
                 return response.content
 
         for root, dirs, files in os.walk(output_path):
