@@ -5748,9 +5748,8 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                 response = ChatGoogleGenerativeAI(model="gemini-pro-vision",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
                 return response.content
             else:
-                print("NONE")
-                # response = ChatOpenAI(model="gpt-4o", max_tokens=200, temperature=0).invoke(prompt)
-                # return response.content
+                response = AzureChatOpenAI(model="gpt-4o", max_tokens=200, temperature=0).invoke(prompt)
+                return response.content
 
         for root, dirs, files in os.walk(output_path):
             for i in files:
