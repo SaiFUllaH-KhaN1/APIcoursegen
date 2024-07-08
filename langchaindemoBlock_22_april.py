@@ -5649,7 +5649,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
     print("RE_SIMILARITY_SEARCH Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     print("docs from RE_SIMILARITY_SEARCH",docs)
-    if summarize_images == "on" and model_type == "gemini":
+    if summarize_images == "on":
         print(f"Tells me to summarize images, {summarize_images}")
         PageNumberList = []
         for relevant_doc in docs:
