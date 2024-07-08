@@ -24,8 +24,3 @@ jobs:
       with:
         push: true
         tags: "saifullahedu0/apicoursegen:latest"
-        build-args: |
-          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
-          BASIC_AUTH_USERNAME=${{ secrets.BASIC_AUTH_USERNAME }}
-          BASIC_AUTH_PASSWORD=${{ secrets.BASIC_AUTH_PASSWORD }}
