@@ -158,12 +158,21 @@ def process_data():
             os.makedirs(output_path)
         
         # getting requests from frontend
+        
         model_type = request.args.get('model', 'azure') # to set default model
         model_name = request.args.get('modelName', 'gpt') # to set default model name
+        
         prompt = request.form.get("prompt")
         url_doc = request.form.get('url_doc')
         f = request.files.getlist('file')
         print("There is a file")
+
+        language = request.form.get("language")
+        allowed_languages = ["english","finnish","spanish","german","italian","french"]
+        if language not in allowed_languages:
+            return "Invalid Language Selected. Select out of english,finnish,spanish,german,italian or french.", 400
+        else:
+            print(f"Language Selected is:{language}")
 
 
         if url_doc:
@@ -248,6 +257,7 @@ def process_data():
             
             #cache.set(f"user_id_cache_{session['user_id']}", session['user_id'],timeout=0) #old cache based session storage
             
+            cache.set(f"language_{session_var}", language,timeout=0)
             cache.set(f"prompt_{session_var}", prompt,timeout=0)
             end_time = time.time()
             execution_time = end_time - start_time
@@ -288,6 +298,7 @@ def decide():
         if scenario:
 
             prompt = cache.get(f"prompt_{user_id}")
+            language = cache.get(f"language_{user_id}")
             print("Prompt loaded!:",prompt)
 
             try:
@@ -316,7 +327,7 @@ def decide():
                 print("1st Docs_main of /Decide route:",docs_main)
 
                 print("response_LO_CA started")
-                response_LO_CA = chain({"input_documents": docs_main,"human_input": query})
+                response_LO_CA = chain({"input_documents": docs_main,"human_input": query, "language":language})
                 print(response_LO_CA)
                 print("response_LO_CA ended")
 
@@ -364,6 +375,9 @@ def generate_course():
             scenario = cache.get(f"scenario_{user_id}")
             print("scenario loaded!:",scenario)
 
+            language = cache.get(f"language_{user_id}")
+            print(f"Language seleted is:{language}")
+
             try:
                 if model_type == 'gemini':
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1, max_output_tokens=8000)
@@ -387,7 +401,7 @@ def generate_course():
                 output_path = f"./imagefolder_{user_id}"
 
                 start_RE_SIMILARITY_SEARCH_time = time.time()
-                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type, summarize_images)
+                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type, summarize_images, language)
                 end_RE_SIMILARITY_SEARCH_time = time.time()
                 execution_RE_SIMILARITY_SEARCH_time = end_RE_SIMILARITY_SEARCH_time - start_RE_SIMILARITY_SEARCH_time
                 minutes, seconds = divmod(execution_RE_SIMILARITY_SEARCH_time, 60)
@@ -399,7 +413,7 @@ def generate_course():
             # ... it has been list of images are chosen to be atleast reletive to the topic at hand
                 
                 start_TALK_WITH_RAG_time = time.time()
-                response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings)
+                response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language)
                 end_TALK_WITH_RAG_time = time.time()
                 execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
                 minutes, seconds = divmod(execution_TALK_WITH_RAG_time, 60)
@@ -441,6 +455,10 @@ def find_images():
         response_text = cache.get(f"response_text_{user_id}")
         docs_main = cache.get(f"docs_main_{user_id}")
         output_path = f"./imagefolder_{user_id}"
+
+        language = cache.get(f"language_{user_id}")
+        print(f"Language seleted is:{language}")
+
         if response_text and docs_main:
             try:
                 if model_type == 'gemini':
@@ -453,7 +471,7 @@ def find_images():
                                         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
                                         )
 
-                img_response = LCD.ANSWER_IMG(response_text, llm,docs_main)
+                img_response = LCD.ANSWER_IMG(response_text, llm,docs_main,language)
 
                 json_img_response = json.loads(img_response)
                 print("json_img_response is::",json_img_response)
