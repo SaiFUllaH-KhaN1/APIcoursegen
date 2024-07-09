@@ -369,10 +369,10 @@ promptSelector = PromptTemplate(
     """
 )
 
-
 prompt_linear = PromptTemplate(
-    input_variables=["input_documents","human_input","content_areas","learning_obj"],
+    input_variables=["input_documents","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
@@ -569,9 +569,10 @@ prompt_linear = PromptTemplate(
 )
 
 prompt_linear_retry = PromptTemplate(
-    input_variables=["incomplete_response"],
+    input_variables=["incomplete_response","language"],
     template="""
     ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response.
     Complete the response by continuing exactly from the discontinued point, which is specified by '[CONTINUE_EXACTLY_FROM_HERE]'.
@@ -783,8 +784,9 @@ prompt_linear_retry = PromptTemplate(
 )
 
 prompt_linear_simplify = PromptTemplate(
-    input_variables=["input_documents","human_input","content_areas","learning_obj"],
+    input_variables=["input_documents","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
@@ -981,7 +983,7 @@ prompt_linear_simplify = PromptTemplate(
 
     Chatbot (Tone of a teacher teaching student in great detail):"""
 )
-    
+
 ###Gamified Prompts
 # prompt_gamified_original = PromptTemplate(
 #     input_variables=["input_documents","human_input","content_areas","learning_obj"],
@@ -1404,8 +1406,9 @@ prompt_linear_simplify = PromptTemplate(
 
 #created for responding a meta-data knowledge twisted to meet escape room scene
 prompt_gamified_setup = PromptTemplate(
-    input_variables=["input_documents","human_input","content_areas","learning_obj"],
+    input_variables=["input_documents","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     Show the answer to human's input step-by-step such that you are teaching a student. 
     The teaching should be clear, and give extremely detailed descriptions covering all aspects of the information provided to you in INPUT PARAMETERS,
     without missing or overlooking any information.
@@ -1421,8 +1424,9 @@ prompt_gamified_setup = PromptTemplate(
 )
 
 prompt_gamified_json = PromptTemplate(
-    input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
+    input_variables=["response_of_bot","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
     where you give a story situation to the student to escape from. YOu also give information in the form of
@@ -2020,8 +2024,10 @@ prompt_gamified_json = PromptTemplate(
 )
 
 prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
-    input_variables=["incomplete_response","exit_game_story"],
+    input_variables=["incomplete_response","exit_game_story","language"],
     template="""
+    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response. This 'Incomplete Response'
     was created using the data of 'Exit Game Story'.
@@ -2636,10 +2642,10 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     Chatbot:"""
 )
 
-
 prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
-    input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
+    input_variables=["response_of_bot","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
     where you give a story situation to the student to escape from. YOu also give information in the form of
@@ -3241,8 +3247,9 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
 
 ### Branched Prompts
 prompt_branched_setup = PromptTemplate(
-    input_variables=["input_documents","human_input","content_areas","learning_obj"],
+    input_variables=["input_documents","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot which is designed to take the inputs of Parameters and using the information
     and context of these parameters, you create subtopics from the main subject of interest set by these parameters.
     For each of the subtopic that contributes to the main subject, you create a detailed information-database of every possible information available
@@ -3267,8 +3274,9 @@ prompt_branched_setup = PromptTemplate(
 )
 
 prompt_branched = PromptTemplate(
-    input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
+    input_variables=["response_of_bot","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You give explanations and provide detailed information such that you are teaching a student.
     !!!WARNING!!!
@@ -3596,8 +3604,10 @@ prompt_branched = PromptTemplate(
 )
 
 prompt_branched_retry = PromptTemplate(
-    input_variables=["incomplete_response","micro_subtopics"],
+    input_variables=["incomplete_response","micro_subtopics","language"],
     template="""
+    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response. This 'Incomplete Response'
     was created using the data of 'Micro Subtopics'.
@@ -3943,8 +3953,9 @@ prompt_branched_retry = PromptTemplate(
 )
 
 prompt_branched_simplify = PromptTemplate(
-    input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
+    input_variables=["response_of_bot","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You give explanations and provide detailed information such that you are teaching a student.
     !!!WARNING!!!
@@ -4276,8 +4287,9 @@ prompt_branched_simplify = PromptTemplate(
 
 ### Simulation Prompts
 prompt_simulation_pedagogy_setup = PromptTemplate(
-    input_variables=["input_documents","human_input","content_areas","learning_obj"],
+    input_variables=["input_documents","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot which is designed to take the inputs of Parameters and using the information
     and context of these parameters, you create progressive simulation story where the student goes
     through a simulation story and is given choices. For each choices, a consequence is given if it was
@@ -4307,8 +4319,9 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
 )
 
 prompt_simulation_pedagogy_gemini = PromptTemplate(
-    input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
+    input_variables=["response_of_bot","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
@@ -4735,8 +4748,9 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
 )
 
 prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
-    input_variables=["response_of_bot","human_input","content_areas","learning_obj"],
+    input_variables=["response_of_bot","human_input","content_areas","learning_obj","language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
@@ -5165,8 +5179,10 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
 )
 
 prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
-    input_variables=["incomplete_response","simulation_story"],
+    input_variables=["incomplete_response","simulation_story","language"],
     template="""
+    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response. This 'Incomplete Response'
     was created using the data of 'Simulation Story'.
@@ -5174,7 +5190,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     and will be able to complete it by continuing exactly from the discontinued point, which is specified by '[CONTINUE_EXACTLY_FROM_HERE]'.
     Never include [CONTINUE_EXACTLY_FROM_HERE] in your response. This is just for your information.
     DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued! 
-    Take great care into the ID heirarchy considerations while continuing the incomplete response.
+    Take great care into the ID heirarchy considerations while continuing the incomplete response. 
     'Incomplete Response': {incomplete_response};
     'Simulation Story': {simulation_story};
 
@@ -5613,8 +5629,9 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
 ### Simulation Prompts End
 
 prompt_LO_CA_GEMINI = PromptTemplate(
-    input_variables=["input_documents","human_input"],
+    input_variables=["input_documents","human_input", "language"],
     template="""
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. 
     Based on the information provided in 'Human Input' and 'Input Documents', you are going to generate 
     Learning Objectives and Content Areas in a JSON format. Make sure the both Learning Objectives and Content Areas
     are specifically relevant to the query of 'Human Input'. 
@@ -5645,7 +5662,7 @@ def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm):
     chain = LLMChain(prompt=prompt_LO_CA_GEMINI, llm=llm)
     return chain, docs_main, query
 
-def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_images):
+def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_images, language):
     print("RE_SIMILARITY_SEARCH Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     print("docs from RE_SIMILARITY_SEARCH",docs)
@@ -5716,13 +5733,13 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
 
 
 
-        def summarize_image(encoded_image, basename):
+        def summarize_image(encoded_image, basename, language):
             prompt = [
                 SystemMessage(content="You are a bot that is good at analyzing images."),
                 HumanMessage(content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!"
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!"
                     },
                     {
                         "type": "image_url",
@@ -5737,7 +5754,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                 content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!",
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!",
                     },  # You can optionally provide text parts
                     {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
                 ]
@@ -5767,7 +5784,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                             print(os.path.basename(image_path))
                             encoded_image = encode_image(image_path)
                             image_elements.append(encoded_image)
-                            summary = summarize_image(encoded_image,basename)
+                            summary = summarize_image(encoded_image,basename, language)
                             image_summaries.append(summary)
                         elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
                             image_path = os.path.join(root, i)
@@ -5775,7 +5792,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                             print(os.path.basename(image_path))
                             encoded_image = encode_image(image_path)
                             image_elements.append(encoded_image)
-                            summary = summarize_image(encoded_image,basename)
+                            summary = summarize_image(encoded_image,basename, language)
                             image_summaries.append(summary)
                         elif f"FileName {file} SlideNumber {page_number}" in i:
                             image_path = os.path.join(root, i)
@@ -5783,7 +5800,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                             print(os.path.basename(image_path))
                             encoded_image = encode_image(image_path)
                             image_elements.append(encoded_image)
-                            summary = summarize_image(encoded_image,basename)
+                            summary = summarize_image(encoded_image,basename, language)
                             image_summaries.append(summary)
 
         print("image_summaries::",image_summaries)
@@ -5794,7 +5811,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
     return docs
 
 
-def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings):
+def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings, language):
     print("TALK_WITH_RAG Initiated!")
     # if we are getting docs_main already from the process_data flask route then comment, else
     # UNcomment if you want more similarity_searching based on Learning obj and content areas!
@@ -5816,7 +5833,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         #     chain = LLMChain(prompt=prompt_linear, llm=llm)
         
         chain = LLMChain(prompt=prompt_linear, llm=llm)
-        response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
 
         is_valid, result = is_json_parseable(response['text'])
         
@@ -5847,7 +5864,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
             chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
-            response_retry = chain_retry({"incomplete_response": modified_txt})
+            response_retry = chain_retry({"incomplete_response": modified_txt,"language":language})
             print("response contd... is:\n",response_retry['text'])
 
             responses = modified_txt + response_retry['text']
@@ -5859,7 +5876,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 attempts = 1
                 while attempts < max_attempts:
                     chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
-                    response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                    response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj,"language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                     if is_valid_retry_simplify == True:
                         response['text'] = response_retry_simplify['text']
@@ -5889,11 +5906,11 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
 
         # summarized first, then response
         chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
-        response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         print("Response 1 is::",response1['text'])
     
         chain = LLMChain(prompt=prompt_branched,llm=llm)  
-        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
 
         is_valid, result = is_json_parseable(response['text'])
         
@@ -5924,7 +5941,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
             chain_retry = LLMChain(prompt=prompt_branched_retry,llm=llm)
-            response_retry = chain_retry({"incomplete_response": modified_txt,"micro_subtopics":response1['text']})
+            response_retry = chain_retry({"incomplete_response": modified_txt,"micro_subtopics":response1['text'], "language":language})
             print("response contd... is:\n",response_retry['text'])
 
             responses = modified_txt + response_retry['text']
@@ -5936,7 +5953,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 attempts = 1
                 while attempts < max_attempts:
                     chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm)
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                     if is_valid_retry_simplify == True:
                         response['text'] = response_retry_simplify['text']
@@ -5969,10 +5986,10 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
 
 
         chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
-        response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         print("Response 1 is::",response1['text'])
 
-        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         
         is_valid, result = is_json_parseable(response['text'])
         
@@ -6003,7 +6020,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
             chain_retry = LLMChain(prompt=prompt_simulation_pedagogy_retry_gemini,llm=llm)
-            response_retry = chain_retry({"incomplete_response": modified_txt,"simulation_story":response1['text']})
+            response_retry = chain_retry({"incomplete_response": modified_txt,"simulation_story":response1['text'], "language":language})
             print("response contd... is:\n",response_retry['text'])
 
             responses = modified_txt + response_retry['text']
@@ -6015,7 +6032,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 attempts = 1
                 while attempts < max_attempts:
                     chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm)
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                     if is_valid_retry_simplify == True:
                         response['text'] = response_retry_simplify['text']
@@ -6043,7 +6060,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                                 )  
 
         chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
-        response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         print("Response 1 is::",response1['text'])
 
         # chain2 = LLMChain(prompt=prompt_gamified_simple,llm=llm_setup)
@@ -6051,7 +6068,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         # print("Response 2 is::",response2['text'])
 
         chain = LLMChain(prompt=prompt_gamified_json,llm=llm)
-        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         
         is_valid, result = is_json_parseable(response['text'])
         
@@ -6081,7 +6098,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
             chain_retry = LLMChain(prompt=prompt_gamified_pedagogy_retry_gemini,llm=llm)
-            response_retry = chain_retry({"incomplete_response": modified_txt,"exit_game_story":response1['text']})
+            response_retry = chain_retry({"incomplete_response": modified_txt,"exit_game_story":response1['text'], "language":language})
             print("response contd... is:\n",response_retry['text'])
 
             responses = modified_txt + response_retry['text']
@@ -6093,7 +6110,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 attempts = 1
                 while attempts < max_attempts:
                     chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm)
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                     if is_valid_retry_simplify == True:
                         response['text'] = response_retry_simplify['text']
@@ -6163,7 +6180,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                                     )  
 
             chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
-            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             print("Response 1 is::",response1['text'])
 
             # chain2 = LLMChain(prompt=prompt_gamified_simple,llm=llm_setup)
@@ -6171,7 +6188,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # print("Response 2 is::",response2['text'])
 
             chain = LLMChain(prompt=prompt_gamified_json,llm=llm)
-            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
             is_valid, result = is_json_parseable(response['text'])
             
@@ -6201,7 +6218,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
                 chain_retry = LLMChain(prompt=prompt_gamified_pedagogy_retry_gemini,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt,"exit_game_story":response1['text']})
+                response_retry = chain_retry({"incomplete_response": modified_txt,"exit_game_story":response1['text'], "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
                 responses = modified_txt + response_retry['text']
@@ -6213,7 +6230,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     attempts = 1
                     while attempts < max_attempts:
                         chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                         is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                         if is_valid_retry_simplify == True:
                             response['text'] = response_retry_simplify['text']
@@ -6231,7 +6248,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         elif max_similarity == max(linear_similarity):
             print("Linear Auto Selected")
             chain = LLMChain(prompt=prompt_linear, llm=llm)
-            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
 
             is_valid, result = is_json_parseable(response['text'])
             
@@ -6262,7 +6279,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
                 chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt})
+                response_retry = chain_retry({"incomplete_response": modified_txt, "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
                 responses = modified_txt + response_retry['text']
@@ -6274,7 +6291,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     attempts = 1
                     while attempts < max_attempts:
                         chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                        response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                         is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                         if is_valid_retry_simplify == True:
                             response['text'] = response_retry_simplify['text']
@@ -6305,10 +6322,10 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)  
 
             chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
-            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             print("Response 1 is::",response1['text'])
 
-            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
             is_valid, result = is_json_parseable(response['text'])
             
@@ -6339,7 +6356,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
                 chain_retry = LLMChain(prompt=prompt_simulation_pedagogy_retry_gemini,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt,"simulation_story":response1['text']})
+                response_retry = chain_retry({"incomplete_response": modified_txt,"simulation_story":response1['text'], "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
                 responses = modified_txt + response_retry['text']
@@ -6351,7 +6368,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     attempts = 1
                     while attempts < max_attempts:
                         chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                         is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                         if is_valid_retry_simplify == True:
                             response['text'] = response_retry_simplify['text']
@@ -6380,11 +6397,11 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
 
             # summarized first, then response
             chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
-            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             print("Response 1 is::",response1['text'])
         
             chain = LLMChain(prompt=prompt_branched,llm=llm)  
-            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
 
             is_valid, result = is_json_parseable(response['text'])
             
@@ -6415,7 +6432,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
                 chain_retry = LLMChain(prompt=prompt_branched_retry,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt,"micro_subtopics":response1['text']})
+                response_retry = chain_retry({"incomplete_response": modified_txt,"micro_subtopics":response1['text'], "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
                 responses = modified_txt + response_retry['text']
@@ -6427,7 +6444,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     attempts = 1
                     while attempts < max_attempts:
                         chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                         is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                         if is_valid_retry_simplify == True:
                             response['text'] = response_retry_simplify['text']
@@ -6446,7 +6463,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             print("AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
 
             chain = LLMChain(prompt=prompt_linear, llm=llm)
-            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
 
             is_valid, result = is_json_parseable(response['text'])
             
@@ -6477,7 +6494,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
 
                 chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt})
+                response_retry = chain_retry({"incomplete_response": modified_txt, "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
                 responses = modified_txt + response_retry['text']
@@ -6489,7 +6506,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     attempts = 1
                     while attempts < max_attempts:
                         chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
+                        response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                         is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                         if is_valid_retry_simplify == True:
                             response['text'] = response_retry_simplify['text']
@@ -6507,7 +6524,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
     print("The output is as follows::\n",response['text'])
     return response['text']
 
-def ANSWER_IMG(response_text, llm,relevant_doc):
+def ANSWER_IMG(response_text, llm,relevant_doc,language):
     # prompt_template_img =PromptTemplate( 
     # input_variables=["response_text","context"],
     # template="""
@@ -6555,17 +6572,18 @@ def ANSWER_IMG(response_text, llm,relevant_doc):
 
     prompt = PromptTemplate(
     template="""
-    Search for those image or images only, whose descriptions in the Media Blocks of the 'Response Text' matches
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    Search for those image or images only, whose descriptions in a MediaBlock of the 'Response Text' matches
     with the descriptions in the 'Context' data. Output only those image's or images' description from the 
     'Context' data. 
     \n{format_instructions}\n'Response Text': {response_text}\n'Context': {context}""",
-    input_variables=["response_text","context"],
+    input_variables=["response_text","context","language"],
     partial_variables={"format_instructions": parser.get_format_instructions()},
     )
 
     chain = prompt | llm | parser
 
-    img_response = chain.invoke({"response_text": response_text, "context": relevant_doc})
+    img_response = chain.invoke({"response_text": response_text, "context": relevant_doc, "language": language})
     print("img_response is::",img_response)
     format_instructions = parser.get_format_instructions()
     print("format_instructions",format_instructions)
@@ -6596,3 +6614,4 @@ def ANSWER_IMG(response_text, llm,relevant_doc):
     print(structured_response)
 
     return str(structured_response)
+
