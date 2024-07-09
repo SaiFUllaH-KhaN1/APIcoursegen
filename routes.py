@@ -167,7 +167,7 @@ def process_data():
         f = request.files.getlist('file')
         print("There is a file")
 
-        language = request.form.get("language")
+        language = request.form.get("language","english").lower()
         allowed_languages = ["english","finnish","spanish","german","italian","french"]
         if language not in allowed_languages:
             return "Invalid Language Selected. Select out of english,finnish,spanish,german,italian or french.", 400
