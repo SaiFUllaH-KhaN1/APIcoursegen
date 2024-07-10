@@ -27,7 +27,7 @@ from functools import wraps
 import io
 import openai
 
-# load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env") # This is for render hosting service
+load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
 openai.api_type = os.getenv("OPENAI_API_TYPE")
 openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
