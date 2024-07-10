@@ -1,5 +1,3 @@
-from gevent import monkey
-monkey.patch_all()
 from flask import g, Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
 import jwt
 from langchain_community.vectorstores import FAISS
@@ -21,8 +19,7 @@ import base64
 import time
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 import google.generativeai as genai
-from langchain_community.chat_models import AzureChatOpenAI
-from langchain_openai import AzureOpenAIEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_cors import CORS
@@ -30,11 +27,12 @@ from functools import wraps
 import io
 import openai
 
-openai.api_type = "azure"
-openai.api_version = "2023-05-15"
-openai.api_key = os.getenv("AZURE_OPENAI_API_KEY")
+# load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env") # This is for render hosting service
 
-load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env") # This is for render hosting service
+openai.api_type = os.getenv("OPENAI_API_TYPE")
+openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
+openai.api_key = os.getenv("AZURE_OPENAI_API_KEY")
+openai.azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
 
 os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 
@@ -170,7 +168,7 @@ def process_data():
         language = request.form.get("language","english").lower()
         allowed_languages = ["english","finnish","spanish","german","italian","french"]
         if language not in allowed_languages:
-            return "Invalid Language Selected. Select out of english,finnish,spanish,german,italian or french.", 400
+            return jsonify(error="Invalid Language Selected. Select out of english,finnish,spanish,german,italian or french.")
         else:
             print(f"Language Selected is:{language}")
 
@@ -235,12 +233,7 @@ def process_data():
                 if model_type == 'gemini':
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
                 else:
-                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",
-                                                       openai_api_type="azure",
-                                                       openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-                                                       openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                                                       azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
-                                                       )
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
                 print(f"Using embeddings of {embeddings}")
                 docsearch = LCD.RAG(file_content,embeddings,file,session_var)
             except Exception as e:
@@ -307,17 +300,10 @@ def decide():
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
                 else:
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                        openai_api_type="azure",
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-                                        openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                                        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
-                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",  
-                                                    openai_api_type="azure",
-                                                    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-                                                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                                                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
-                                                    )
+
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
                 print(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
 
@@ -384,17 +370,9 @@ def generate_course():
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
                 else:
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
-                                            openai_api_type="azure",
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-                                            openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                                            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
-                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002",
-                                                    openai_api_type="azure",
-                                                    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-                                                    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                                                    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
-                                                    )
+                    embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
@@ -465,10 +443,7 @@ def find_images():
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                 else:
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                        openai_api_type="azure",
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-                                        openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-                                        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
 
                 img_response = LCD.ANSWER_IMG(response_text, llm,docs_main,language)
