@@ -34,6 +34,7 @@ openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 openai.api_key = os.getenv("AZURE_OPENAI_API_KEY")
 openai.azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
 
+os.environ["GOOGLE_API_KEY"] = os.getenv("AZURE_OPENAI_ENDPOINT")
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
 app = Flask(__name__)
