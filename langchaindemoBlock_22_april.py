@@ -335,19 +335,19 @@ def RAG(file_content,embeddings,file,session_var):
     #     docsearch = FAISS.from_texts(text, embeddings)
 
     if texts:
-    print("Running Text Merged (Pdfs other than extractedcontent.pdf)")
-    text_splitter_formerged = RecursiveCharacterTextSplitter(chunk_size=1536, chunk_overlap=128, length_function=len)
-    text_chunks = text_splitter_formerged.split_text(texts)
+        print("Running Text Merged (Pdfs other than extractedcontent.pdf)")
+        text_splitter_formerged = RecursiveCharacterTextSplitter(chunk_size=1536, chunk_overlap=128, length_function=len)
+        text_chunks = text_splitter_formerged.split_text(texts)
+    
+        batch_size = 100  # As per the limit mentioned in your error
+        total_chunks = len(text_chunks)
+        print("total_chunks",total_chunks)
 
-    batch_size = 100  # As per the limit mentioned in your error
-    total_chunks = len(text_chunks)
-    print("total_chunks",total_chunks)
-
-    for i in range(0, total_chunks, batch_size):
-        batch = text_chunks[i:i + batch_size]
-
-        docsearch = FAISS.from_texts(batch, embeddings)
-        print(f"docsearch made for batch,{len(batch)} of the total {total_chunks}")
+        for i in range(0, total_chunks, batch_size):
+            batch = text_chunks[i:i + batch_size]
+    
+            docsearch = FAISS.from_texts(batch, embeddings)
+            print(f"docsearch made for batch,{len(batch)} of the total {total_chunks}")
 
     elif raw_text:
         raw_text_splitted = text_splitter.split_text(raw_text)
