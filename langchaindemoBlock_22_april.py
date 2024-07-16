@@ -5880,9 +5880,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
     if scenario == "linear":
         print("SCENARIO ====prompt_linear",scenario)
         if model_type == 'gemini':
-            chain = LLMChain(prompt=prompt_linear,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            chain = LLMChain(prompt=prompt_linear,llm=llm)
         else:
-            chain = LLMChain(prompt=prompt_linear,llm=llm.bind(response_format={"type": "json_object"}))   
+            chain = LLMChain(prompt=prompt_linear,llm=llm)   
 
         response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         
@@ -5903,8 +5903,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # Finding if corrupt edges exists further and to remove it via if loop
             find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
             if find_edges:
-                modified_txt = modified_txt[0]  # Get the matched string
-                print("Corrupt edges found",modified_txt)
+                find_edges = find_edges[0]  # Get the matched string
+                print("Corrupt edges found",find_edges)
                 # Using regex to replace the specific pattern
                 modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                 print("Corrected corrupt edges:", modified_txt)
@@ -5926,8 +5926,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # Finding if corrupt edges exists AFTER combined prompts
             find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
             if find_edges:
-                responses = responses[0]  # Get the matched string
-                print("Corrupt edges found",responses)
+                find_edges = find_edges[0]  # Get the matched string
+                print("Corrupt edges found",find_edges)
                 # Using regex to replace the specific pattern
                 responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                 print("Corrected corrupt edges:", responses)
@@ -5946,9 +5946,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             while attempts <= max_attempts:
 
                 if model_type == 'gemini':
-                    chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
                 else:
-                    chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                    chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
 
                 response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -5960,21 +5960,18 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
                     
-        else:
-            response['text'] = responses
-            print("Retry success\n", response['text'])
 
     elif scenario == "branched":
         print("SCENARIO ====branched",scenario)
         
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-            chain = LLMChain(prompt=prompt_branched,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            chain = LLMChain(prompt=prompt_branched,llm=llm)
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )  
-            chain = LLMChain(prompt=prompt_branched,llm=llm.bind(response_format={"type": "json_object"}))   
+            chain = LLMChain(prompt=prompt_branched,llm=llm)   
 
         if model_type == 'gemini':
             chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
@@ -6003,8 +6000,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # Finding if corrupt edges exists further and to remove it via if loop
             find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
             if find_edges:
-                modified_txt = modified_txt[0]  # Get the matched string
-                print("Corrupt edges found",modified_txt)
+                find_edges = find_edges[0]  # Get the matched string
+                print("Corrupt edges found",find_edges)
                 # Using regex to replace the specific pattern
                 modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                 print("Corrected corrupt edges:", modified_txt)
@@ -6026,8 +6023,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # Finding if corrupt edges exists AFTER combined prompts
             find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
             if find_edges:
-                responses = responses[0]  # Get the matched string
-                print("Corrupt edges found",responses)
+                find_edges = find_edges[0]  # Get the matched string
+                print("Corrupt edges found",find_edges)
                 # Using regex to replace the specific pattern
                 responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                 print("Corrected corrupt edges:", responses)
@@ -6046,9 +6043,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             while attempts <= max_attempts:
 
                 if model_type == 'gemini':
-                    chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm)
                 else:
-                    chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                    chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm)
 
                 response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -6060,21 +6057,18 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
                     
-        else:
-            response['text'] = responses
-            print("Retry success\n", response['text'])
 
     elif scenario == "simulation":
         print("SCENARIO ====prompt_simulation_pedagogy",scenario)
         # summarized first, then response
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
-            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0.3,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )  
-            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm.bind(response_format={"type": "json_object"}))   
+            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)   
 
         if model_type == 'gemini':
             chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
@@ -6103,8 +6097,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # Finding if corrupt edges exists further and to remove it via if loop
             find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
             if find_edges:
-                modified_txt = modified_txt[0]  # Get the matched string
-                print("Corrupt edges found",modified_txt)
+                find_edges = find_edges[0]  # Get the matched string
+                print("Corrupt edges found",find_edges)
                 # Using regex to replace the specific pattern
                 modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                 print("Corrected corrupt edges:", modified_txt)
@@ -6126,8 +6120,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # Finding if corrupt edges exists AFTER combined prompts
             find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
             if find_edges:
-                responses = responses[0]  # Get the matched string
-                print("Corrupt edges found",responses)
+                find_edges = find_edges[0]  # Get the matched string
+                print("Corrupt edges found",find_edges)
                 # Using regex to replace the specific pattern
                 responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                 print("Corrected corrupt edges:", responses)
@@ -6146,9 +6140,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             while attempts <= max_attempts:
 
                 if model_type == 'gemini':
-                    chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm)
                 else:
-                    chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                    chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm)
 
                 response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -6159,22 +6153,18 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 else:
                     print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
-                    
-        else:
-            response['text'] = responses
-            print("Retry success\n", response['text'])
-        
+                            
 
     elif scenario == "gamified":
         print("SCENARIO ====prompt_gamified",scenario)
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-            chain = LLMChain(prompt=prompt_gamified_json,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            chain = LLMChain(prompt=prompt_gamified_json,llm=llm)
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )  
-            chain = LLMChain(prompt=prompt_gamified_json,llm=llm.bind(response_format={"type": "json_object"}))   
+            chain = LLMChain(prompt=prompt_gamified_json,llm=llm)   
 
         if model_type == 'gemini':
             chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
@@ -6203,8 +6193,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # Finding if corrupt edges exists further and to remove it via if loop
             find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
             if find_edges:
-                modified_txt = modified_txt[0]  # Get the matched string
-                print("Corrupt edges found",modified_txt)
+                find_edges = find_edges[0]  # Get the matched string
+                print("Corrupt edges found",find_edges)
                 # Using regex to replace the specific pattern
                 modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                 print("Corrected corrupt edges:", modified_txt)
@@ -6226,8 +6216,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             # Finding if corrupt edges exists AFTER combined prompts
             find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
             if find_edges:
-                responses = responses[0]  # Get the matched string
-                print("Corrupt edges found",responses)
+                find_edges = find_edges[0]  # Get the matched string
+                print("Corrupt edges found",find_edges)
                 # Using regex to replace the specific pattern
                 responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                 print("Corrected corrupt edges:", responses)
@@ -6246,9 +6236,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             while attempts <= max_attempts:
 
                 if model_type == 'gemini':
-                    chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm)
                 else:
-                    chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                    chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm)
 
                 response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -6260,9 +6250,6 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
                     
-        else:
-            response['text'] = responses
-            print("Retry success\n", response['text'])
 
     elif scenario == "auto":
         print("SCENARIO ====PROMPT",scenario)
@@ -6308,12 +6295,12 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             print("Gamified Auto Selected")
             if model_type == 'gemini':
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                chain = LLMChain(prompt=prompt_gamified_json,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                chain = LLMChain(prompt=prompt_gamified_json,llm=llm)
             else:
                 llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                             )  
-                chain = LLMChain(prompt=prompt_gamified_json,llm=llm.bind(response_format={"type": "json_object"}))   
+                chain = LLMChain(prompt=prompt_gamified_json,llm=llm)   
 
             if model_type == 'gemini':
                 chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
@@ -6342,8 +6329,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists further and to remove it via if loop
                 find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
                 if find_edges:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                    print("Corrupt edges found",modified_txt)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                     print("Corrected corrupt edges:", modified_txt)
@@ -6365,8 +6352,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists AFTER combined prompts
                 find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
                 if find_edges:
-                    responses = responses[0]  # Get the matched string
-                    print("Corrupt edges found",responses)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                     print("Corrected corrupt edges:", responses)
@@ -6385,9 +6372,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 while attempts <= max_attempts:
 
                     if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                        chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm)
                     else:
-                        chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                        chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm)
 
                     response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -6398,17 +6385,14 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     else:
                         print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                         attempts += 1
-                        
-            else:
-                response['text'] = responses
-                print("Retry success\n", response['text'])
+
 
         elif max_similarity == max(linear_similarity):
             print("Linear Auto Selected")
             if model_type == 'gemini':
-                chain = LLMChain(prompt=prompt_linear,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                chain = LLMChain(prompt=prompt_linear,llm=llm)
             else:
-                chain = LLMChain(prompt=prompt_linear,llm=llm.bind(response_format={"type": "json_object"}))   
+                chain = LLMChain(prompt=prompt_linear,llm=llm)   
 
             response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
@@ -6429,8 +6413,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists further and to remove it via if loop
                 find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
                 if find_edges:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                    print("Corrupt edges found",modified_txt)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                     print("Corrected corrupt edges:", modified_txt)
@@ -6452,8 +6436,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists AFTER combined prompts
                 find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
                 if find_edges:
-                    responses = responses[0]  # Get the matched string
-                    print("Corrupt edges found",responses)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                     print("Corrected corrupt edges:", responses)
@@ -6472,9 +6456,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 while attempts <= max_attempts:
 
                     if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
                     else:
-                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
 
                     response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -6485,21 +6469,18 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     else:
                         print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                         attempts += 1
-                        
-            else:
-                response['text'] = responses
-                print("Retry success\n", response['text'])
+
 
         elif max_similarity == max(simulation_similarity):
             print("Simulation Auto Selected")
             if model_type == 'gemini':
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
-                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
             else:
                 llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0.3,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                             )  
-                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm.bind(response_format={"type": "json_object"}))   
+                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)   
 
             if model_type == 'gemini':
                 chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
@@ -6528,8 +6509,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists further and to remove it via if loop
                 find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
                 if find_edges:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                    print("Corrupt edges found",modified_txt)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                     print("Corrected corrupt edges:", modified_txt)
@@ -6551,8 +6532,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists AFTER combined prompts
                 find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
                 if find_edges:
-                    responses = responses[0]  # Get the matched string
-                    print("Corrupt edges found",responses)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                     print("Corrected corrupt edges:", responses)
@@ -6571,9 +6552,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 while attempts <= max_attempts:
 
                     if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                        chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm)
                     else:
-                        chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                        chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm)
 
                     response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -6584,21 +6565,18 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     else:
                         print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                         attempts += 1
-                        
-            else:
-                response['text'] = responses
-                print("Retry success\n", response['text'])
+
 
         elif max_similarity == max(branched_similarity):
             print("Branched Auto Selected")
             if model_type == 'gemini':
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                chain = LLMChain(prompt=prompt_branched,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                chain = LLMChain(prompt=prompt_branched,llm=llm)
             else:
                 llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                             )  
-                chain = LLMChain(prompt=prompt_branched,llm=llm.bind(response_format={"type": "json_object"}))   
+                chain = LLMChain(prompt=prompt_branched,llm=llm)   
 
             if model_type == 'gemini':
                 chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
@@ -6627,8 +6605,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists further and to remove it via if loop
                 find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
                 if find_edges:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                    print("Corrupt edges found",modified_txt)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                     print("Corrected corrupt edges:", modified_txt)
@@ -6650,8 +6628,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists AFTER combined prompts
                 find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
                 if find_edges:
-                    responses = responses[0]  # Get the matched string
-                    print("Corrupt edges found",responses)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                     print("Corrected corrupt edges:", responses)
@@ -6670,9 +6648,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 while attempts <= max_attempts:
 
                     if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                        chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm)
                     else:
-                        chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                        chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm)
 
                     response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -6682,19 +6660,15 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                         break
                     else:
                         print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                        attempts += 1
-                        
-            else:
-                response['text'] = responses
-                print("Retry success\n", response['text'])        
+                        attempts += 1   
 
         else:
             print("AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
 
             if model_type == 'gemini':
-                chain = LLMChain(prompt=prompt_linear,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                chain = LLMChain(prompt=prompt_linear,llm=llm)
             else:
-                chain = LLMChain(prompt=prompt_linear,llm=llm.bind(response_format={"type": "json_object"}))   
+                chain = LLMChain(prompt=prompt_linear,llm=llm)   
 
             response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
@@ -6715,8 +6689,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists further and to remove it via if loop
                 find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
                 if find_edges:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                    print("Corrupt edges found",modified_txt)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
                     print("Corrected corrupt edges:", modified_txt)
@@ -6738,8 +6712,8 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 # Finding if corrupt edges exists AFTER combined prompts
                 find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
                 if find_edges:
-                    responses = responses[0]  # Get the matched string
-                    print("Corrupt edges found",responses)
+                    find_edges = find_edges[0]  # Get the matched string
+                    print("Corrupt edges found",find_edges)
                     # Using regex to replace the specific pattern
                     responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
                     print("Corrected corrupt edges:", responses)
@@ -6758,9 +6732,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 while attempts <= max_attempts:
 
                     if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
                     else:
-                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
 
                     response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                     is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
@@ -6772,10 +6746,6 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                         print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                         attempts += 1
                         
-            else:
-                response['text'] = responses
-                print("Retry success\n", response['text'])
-
     print("The output is as follows::\n",response['text'])
     return response['text']
 
@@ -6872,3 +6842,4 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     print(structured_response)
 
     return str(structured_response)
+
