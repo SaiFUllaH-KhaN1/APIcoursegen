@@ -320,7 +320,7 @@ def RAG(file_content,embeddings,file,session_var):
     text_splitter = RecursiveCharacterTextSplitter(
     chunk_size = 1536,
     chunk_overlap  = 0,
-    length_function = len,
+    length_function = len
     )
     # uses openai embeddings for chunking, costs time and money but gives good performances, not ideal for real-time
     # text_splitter = SemanticChunker(OpenAIEmbeddings(), breakpoint_threshold_type="percentile", number_of_chunks= 10000)
@@ -328,30 +328,33 @@ def RAG(file_content,embeddings,file,session_var):
     
     print("Now Doing Embeddings!")
     
-    # if texts:
-    #     print("Running Text Merged (Pdfs other than extractedcontent.pdf)")
-    #     text_splitter_formerged = RecursiveCharacterTextSplitter(chunk_size=1536, chunk_overlap=128, length_function=len,)
-    #     text = text_splitter_formerged.split_text(texts)
-    #     docsearch = FAISS.from_texts(text, embeddings)
-
     if texts:
         print("Running Text Merged (Pdfs other than extractedcontent.pdf)")
         text_splitter_formerged = RecursiveCharacterTextSplitter(chunk_size=1536, chunk_overlap=128, length_function=len)
         text_chunks = text_splitter_formerged.split_text(texts)
-    
+
         batch_size = 100  # As per the limit mentioned in your error
         total_chunks = len(text_chunks)
         print("total_chunks",total_chunks)
 
         for i in range(0, total_chunks, batch_size):
             batch = text_chunks[i:i + batch_size]
-    
+
             docsearch = FAISS.from_texts(batch, embeddings)
             print(f"docsearch made for batch,{len(batch)} of the total {total_chunks}")
 
     elif raw_text:
-        raw_text_splitted = text_splitter.split_text(raw_text)
-        docsearch = FAISS.from_texts(raw_text_splitted, embeddings)
+        raw_text_splitted_chunks = text_splitter.split_text(raw_text)
+
+        batch_size = 100  # As per the limit mentioned in your error
+        total_chunks = len(raw_text_splitted_chunks)
+        print("total_chunks",total_chunks)
+
+        for i in range(0, total_chunks, batch_size):
+            batch_raw_text = raw_text_splitted_chunks[i:i + batch_size]
+
+            docsearch = FAISS.from_texts(batch_raw_text, embeddings)
+            print(f"docsearch made for batch,{len(batch_raw_text)} of the total {total_chunks}")
 
     print("docsearch made")
     return docsearch
@@ -454,8 +457,9 @@ prompt_linear = PromptTemplate(
     GoalBlock
     \nEnd of Overview structure\n
 
-    Problem to overcome: 
-    1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively. 
+    Problems to overcome: 
+    1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
+    2. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
 
     \n\nEXAMPLE START: LINEAR SCENARIO:\n\n
@@ -529,8 +533,8 @@ prompt_linear = PromptTemplate(
           "title": "Congratulations!",
           "score": 3
         }}
-      ],
-      "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
         {{
             "source": "StartBlock",
             "target": "B1"
@@ -587,17 +591,17 @@ prompt_linear = PromptTemplate(
 prompt_linear_retry = PromptTemplate(
     input_variables=["incomplete_response","language"],
     template="""
-    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU!
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response.
-    Complete the response by continuing exactly from the discontinued point, which is specified by '[CONTINUE_EXACTLY_FROM_HERE]'.
+    So, I have given this data to you for your context so you will be able to understand the 'Incomplete Response'
+    and will be able to complete it by continuing exactly from the discontinued point, which is specified by '[CONTINUE_EXACTLY_FROM_HERE]'.
     Never include [CONTINUE_EXACTLY_FROM_HERE] in your response. This is just for your information.
-    DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued! 
+    DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued!
     Take great care into the ID heirarchy considerations while continuing the incomplete response.
     'Incomplete Response': {incomplete_response};
 
-    !!!WARNING: KEEP YOUR RESPONSE SHORT AS MUCH AS LOGICALLY POSSIBLE!!! 
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS LOGICALLY POSSIBLE SINCE TOKEN LIMIT IS ALREADY ACHIEVED!!!
 
     !!!NOTE: YOU HAVE TO ENCLOSE THE JSON PARENTHESIS BY KEEPING THE 'Incomplete Response' IN CONTEXT!!!
 
@@ -606,6 +610,7 @@ prompt_linear_retry = PromptTemplate(
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
     [
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
@@ -667,8 +672,9 @@ prompt_linear_retry = PromptTemplate(
     GoalBlock
     \nEnd of Overview structure\n
 
-    Problem to overcome: 
-    1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively. 
+    Problems to overcome: 
+    1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
+    2. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
 
     \n\nEXAMPLE START: LINEAR SCENARIO:\n\n
@@ -742,8 +748,8 @@ prompt_linear_retry = PromptTemplate(
           "title": "Congratulations!",
           "score": 3
         }}
-      ],
-      "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
         {{
             "source": "StartBlock",
             "target": "B1"
@@ -795,6 +801,7 @@ prompt_linear_retry = PromptTemplate(
     Just start the JSON response directly.
     ]
 
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
 
     Chatbot:"""
 )
@@ -806,6 +813,8 @@ prompt_linear_simplify = PromptTemplate(
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
+    
     ***WHAT TO DO***
     To accomplish educational Linear Scenario creation, YOU will:
 
@@ -868,8 +877,9 @@ prompt_linear_simplify = PromptTemplate(
     GoalBlock
     \nEnd of Overview structure\n
 
-    Problem to overcome: 
-    1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively. 
+    Problems to overcome: 
+    1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
+    2. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
 
     \n\nEXAMPLE START: LINEAR SCENARIO:\n\n
@@ -943,8 +953,8 @@ prompt_linear_simplify = PromptTemplate(
           "title": "Congratulations!",
           "score": 3
         }}
-      ],
-      "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
         {{
             "source": "StartBlock",
             "target": "B1"
@@ -995,9 +1005,7 @@ prompt_linear_simplify = PromptTemplate(
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
 
-    !!!KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS LOGICALLY POSSIBLE!!!
-
-    Chatbot (Tone of a teacher teaching student in great detail):"""
+    Chatbot:"""
 )
 
 ###Gamified Prompts
@@ -1527,6 +1535,7 @@ prompt_gamified_json = PromptTemplate(
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
     2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
         The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.  
+    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
     \n\nSAMPLE EXAMPLE\n\n
 {{
@@ -1768,8 +1777,8 @@ prompt_gamified_json = PromptTemplate(
                 "title": "(Insert Text Here)",
                 "score": "Insert Integer Number Here"
             }}
-        ],                       
-        "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
             {{
                 "source": "StartBlock",
                 "target": "B1"
@@ -2042,20 +2051,21 @@ prompt_gamified_json = PromptTemplate(
 prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     input_variables=["incomplete_response","exit_game_story","language"],
     template="""
-    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU!
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response. This 'Incomplete Response'
-    was created using the data of 'Exit Game Story'.
+    was created using the data of 'Exit Game Story Data'. You will see the 'Exit Game Story Data' and it will already be completed partially in the
+    'Incomplete Response'. The goal is to complete the story and cover the content given in 'Exit Game Story Data' by continuing the 'Incomplete Response'
+    such that the story is concluded.
     So, I have given this data to you for your context so you will be able to understand the 'Incomplete Response'
     and will be able to complete it by continuing exactly from the discontinued point, which is specified by '[CONTINUE_EXACTLY_FROM_HERE]'.
     Never include [CONTINUE_EXACTLY_FROM_HERE] in your response. This is just for your information.
-    DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued! 
+    DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued!
     Take great care into the ID heirarchy considerations while continuing the incomplete response.
-    'Incomplete Response': {incomplete_response};
-    'Exit Game Story': {exit_game_story};
+    'Exit Game Story Data': {exit_game_story};
+    'Incomplete Response': {incomplete_response}; # Try to Complete on the basis of 'Exit Game Story Data'
 
-    !!!WARNING: KEEP YOUR RESPONSE SHORT AS MUCH AS LOGICALLY POSSIBLE!!! 
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS LOGICALLY POSSIBLE SINCE TOKEN LIMIT IS ALREADY ACHIEVED!!!
 
     !!!NOTE: YOU HAVE TO ENCLOSE THE JSON PARENTHESIS BY KEEPING THE 'Incomplete Response' IN CONTEXT!!!
 
@@ -2064,6 +2074,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
     [
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
     where you give a story situation to the student to escape from. YOu also give information in the form of
@@ -2078,7 +2089,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
     and create the Exit Game according to these very "Learning Objectives" and "Content Areas" specified.
     3. Generate a JSON-formatted Exit Game structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
-    
+
     ***WHAT TO DO END***
 
     The Exit Game are built using blocks, each having its own parameters.
@@ -2144,6 +2155,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
     2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
         The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.  
+    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
     \n\nSAMPLE EXAMPLE\n\n
 {{
@@ -2385,8 +2397,8 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "title": "(Insert Text Here)",
                 "score": "Insert Integer Number Here"
             }}
-        ],                       
-        "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
             {{
                 "source": "StartBlock",
                 "target": "B1"
@@ -2654,6 +2666,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     Just start the JSON response directly. 
     ]
 
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
 
     Chatbot:"""
 )
@@ -2668,6 +2681,8 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     clues to the student of the subject matter so that with studying those clues' information the
     student will be able to escape the situations by making correct choices. This type of game is
     also known as Exit Game and you are tasked with making Exit Game Scenarios.
+
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Exit Game creation, YOU will:
@@ -2746,6 +2761,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
     2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
         The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.  
+    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
     \n\nSAMPLE EXAMPLE\n\n
 {{
@@ -2987,8 +3003,8 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "title": "(Insert Text Here)",
                 "score": "Insert Integer Number Here"
             }}
-        ],                       
-        "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
             {{
                 "source": "StartBlock",
                 "target": "B1"
@@ -3254,8 +3270,6 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly. 
-
-    !!!KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS LOGICALLY POSSIBLE!!!
     
     Chatbot:"""
 )
@@ -3510,8 +3524,8 @@ prompt_branched = PromptTemplate(
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
             }}
-        ],                       
-        "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
             {{
                 "source": "StartBlock",
                 "target": "B1"
@@ -3622,20 +3636,21 @@ prompt_branched = PromptTemplate(
 prompt_branched_retry = PromptTemplate(
     input_variables=["incomplete_response","micro_subtopics","language"],
     template="""
-    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU!
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response. This 'Incomplete Response'
-    was created using the data of 'Micro Subtopics'.
+    was created using the data of 'Micro Subtopics'. You will see the 'Micro Subtopics' and it will already be completed partially in the
+    'Incomplete Response'. The goal is to complete and cover all the content given for each subtopic in 'Micro Subtopics' by continuing the 'Incomplete Response'
+    such that all subtopics information is completed.
     So, I have given this data to you for your context so you will be able to understand the 'Incomplete Response'
     and will be able to complete it by continuing exactly from the discontinued point, which is specified by '[CONTINUE_EXACTLY_FROM_HERE]'.
     Never include [CONTINUE_EXACTLY_FROM_HERE] in your response. This is just for your information.
-    DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued! 
+    DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued!
     Take great care into the ID heirarchy considerations while continuing the incomplete response.
-    'Incomplete Response': {incomplete_response};
-    'Micro Subtopics': {micro_subtopics};
+    'Micro Subtopics': {micro_subtopics}; 
+    'Incomplete Response': {incomplete_response}; # Try to Complete on the basis of 'Micro Subtopics'
 
-    !!!WARNING: KEEP YOUR RESPONSE SHORT AS MUCH AS LOGICALLY POSSIBLE!!! 
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS LOGICALLY POSSIBLE SINCE TOKEN LIMIT IS ALREADY ACHIEVED!!!
 
     !!!NOTE: YOU HAVE TO ENCLOSE THE JSON PARENTHESIS BY KEEPING THE 'Incomplete Response' IN CONTEXT!!!
 
@@ -3644,6 +3659,7 @@ prompt_branched_retry = PromptTemplate(
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
     [
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You give explanations and provide detailed information such that you are teaching a student.
     !!!WARNING!!!
@@ -3857,8 +3873,8 @@ prompt_branched_retry = PromptTemplate(
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
             }}
-        ],                       
-        "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
             {{
                 "source": "StartBlock",
                 "target": "B1"
@@ -3964,6 +3980,7 @@ prompt_branched_retry = PromptTemplate(
     Just start the JSON response directly.
     ]
 
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
     
     Chatbot:"""
 )
@@ -3977,6 +3994,8 @@ prompt_branched_simplify = PromptTemplate(
     !!!WARNING!!!
     Explain the material itself, Please provide detailed, informative explanations that align closely with the learning objectives and content areas provided. Each response should not just direct the learner but educate them by elaborating on the historical, technical, or practical details mentioned in the 'Input Documents'. Use simple and engaging language to enhance understanding and retention. Ensure that each explanation directly supports the learners' ability to meet the learning objectives by providing comprehensive insights into the topics discussed.
     !!!WARNING END!!!
+
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Micro Learning Scenario creation, YOU will:
@@ -4189,8 +4208,8 @@ prompt_branched_simplify = PromptTemplate(
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
             }}
-        ],                       
-        "edges": [
+        ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+        "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
             {{
                 "source": "StartBlock",
                 "target": "B1"
@@ -4295,9 +4314,7 @@ prompt_branched_simplify = PromptTemplate(
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
 
-    !!!KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS LOGICALLY POSSIBLE!!!
-
-    Chatbot (Tone of a teacher teaching student in great detail):"""
+    Chatbot:"""
 )
 ### End Branched Prompts
 
@@ -4374,13 +4391,13 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)'/'Branching Block (Conditional Branching)'  
+    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)' 
     is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
     consequence branches. Each consequence branch can have its own branches that can divide further 
     to have their own branches, untill the simulation story ends covering all aspects of the information
     for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
     give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
-    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)'/'Branching Block (Conditional Branching)' and this 
+    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)' and this 
     branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
     more Branches that may be further DIVISIBLE or NON-DIVISIBLE type branches. The NON-DIVISIBLE type branches are the branches where
     a simulation path ends and the story of that path is finished. The NON-DIVISIBLE type branch has at the end Goal Block, Debriefing and Reflection blocks.
@@ -4429,6 +4446,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
     2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
         The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.   
+    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
     SAMPLE EXAMPLE:::
 {{
@@ -4630,8 +4648,8 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }}
-    ],                       
-    "edges": [
+    ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+    "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
         {{
             "source": "StartBlock",
             "target": "B1"
@@ -4771,6 +4789,8 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
 
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
+
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
 
@@ -4803,13 +4823,13 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)'/'Branching Block (Conditional Branching)'  
+    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)' 
     is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
     consequence branches. Each consequence branch can have its own branches that can divide further 
     to have their own branches, untill the simulation story ends covering all aspects of the information
     for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
     give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
-    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)'/'Branching Block (Conditional Branching)' and this 
+    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)' and this 
     branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
     more Branches that may be further DIVISIBLE or NON-DIVISIBLE type branches. The NON-DIVISIBLE type branches are the branches where
     a simulation path ends and the story of that path is finished. The NON-DIVISIBLE type branch has at the end Goal Block, Debriefing and Reflection blocks.
@@ -4858,6 +4878,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
     2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
         The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.   
+    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
     SAMPLE EXAMPLE:::
 {{
@@ -5059,8 +5080,8 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }}
-    ],                       
-    "edges": [
+    ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+    "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
         {{
             "source": "StartBlock",
             "target": "B1"
@@ -5187,30 +5208,29 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     NEGATIVE PROMPT: Responding outside the JSON format.   
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly. 
+    Just start the JSON response directly.  
 
-    !!!KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS LOGICALLY POSSIBLE!!!
-
-    Chatbot (Tone of a teacher instructing and teaching student in great detail):"""
+    Chatbot:"""
 )
 
 prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     input_variables=["incomplete_response","simulation_story","language"],
     template="""
-    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU! 
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    ONLY PARSEABLE JSON FORMATTED RESPONSE IS ACCEPTED FROM YOU!
     Based on the INSTRUCTIONS below, an 'Incomplete Response' was created. Your task is to complete
     this response by continuing from exactly where the 'Incomplete Response' discontinued its response. This 'Incomplete Response'
-    was created using the data of 'Simulation Story'.
+    was created using the data of 'Simulation Data'. You will see the 'Simulation Data' and it will already be completed partially in the
+    'Incomplete Response'. The goal is to complete the story and cover the content given in 'Simulation Data' by continuing the 'Incomplete Response'
+    such that the story is completed.
     So, I have given this data to you for your context so you will be able to understand the 'Incomplete Response'
     and will be able to complete it by continuing exactly from the discontinued point, which is specified by '[CONTINUE_EXACTLY_FROM_HERE]'.
     Never include [CONTINUE_EXACTLY_FROM_HERE] in your response. This is just for your information.
-    DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued! 
-    Take great care into the ID heirarchy considerations while continuing the incomplete response. 
-    'Incomplete Response': {incomplete_response};
-    'Simulation Story': {simulation_story};
+    DO NOT RESPOND FROM THE START OF THE 'Incomplete Response'. Just start from the exact point where the 'Incomplete Response' is discontinued!
+    Take great care into the ID heirarchy considerations while continuing the incomplete response.
+    'Simulation Data': {simulation_story};
+    'Incomplete Response': {incomplete_response}; # Try to Complete on the basis of 'Simulation Data'
 
-    !!!WARNING: KEEP YOUR RESPONSE SHORT AS MUCH AS LOGICALLY POSSIBLE!!! 
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
 
     !!!NOTE: YOU HAVE TO ENCLOSE THE JSON PARENTHESIS BY KEEPING THE 'Incomplete Response' IN CONTEXT!!!
 
@@ -5219,6 +5239,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
     [
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
@@ -5249,20 +5270,20 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
-    the student is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)'/'Branching Block (Conditional Branching)'  
-    is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
-    consequence branches. Each consequence branch can have its own branches that can divide further 
+    Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where
+    the student is given choices based on which they face consequences. The simulation is based on the information in
+    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)'
+    is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into
+    consequence branches. Each consequence branch can have its own branches that can divide further
     to have their own branches, untill the simulation story ends covering all aspects of the information
     for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
-    give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
-    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)'/'Branching Block (Conditional Branching)' and this 
+    give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks.
+    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)' and this
     branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
     more Branches that may be further DIVISIBLE or NON-DIVISIBLE type branches. The NON-DIVISIBLE type branches are the branches where
     a simulation path ends and the story of that path is finished. The NON-DIVISIBLE type branch has at the end Goal Block, Debriefing and Reflection blocks.
-    Furthermore, a NON-DIVISIBLE-MERGE branch includes in addition to TextBlocks and MediaBlocks, the MANDATORY FeedbackAndFeedforwardBlock and JumpBlock (Used in situation where the story of a 
-    branch leads to another branch hence we use JumpBlock to connect the progressive story because story paths 
+    Furthermore, a NON-DIVISIBLE-MERGE branch includes in addition to TextBlocks and MediaBlocks, the MANDATORY FeedbackAndFeedforwardBlock and JumpBlock (Used in situation where the story of a
+    branch leads to another branch hence we use JumpBlock to connect the progressive story because story paths
     can merge as well to have the 1 same conclusion). Use NON-DIVISIBLE-MERGE only in the situation where
     a story of the branch leads to and connects to the progressive story of another branch such that both the choices
     leads to the same conclusion for that part of the story.
@@ -5306,6 +5327,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and elaborates content of the Text Blocks illustratively and visually presents the Choices in the Branching Blocks!, 
     2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
         The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.   
+    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
 
     SAMPLE EXAMPLE:::
 {{
@@ -5507,8 +5529,8 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }}
-    ],                       
-    "edges": [
+    ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
+    "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
         {{
             "source": "StartBlock",
             "target": "B1"
@@ -5638,6 +5660,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     Just start the JSON response directly.
     ]
 
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
     
     Chatbot:"""
 )
@@ -5671,11 +5694,28 @@ prompt_LO_CA_GEMINI = PromptTemplate(
     """
 )
 
-def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm):
+# prompt_LO_CA_GEMINI_NONJSON = PromptTemplate(
+#     input_variables=["input_documents","human_input", "language"],
+#     template="""
+#     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. 
+#     Based on the information provided in 'Human Input' and 'Input Documents', you are going to generate 
+#     Learning Objectives and Content Areas. Make sure the both Learning Objectives and Content Areas
+#     are specifically relevant to the query of 'Human Input'. 
+    
+#     'Human Input': {human_input}
+#     'Input Documents': {input_documents}
+
+#     """
+# )
+
+def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
     print("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     docs_main = " ".join([d.page_content for d in docs])
-    chain = LLMChain(prompt=prompt_LO_CA_GEMINI, llm=llm)
+    if model_type=="gemini":
+        chain = LLMChain(prompt=prompt_LO_CA_GEMINI, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
+    else:
+        chain = LLMChain(prompt=prompt_LO_CA_GEMINI, llm=llm.bind(response_format={"type": "json_object"}))
     return chain, docs_main, query
 
 def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_images, language):
@@ -5839,294 +5879,390 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
          
     if scenario == "linear":
         print("SCENARIO ====prompt_linear",scenario)
-        # if model_type == 'gemini':
-        #     chain = LLMChain(prompt=prompt_linear_gemini, llm=llm)
-        # else:
-        #     chain = LLMChain(prompt=prompt_linear, llm=llm)
-        
-        chain = LLMChain(prompt=prompt_linear, llm=llm)
-        response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+        if model_type == 'gemini':
+            chain = LLMChain(prompt=prompt_linear,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+        else:
+            chain = LLMChain(prompt=prompt_linear,llm=llm.bind(response_format={"type": "json_object"}))   
 
-        is_valid, result = is_json_parseable(response['text'])
+        response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         
-        if is_valid == False:
+        is_valid, result = is_json_parseable(response['text'])
+        countd=1
+        while not is_valid and countd<=2:
             txt = response['text']
             print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
             ### REGEX to remove last incomplete id block ###
-            # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-            
-            y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-            matches = re.findall(y, txt, re.DOTALL)
-            print(len(matches))
-            print(matches[-1])
-
-            if matches:
-                last_match = matches[-1]
-                idx = txt.rfind(last_match)  # find the index of the last occurrence
-                modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                print("Original text:")
-                print(txt)
-
-                print("\nModified text:")
-                print(modified_txt)
+            modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+            if modified_txt:
+                modified_txt = modified_txt[0]  # Get the matched string
             else:
-                print("No matches found.")
-                ### ###
-            responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                modified_txt = txt  # No match found, return original
+            print("original:::\n",txt)
+            print("changed:::\n",modified_txt)
 
-            chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
-            response_retry = chain_retry({"incomplete_response": modified_txt,"language":language})
+            # Finding if corrupt edges exists further and to remove it via if loop
+            find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+            if find_edges:
+                modified_txt = modified_txt[0]  # Get the matched string
+                print("Corrupt edges found",modified_txt)
+                # Using regex to replace the specific pattern
+                modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                print("Corrected corrupt edges:", modified_txt)
+
+            responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+            print("\nThe responses_modification to LLM is:\n",responses)
+
+            if model_type == 'gemini':
+                chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
+            else:
+                chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
+
+            response_retry = chain_retry({"incomplete_response": responses, "language":language})
             print("response contd... is:\n",response_retry['text'])
 
-            responses = modified_txt + response_retry['text']
-            print("Responses list is:\n",responses)
-            is_valid_retry, result = is_json_parseable(responses)
-            if is_valid_retry == False:
-                print("The retry is also not parseable!", responses)
-                max_attempts = 3  # Maximum number of attempts
-                attempts = 1
-                while attempts < max_attempts:
-                    chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
-                    response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj,"language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        print("Result successfull for simplified response:",response['text'])
-                        break
-                    else:
-                        attempts += 1
-                        print(f"Attempt {attempts}: Failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-            else:
-                response['text'] = responses
-                print("Retry success", response['text'])
+            responses = modified_txt + response_retry['text'] #changed modified_text to responses
+            print("responses+continued Combined is:\n",responses)
+
+            # Finding if corrupt edges exists AFTER combined prompts
+            find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+            if find_edges:
+                responses = responses[0]  # Get the matched string
+                print("Corrupt edges found",responses)
+                # Using regex to replace the specific pattern
+                responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                print("Corrected corrupt edges:", responses)
+
+            response['text'] = responses
+
+            is_valid, result = is_json_parseable(responses)
+            print("Parseability status:\n", result)
+            countd+=1
+            print("contd count is:",countd)
+
+        if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+            print("The retry is also not parseable!", responses)
+            max_attempts = 1  # Maximum number of attempts
+            attempts = 1
+            while attempts <= max_attempts:
+
+                if model_type == 'gemini':
+                    chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                else:
+                    chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                if is_valid_retry_simplify == True:
+                    response['text'] = response_retry_simplify['text']
+                    print("Result successfull for simplified response:",response['text'])
+                    break
+                else:
+                    print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                    attempts += 1
+                    
         else:
-            ("Parseable JSON", response['text'])
+            response['text'] = responses
+            print("Retry success\n", response['text'])
 
     elif scenario == "branched":
         print("SCENARIO ====branched",scenario)
         
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+            chain = LLMChain(prompt=prompt_branched,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
+                                        )  
+            chain = LLMChain(prompt=prompt_branched,llm=llm.bind(response_format={"type": "json_object"}))   
 
-        # summarized first, then response
-        chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
+        if model_type == 'gemini':
+            chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
+        else:
+            chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
+
         response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         print("Response 1 is::",response1['text'])
-    
-        chain = LLMChain(prompt=prompt_branched,llm=llm)  
-        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
 
-        is_valid, result = is_json_parseable(response['text'])
+        response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         
-        if is_valid == False:
+        is_valid, result = is_json_parseable(response['text'])
+        countd=1
+        while not is_valid and countd<=2:
             txt = response['text']
             print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
             ### REGEX to remove last incomplete id block ###
-            # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-            
-            y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-            matches = re.findall(y, txt, re.DOTALL)
-            print(len(matches))
-            print(matches[-1])
-
-            if matches:
-                last_match = matches[-1]
-                idx = txt.rfind(last_match)  # find the index of the last occurrence
-                modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                print("Original text:")
-                print(txt)
-
-                print("\nModified text:")
-                print(modified_txt)
+            modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+            if modified_txt:
+                modified_txt = modified_txt[0]  # Get the matched string
             else:
-                print("No matches found.")
-                ### ###
-            responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                modified_txt = txt  # No match found, return original
+            print("original:::\n",txt)
+            print("changed:::\n",modified_txt)
 
-            chain_retry = LLMChain(prompt=prompt_branched_retry,llm=llm)
-            response_retry = chain_retry({"incomplete_response": modified_txt,"micro_subtopics":response1['text'], "language":language})
+            # Finding if corrupt edges exists further and to remove it via if loop
+            find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+            if find_edges:
+                modified_txt = modified_txt[0]  # Get the matched string
+                print("Corrupt edges found",modified_txt)
+                # Using regex to replace the specific pattern
+                modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                print("Corrected corrupt edges:", modified_txt)
+
+            responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+            print("\nThe responses_modification to LLM is:\n",responses)
+
+            if model_type == 'gemini':
+                chain_retry = LLMChain(prompt=prompt_branched_retry,llm=llm)
+            else:
+                chain_retry = LLMChain(prompt=prompt_branched_retry,llm=llm)
+
+            response_retry = chain_retry({"incomplete_response": responses,"micro_subtopics":response1['text'], "language":language})
             print("response contd... is:\n",response_retry['text'])
 
-            responses = modified_txt + response_retry['text']
-            print("Responses list is:\n",responses)
-            is_valid_retry, result = is_json_parseable(responses)
-            if is_valid_retry == False:
-                print("The retry is also not parseable!", responses)
-                max_attempts = 3  # Maximum number of attempts
-                attempts = 1
-                while attempts < max_attempts:
-                    chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm)
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        print("Result successfull for simplified response:",response['text'])
-                        break
-                    else:
-                        attempts += 1
-                        print(f"Attempt {attempts}: Failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-            else:
-                response['text'] = responses
-                print("Retry success", response['text'])
+            responses = modified_txt + response_retry['text'] #changed modified_text to responses
+            print("responses+continued Combined is:\n",responses)
+
+            # Finding if corrupt edges exists AFTER combined prompts
+            find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+            if find_edges:
+                responses = responses[0]  # Get the matched string
+                print("Corrupt edges found",responses)
+                # Using regex to replace the specific pattern
+                responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                print("Corrected corrupt edges:", responses)
+
+            response['text'] = responses
+
+            is_valid, result = is_json_parseable(responses)
+            print("Parseability status:\n", result)
+            countd+=1
+            print("contd count is:",countd)
+
+        if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+            print("The retry is also not parseable!", responses)
+            max_attempts = 1  # Maximum number of attempts
+            attempts = 1
+            while attempts <= max_attempts:
+
+                if model_type == 'gemini':
+                    chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                else:
+                    chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                if is_valid_retry_simplify == True:
+                    response['text'] = response_retry_simplify['text']
+                    print("Result successfull for simplified response:",response['text'])
+                    break
+                else:
+                    print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                    attempts += 1
+                    
         else:
-            ("Parseable JSON", response['text'])
+            response['text'] = responses
+            print("Retry success\n", response['text'])
 
     elif scenario == "simulation":
         print("SCENARIO ====prompt_simulation_pedagogy",scenario)
         # summarized first, then response
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
-            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
-            print("prompt_simulation_pedagogy_gemini selected!")
+            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0.3,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )  
-            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)   
+            chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm.bind(response_format={"type": "json_object"}))   
 
+        if model_type == 'gemini':
+            chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
+        else:
+            chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
 
-        chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
         response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         print("Response 1 is::",response1['text'])
 
         response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         
         is_valid, result = is_json_parseable(response['text'])
-        
-        if is_valid == False:
+        countd=1
+        while not is_valid and countd<=2:
             txt = response['text']
             print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
             ### REGEX to remove last incomplete id block ###
-            # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-            
-            y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-            matches = re.findall(y, txt, re.DOTALL)
-            print(len(matches))
-            print(matches[-1])
-
-            if matches:
-                last_match = matches[-1]
-                idx = txt.rfind(last_match)  # find the index of the last occurrence
-                modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                print("Original text:")
-                print(txt)
-
-                print("\nModified text:")
-                print(modified_txt)
+            modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+            if modified_txt:
+                modified_txt = modified_txt[0]  # Get the matched string
             else:
-                print("No matches found.")
-                ### ###
-            responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                modified_txt = txt  # No match found, return original
+            print("original:::\n",txt)
+            print("changed:::\n",modified_txt)
 
-            chain_retry = LLMChain(prompt=prompt_simulation_pedagogy_retry_gemini,llm=llm)
-            response_retry = chain_retry({"incomplete_response": modified_txt,"simulation_story":response1['text'], "language":language})
+            # Finding if corrupt edges exists further and to remove it via if loop
+            find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+            if find_edges:
+                modified_txt = modified_txt[0]  # Get the matched string
+                print("Corrupt edges found",modified_txt)
+                # Using regex to replace the specific pattern
+                modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                print("Corrected corrupt edges:", modified_txt)
+
+            responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+            print("\nThe responses_modification to LLM is:\n",responses)
+
+            if model_type == 'gemini':
+                chain_retry = LLMChain(prompt=prompt_simulation_pedagogy_retry_gemini,llm=llm)
+            else:
+                chain_retry = LLMChain(prompt=prompt_simulation_pedagogy_retry_gemini,llm=llm)
+
+            response_retry = chain_retry({"incomplete_response": responses,"simulation_story":response1['text'], "language":language})
             print("response contd... is:\n",response_retry['text'])
 
-            responses = modified_txt + response_retry['text']
-            print("Responses list is:\n",responses)
-            is_valid_retry, result = is_json_parseable(responses)
-            if is_valid_retry == False:
-                print("The retry is also not parseable!", responses)
-                max_attempts = 3  # Maximum number of attempts
-                attempts = 1
-                while attempts < max_attempts:
-                    chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm)
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        print("Result successfull for simplified response:",response['text'])
-                        break
-                    else:
-                        attempts += 1
-                        print(f"Attempt {attempts}: Failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-            else:
-                response['text'] = responses
-                print("Retry success", response['text'])
+            responses = modified_txt + response_retry['text'] #changed modified_text to responses
+            print("responses+continued Combined is:\n",responses)
+
+            # Finding if corrupt edges exists AFTER combined prompts
+            find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+            if find_edges:
+                responses = responses[0]  # Get the matched string
+                print("Corrupt edges found",responses)
+                # Using regex to replace the specific pattern
+                responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                print("Corrected corrupt edges:", responses)
+
+            response['text'] = responses
+
+            is_valid, result = is_json_parseable(responses)
+            print("Parseability status:\n", result)
+            countd+=1
+            print("contd count is:",countd)
+
+        if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+            print("The retry is also not parseable!", responses)
+            max_attempts = 1  # Maximum number of attempts
+            attempts = 1
+            while attempts <= max_attempts:
+
+                if model_type == 'gemini':
+                    chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                else:
+                    chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                if is_valid_retry_simplify == True:
+                    response['text'] = response_retry_simplify['text']
+                    print("Result successfull for simplified response:",response['text'])
+                    break
+                else:
+                    print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                    attempts += 1
+                    
         else:
-            ("Parseable JSON", response['text'])
-            
+            response['text'] = responses
+            print("Retry success\n", response['text'])
+        
+
     elif scenario == "gamified":
         print("SCENARIO ====prompt_gamified",scenario)
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+            chain = LLMChain(prompt=prompt_gamified_json,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
+                                        )  
+            chain = LLMChain(prompt=prompt_gamified_json,llm=llm.bind(response_format={"type": "json_object"}))   
 
-        chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+        if model_type == 'gemini':
+            chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+        else:
+            chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+
         response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         print("Response 1 is::",response1['text'])
 
-        # chain2 = LLMChain(prompt=prompt_gamified_simple,llm=llm_setup)
-        # response2 = chain2({"response_of_bot_simple": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
-        # print("Response 2 is::",response2['text'])
-
-        chain = LLMChain(prompt=prompt_gamified_json,llm=llm)
         response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         
         is_valid, result = is_json_parseable(response['text'])
-        
-        if is_valid == False:
+        countd=1
+        while not is_valid and countd<=2:
             txt = response['text']
             print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
             ### REGEX to remove last incomplete id block ###
-            # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-            y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-            matches = re.findall(y, txt, re.DOTALL)
-            print(len(matches))
-            print(matches[-1])
-
-            if matches:
-                last_match = matches[-1]
-                idx = txt.rfind(last_match)  # find the index of the last occurrence
-                modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                print("Original text:")
-                print(txt)
-
-                print("\nModified text:")
-                print(modified_txt)
+            modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+            if modified_txt:
+                modified_txt = modified_txt[0]  # Get the matched string
             else:
-                print("No matches found.")
-                ### ###
-            responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                modified_txt = txt  # No match found, return original
+            print("original:::\n",txt)
+            print("changed:::\n",modified_txt)
 
-            chain_retry = LLMChain(prompt=prompt_gamified_pedagogy_retry_gemini,llm=llm)
-            response_retry = chain_retry({"incomplete_response": modified_txt,"exit_game_story":response1['text'], "language":language})
+            # Finding if corrupt edges exists further and to remove it via if loop
+            find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+            if find_edges:
+                modified_txt = modified_txt[0]  # Get the matched string
+                print("Corrupt edges found",modified_txt)
+                # Using regex to replace the specific pattern
+                modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                print("Corrected corrupt edges:", modified_txt)
+
+            responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+            print("\nThe responses_modification to LLM is:\n",responses)
+
+            if model_type == 'gemini':
+                chain_retry = LLMChain(prompt=prompt_gamified_pedagogy_retry_gemini,llm=llm)
+            else:
+                chain_retry = LLMChain(prompt=prompt_gamified_pedagogy_retry_gemini,llm=llm)
+
+            response_retry = chain_retry({"incomplete_response": responses,"exit_game_story":response1['text'], "language":language})
             print("response contd... is:\n",response_retry['text'])
 
-            responses = modified_txt + response_retry['text']
-            print("Responses list is:\n",responses)
-            is_valid_retry, result = is_json_parseable(responses)
-            if is_valid_retry == False:
-                print("The retry is also not parseable!", responses)
-                max_attempts = 3  # Maximum number of attempts
-                attempts = 1
-                while attempts < max_attempts:
-                    chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm)
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        print("Result successfull for simplified response:",response['text'])
-                        break
-                    else:
-                        attempts += 1
-                        print(f"Attempt {attempts}: Failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-            else:
-                response['text'] = responses
-                print("Retry success", response['text'])
+            responses = modified_txt + response_retry['text'] #changed modified_text to responses
+            print("responses+continued Combined is:\n",responses)
+
+            # Finding if corrupt edges exists AFTER combined prompts
+            find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+            if find_edges:
+                responses = responses[0]  # Get the matched string
+                print("Corrupt edges found",responses)
+                # Using regex to replace the specific pattern
+                responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                print("Corrected corrupt edges:", responses)
+
+            response['text'] = responses
+
+            is_valid, result = is_json_parseable(responses)
+            print("Parseability status:\n", result)
+            countd+=1
+            print("contd count is:",countd)
+
+        if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+            print("The retry is also not parseable!", responses)
+            max_attempts = 1  # Maximum number of attempts
+            attempts = 1
+            while attempts <= max_attempts:
+
+                if model_type == 'gemini':
+                    chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                else:
+                    chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                if is_valid_retry_simplify == True:
+                    response['text'] = response_retry_simplify['text']
+                    print("Result successfull for simplified response:",response['text'])
+                    break
+                else:
+                    print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                    attempts += 1
+                    
         else:
-            ("Parseable JSON", response['text'])
+            response['text'] = responses
+            print("Retry success\n", response['text'])
 
     elif scenario == "auto":
         print("SCENARIO ====PROMPT",scenario)
@@ -6135,13 +6271,14 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
 
         ### SEMANTIC ROUTES LOGIC ###
         if model_type == 'gemini':
-            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32)  
+            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32) 
+            llm_auto_chain = LLMChain(prompt=promptSelector, llm=llm_auto.bind(generation_config={"response_mime_type": "application/json"})) 
         else:
             llm_auto =  AzureChatOpenAI(deployment_name=model_name, temperature=0.4, max_tokens=32,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
+            llm_auto_chain = LLMChain(prompt=promptSelector, llm=llm_auto.bind(response_format={"type": "json_object"}))
         
-        llm_auto_chain = LLMChain(prompt=promptSelector, llm=llm_auto)
         selected = llm_auto_chain.run({"input_documents": docs_main, "human_input": query})
 
         print("Semantic Scenario Selected of NAME",selected)
@@ -6170,352 +6307,479 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         if max_similarity == max(gamified_similarity):
             print("Gamified Auto Selected")
             if model_type == 'gemini':
-                llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)    
+                llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                chain = LLMChain(prompt=prompt_gamified_json,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             else:
                 llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        ) 
+                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                            )  
+                chain = LLMChain(prompt=prompt_gamified_json,llm=llm.bind(response_format={"type": "json_object"}))   
 
-            chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+            if model_type == 'gemini':
+                chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+            else:
+                chain1 = LLMChain(prompt=prompt_gamified_setup,llm=llm_setup)
+
             response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             print("Response 1 is::",response1['text'])
 
-            # chain2 = LLMChain(prompt=prompt_gamified_simple,llm=llm_setup)
-            # response2 = chain2({"response_of_bot_simple": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj})
-            # print("Response 2 is::",response2['text'])
-
-            chain = LLMChain(prompt=prompt_gamified_json,llm=llm)
             response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
             is_valid, result = is_json_parseable(response['text'])
-            
-            if is_valid == False:
+            countd=1
+            while not is_valid and countd<=2:
                 txt = response['text']
                 print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
                 ### REGEX to remove last incomplete id block ###
-                # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-                y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-                matches = re.findall(y, txt, re.DOTALL)
-                print(len(matches))
-                print(matches[-1])
-
-                if matches:
-                    last_match = matches[-1]
-                    idx = txt.rfind(last_match)  # find the index of the last occurrence
-                    modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                    print("Original text:")
-                    print(txt)
-
-                    print("\nModified text:")
-                    print(modified_txt)
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
                 else:
-                    print("No matches found.")
-                    ### ###
-                responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                    modified_txt = txt  # No match found, return original
+                print("original:::\n",txt)
+                print("changed:::\n",modified_txt)
 
-                chain_retry = LLMChain(prompt=prompt_gamified_pedagogy_retry_gemini,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt,"exit_game_story":response1['text'], "language":language})
+                # Finding if corrupt edges exists further and to remove it via if loop
+                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+                if find_edges:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                    print("Corrupt edges found",modified_txt)
+                    # Using regex to replace the specific pattern
+                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", modified_txt)
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                print("\nThe responses_modification to LLM is:\n",responses)
+
+                if model_type == 'gemini':
+                    chain_retry = LLMChain(prompt=prompt_gamified_pedagogy_retry_gemini,llm=llm)
+                else:
+                    chain_retry = LLMChain(prompt=prompt_gamified_pedagogy_retry_gemini,llm=llm)
+
+                response_retry = chain_retry({"incomplete_response": responses,"exit_game_story":response1['text'], "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
-                responses = modified_txt + response_retry['text']
-                print("Responses list is:\n",responses)
-                is_valid_retry, result = is_json_parseable(responses)
-                if is_valid_retry == False:
-                    print("The retry is also not parseable!", responses)
-                    max_attempts = 3  # Maximum number of attempts
-                    attempts = 1
-                    while attempts < max_attempts:
-                        chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                        is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                        if is_valid_retry_simplify == True:
-                            response['text'] = response_retry_simplify['text']
-                            print("Result successfull for simplified response:",response['text'])
-                            break
-                        else:
-                            attempts += 1
-                            print(f"Attempt {attempts}: Failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                else:
-                    response['text'] = responses
-                    print("Retry success", response['text'])
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                print("responses+continued Combined is:\n",responses)
+
+                # Finding if corrupt edges exists AFTER combined prompts
+                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+                if find_edges:
+                    responses = responses[0]  # Get the matched string
+                    print("Corrupt edges found",responses)
+                    # Using regex to replace the specific pattern
+                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", responses)
+
+                response['text'] = responses
+
+                is_valid, result = is_json_parseable(responses)
+                print("Parseability status:\n", result)
+                countd+=1
+                print("contd count is:",countd)
+
+            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+                print("The retry is also not parseable!", responses)
+                max_attempts = 1  # Maximum number of attempts
+                attempts = 1
+                while attempts <= max_attempts:
+
+                    if model_type == 'gemini':
+                        chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    else:
+                        chain_simplify = LLMChain(prompt=prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                    if is_valid_retry_simplify == True:
+                        response['text'] = response_retry_simplify['text']
+                        print("Result successfull for simplified response:",response['text'])
+                        break
+                    else:
+                        print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                        attempts += 1
+                        
             else:
-                ("Parseable JSON", response['text'])
+                response['text'] = responses
+                print("Retry success\n", response['text'])
 
         elif max_similarity == max(linear_similarity):
             print("Linear Auto Selected")
-            chain = LLMChain(prompt=prompt_linear, llm=llm)
-            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+            if model_type == 'gemini':
+                chain = LLMChain(prompt=prompt_linear,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            else:
+                chain = LLMChain(prompt=prompt_linear,llm=llm.bind(response_format={"type": "json_object"}))   
 
-            is_valid, result = is_json_parseable(response['text'])
+            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
-            if is_valid == False:
+            is_valid, result = is_json_parseable(response['text'])
+            countd=1
+            while not is_valid and countd<=2:
                 txt = response['text']
                 print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
                 ### REGEX to remove last incomplete id block ###
-                # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-                
-                y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-                matches = re.findall(y, txt, re.DOTALL)
-                print(len(matches))
-                print(matches[-1])
-
-                if matches:
-                    last_match = matches[-1]
-                    idx = txt.rfind(last_match)  # find the index of the last occurrence
-                    modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                    print("Original text:")
-                    print(txt)
-
-                    print("\nModified text:")
-                    print(modified_txt)
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
                 else:
-                    print("No matches found.")
-                    ### ###
-                responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                    modified_txt = txt  # No match found, return original
+                print("original:::\n",txt)
+                print("changed:::\n",modified_txt)
 
-                chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt, "language":language})
+                # Finding if corrupt edges exists further and to remove it via if loop
+                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+                if find_edges:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                    print("Corrupt edges found",modified_txt)
+                    # Using regex to replace the specific pattern
+                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", modified_txt)
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                print("\nThe responses_modification to LLM is:\n",responses)
+
+                if model_type == 'gemini':
+                    chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
+                else:
+                    chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
+
+                response_retry = chain_retry({"incomplete_response": responses, "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
-                responses = modified_txt + response_retry['text']
-                print("Responses list is:\n",responses)
-                is_valid_retry, result = is_json_parseable(responses)
-                if is_valid_retry == False:
-                    print("The retry is also not parseable!", responses)
-                    max_attempts = 3  # Maximum number of attempts
-                    attempts = 1
-                    while attempts < max_attempts:
-                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                        is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                        if is_valid_retry_simplify == True:
-                            response['text'] = response_retry_simplify['text']
-                            print("Result successfull for simplified response:",response['text'])
-                            break
-                        else:
-                            attempts += 1
-                            print(f"Attempt {attempts}: Failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                else:
-                    response['text'] = responses
-                    print("Retry success", response['text'])
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                print("responses+continued Combined is:\n",responses)
+
+                # Finding if corrupt edges exists AFTER combined prompts
+                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+                if find_edges:
+                    responses = responses[0]  # Get the matched string
+                    print("Corrupt edges found",responses)
+                    # Using regex to replace the specific pattern
+                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", responses)
+
+                response['text'] = responses
+
+                is_valid, result = is_json_parseable(responses)
+                print("Parseability status:\n", result)
+                countd+=1
+                print("contd count is:",countd)
+
+            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+                print("The retry is also not parseable!", responses)
+                max_attempts = 1  # Maximum number of attempts
+                attempts = 1
+                while attempts <= max_attempts:
+
+                    if model_type == 'gemini':
+                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    else:
+                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                    response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                    if is_valid_retry_simplify == True:
+                        response['text'] = response_retry_simplify['text']
+                        print("Result successfull for simplified response:",response['text'])
+                        break
+                    else:
+                        print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                        attempts += 1
+                        
             else:
-                ("Parseable JSON", response['text'])
+                response['text'] = responses
+                print("Retry success\n", response['text'])
 
         elif max_similarity == max(simulation_similarity):
             print("Simulation Auto Selected")
             if model_type == 'gemini':
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
-                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)
-                print("prompt_simulation_pedagogy_gemini selected!")
+                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             else:
                 llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0.3,
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )  
-                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm)  
+                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                            )  
+                chain = LLMChain(prompt=prompt_simulation_pedagogy_gemini,llm=llm.bind(response_format={"type": "json_object"}))   
 
-            chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
+            if model_type == 'gemini':
+                chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
+            else:
+                chain1 = LLMChain(prompt=prompt_simulation_pedagogy_setup,llm=llm_setup)
+
             response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             print("Response 1 is::",response1['text'])
 
             response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
             is_valid, result = is_json_parseable(response['text'])
-            
-            if is_valid == False:
+            countd=1
+            while not is_valid and countd<=2:
                 txt = response['text']
                 print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
                 ### REGEX to remove last incomplete id block ###
-                # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-                
-                y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-                matches = re.findall(y, txt, re.DOTALL)
-                print(len(matches))
-                print(matches[-1])
-
-                if matches:
-                    last_match = matches[-1]
-                    idx = txt.rfind(last_match)  # find the index of the last occurrence
-                    modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                    print("Original text:")
-                    print(txt)
-
-                    print("\nModified text:")
-                    print(modified_txt)
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
                 else:
-                    print("No matches found.")
-                    ### ###
-                responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                    modified_txt = txt  # No match found, return original
+                print("original:::\n",txt)
+                print("changed:::\n",modified_txt)
 
-                chain_retry = LLMChain(prompt=prompt_simulation_pedagogy_retry_gemini,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt,"simulation_story":response1['text'], "language":language})
+                # Finding if corrupt edges exists further and to remove it via if loop
+                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+                if find_edges:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                    print("Corrupt edges found",modified_txt)
+                    # Using regex to replace the specific pattern
+                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", modified_txt)
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                print("\nThe responses_modification to LLM is:\n",responses)
+
+                if model_type == 'gemini':
+                    chain_retry = LLMChain(prompt=prompt_simulation_pedagogy_retry_gemini,llm=llm)
+                else:
+                    chain_retry = LLMChain(prompt=prompt_simulation_pedagogy_retry_gemini,llm=llm)
+
+                response_retry = chain_retry({"incomplete_response": responses,"simulation_story":response1['text'], "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
-                responses = modified_txt + response_retry['text']
-                print("Responses list is:\n",responses)
-                is_valid_retry, result = is_json_parseable(responses)
-                if is_valid_retry == False:
-                    print("The retry is also not parseable!", responses)
-                    max_attempts = 3  # Maximum number of attempts
-                    attempts = 1
-                    while attempts < max_attempts:
-                        chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                        is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                        if is_valid_retry_simplify == True:
-                            response['text'] = response_retry_simplify['text']
-                            print("Result successfull for simplified response:",response['text'])
-                            break
-                        else:
-                            attempts += 1
-                            print(f"Attempt {attempts}: Failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                else:
-                    response['text'] = responses
-                    print("Retry success", response['text'])
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                print("responses+continued Combined is:\n",responses)
+
+                # Finding if corrupt edges exists AFTER combined prompts
+                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+                if find_edges:
+                    responses = responses[0]  # Get the matched string
+                    print("Corrupt edges found",responses)
+                    # Using regex to replace the specific pattern
+                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", responses)
+
+                response['text'] = responses
+
+                is_valid, result = is_json_parseable(responses)
+                print("Parseability status:\n", result)
+                countd+=1
+                print("contd count is:",countd)
+
+            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+                print("The retry is also not parseable!", responses)
+                max_attempts = 1  # Maximum number of attempts
+                attempts = 1
+                while attempts <= max_attempts:
+
+                    if model_type == 'gemini':
+                        chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    else:
+                        chain_simplify = LLMChain(prompt=prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                    if is_valid_retry_simplify == True:
+                        response['text'] = response_retry_simplify['text']
+                        print("Result successfull for simplified response:",response['text'])
+                        break
+                    else:
+                        print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                        attempts += 1
+                        
             else:
-                ("Parseable JSON", response['text'])
+                response['text'] = responses
+                print("Retry success\n", response['text'])
 
         elif max_similarity == max(branched_similarity):
             print("Branched Auto Selected")
             if model_type == 'gemini':
                 llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                chain = LLMChain(prompt=prompt_branched,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             else:
                 llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        ) 
+                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                            )  
+                chain = LLMChain(prompt=prompt_branched,llm=llm.bind(response_format={"type": "json_object"}))   
 
-            # summarized first, then response
-            chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
+            if model_type == 'gemini':
+                chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
+            else:
+                chain1 = LLMChain(prompt=prompt_branched_setup,llm=llm_setup)
+
             response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             print("Response 1 is::",response1['text'])
-        
-            chain = LLMChain(prompt=prompt_branched,llm=llm)  
-            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
 
-            is_valid, result = is_json_parseable(response['text'])
+            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
-            if is_valid == False:
+            is_valid, result = is_json_parseable(response['text'])
+            countd=1
+            while not is_valid and countd<=2:
                 txt = response['text']
                 print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
                 ### REGEX to remove last incomplete id block ###
-                # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-                
-                y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-                matches = re.findall(y, txt, re.DOTALL)
-                print(len(matches))
-                print(matches[-1])
-
-                if matches:
-                    last_match = matches[-1]
-                    idx = txt.rfind(last_match)  # find the index of the last occurrence
-                    modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                    print("Original text:")
-                    print(txt)
-
-                    print("\nModified text:")
-                    print(modified_txt)
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
                 else:
-                    print("No matches found.")
-                    ### ###
-                responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                    modified_txt = txt  # No match found, return original
+                print("original:::\n",txt)
+                print("changed:::\n",modified_txt)
 
-                chain_retry = LLMChain(prompt=prompt_branched_retry,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt,"micro_subtopics":response1['text'], "language":language})
+                # Finding if corrupt edges exists further and to remove it via if loop
+                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+                if find_edges:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                    print("Corrupt edges found",modified_txt)
+                    # Using regex to replace the specific pattern
+                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", modified_txt)
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                print("\nThe responses_modification to LLM is:\n",responses)
+
+                if model_type == 'gemini':
+                    chain_retry = LLMChain(prompt=prompt_branched_retry,llm=llm)
+                else:
+                    chain_retry = LLMChain(prompt=prompt_branched_retry,llm=llm)
+
+                response_retry = chain_retry({"incomplete_response": responses,"micro_subtopics":response1['text'], "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
-                responses = modified_txt + response_retry['text']
-                print("Responses list is:\n",responses)
-                is_valid_retry, result = is_json_parseable(responses)
-                if is_valid_retry == False:
-                    print("The retry is also not parseable!", responses)
-                    max_attempts = 3  # Maximum number of attempts
-                    attempts = 1
-                    while attempts < max_attempts:
-                        chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                        is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                        if is_valid_retry_simplify == True:
-                            response['text'] = response_retry_simplify['text']
-                            print("Result successfull for simplified response:",response['text'])
-                            break
-                        else:
-                            attempts += 1
-                            print(f"Attempt {attempts}: Failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                else:
-                    response['text'] = responses
-                    print("Retry success", response['text'])
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                print("responses+continued Combined is:\n",responses)
+
+                # Finding if corrupt edges exists AFTER combined prompts
+                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+                if find_edges:
+                    responses = responses[0]  # Get the matched string
+                    print("Corrupt edges found",responses)
+                    # Using regex to replace the specific pattern
+                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", responses)
+
+                response['text'] = responses
+
+                is_valid, result = is_json_parseable(responses)
+                print("Parseability status:\n", result)
+                countd+=1
+                print("contd count is:",countd)
+
+            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+                print("The retry is also not parseable!", responses)
+                max_attempts = 1  # Maximum number of attempts
+                attempts = 1
+                while attempts <= max_attempts:
+
+                    if model_type == 'gemini':
+                        chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    else:
+                        chain_simplify = LLMChain(prompt=prompt_branched_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                    if is_valid_retry_simplify == True:
+                        response['text'] = response_retry_simplify['text']
+                        print("Result successfull for simplified response:",response['text'])
+                        break
+                    else:
+                        print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                        attempts += 1
+                        
             else:
-                ("Parseable JSON", response['text'])        
+                response['text'] = responses
+                print("Retry success\n", response['text'])        
 
         else:
             print("AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
 
-            chain = LLMChain(prompt=prompt_linear, llm=llm)
-            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+            if model_type == 'gemini':
+                chain = LLMChain(prompt=prompt_linear,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            else:
+                chain = LLMChain(prompt=prompt_linear,llm=llm.bind(response_format={"type": "json_object"}))   
 
-            is_valid, result = is_json_parseable(response['text'])
+            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
             
-            if is_valid == False:
+            is_valid, result = is_json_parseable(response['text'])
+            countd=1
+            while not is_valid and countd<=2:
                 txt = response['text']
                 print("CHAIN_RETRY BEGINS for the failed response:\n", txt)
                 ### REGEX to remove last incomplete id block ###
-                # y = r'\s*{\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z)' # this is previous working iteration for the below regex
-                
-                y = r'\s*},\s*.*?({\s*"id":\s*"[^"]+".*?(?=\n\s*{|\Z))'
-                matches = re.findall(y, txt, re.DOTALL)
-                print(len(matches))
-                print(matches[-1])
-
-                if matches:
-                    last_match = matches[-1]
-                    idx = txt.rfind(last_match)  # find the index of the last occurrence
-                    modified_txt = txt[:idx]  # remove the last occurrence and everything after it
-
-                    print("Original text:")
-                    print(txt)
-
-                    print("\nModified text:")
-                    print(modified_txt)
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
                 else:
-                    print("No matches found.")
-                    ### ###
-                responses = modified_txt + "[CONTINUE_EXACTLY_FROM_HERE]"
+                    modified_txt = txt  # No match found, return original
+                print("original:::\n",txt)
+                print("changed:::\n",modified_txt)
 
-                chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
-                response_retry = chain_retry({"incomplete_response": modified_txt, "language":language})
+                # Finding if corrupt edges exists further and to remove it via if loop
+                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
+                if find_edges:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                    print("Corrupt edges found",modified_txt)
+                    # Using regex to replace the specific pattern
+                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", modified_txt)
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                print("\nThe responses_modification to LLM is:\n",responses)
+
+                if model_type == 'gemini':
+                    chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
+                else:
+                    chain_retry = LLMChain(prompt=prompt_linear_retry,llm=llm)
+
+                response_retry = chain_retry({"incomplete_response": responses, "language":language})
                 print("response contd... is:\n",response_retry['text'])
 
-                responses = modified_txt + response_retry['text']
-                print("Responses list is:\n",responses)
-                is_valid_retry, result = is_json_parseable(responses)
-                if is_valid_retry == False:
-                    print("The retry is also not parseable!", responses)
-                    max_attempts = 3  # Maximum number of attempts
-                    attempts = 1
-                    while attempts < max_attempts:
-                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm)
-                        response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                        is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                        if is_valid_retry_simplify == True:
-                            response['text'] = response_retry_simplify['text']
-                            print("Result successfull for simplified response:",response['text'])
-                            break
-                        else:
-                            attempts += 1
-                            print(f"Attempt {attempts}: Failed to parse JSON. Error: {response_retry_simplify['text']}")
-                else:
-                    response['text'] = responses
-                    print("Retry success", response['text'])
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                print("responses+continued Combined is:\n",responses)
+
+                # Finding if corrupt edges exists AFTER combined prompts
+                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
+                if find_edges:
+                    responses = responses[0]  # Get the matched string
+                    print("Corrupt edges found",responses)
+                    # Using regex to replace the specific pattern
+                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
+                    print("Corrected corrupt edges:", responses)
+
+                response['text'] = responses
+
+                is_valid, result = is_json_parseable(responses)
+                print("Parseability status:\n", result)
+                countd+=1
+                print("contd count is:",countd)
+
+            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
+                print("The retry is also not parseable!", responses)
+                max_attempts = 1  # Maximum number of attempts
+                attempts = 1
+                while attempts <= max_attempts:
+
+                    if model_type == 'gemini':
+                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+                    else:
+                        chain_simplify = LLMChain(prompt=prompt_linear_simplify,llm=llm.bind(response_format={"type": "json_object"}))
+
+                    response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
+                    if is_valid_retry_simplify == True:
+                        response['text'] = response_retry_simplify['text']
+                        print("Result successfull for simplified response:",response['text'])
+                        break
+                    else:
+                        print(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                        attempts += 1
+                        
             else:
-                ("Parseable JSON", response['text'])
+                response['text'] = responses
+                print("Retry success\n", response['text'])
 
     print("The output is as follows::\n",response['text'])
     return response['text']
 
-def ANSWER_IMG(response_text, llm,relevant_doc,language):
+def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     # prompt_template_img =PromptTemplate( 
     # input_variables=["response_text","context"],
     # template="""
@@ -6566,13 +6830,16 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language):
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     Search for those image or images only, whose descriptions in a MediaBlock of the 'Response Text' matches
     with the descriptions in the 'Context' data. Output only those image's or images' description from the 
-    'Context' data. 
+    'Context' data.
     \n{format_instructions}\n'Response Text': {response_text}\n'Context': {context}""",
     input_variables=["response_text","context","language"],
     partial_variables={"format_instructions": parser.get_format_instructions()},
     )
 
-    chain = prompt | llm | parser
+    if model_type == "gemini":
+        chain = prompt | llm.bind(generation_config={"response_mime_type": "application/json"}) | parser
+    else:
+        chain = prompt | llm.bind(response_format={"type": "json_object"}) | parser
 
     img_response = chain.invoke({"response_text": response_text, "context": relevant_doc, "language": language})
     print("img_response is::",img_response)
