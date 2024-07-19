@@ -5818,7 +5818,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
 
             if model_type == 'gemini':
                 print("Gemini summarizing images NOW")
-                response = ChatGoogleGenerativeAI(model="gemini-pro-vision",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
+                response = ChatGoogleGenerativeAI(model="gemini-1.5-flash",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
                 return response.content
             else:
                 print("Openai summarizing images NOW")
