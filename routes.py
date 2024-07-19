@@ -440,14 +440,14 @@ def find_images():
 
         if response_text and docs_main:
             try:
-                if model_type == 'gemini':
+                if model_type == "gemini":
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                 else:
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
 
-                img_response = LCD.ANSWER_IMG(response_text, llm,docs_main,language)
+                img_response = LCD.ANSWER_IMG(response_text, llm,docs_main,language,model_type)
 
                 json_img_response = json.loads(img_response)
                 print("json_img_response is::",json_img_response)
