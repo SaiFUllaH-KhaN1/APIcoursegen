@@ -1,5 +1,5 @@
 from flask import g, Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
-import logging
+from prompt_logics import logger
 import jwt
 from langchain_community.vectorstores import FAISS
 import os
@@ -41,11 +41,6 @@ genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
-
-# Logging Declaration
-log_format = '%(asctime)s - %(levelname)s - %(message)s'
-logger = logging
-logger.basicConfig(level= logging.DEBUG, format= log_format)
 
 # Configuration for the cache directory
 cache_dir = 'cache'
