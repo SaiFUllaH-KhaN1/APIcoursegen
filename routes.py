@@ -1,10 +1,11 @@
 from flask import g, Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
+import logging
 import jwt
 from langchain_community.vectorstores import FAISS
 import os
 from dotenv import load_dotenv
 import json
-import langchaindemoBlock_22_april as LCD
+import prompt_logics as LCD
 from flask_caching import Cache
 import uuid
 import shutil 
@@ -37,8 +38,14 @@ openai.azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
 os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
+
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
+
+# Logging Declaration
+log_format = '%(asctime)s - %(levelname)s - %(message)s'
+logger = logging
+logger.basicConfig(level= logging.DEBUG, format= log_format)
 
 # Configuration for the cache directory
 cache_dir = 'cache'
@@ -60,7 +67,9 @@ app.config['CACHE_DIR'] = 'cache' # path to server cache folder
 app.config['CACHE_THRESHOLD'] = 1000
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+
 cache = Cache(app)
+
 allowed_origins = [
     "https://thinglink.local",
     "https://thinglink.local:3000",
@@ -84,6 +93,7 @@ def token_required(f):
         # Extract the token from the Authorization header
         auth_header = request.headers.get('Authorization')
         if not auth_header or 'Bearer ' not in auth_header:
+            logger.critical("message: Missing or malformed token")
             return jsonify({"message": "Missing or malformed token"}), 401
         
         token = auth_header.split(" ")[1]
@@ -92,18 +102,23 @@ def token_required(f):
             decoded = jwt.decode(token, app.secret_key, algorithms=['HS256'])
             # Extract uuid4 from the decoded token
             g.user_uuid = decoded['uuid4']
-            print("Token Decoded Success!:",g.user_uuid)
+            logger.debug(f"Token Decoded Success!:{g.user_uuid}") # NOT FOR PRODUCTION
 
         except jwt.ExpiredSignatureError:
+            logger.critical("message: Token has expired")
             return jsonify({"message": "Token has expired"}), 401
         except jwt.InvalidTokenError:
+            logger.critical("message: Invalid token")
             return jsonify({"message": "Invalid token"}), 401
         except Exception as e:
             # Catch other exceptions, such as no 'uuid4' in token
-            return jsonify({"message": "Invalid token: " + str(e)}), 401
+            logger.critical(f"message: Invalid token: {str(e)}")
+            return jsonify({"message": "Error for Token : " + str(e)}), 401
         
         return f(*args, **kwargs)
     return decorated
+
+
 
 ### MANUAL DELETION OF all folders starting with faiss_index_ ###
 def delete_indexes():
@@ -114,24 +129,24 @@ def delete_indexes():
     for item in os.listdir(base_path):
         dir_path = os.path.join(base_path, item)
         if os.path.isdir(dir_path) and item.startswith("faiss_index_"):
-            print(f"Deleting Faiss directory: {dir_path}")
+            logger.debug(f"Deleting Faiss directory: {dir_path}")
             shutil.rmtree(dir_path)
         elif os.path.isdir(dir_path) and item.startswith("imagefolder_"):
-            print(f"Deleting image directory: {dir_path}")
+            logger.debug(f"Deleting image directory: {dir_path}")
             shutil.rmtree(dir_path)
 
 @app.route("/cron", methods=['POST'])
 @basic_auth.required
 def cron():
     delete_indexes()
-    print("Deleted FAISS index")
+    logger.debug("Deleted FAISS index")
     return jsonify(message="FAISS and imagefolder index directories deleted")
 ###     ###     ### 
 
 ### SCHEDULED DELETION OF folders of imagefolder_ and faiss_index_ ###
 def delete_old_directories():
     time_to_delete_files_older_than = timedelta(hours=6)
-    print(f"Scheduler is running the delete_old_directories function to delete files older than {time_to_delete_files_older_than}.")
+    logger.debug(f"Scheduler is running the delete_old_directories function to delete files older than {time_to_delete_files_older_than}.")
     
     base_path = os.path.dirname(os.path.abspath(__file__))
     for item in os.listdir(base_path):
@@ -140,7 +155,7 @@ def delete_old_directories():
             # Check if directory is older than a specified time
             dir_age = datetime.fromtimestamp(os.path.getmtime(dir_path))
             if datetime.now() - dir_age > time_to_delete_files_older_than:
-                print(f"Deleting directory: {dir_path}, it has modified date of {dir_age}")
+                logger.debug(f"Deleting directory: {dir_path}, it has modified date of {dir_age}")
                 shutil.rmtree(dir_path)
 ###     ###     ###
 
@@ -164,14 +179,16 @@ def process_data():
         prompt = request.form.get("prompt")
         url_doc = request.form.get('url_doc')
         f = request.files.getlist('file')
-        print("There is a file")
+        logger.debug("There is a File")
 
         language = request.form.get("language","english").lower()
         allowed_languages = ["english","finnish","spanish","german","italian","french"]
+
         if language not in allowed_languages:
+            logger.error("Invalid Language Selected. Select out of english,finnish,spanish,german,italian or french.")
             return jsonify(error="Invalid Language Selected. Select out of english,finnish,spanish,german,italian or french.")
         else:
-            print(f"Language Selected is:{language}")
+            logger.debug(f"Language Selected is:{language}")
 
 
         if url_doc:
@@ -202,7 +219,7 @@ def process_data():
             else:
                 soup = BeautifulSoup(urllib.request.urlopen(url_doc).read())
                 var = soup.get_text()
-                print("Extracted text length:", len(var))  # Debug text length
+                logger.debug(f"Extracted text length:{len(var)}")
 
                 if var:
                     pdf_bytes = io.BytesIO()
@@ -223,23 +240,23 @@ def process_data():
                     f.append(pdf_file_wrapper)
 
         filename = [f_name.filename for f_name in f]
-        print("Filename is::",filename)
+        logger.debug(f"Filename is::{filename}")
 
         base_docsearch = None
         for file in f:
             file_content = io.BytesIO(file.read())
             # file_content = [io.BytesIO(fs.read()) for fs in f]
-            print("LCD initiated!")
+            logger.debug("LCD initiated!")
             try:
                 if model_type == 'gemini':
-                    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001" )
                 else:
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
-                print(f"Using embeddings of {embeddings}")
+                logger.debug(f"Using embeddings of {embeddings}")
                 docsearch = LCD.RAG(file_content,embeddings,file,session_var)
             except Exception as e:
                 docsearch = None
-                print("Error processing file:", str(e))
+                logger.error(f"Error processing file:{str(e)}")
                 return jsonify(error=f"Error processing file:{str(e)}")
             if base_docsearch is None:
                 base_docsearch = docsearch  # For the first file
@@ -266,11 +283,15 @@ def process_data():
             token = jwt.encode({'uuid4': session_var,'exp': datetime.utcnow() + timedelta(days=7)}, app.secret_key, algorithm='HS256')
             response_with_time['token'] = token  # Add token as a string under the key 'token'
 
+            logger.debug(f"{json.dumps(response_with_time)}")
             return Response(json.dumps(response_with_time), mimetype='application/json')
 
     else:
         f = None
         filename = None
+        logger.error("None")
+
+    logger.critical("Unexpected Fault or Interruption")
 
     # Return the processed text in JSON format
     # return jsonify({"response": response['text']})
@@ -281,10 +302,10 @@ def process_data():
 def decide():
 
     user_id = g.user_uuid
-    print("User UUID:", user_id)
     if request.method == 'POST':
         scenario = request.form.get('scenario')
-        print("Scenario type:",scenario)
+        logger.debug(f"Scenario type:{scenario}")
+
         model_type = request.args.get('model', 'azure') # to set default model
         model_name = request.args.get('modelName', 'gpt') # to set default model name
         start_time = time.time() # Timer starts at the Post
@@ -293,7 +314,7 @@ def decide():
 
             prompt = cache.get(f"prompt_{user_id}")
             language = cache.get(f"language_{user_id}")
-            print("Prompt loaded!:",prompt)
+            logger.debug(f"Prompt loaded!:{prompt}")
 
             try:
                 if model_type == "gemini":
@@ -306,17 +327,17 @@ def decide():
 
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
-                print(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
-
+                logger.debug(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
+                
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 
                 chain, docs_main, query = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type)
-                print("1st Docs_main of /Decide route:",docs_main)
+                logger.debug(f"1st Docs_main of /Decide route:{docs_main}")
 
-                print("response_LO_CA started")
+                logger.debug("response_LO_CA started")
                 response_LO_CA = chain({"input_documents": docs_main,"human_input": query, "language":language})
-                print(response_LO_CA)
-                print("response_LO_CA ended")
+                logger.debug(f"{response_LO_CA}")
+                logger.debug("response_LO_CA ended")
 
                 cache.set(f"scenario_{user_id}", scenario,timeout=0)
                 end_time = time.time()
@@ -324,18 +345,21 @@ def decide():
                 minutes, seconds = divmod(execution_time, 60)
                 formatted_time = f"{int(minutes):02}:{int(seconds):02}"
                 execution_time_block = {"executionTime":f"{formatted_time}"}
-                print(response_LO_CA['text'])
+                logger.debug(f"{response_LO_CA['text']}")
                 response_with_time = json.loads(response_LO_CA['text']) 
                 response_with_time.update(execution_time_block)
+                logger.debug(f"{json.dumps(response_with_time)}")
                 return Response(json.dumps(response_with_time), mimetype='application/json')
-                # return jsonify(response_LO_CA['text'])
+                # return jsonify(response_LO_CA['text'])       
+
             except Exception as e:
-                print(f"An error occurred: {e}")
-                return jsonify(error=f"An error occurred: {str(e)}")
+                logger.error(f"An error occurred or abrupt Model change: {str(e)}")
+                return jsonify(error=f"An error occurred or abrupt Model change: {str(e)}")
 
         else:
-            print("None")
-            
+            logger.error("None")
+        
+        logger.critical("Unexpected Fault or Interruption")
         return jsonify(error="Unexpected Fault or Interruption")
     
 @app.route("/generate_course", methods=["GET", "POST"])
@@ -343,7 +367,6 @@ def decide():
 def generate_course():
 
     user_id = g.user_uuid
-    print("User UUID:", user_id)
     if request.method == 'POST':
         learning_obj = request.form.get("learning_obj")
         content_areas = request.form.get("content_areas")
@@ -357,13 +380,13 @@ def generate_course():
         if learning_obj and content_areas:
 
             prompt = cache.get(f"prompt_{user_id}")
-            print("Prompt loaded!:",prompt)
+            logger.debug(f"Prompt loaded!: {prompt}")
 
             scenario = cache.get(f"scenario_{user_id}")
-            print("scenario loaded!:",scenario)
+            logger.debug(f"scenario loaded!: {scenario}")
 
             language = cache.get(f"language_{user_id}")
-            print(f"Language seleted is:{language}")
+            logger.debug(f"Language selected is: {language}")
 
             try:
                 if model_type == 'gemini':
@@ -386,13 +409,16 @@ def generate_course():
                 minutes, seconds = divmod(execution_RE_SIMILARITY_SEARCH_time, 60)
                 formatted_RE_SIMILARITY_SEARCH_time = f"{int(minutes):02}:{int(seconds):02} with summarize_images switched = {summarize_images} " # for docs retreival and image summarizer
 
-                print("2nd Docs_main:",docs_main)
-                print("combined_prompt",combined_prompt)
+                logger.debug(f"2nd Docs_main:\n{docs_main}")
+                logger.debug(f"combined_prompt\n{combined_prompt}")
             # doc_main has all the unfiltered meta image summaries appended with and not in vectorstore, however...
             # ... it has been list of images are chosen to be atleast reletive to the topic at hand
                 
                 start_TALK_WITH_RAG_time = time.time()
+
+
                 response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language)
+                
                 end_TALK_WITH_RAG_time = time.time()
                 execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
                 minutes, seconds = divmod(execution_TALK_WITH_RAG_time, 60)
@@ -411,22 +437,23 @@ def generate_course():
                 response_with_time = json.loads(response) 
                 response_with_time.update(execution_time_block)
 
+                logger.debug(f"{json.dumps(response_with_time, indent=4)}")
                 return Response(json.dumps(response_with_time), mimetype='application/json')
                 # return jsonify(message=f"""{response}""")
             except Exception as e:
-                print(f"An error occurred: {e}")
-                return jsonify(error=f"An error occurred: {str(e)}")
+                logger.error(f"An error occurred or abrupt Model change: {str(e)}")
+                return jsonify(error=f"An error occurred or abrupt Model change: {str(e)}")
 
         else:
-            print("None")
+            logger.error("None")
         
+        logger.critical("Unexpected Fault or Interruption")
         return jsonify(error="Unexpected Fault or Interruption")
     
 @app.route("/find_images", methods=["GET", "POST"])
 @token_required
 def find_images():
     user_id = g.user_uuid
-    print("User UUID:", user_id)
     if request.method == 'POST':
         model_type = request.args.get('model', 'azure') # default select openai
         model_name = request.args.get('modelName', 'gpt') # to set default model name
@@ -436,7 +463,7 @@ def find_images():
         output_path = f"./imagefolder_{user_id}"
 
         language = cache.get(f"language_{user_id}")
-        print(f"Language seleted is:{language}")
+        logger.debug(f"Language seleted is:{language}")
 
         if response_text and docs_main:
             try:
@@ -450,7 +477,7 @@ def find_images():
                 img_response = LCD.ANSWER_IMG(response_text, llm,docs_main,language,model_type)
 
                 json_img_response = json.loads(img_response)
-                print("json_img_response is::",json_img_response)
+                logger.debug(f"""json_img_response is:: {str(json_img_response)}""")
 
                 def encode_image(image_path):
                     with open(image_path, "rb") as f:
@@ -463,10 +490,10 @@ def find_images():
                         normalized_value = value.lower()  # Normalize as filenames may vary
                         matched = False
                         for imgfolder in os.listdir(output_path):
-                            print("Image folder is ::",imgfolder)
+                            logger.debug(f"Image folder is ::{imgfolder}")
                             imgfolder = os.path.join(output_path, imgfolder)
                             for image_file in os.listdir(imgfolder):
-                                print("Image file is::",image_file)
+                                logger.debug(f"Image file is::{image_file}")
                                 if image_file.endswith(('.png', '.jpg', '.jpeg')):
                                     if normalized_value in image_file.lower():  # Case insensitive comparison
                                         image_path = os.path.join(imgfolder, image_file)
@@ -475,19 +502,19 @@ def find_images():
                                         matched = True
                                         break  # Stop searching once a match is found for this key
                             if not matched:
-                                print(f"No match found for {value}")
+                                logger.debug(f"No match found for: {value}")
                 
                 count_var = 0
                 for r in image_elements:
                     count_var += 1
                     json_img_response[f"base64_Image{count_var}"] = r
-                    print(json_img_response)
+                    logger.debug(f"""{str(json_img_response)}""")
 
                 # return Response(json_img_response, mimetype='application/json') #This one prefered
                 return jsonify(f"""{str(json_img_response)}""") #This one works
             except Exception as e:
-                print(f"An error occurred: {e}")
-                return jsonify(error=f"An error occurred: {str(e)}")
+                logger.error(f"An error occurred or abrupt Model change: {str(e)}")
+                return jsonify(error=f"An error occurred or abrupt Model change: {str(e)}")
 
 
             # shutil.rmtree(f"faiss_index_{user_id_cache}")
@@ -499,8 +526,9 @@ def find_images():
             # cache.delete("user_id_cache")
 
         else:
-            print("None")
+            logger.error("response_text and docs_main most likely NOT FOUND")
         
+        logger.critical("Unexpected Fault or Interruption")
         return jsonify(error="Unexpected Fault or Interruption")
         
 if __name__ == '__main__':
