@@ -1,6 +1,6 @@
 # from langchain_openai import ChatOpenAI
-from routes import logger
 import PROMPTS as PROMPTS
+import logging
 from langchain.chains import LLMChain
 from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
 import base64
@@ -28,6 +28,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 from PIL import Image
 from langchain.utils.math import cosine_similarity
 
+# Logging Declaration
+log_format = '%(asctime)s - %(levelname)s - %(message)s'
+logger = logging
+logger.basicConfig(level= logging.DEBUG, format= log_format)
 
 def RAG(file_content,embeddings,file,session_var):
     logger.debug(f"file is: {file}",)
@@ -1614,4 +1618,3 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     logger.debug(structured_response)
 
     return str(structured_response)
-
