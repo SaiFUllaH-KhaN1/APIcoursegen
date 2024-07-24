@@ -430,7 +430,15 @@ def generate_course():
                 validity, result = is_json_parseable(original_txt)
 
                 if validity == True:
+                    start_REPAIR_SHADOW_EDGES_time = time.time()
+
                     response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language)
+                    
+                    end_REPAIR_SHADOW_EDGES_time = time.time()
+                    execution_REPAIR_SHADOW_EDGES_time = end_REPAIR_SHADOW_EDGES_time - start_REPAIR_SHADOW_EDGES_time
+                    minutes, seconds = divmod(execution_REPAIR_SHADOW_EDGES_time, 60)
+                    formatted_REPAIR_SHADOW_EDGES_time = f"{int(minutes):02}:{int(seconds):02}" 
+
                 else:
                     logger.error("JSON of original_txt is NOT VALID")
                     return jsonify(error="Failed to complete the scenario")
@@ -443,7 +451,7 @@ def generate_course():
                 minutes, seconds = divmod(execution_route_time, 60)
                 formatted_route_time = f"{int(minutes):02}:{int(seconds):02}"
 
-                execution_time_block = {"executionTime":f"""For whole Route is {formatted_route_time};\nFor document retreival &/or image summarizer is {formatted_RE_SIMILARITY_SEARCH_time};\nFor JSON scenario response is {formatted_TALK_WITH_RAG_time};"""}
+                execution_time_block = {"executionTime":f"""For whole Route is {formatted_route_time};\nFor document retreival &/or image summarizer is {formatted_RE_SIMILARITY_SEARCH_time};\nFor JSON scenario response is {formatted_TALK_WITH_RAG_time};\nFor Shadow Edges Repair is {formatted_REPAIR_SHADOW_EDGES_time}"""}
                 response_with_time = json.loads(response) 
                 response_with_time.update(execution_time_block)
 
