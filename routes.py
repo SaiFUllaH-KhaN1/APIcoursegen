@@ -153,7 +153,6 @@ def delete_old_directories():
                 logger.debug(f"Deleting directory: {dir_path}, it has modified date of {dir_age}")
                 shutil.rmtree(dir_path)
 ###     ###     ###
-
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
 
@@ -361,6 +360,13 @@ def decide():
 @token_required
 def generate_course():
 
+    def is_json_parseable(json_string):
+        try:
+            json_object = json.loads(json_string)
+        except ValueError as e:
+            return False, str(e)
+        return True, json_object
+
     user_id = g.user_uuid
     if request.method == 'POST':
         learning_obj = request.form.get("learning_obj")
@@ -412,14 +418,23 @@ def generate_course():
                 start_TALK_WITH_RAG_time = time.time()
 
 
-                response = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language)
+                response, scenario = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language)
                 
                 end_TALK_WITH_RAG_time = time.time()
                 execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
                 minutes, seconds = divmod(execution_TALK_WITH_RAG_time, 60)
                 formatted_TALK_WITH_RAG_time = f"{int(minutes):02}:{int(seconds):02}" # for docs JSON scenario response
 
+                original_txt = response
 
+                validity, result = is_json_parseable(original_txt)
+
+                if validity == True:
+                    response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language)
+                else:
+                    logger.error("JSON of original_txt is NOT VALID")
+                    return jsonify(error="Failed to complete the scenario")
+                
                 cache.set(f"docs_main_{user_id}", docs_main, timeout=0)
                 cache.set(f"response_text_{user_id}", response, timeout=0)
 
