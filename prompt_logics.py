@@ -538,7 +538,67 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         except ValueError as e:
             return False, str(e)
         return True, json_object
-         
+
+    if scenario == "auto":
+        logger.debug(f"SCENARIO ====PROMPT{scenario}",)
+        # chain = prompt | llm | {f"{llm_memory}": RunnablePassthrough()}
+        
+
+        ### SEMANTIC ROUTES LOGIC ###
+        if model_type == 'gemini':
+            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32) 
+            llm_auto_chain = LLMChain(prompt=PROMPTS.promptSelector, llm=llm_auto.bind(generation_config={"response_mime_type": "application/json"})) 
+        else:
+            llm_auto =  AzureChatOpenAI(deployment_name=model_name, temperature=0.4, max_tokens=32,
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                        )
+            llm_auto_chain = LLMChain(prompt=PROMPTS.promptSelector, llm=llm_auto.bind(response_format={"type": "json_object"}))
+        
+        selected = llm_auto_chain.run({"input_documents": docs_main, "human_input": query})
+
+        logger.debug(f"Semantic Scenario Selected of NAME: {selected}",)
+
+        gamified_route = ['gamified', 'gamified scenario','bot: gamified scenario']
+        simulation_route = ['simulation', 'simulation scenario', 'bot: simulation scenario']
+        linear_route = ['linear', 'linear scenario', 'bot: linear scenario']
+        branched_route = ['branched', 'branched scenario', 'bot: branched scenario']
+
+        gamified_route_embeddings = embeddings.embed_documents(gamified_route)
+        simulation_route_embeddings = embeddings.embed_documents(simulation_route)
+        linear_route_embeddings = embeddings.embed_documents(linear_route)
+        branched_route_embeddings =  embeddings.embed_documents(branched_route)
+
+        query_embedding = embeddings.embed_query(selected)
+
+        gamified_similarity = cosine_similarity([query_embedding],gamified_route_embeddings)[0]
+        simulation_similarity = cosine_similarity([query_embedding],simulation_route_embeddings)[0]
+        linear_similarity = cosine_similarity([query_embedding], linear_route_embeddings)[0]
+        branched_similarity = cosine_similarity([query_embedding], branched_route_embeddings)[0]
+
+        max_similarity = max(max(gamified_similarity), max(simulation_similarity), max(linear_similarity), max(branched_similarity))
+
+        ############################
+
+        if max_similarity == max(gamified_similarity):
+            logger.debug("Gamified Auto Selected")
+            scenario = "gamified"
+
+        elif max_similarity == max(linear_similarity):
+            logger.debug("Linear Auto Selected")
+            scenario = "linear"
+
+        elif max_similarity == max(simulation_similarity):
+            logger.debug(f"Simulation Auto Selected")
+            scenario = "simulation"
+
+        elif max_similarity == max(branched_similarity):
+            logger.debug(f"Branched Auto Selected")
+            scenario = "branched"
+
+        else:
+            logger.debug(f"AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
+            scenario = "linear"
+
     if scenario == "linear":
         logger.debug(f"SCENARIO ====prompt_linear : {scenario}")
         if model_type == 'gemini':
@@ -969,561 +1029,269 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                     logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
                     
-
-    elif scenario == "auto":
-        logger.debug(f"SCENARIO ====PROMPT{scenario}",)
-        # chain = prompt | llm | {f"{llm_memory}": RunnablePassthrough()}
-        
-
-        ### SEMANTIC ROUTES LOGIC ###
-        if model_type == 'gemini':
-            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32) 
-            llm_auto_chain = LLMChain(prompt=PROMPTS.promptSelector, llm=llm_auto.bind(generation_config={"response_mime_type": "application/json"})) 
-        else:
-            llm_auto =  AzureChatOpenAI(deployment_name=model_name, temperature=0.4, max_tokens=32,
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
-            llm_auto_chain = LLMChain(prompt=PROMPTS.promptSelector, llm=llm_auto.bind(response_format={"type": "json_object"}))
-        
-        selected = llm_auto_chain.run({"input_documents": docs_main, "human_input": query})
-
-        logger.debug(f"Semantic Scenario Selected of NAME: {selected}",)
-
-        gamified_route = ['gamified', 'gamified scenario','bot: gamified scenario']
-        simulation_route = ['simulation', 'simulation scenario', 'bot: simulation scenario']
-        linear_route = ['linear', 'linear scenario', 'bot: linear scenario']
-        branched_route = ['branched', 'branched scenario', 'bot: branched scenario']
-
-        gamified_route_embeddings = embeddings.embed_documents(gamified_route)
-        simulation_route_embeddings = embeddings.embed_documents(simulation_route)
-        linear_route_embeddings = embeddings.embed_documents(linear_route)
-        branched_route_embeddings =  embeddings.embed_documents(branched_route)
-
-        query_embedding = embeddings.embed_query(selected)
-
-        gamified_similarity = cosine_similarity([query_embedding],gamified_route_embeddings)[0]
-        simulation_similarity = cosine_similarity([query_embedding],simulation_route_embeddings)[0]
-        linear_similarity = cosine_similarity([query_embedding], linear_route_embeddings)[0]
-        branched_similarity = cosine_similarity([query_embedding], branched_route_embeddings)[0]
-
-        max_similarity = max(max(gamified_similarity), max(simulation_similarity), max(linear_similarity), max(branched_similarity))
-
-        ############################
-        
-        if max_similarity == max(gamified_similarity):
-            logger.debug("Gamified Auto Selected")
-            if model_type == 'gemini':
-                llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
-                chain = LLMChain(prompt=PROMPTS.prompt_gamified_json,llm=llm)
-            else:
-                llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                            )  
-                llm_setup_continue = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                            )
-                chain = LLMChain(prompt=PROMPTS.prompt_gamified_json,llm=llm)   
-
-            if model_type == 'gemini':
-                chain1 = LLMChain(prompt=PROMPTS.prompt_gamified_setup,llm=llm_setup)
-            else:
-                chain1 = LLMChain(prompt=PROMPTS.prompt_gamified_setup,llm=llm_setup)
-
-            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-            if "[END_OF_RESPONSE]" not in response1['text']:
-                count_setup_retry = 0
-                while "[END_OF_RESPONSE]" not in response1['text'] and count_setup_retry<=3:
-                    logger.debug("[END_OF_RESPONSE] not found")
-                    contd_response1 = response1['text'] + "[CONTINUE_EXACTLY_FROM_HERE]"
-                    chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_gamified_setup_continue,llm=llm_setup_continue)
-                    response1 = chain_setup_retry({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    logger.debug(f"CONTINUED Response 1 IS::\n{response1['text']}")
-                    response1['text'] = contd_response1 + response1['text']
-                    response1['text'] = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1['text'])
-                    
-                    logger.debug(f"JOINED Response 1 IS::\n{response1['text']}")
-                    count_setup_retry += 1
-            else:
-                logger.debug(f"Response 1 is::\n{response1['text']}",)
-
-
-            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-            
-            is_valid, result = is_json_parseable(response['text'])
-            countd=1
-            while not is_valid and countd<=2:
-                txt = response['text']
-                logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
-                ### REGEX to remove last incomplete id block ###
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}",)
-                logger.debug(f"changed:::\n{modified_txt}",)
-
-                # Finding if corrupt edges exists further and to remove it via if loop
-                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{modified_txt}", )
-
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
-
-                if model_type == 'gemini':
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_gamified_pedagogy_retry_gemini,llm=llm)
-                else:
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_gamified_pedagogy_retry_gemini,llm=llm)
-
-                response_retry = chain_retry({"incomplete_response": responses,"exit_game_story":response1['text'], "language":language})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
-
-                responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
-
-                # Finding if corrupt edges exists AFTER combined prompts
-                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{responses}", )
-
-                response['text'] = responses
-
-                is_valid, result = is_json_parseable(responses)
-                logger.debug(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.debug(f"contd count is:{countd}",)
-
-            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-                logger.debug(f"The retry is also not parseable!:\n{responses}", )
-                max_attempts = 1  # Maximum number of attempts
-                attempts = 1
-                while attempts <= max_attempts:
-
-                    if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_gamify_pedagogy_gemini_simplify,llm=llm)
-                    else:
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_gamify_pedagogy_gemini_simplify,llm=llm)
-
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
-                        break
-                    else:
-                        logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                        attempts += 1
-
-
-        elif max_similarity == max(linear_similarity):
-            logger.debug("Linear Auto Selected")
-            if model_type == 'gemini':
-                chain = LLMChain(prompt=PROMPTS.prompt_linear,llm=llm)
-            else:
-                chain = LLMChain(prompt=PROMPTS.prompt_linear,llm=llm)   
-
-            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-            
-            is_valid, result = is_json_parseable(response['text'])
-            countd=1
-            while not is_valid and countd<=2:
-                txt = response['text']
-                logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
-                ### REGEX to remove last incomplete id block ###
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}",)
-                logger.debug(f"changed:::\n{modified_txt}",)
-
-                # Finding if corrupt edges exists further and to remove it via if loop
-                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{modified_txt}", )
-
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
-
-                if model_type == 'gemini':
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_linear_retry,llm=llm)
-                else:
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_linear_retry,llm=llm)
-
-                response_retry = chain_retry({"incomplete_response": responses, "language":language})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
-
-                responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
-
-                # Finding if corrupt edges exists AFTER combined prompts
-                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{responses}", )
-
-                response['text'] = responses
-
-                is_valid, result = is_json_parseable(responses)
-                logger.debug(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.debug(f"contd count is:{countd}",)
-
-            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-                logger.debug(f"The retry is also not parseable!:\n{responses}", )
-                max_attempts = 1  # Maximum number of attempts
-                attempts = 1
-                while attempts <= max_attempts:
-
-                    if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_linear_simplify,llm=llm)
-                    else:
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_linear_simplify,llm=llm)
-
-                    response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
-                        break
-                    else:
-                        logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                        attempts += 1
-
-
-        elif max_similarity == max(simulation_similarity):
-            logger.debug(f"Simulation Auto Selected")
-            if model_type == 'gemini':
-                llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
-                llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
-                chain = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_gemini,llm=llm)
-            else:
-                llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0.3,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                            )  
-                llm_setup_continue = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                            ) 
-                chain = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_gemini,llm=llm)   
-
-            if model_type == 'gemini':
-                chain1 = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_setup,llm=llm_setup)
-            else:
-                chain1 = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_setup,llm=llm_setup)
-
-            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-            if "[END_OF_RESPONSE]" not in response1['text']:
-                count_setup_retry = 0
-                while "[END_OF_RESPONSE]" not in response1['text'] and count_setup_retry<=3:
-                    logger.debug("[END_OF_RESPONSE] not found")
-                    contd_response1 = response1['text'] + "[CONTINUE_EXACTLY_FROM_HERE]"
-                    chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_setup_continue,llm=llm_setup_continue)
-                    response1 = chain_setup_retry({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    logger.debug(f"CONTINUED Response 1 IS::\n{response1['text']}")
-                    response1['text'] = contd_response1 + response1['text']
-                    response1['text'] = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1['text'])
-                    
-                    logger.debug(f"JOINED Response 1 IS::\n{response1['text']}")
-                    count_setup_retry += 1
-            else:
-                logger.debug(f"Response 1 is::\n{response1['text']}",)
-
-
-            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-            
-            is_valid, result = is_json_parseable(response['text'])
-            countd=1
-            while not is_valid and countd<=2:
-                txt = response['text']
-                logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
-                ### REGEX to remove last incomplete id block ###
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}",)
-                logger.debug(f"changed:::\n{modified_txt}",)
-
-                # Finding if corrupt edges exists further and to remove it via if loop
-                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{modified_txt}", )
-
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
-
-                if model_type == 'gemini':
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_retry_gemini,llm=llm)
-                else:
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_retry_gemini,llm=llm)
-
-                response_retry = chain_retry({"incomplete_response": responses,"simulation_story":response1['text'], "language":language})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
-
-                responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
-
-                # Finding if corrupt edges exists AFTER combined prompts
-                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{responses}", )
-
-                response['text'] = responses
-
-                is_valid, result = is_json_parseable(responses)
-                logger.debug(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.debug(f"contd count is:{countd}",)
-
-            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-                logger.debug(f"The retry is also not parseable!:\n{responses}", )
-                max_attempts = 1  # Maximum number of attempts
-                attempts = 1
-                while attempts <= max_attempts:
-
-                    if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_gemini_simplify,llm=llm)
-                    else:
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_gemini_simplify,llm=llm)
-
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
-                        break
-                    else:
-                        logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                        attempts += 1
-
-
-        elif max_similarity == max(branched_similarity):
-            logger.debug(f"Branched Auto Selected")
-            if model_type == 'gemini':
-                llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
-                chain = LLMChain(prompt=PROMPTS.prompt_branched,llm=llm)
-            else:
-                llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                            )  
-                llm_setup_continue = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                            )
-                chain = LLMChain(prompt=PROMPTS.prompt_branched,llm=llm)   
-
-            if model_type == 'gemini':
-                chain1 = LLMChain(prompt=PROMPTS.prompt_branched_setup,llm=llm_setup)
-            else:
-                chain1 = LLMChain(prompt=PROMPTS.prompt_branched_setup,llm=llm_setup)
-
-            response1 = chain1({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-            if "[END_OF_RESPONSE]" not in response1['text']:
-                count_setup_retry = 0
-                while "[END_OF_RESPONSE]" not in response1['text'] and count_setup_retry<=3:
-                    logger.debug("[END_OF_RESPONSE] not found")
-                    contd_response1 = response1['text'] + "[CONTINUE_EXACTLY_FROM_HERE]"
-                    chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_branched_setup_continue,llm=llm_setup_continue)
-                    response1 = chain_setup_retry({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    logger.debug(f"CONTINUED Response 1 IS::\n{response1['text']}")
-                    response1['text'] = contd_response1 + response1['text']
-                    response1['text'] = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1['text'])
-                    
-                    logger.debug(f"JOINED Response 1 IS::\n{response1['text']}")
-                    count_setup_retry += 1
-            else:
-                logger.debug(f"Response 1 is::\n{response1['text']}",)
-
-
-            response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-            
-            is_valid, result = is_json_parseable(response['text'])
-            countd=1
-            while not is_valid and countd<=2:
-                txt = response['text']
-                logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
-                ### REGEX to remove last incomplete id block ###
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}",)
-                logger.debug(f"changed:::\n{modified_txt}",)
-
-                # Finding if corrupt edges exists further and to remove it via if loop
-                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{modified_txt}", )
-
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
-
-                if model_type == 'gemini':
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_branched_retry,llm=llm)
-                else:
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_branched_retry,llm=llm)
-
-                response_retry = chain_retry({"incomplete_response": responses,"micro_subtopics":response1['text'], "language":language})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
-
-                responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
-
-                # Finding if corrupt edges exists AFTER combined prompts
-                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{responses}", )
-
-                response['text'] = responses
-
-                is_valid, result = is_json_parseable(responses)
-                logger.debug(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.debug(f"contd count is:\n{countd}",)
-
-            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-                logger.debug(f"The retry is also not parseable!:\n{responses}", )
-                max_attempts = 1  # Maximum number of attempts
-                attempts = 1
-                while attempts <= max_attempts:
-
-                    if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_branched_simplify,llm=llm)
-                    else:
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_branched_simplify,llm=llm)
-
-                    response_retry_simplify = chain_simplify({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
-                        break
-                    else:
-                        logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                        attempts += 1   
-
-        else:
-            logger.debug(f"AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
-
-            if model_type == 'gemini':
-                chain = LLMChain(prompt=PROMPTS.prompt_linear,llm=llm)
-            else:
-                chain = LLMChain(prompt=PROMPTS.prompt_linear,llm=llm)   
-
-            response = chain({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-            
-            is_valid, result = is_json_parseable(response['text'])
-            countd=1
-            while not is_valid and countd<=2:
-                txt = response['text']
-                logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
-                ### REGEX to remove last incomplete id block ###
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}",)
-                logger.debug(f"changed:::\n{modified_txt}",)
-
-                # Finding if corrupt edges exists further and to remove it via if loop
-                find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{modified_txt}", )
-
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
-
-                if model_type == 'gemini':
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_linear_retry,llm=llm)
-                else:
-                    chain_retry = LLMChain(prompt=PROMPTS.prompt_linear_retry,llm=llm)
-
-                response_retry = chain_retry({"incomplete_response": responses, "language":language})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
-
-                responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
-
-                # Finding if corrupt edges exists AFTER combined prompts
-                find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
-                if find_edges:
-                    find_edges = find_edges[0]  # Get the matched string
-                    logger.debug(f"Corrupt edges found:\n{find_edges}",)
-                    # Using regex to replace the specific pattern
-                    responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                    logger.debug(f"Corrected corrupt edges:\n{responses}", )
-
-                response['text'] = responses
-
-                is_valid, result = is_json_parseable(responses)
-                logger.debug(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.debug(f"contd count is:\n{countd}",)
-
-            if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-                logger.debug(f"The retry is also not parseable!:\n{responses}", )
-                max_attempts = 1  # Maximum number of attempts
-                attempts = 1
-                while attempts <= max_attempts:
-
-                    if model_type == 'gemini':
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_linear_simplify,llm=llm)
-                    else:
-                        chain_simplify = LLMChain(prompt=PROMPTS.prompt_linear_simplify,llm=llm)
-
-                    response_retry_simplify = chain_simplify({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                    is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
-                    if is_valid_retry_simplify == True:
-                        response['text'] = response_retry_simplify['text']
-                        logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
-                        break
-                    else:
-                        logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
-                        attempts += 1
-                        
+     
     logger.debug(f"The output is as follows::\n{response['text']}",)
-    return response['text']
+    return response['text'], scenario
+
+def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language):
+    
+
+    if model_type == 'gemini':
+        llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+    else:
+        llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
+                                    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                )  
+        
+    def is_json_parseable(json_string):
+        try:
+            json_object = json.loads(json_string)
+        except ValueError as e:
+            return False, str(e)
+        return True, json_object
+
+    def validate_edges(json_data):
+        # txt_string = json.dumps(json_data)  # Convert dictionary to JSON string
+        # json_data = json.loads(txt_string)  # Convert JSON string into dictionary
+        json_data = json.loads(json_data)  # Convert JSON string into dictionary
+        node_ids = {node['id'] for node in json_data['nodes']}
+        error_flag = False
+
+        for edge in json_data['edges']:
+            source_exists = edge['source'] in node_ids
+            target_exists = edge['target'] in node_ids
+
+            if not source_exists or not target_exists:
+                logger.debug(f"Error occured:\n{edge}")
+                edge['SHADOW EDGE BLOCK'] = 'SHADOW EDGES IN THIS BLOCK'  # Add error directly to the edge
+                error_flag = True
+                # If you want to find all errors, remove the break statement
+                # break
+
+        shadow_result = json.dumps(json_data, indent=4)
+        return shadow_result, error_flag
+
+    output, error_flag = validate_edges(original_txt)
+    logger.debug(f"error_flag: {error_flag}")
+
+    if error_flag == True:
+
+        logger.debug(f"Error flag is: {error_flag} and so output is:\n{output}")
+
+        if scenario == "linear":
+
+            chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            shadow_response = chain({"output": output,"language":language})
+            is_valid, result = is_json_parseable(shadow_response['text'])
+            countd=0
+            while not is_valid and countd<=3:
+                txt = shadow_response['text']
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                else:
+                    modified_txt = txt  # No match found, return original
+                logger.debug(f"original:::\n{txt}")
+                logger.debug(f"changed:::\n{modified_txt}")
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+
+                chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges_retry, llm=llm)
+                response_retry = chain_edges_retry({"incomplete_response": responses, "output":output, "language":language})
+                logger.debug(f"response contd... is:\n{response_retry['text']}",)
+
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                logger.debug(f"responses+continued Combined is:\n{responses}",)
+                
+                shadow_response['text'] = responses
+
+                is_valid, result = is_json_parseable(shadow_response['text'])
+                logger.debug(f"Parseability status:\n{result}", )
+                countd+=1
+                logger.debug(f"contd count is:\n{countd}",)
+
+            logger.debug("Success shadow repair!:",shadow_response['text'])
+            shadow_response = shadow_response['text']
+            logger.debug(f"shadow_response type before: {type(shadow_response)}")
+            logger.debug(f"output type before: {type(output)}")
+
+            shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
+            output = json.loads(output)  # Convert JSON string into dictionary
+
+            logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
+
+            output['edges']  = shadow_response['edges']  
+            logger.debug(output)
+            is_valid_output, result = is_json_parseable(output)
+
+            if is_valid_output == False:
+                output = original_txt
+                logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+
+
+        elif scenario == "branched":
+
+            chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            shadow_response = chain({"output": output,"language":language})
+            is_valid, result = is_json_parseable(shadow_response['text'])
+            countd=0
+            while not is_valid and countd<=3:
+                txt = shadow_response['text']
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                else:
+                    modified_txt = txt  # No match found, return original
+                logger.debug(f"original:::\n{txt}")
+                logger.debug(f"changed:::\n{modified_txt}")
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+
+                chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges_retry, llm=llm)
+                response_retry = chain_edges_retry({"incomplete_response": responses, "output":output, "language":language})
+                logger.debug(f"response contd... is:\n{response_retry['text']}",)
+
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                logger.debug(f"responses+continued Combined is:\n{responses}",)
+                
+                shadow_response['text'] = responses
+
+                is_valid, result = is_json_parseable(shadow_response['text'])
+                logger.debug(f"Parseability status:\n{result}", )
+                countd+=1
+                logger.debug(f"contd count is:\n{countd}",)
+
+            logger.debug("Success shadow repair!:",shadow_response['text'])
+            shadow_response = shadow_response['text']
+            logger.debug(f"shadow_response type before: {type(shadow_response)}")
+            logger.debug(f"output type before: {type(output)}")
+
+            shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
+            output = json.loads(output)  # Convert JSON string into dictionary
+
+            logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
+
+            output['edges']  = shadow_response['edges']  
+            logger.debug(output)
+            is_valid_output, result = is_json_parseable(output)
+
+            if is_valid_output == False:
+                output = original_txt
+                logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+
+
+        elif scenario == "simulation":
+
+            chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            shadow_response = chain({"output": output,"language":language})
+            is_valid, result = is_json_parseable(shadow_response['text'])
+            countd=0
+            while not is_valid and countd<=3:
+                txt = shadow_response['text']
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                else:
+                    modified_txt = txt  # No match found, return original
+                logger.debug(f"original:::\n{txt}")
+                logger.debug(f"changed:::\n{modified_txt}")
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+
+                chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges_retry, llm=llm)
+                response_retry = chain_edges_retry({"incomplete_response": responses, "output":output, "language":language})
+                logger.debug(f"response contd... is:\n{response_retry['text']}",)
+
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                logger.debug(f"responses+continued Combined is:\n{responses}",)
+                
+                shadow_response['text'] = responses
+
+                is_valid, result = is_json_parseable(shadow_response['text'])
+                logger.debug(f"Parseability status:\n{result}", )
+                countd+=1
+                logger.debug(f"contd count is:\n{countd}",)
+
+            logger.debug("Success shadow repair!:",shadow_response['text'])
+            shadow_response = shadow_response['text']
+            logger.debug(f"shadow_response type before: {type(shadow_response)}")
+            logger.debug(f"output type before: {type(output)}")
+
+            shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
+            output = json.loads(output)  # Convert JSON string into dictionary
+
+            logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
+
+            output['edges']  = shadow_response['edges']  
+            logger.debug(output)
+            is_valid_output, result = is_json_parseable(output)
+
+            if is_valid_output == False:
+                output = original_txt
+                logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+
+
+        elif scenario == "gamified":
+
+            chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            shadow_response = chain({"output": output,"language":language})
+            is_valid, result = is_json_parseable(shadow_response['text'])
+            countd=0
+            while not is_valid and countd<=3:
+                txt = shadow_response['text']
+                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
+                if modified_txt:
+                    modified_txt = modified_txt[0]  # Get the matched string
+                else:
+                    modified_txt = txt  # No match found, return original
+                logger.debug(f"original:::\n{txt}")
+                logger.debug(f"changed:::\n{modified_txt}")
+
+                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
+                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+
+                chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges_retry, llm=llm)
+                response_retry = chain_edges_retry({"incomplete_response": responses, "output":output, "language":language})
+                logger.debug(f"response contd... is:\n{response_retry['text']}",)
+
+                responses = modified_txt + response_retry['text'] #changed modified_text to responses
+                logger.debug(f"responses+continued Combined is:\n{responses}",)
+                
+                shadow_response['text'] = responses
+
+                is_valid, result = is_json_parseable(shadow_response['text'])
+                logger.debug(f"Parseability status:\n{result}", )
+                countd+=1
+                logger.debug(f"contd count is:\n{countd}",)
+
+            logger.debug("Success shadow repair!:",shadow_response['text'])
+            shadow_response = shadow_response['text']
+            logger.debug(f"shadow_response type before: {type(shadow_response)}")
+            logger.debug(f"output type before: {type(output)}")
+
+            shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
+            output = json.loads(output)  # Convert JSON string into dictionary
+
+            logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
+
+            output['edges']  = shadow_response['edges']  
+            logger.debug(output)
+            is_valid_output, result = is_json_parseable(output)
+
+            if is_valid_output == False:
+                output = original_txt
+                logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+
+
+    else:
+        logger.debug(f"Since error_flag is {error_flag}, no shadow edges found!")
+
+    return output
+
+
 
 def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     # prompt_template_img =PromptTemplate( 
@@ -1618,3 +1386,4 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     logger.debug(structured_response)
 
     return str(structured_response)
+
