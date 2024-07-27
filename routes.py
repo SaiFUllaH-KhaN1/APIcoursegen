@@ -27,6 +27,9 @@ from flask_cors import CORS
 from functools import wraps
 import io
 import openai
+from urllib.error import URLError, HTTPError
+import urllib.request
+from urllib.parse import urlparse, urljoin
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
@@ -170,6 +173,20 @@ def process_data():
         model_type = request.args.get('model', 'azure') # to set default model
         model_name = request.args.get('modelName', 'gpt') # to set default model name
         
+        user_agents = request.headers.get('User-Agent') # a user agent of user from frontend if frontend allows
+        if not user_agents:
+            user_agents = [
+                        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+                        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+                        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15',
+                        'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
+                        'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko'
+                        ]
+            logger.debug(f"user_agent alternate: {user_agents}")
+        else:
+            logger.debug(f"user_agent from client: {user_agents}")
+
+        
         prompt = request.form.get("prompt")
         url_doc = request.form.get('url_doc')
         f = request.files.getlist('file')
@@ -211,9 +228,23 @@ def process_data():
                     f.append(pdf_file_wrapper)
                 
             else:
-                soup = BeautifulSoup(urllib.request.urlopen(url_doc).read())
-                var = soup.get_text()
-                logger.debug(f"Extracted text length:{len(var)}")
+                def fetch_url(url):
+                    for user_agent in user_agents:
+                        headers = {'User-Agent': user_agent}
+                        request = urllib.request.Request(url, headers=headers)
+                        
+                        try:
+                            response = urllib.request.urlopen(request, timeout=3)
+                            soup = BeautifulSoup(response.read(), 'html.parser')
+                            var = soup.get_text()
+                            print(f"Extracted text length: {len(var)}")
+                            return  var, soup
+                        except (HTTPError, URLError) as e:
+                            print(f"Error with {user_agent}: {str(e)}")
+                            continue  # Try the next user agent in case of an error
+
+                # Test the function with a given URL
+                var, soup = fetch_url(url_doc)
 
                 if var:
                     pdf_bytes = io.BytesIO()
@@ -231,7 +262,12 @@ def process_data():
                     #     pdf_file.write(pdf_bytes.getvalue())
                     pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf')
                     pdf_file_wrapper.seek(0)
-                    f.append(pdf_file_wrapper)
+                    f.append(pdf_file_wrapper) # here the file is formed and appended with other user uploaded files
+                    
+                    # Starting Image extraction now
+                    parsed_url = urlparse(url_doc) # parse url for getting base url only
+                    base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
+                    LCD.URL_IMG_EXTRACT(soup, session_var, base_url) # images extracted by this function
 
         filename = [f_name.filename for f_name in f]
         logger.debug(f"Filename is::{filename}")
@@ -512,7 +548,7 @@ def find_images():
                             imgfolder = os.path.join(output_path, imgfolder)
                             for image_file in os.listdir(imgfolder):
                                 logger.debug(f"Image file is::{image_file}")
-                                if image_file.endswith(('.png', '.jpg', '.jpeg')):
+                                if image_file.endswith(('.png', '.jpg', '.jpeg', '.webp', '.JPG')):
                                     if normalized_value in image_file.lower():  # Case insensitive comparison
                                         image_path = os.path.join(imgfolder, image_file)
                                         encoded_image = encode_image(image_path)  # Assuming you have a function `encode_image`
@@ -528,8 +564,30 @@ def find_images():
                     json_img_response[f"base64_Image{count_var}"] = r
                     logger.debug(f"""{str(json_img_response)}""")
 
+                # logic to delete NOT RELEVANT keys
+
+                keys_to_remove = []
+
+                # Iterate through the Logic keys to identify the ones to remove
+                logic_count = 1
+                while f'Logic{logic_count}' in json_img_response:
+                    logic_key = f'Logic{logic_count}'
+                    if json_img_response[logic_key] == "NOT RELEVANT":
+                        description_key = f'Description{logic_count}'
+                        base_key = f'base64_Image{logic_count}'
+                        image_key = f'Image{logic_count}'
+                        keys_to_remove.extend([logic_key, description_key, base_key, image_key])
+                    logic_count += 1
+
+                # Remove the identified keys from the dictionary
+                for key in keys_to_remove:
+                    if key in json_img_response:
+                        del json_img_response[key]
+
+                print(json_img_response) 
+
                 # return Response(json_img_response, mimetype='application/json') #This one prefered
-                return jsonify(f"""{str(json_img_response)}""") #This one works
+                return jsonify(json_img_response) #This one works
             except Exception as e:
                 logger.error(f"An error occurred or abrupt Model change: {str(e)}")
                 return jsonify(error=f"An error occurred or abrupt Model change: {str(e)}")
