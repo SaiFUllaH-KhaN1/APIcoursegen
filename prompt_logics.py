@@ -27,6 +27,11 @@ import re
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from PIL import Image
 from langchain.utils.math import cosine_similarity
+import urllib
+import urllib.request
+from urllib.parse import urlparse, urljoin
+# from cairosvg import svg2png
+from bs4 import BeautifulSoup
 
 # Logging Declaration
 log_format = '%(asctime)s - %(levelname)s - %(message)s'
@@ -40,9 +45,10 @@ def RAG(file_content,embeddings,file,session_var):
     logger.debug(filename)
     extension = filename.rsplit('.', 1)[1].lower()
     filename_without_extension = filename.rsplit('.', 1)[0].lower()
-    output_path_byfile = f"./imagefolder_{session_var}/images_{session_var}_{filename_without_extension}"
-    if not os.path.exists(output_path_byfile):
-        os.makedirs(output_path_byfile) 
+    if f"extracted_content{session_var}" not in filename_without_extension:
+        output_path_byfile = f"./imagefolder_{session_var}/images_{session_var}_{filename_without_extension}"
+        if not os.path.exists(output_path_byfile):
+            os.makedirs(output_path_byfile) 
     logger.debug(f"Extension is: {extension}",)
     raw_text = ''
     texts = '' # for pdf image path only!
@@ -92,7 +98,7 @@ def RAG(file_content,embeddings,file,session_var):
                         
 
                 except Exception as e:
-                    logger.debug(f"Error processing image {image_file_object.name}: {e}")
+                    logger.error(f"Error processing image {image_file_object.name}: {e}")
                     continue  # Skip to the next image
                 if text_instant:
                     texts += text_instant
@@ -369,6 +375,52 @@ def RAG(file_content,embeddings,file,session_var):
     logger.debug("docsearch made")
     return docsearch
 
+def URL_IMG_EXTRACT(soup, session_var, base_url):
+    output_path_byfile = f"./imagefolder_{session_var}/images_{session_var}_URL"
+    if not os.path.exists(output_path_byfile):
+        os.makedirs(output_path_byfile) 
+    index = 1
+    skip_patterns = ['/icons/', '/logos/', '/ads/', '/footer/']
+    for image in soup.find_all('img'):
+        try:
+            logger.debug(f"{image}")
+            image_src = image['src']
+            logger.debug(f"image_src: {image_src}",)
+            extension_src = image_src.split('.')[-1]
+            logger.debug(f"extension image_src: {extension_src}",)
+            if extension_src not in ['png', 'jpg', 'jpeg', 'JPG', 'webp']:
+                continue
+            if any(pattern in image_src for pattern in skip_patterns):
+              continue
+            if any('logo' in cls for cls in image.get('class', [])):
+                continue
+            full_image_url = urljoin(base_url, image_src)
+            logger.debug(f"Selected: {full_image_url}")
+            img_filename = os.path.join(output_path_byfile, f'FileName URL ImageNumber {index}.{extension_src}')
+            # if extension_src == 'svg':
+            #     svg_filename = os.path.join(output_path_byfile, f'URL image_{index}.png')
+            #     png = cairosvg.svg2png(url = full_image_url)
+            #     with open(svg_filename, 'wb') as f:
+            #         f.write(png)
+            #         index += 1
+            #         continue
+
+            # if pil would want to be used for saving and converting
+            # image = requests.get(full_image_url)
+            # image_content = image.content
+            # try:
+            #     img = Image.open(io.BytesIO(image_content))
+            #     img.save(img_filename)
+            #     index += 1
+            # except:
+            #     print(f"Failed to download {full_image_url}")
+            
+            with open(img_filename, 'wb') as f:
+                image = urllib.request.urlopen(full_image_url).read()
+                f.write(image)
+                index += 1
+        except Exception as e:
+          logger.error(f"Failed to download {full_image_url}, error: {str(e)}")
 
 def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
     logger.debug("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
@@ -457,8 +509,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                 HumanMessage(content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!"
-                    },
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: (file name here only, case-sensitive and character-sensitive), ImageNumber: (image number here only) In this Image (description of image only)'. If instead of ImageNumber, the SlideNumber is available then use format 'FileName: ..., SlideNumber: ... In this Image ...'",                    },
                     {
                         "type": "image_url",
                         "image_url": {
@@ -472,8 +523,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                 content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. Tell what FileName, PageNumber/SlideNumber and ImageNumber of this image is by seeing this information: {basename}. Your output should look like this: 'This image that belongs to FileName: ..., PageNumber: ..., ImageNumber: .... In this Image ...' or in case of SlideNumber available 'This image that belongs to FileName: ..., SlideNumber: ..., ImageNumber: .... In this Image ...' !!!WARNING: Exact, absolutely Unchanged File name of the image must be mentioned as found in {basename}. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others, so this should be kept in mind!!!",
-                    },  # You can optionally provide text parts
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: (file name here only, case-sensitive and character-sensitive), ImageNumber: (image number here only) In this Image (description of image only)'. If instead of ImageNumber, the SlideNumber is available then use format 'FileName: ..., SlideNumber: ... In this Image ...'",                    },
                     {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
                 ]
             )
@@ -488,34 +538,83 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
                 return response.content
 
+        def url_summarize_image(encoded_image, basename, language):
+            prompt = [
+                SystemMessage(content="You are a bot that is good at analyzing images."),
+                HumanMessage(content=[
+                    {
+                        "type": "text",
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: URL, ImageNumber: (image number here only) In this Image (description of image only)'",
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{encoded_image}"
+                        },
+                    },
+                ])
+            ]
+
+            prompt_gemini = HumanMessage(
+                content=[
+                    {
+                        "type": "text",
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: URL, ImageNumber: (image number here only) In this Image (description of image only)'",
+                    },  # You can optionally provide text parts
+                    {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
+                ]
+            )
+
+            if model_type == 'gemini':
+                logger.debug("Gemini summarizing images NOW")
+                response = ChatGoogleGenerativeAI(model="gemini-1.5-flash",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
+                return response.content
+            else:
+                logger.debug("Openai summarizing images NOW")
+                response = AzureChatOpenAI(deployment_name="gpt-4o", temperature=0, max_tokens=200,
+                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
+
+                return response.content
+
+
         for root, dirs, files in os.walk(output_path):
             for i in files:
-                if i.endswith(('.png', '.jpg', '.jpeg')):
-                    for page_number, file in PageNumberList:
-                        if f"FileName {file} PageNumber {page_number}" in i:
-                            image_path = os.path.join(root, i)
-                            basename = os.path.basename(image_path)
-                            logger.debug(os.path.basename(image_path))
-                            encoded_image = encode_image(image_path)
-                            image_elements.append(encoded_image)
-                            summary = summarize_image(encoded_image,basename, language)
-                            image_summaries.append(summary)
-                        elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
-                            image_path = os.path.join(root, i)
-                            basename = os.path.basename(image_path)
-                            logger.debug(os.path.basename(image_path))
-                            encoded_image = encode_image(image_path)
-                            image_elements.append(encoded_image)
-                            summary = summarize_image(encoded_image,basename, language)
-                            image_summaries.append(summary)
-                        elif f"FileName {file} SlideNumber {page_number}" in i:
-                            image_path = os.path.join(root, i)
-                            basename = os.path.basename(image_path)
-                            logger.debug(os.path.basename(image_path))
-                            encoded_image = encode_image(image_path)
-                            image_elements.append(encoded_image)
-                            summary = summarize_image(encoded_image,basename, language)
-                            image_summaries.append(summary)
+                if i.endswith(('.png', '.jpg', '.jpeg', '.webp', '.JPG')):
+
+                    if "URL" in i:
+                        image_path = os.path.join(root, i)
+                        basename = os.path.basename(image_path)
+                        logger.debug(os.path.basename(image_path))
+                        encoded_image = encode_image(image_path)
+                        image_elements.append(encoded_image)
+                        summary = url_summarize_image(encoded_image,basename, language)
+                        image_summaries.append(summary)
+                    else:
+                        for page_number, file in PageNumberList:
+                            if f"FileName {file} PageNumber {page_number}" in i:
+                                image_path = os.path.join(root, i)
+                                basename = os.path.basename(image_path)
+                                logger.debug(os.path.basename(image_path))
+                                encoded_image = encode_image(image_path)
+                                image_elements.append(encoded_image)
+                                summary = summarize_image(encoded_image,basename, language)
+                                image_summaries.append(summary)
+                            elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
+                                image_path = os.path.join(root, i)
+                                basename = os.path.basename(image_path)
+                                logger.debug(os.path.basename(image_path))
+                                encoded_image = encode_image(image_path)
+                                image_elements.append(encoded_image)
+                                summary = summarize_image(encoded_image,basename, language)
+                                image_summaries.append(summary)
+                            elif f"FileName {file} SlideNumber {page_number}" in i:
+                                image_path = os.path.join(root, i)
+                                basename = os.path.basename(image_path)
+                                logger.debug(os.path.basename(image_path))
+                                encoded_image = encode_image(image_path)
+                                image_elements.append(encoded_image)
+                                summary = summarize_image(encoded_image,basename, language)
+                                image_summaries.append(summary)
 
         logger.debug(f"image_summaries::\n{image_summaries}",)
 
@@ -598,6 +697,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         else:
             logger.debug(f"AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
             scenario = "linear"
+
 
     if scenario == "linear":
         logger.debug(f"SCENARIO ====prompt_linear : {scenario}")
@@ -1333,6 +1433,7 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
         SlideNumber: Optional[str] = Field(description="If available, slide number of the image.")
         ImageNumber: int = Field(description="image number of the image")
         Description: str = Field(description="Description detail of the image")
+        Logic: str = Field(description="Recommend which MediaBlock (identify by title of pertinent MediaBlock) the pertinent image shall be attached with.")
 
     class image(BaseModel):
         Image: List[image_loc] = Field(description="image_loc")
@@ -1345,6 +1446,15 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     Search for those image or images only, whose descriptions in a MediaBlock of the 'Response Text' matches
     with the descriptions in the 'Context' data. Output only those image's or images' description from the 
     'Context' data.
+
+    Most Important point to Note and be advised on it is that you should only select those images from the 
+    'Context' whose description is relative to the MediaBlock description of the 'Response Text'. Your work will only be
+    succesfull if you do implement this most important point. If an image description does not relative with
+    the MediaBlock in the 'Response Text', then you respond in the format: 'NOT RELEVANT'.
+
+    Please give logic in the Description section for why are you selecting an image in terms of relevance to
+    the description of image in 'Context' to the description in the 'Response Text'.
+
     \n{format_instructions}\n'Response Text': {response_text}\n'Context': {context}""",
     input_variables=["response_text","context","language"],
     partial_variables={"format_instructions": parser.get_format_instructions()},
@@ -1355,29 +1465,42 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     else:
         chain = prompt | llm.bind(response_format={"type": "json_object"}) | parser
 
+    # just to debug the format_instructions and response_text
+    format_instructions = parser.get_format_instructions()
+    logger.debug(f"response_text:\n{response_text}",)
+    logger.debug(f"format_instructions:\n{format_instructions}",)
+
+    # invoking or running the img_response
     img_response = chain.invoke({"response_text": response_text, "context": relevant_doc, "language": language})
     logger.debug(f"img_response is::{img_response}",)
-    format_instructions = parser.get_format_instructions()
-    logger.debug(f"format_instructions:\n{format_instructions}",)
-    logger.debug(f"response_text:\n{response_text}",)
+
+    
 
 ###
     def create_structured_json(img_response):
         result = {}
         for index, img in enumerate(img_response['Image'], start=1):
             logger.debug(f"img: {img}",)
-            if img['PageNumber'] is not None:
+            if img['FileName']=="URL":
                 # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
-                image_key = f"FileName {img['FileName']} PageNumber {img['PageNumber']} ImageNumber {img['ImageNumber']}"
+                image_key = f"FileName {img['FileName']} ImageNumber {img['ImageNumber']}"
                 # Add the image key and description to the result dictionary
                 result[f"Image{index}"] = image_key
                 result[f"Description{index}"] = img['Description']
+                result[f"Logic{index}"] = img['Logic']
             else:
-                # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
-                image_key = f"FileName {img['FileName']} SlideNumber {img['SlideNumber']} ImageNumber {img['ImageNumber']}"
-                # Add the image key and description to the result dictionary
-                result[f"Image{index}"] = image_key
-                result[f"Description{index}"] = img['Description']
+                if img['PageNumber'] is not None:
+                    # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+                    image_key = f"FileName {img['FileName']} PageNumber {img['PageNumber']} ImageNumber {img['ImageNumber']}"
+                    # Add the image key and description to the result dictionary
+                    result[f"Image{index}"] = image_key
+                    result[f"Description{index}"] = img['Description']
+                else:
+                    # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+                    image_key = f"FileName {img['FileName']} SlideNumber {img['SlideNumber']} ImageNumber {img['ImageNumber']}"
+                    # Add the image key and description to the result dictionary
+                    result[f"Image{index}"] = image_key
+                    result[f"Description{index}"] = img['Description']
         
         return json.dumps(result, indent=4)
 
