@@ -1,3 +1,4 @@
+ImageHash
 gevent
 langchain-openai
 PyJWT
