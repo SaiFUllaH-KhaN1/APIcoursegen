@@ -156,6 +156,7 @@ def delete_old_directories():
                 logger.debug(f"Deleting directory: {dir_path}, it has modified date of {dir_age}")
                 shutil.rmtree(dir_path)
 ###     ###     ###
+
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
 
@@ -379,6 +380,11 @@ def decide():
                 response_with_time = json.loads(response_LO_CA['text']) 
                 response_with_time.update(execution_time_block)
                 logger.debug(f"{json.dumps(response_with_time)}")
+
+                # Strategic placement of image removal is placed so less time taking route is used
+                output_path = f"./imagefolder_{user_id}"
+                LCD.REMOVE_DUP_IMG(output_path) #removes duplicate images extracted in process_data route
+
                 return Response(json.dumps(response_with_time), mimetype='application/json')
                 # return jsonify(response_LO_CA['text'])       
 
@@ -411,6 +417,8 @@ def generate_course():
         model_type = request.args.get('model', 'azure') # to set default model
         model_name = request.args.get('modelName', 'gpt') # to set default model name
         summarize_images = request.args.get('summarizeImages', 'on') # to set default value name
+        temp = request.args.get('temp','0.1')
+        logger.debug(f"temp selected!: {temp}")
         
         start_route_time = time.time() # Timer starts at the Post
 
@@ -427,10 +435,10 @@ def generate_course():
 
             try:
                 if model_type == 'gemini':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1, max_output_tokens=8000)
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=temp, max_output_tokens=8000) # temp default 0.1
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
                 else:
-                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
+                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=temp,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
@@ -440,7 +448,7 @@ def generate_course():
                 output_path = f"./imagefolder_{user_id}"
 
                 start_RE_SIMILARITY_SEARCH_time = time.time()
-                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type, summarize_images, language)
+                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type,model_name, summarize_images, language)
                 end_RE_SIMILARITY_SEARCH_time = time.time()
                 execution_RE_SIMILARITY_SEARCH_time = end_RE_SIMILARITY_SEARCH_time - start_RE_SIMILARITY_SEARCH_time
                 minutes, seconds = divmod(execution_RE_SIMILARITY_SEARCH_time, 60)
