@@ -32,11 +32,13 @@ import urllib.request
 from urllib.parse import urlparse, urljoin
 # from cairosvg import svg2png
 from bs4 import BeautifulSoup
+import imagehash
 
 # Logging Declaration
 log_format = '%(asctime)s - %(levelname)s - %(message)s'
 logger = logging
 logger.basicConfig(level= logging.DEBUG, format= log_format)
+
 
 def RAG(file_content,embeddings,file,session_var):
     logger.debug(f"file is: {file}",)
@@ -422,6 +424,34 @@ def URL_IMG_EXTRACT(soup, session_var, base_url):
         except Exception as e:
           logger.error(f"Failed to download {full_image_url}, error: {str(e)}")
 
+def REMOVE_DUP_IMG(image_dir):
+    # Directory containing images
+    image_dir = image_dir
+
+    # store hashes and their corresponding filenames
+    hashes = {}
+    duplicates = []
+
+    # loop over the image files in the directory
+    for root, dirs, files in os.walk(image_dir):
+      for filename in files:
+          if filename.endswith(('.png', '.jpg', '.jpeg', '.webp', '.JPG')):
+            file_path = os.path.join(root, filename) # root returns the file path including subfolder
+            logger.debug(file_path)
+            with Image.open(file_path) as img:
+                # generate the perceptual hash for the image
+                hash = imagehash.phash(img)
+
+                # seeing if this hash already exists in the dictionary
+                if hash in hashes:
+                    duplicates.append(filename)
+                    logger.debug(f"Duplicate found: {filename} is a duplicate of {hashes[hash]}")
+                    os.remove(file_path)  # Delete the duplicate file
+                else:
+                    hashes[hash] = filename
+
+    logger.debug("Duplicate removal complete. Removed files:", duplicates)
+
 def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
     logger.debug("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
     docs = docsearch.similarity_search(query, k=3)
@@ -432,7 +462,7 @@ def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
         chain = LLMChain(prompt=PROMPTS.prompt_LO_CA_GEMINI, llm=llm.bind(response_format={"type": "json_object"}))
     return chain, docs_main, query
 
-def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_images, language):
+def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, summarize_images, language):
     logger.debug("RE_SIMILARITY_SEARCH Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     logger.debug(f"docs from RE_SIMILARITY_SEARCH:\n{docs}",)
@@ -530,11 +560,11 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
 
             if model_type == 'gemini':
                 logger.debug("Gemini summarizing images NOW")
-                response = ChatGoogleGenerativeAI(model="gemini-1.5-flash",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
+                response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).invoke([prompt_gemini])
                 return response.content
             else:
                 logger.debug("Openai summarizing images NOW")
-                response = AzureChatOpenAI(deployment_name="gpt-4o", temperature=0, max_tokens=200,
+                response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
                 return response.content
 
@@ -567,11 +597,11 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type, summarize_im
 
             if model_type == 'gemini':
                 logger.debug("Gemini summarizing images NOW")
-                response = ChatGoogleGenerativeAI(model="gemini-1.5-flash",temperature=0,max_output_tokens=200).invoke([prompt_gemini])
+                response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).invoke([prompt_gemini])
                 return response.content
             else:
                 logger.debug("Openai summarizing images NOW")
-                response = AzureChatOpenAI(deployment_name="gpt-4o", temperature=0, max_tokens=200,
+                response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
 
                 return response.content
@@ -1509,4 +1539,3 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     logger.debug(structured_response)
 
     return str(structured_response)
-
