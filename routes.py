@@ -527,12 +527,14 @@ def find_images():
         language = cache.get(f"language_{user_id}")
         logger.debug(f"Language seleted is:{language}")
 
+        start_route_time = time.time() # Timer starts at the Post
+
         if response_text and docs_main:
             try:
                 if model_type == "gemini":
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
                 else:
-                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
+                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
 
@@ -592,9 +594,18 @@ def find_images():
                     if key in json_img_response:
                         del json_img_response[key]
 
-                print(json_img_response) 
+                print(f"Type of json_img_response:{type(json_img_response)}") 
 
-                # return Response(json_img_response, mimetype='application/json') #This one prefered
+                end_route_time = time.time()
+                execution_route_time = end_route_time - start_route_time
+                minutes, seconds = divmod(execution_route_time, 60)
+                formatted_route_time = f"{int(minutes):02}:{int(seconds):02}"
+
+                execution_time_block = {"executionTime":f"""For whole Route is {formatted_route_time}"""}
+                json_img_response.update(execution_time_block) # already type dict json_img_response
+
+                logger.debug(f"{json.dumps(json_img_response, indent=4)}") # for indentational debug
+
                 return jsonify(json_img_response) #This one works
             except Exception as e:
                 logger.error(f"An error occurred or abrupt Model change: {str(e)}")
