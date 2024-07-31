@@ -539,7 +539,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 HumanMessage(content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: (file name here only, case-sensitive and character-sensitive), ImageNumber: (image number here only) In this Image (description of image only)'. If instead of ImageNumber, the SlideNumber is available then use format 'FileName: ..., SlideNumber: ... In this Image ...'",                    },
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: (exact file name here only without changing anything. DO NOT INCLUDE PageNumber or SlideNumber or ImageNumber in the FileName. The FileName is before what is mentioned as PageNumber or SlideNumber), PageNumber: (image number here only if available) ImageNumber: (image number here only), Description: (short description of image only)'. If the SlideNumber, then replace PageNumber using format as 'FileName: ..., SlideNumber: ... , Description: ...'",                    },
                     {
                         "type": "image_url",
                         "image_url": {
@@ -553,7 +553,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: (file name here only, case-sensitive and character-sensitive), ImageNumber: (image number here only) In this Image (description of image only)'. If instead of ImageNumber, the SlideNumber is available then use format 'FileName: ..., SlideNumber: ... In this Image ...'",                    },
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: (exact file name here only without changing anything. DO NOT INCLUDE PageNumber or SlideNumber or ImageNumber in the FileName. The FileName is before what is mentioned as PageNumber or SlideNumber), PageNumber: (image number here only if available) ImageNumber: (image number here only), Description: (short description of image only)'. If the SlideNumber, then replace PageNumber using format as 'FileName: ..., SlideNumber: ... , Description: ...'",                    },
                     {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
                 ]
             )
@@ -574,7 +574,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 HumanMessage(content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: URL, ImageNumber: (image number here only) In this Image (description of image only)'",
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: URL, ImageNumber: (image number here only), Description: (short description of image only)'",
                     },
                     {
                         "type": "image_url",
@@ -589,7 +589,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: URL, ImageNumber: (image number here only) In this Image (description of image only)'",
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: URL, ImageNumber: (image number here only), Description: (short description of image only)'",
                     },  # You can optionally provide text parts
                     {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
                 ]
@@ -1463,7 +1463,7 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
         SlideNumber: Optional[str] = Field(description="If available, slide number of the image.")
         ImageNumber: int = Field(description="image number of the image")
         Description: str = Field(description="Description detail of the image")
-        Logic: str = Field(description="Recommend which MediaBlock (identify by title of pertinent MediaBlock) the pertinent image shall be attached with.")
+        Logic: str = Field(description="Recommend out of MediaBlocks only (identify by title of pertinent MediaBlock) the pertinent image that shall be attached with. If an Image is not relevant to a MediaBlock, output 'NOT RELEVANT' as your response.")
 
     class image(BaseModel):
         Image: List[image_loc] = Field(description="image_loc")
@@ -1491,9 +1491,9 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     )
 
     if model_type == "gemini":
-        chain = prompt | llm.bind(generation_config={"response_mime_type": "application/json"}) | parser
+        chain = prompt | llm | parser
     else:
-        chain = prompt | llm.bind(response_format={"type": "json_object"}) | parser
+        chain = prompt | llm | parser
 
     # just to debug the format_instructions and response_text
     format_instructions = parser.get_format_instructions()
@@ -1525,12 +1525,14 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
                     # Add the image key and description to the result dictionary
                     result[f"Image{index}"] = image_key
                     result[f"Description{index}"] = img['Description']
+                    result[f"Logic{index}"] = img['Logic']
                 else:
                     # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
                     image_key = f"FileName {img['FileName']} SlideNumber {img['SlideNumber']} ImageNumber {img['ImageNumber']}"
                     # Add the image key and description to the result dictionary
                     result[f"Image{index}"] = image_key
                     result[f"Description{index}"] = img['Description']
+                    result[f"Logic{index}"] = img['Logic']
         
         return json.dumps(result, indent=4)
 
@@ -1539,3 +1541,4 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     logger.debug(structured_response)
 
     return str(structured_response)
+
