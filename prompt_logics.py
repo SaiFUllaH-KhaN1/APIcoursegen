@@ -1163,9 +1163,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
     logger.debug(f"The output is as follows::\n{response['text']}",)
     return response['text'], scenario
 
+
 def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language):
     
-
     if model_type == 'gemini':
         llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
     else:
@@ -1210,7 +1210,12 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language)
 
         if scenario == "linear":
 
-            chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+
+            if model_type=="gemini":
+                chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
+            else:
+                chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
+
             shadow_response = chain({"output": output,"language":language})
             is_valid, result = is_json_parseable(shadow_response['text'])
             countd=0
@@ -1262,7 +1267,11 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language)
 
         elif scenario == "branched":
 
-            chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            if model_type=="gemini":
+                chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
+            else:
+                chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
+
             shadow_response = chain({"output": output,"language":language})
             is_valid, result = is_json_parseable(shadow_response['text'])
             countd=0
@@ -1314,7 +1323,11 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language)
 
         elif scenario == "simulation":
 
-            chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            if model_type=="gemini":
+                chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
+            else:
+                chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
+
             shadow_response = chain({"output": output,"language":language})
             is_valid, result = is_json_parseable(shadow_response['text'])
             countd=0
@@ -1366,7 +1379,11 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language)
 
         elif scenario == "gamified":
 
-            chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            if model_type=="gemini":
+                chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
+            else:
+                chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
+
             shadow_response = chain({"output": output,"language":language})
             is_valid, result = is_json_parseable(shadow_response['text'])
             countd=0
