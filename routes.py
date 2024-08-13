@@ -436,9 +436,13 @@ def generate_course():
             try:
                 if model_type == 'gemini':
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=temp, max_output_tokens=8000) # temp default 0.1
+                    llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
                 else:
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=temp,
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                        )
+                    llm_img_summary = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
@@ -448,7 +452,7 @@ def generate_course():
                 output_path = f"./imagefolder_{user_id}"
 
                 start_RE_SIMILARITY_SEARCH_time = time.time()
-                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type,model_name, summarize_images, language)
+                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary)
                 end_RE_SIMILARITY_SEARCH_time = time.time()
                 execution_RE_SIMILARITY_SEARCH_time = end_RE_SIMILARITY_SEARCH_time - start_RE_SIMILARITY_SEARCH_time
                 minutes, seconds = divmod(execution_RE_SIMILARITY_SEARCH_time, 60)
@@ -625,6 +629,7 @@ def find_images():
         
         logger.critical("Unexpected Fault or Interruption")
         return jsonify(error="Unexpected Fault or Interruption")
+        
         
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
