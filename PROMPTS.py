@@ -8649,3 +8649,16 @@ prompt_LO_CA_GEMINI = PromptTemplate(
 
 #     """
 # )
+
+prompt_polish_summary = PromptTemplate(
+input_variables=["basename","description","language"],
+template="""
+You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+Given below the values of 'Description' of the image and 'FileName' of the file related to it, you output your response in the following format:
+Image Info : "(insert 'FileName' value here)"; "(insert 'Description' value here)"
+
+Given Values:
+'FileName': {basename}
+'Description': {description}
+"""
+)
