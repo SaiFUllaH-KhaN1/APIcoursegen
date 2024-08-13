@@ -39,7 +39,6 @@ log_format = '%(asctime)s - %(levelname)s - %(message)s'
 logger = logging
 logger.basicConfig(level= logging.DEBUG, format= log_format)
 
-
 def RAG(file_content,embeddings,file,session_var):
     logger.debug(f"file is: {file}",)
     
@@ -64,7 +63,9 @@ def RAG(file_content,embeddings,file,session_var):
                 text_instant = page.extract_text()
                 pgcount += 1
                 imgcount = 1
-                text_instant = f"\nThe Content of PageNumber:{pgcount} of file name:{filename_without_extension} is:\n{text_instant}.\nEnd of PageNumber:{pgcount} of file name:{filename_without_extension}\n"
+                #               pattern_end = r'End of PageNumber (\d+) of file name (.+)\n'
+                #               pattern_this_page = r'The Content of PageNumber (\d+) of file name (.+) is:\n'
+                text_instant = f"\nThe Content of PageNumber {pgcount} of file name {filename_without_extension} is:\n{text_instant}.\nEnd of PageNumber {pgcount} of file name {filename_without_extension}\n"
                 try:
                     for image_file_object in page.images:
                         # base_name = os.path.splitext(os.path.basename(image_file_object.name))[0]  # Get the base file name without extension
@@ -224,8 +225,8 @@ def RAG(file_content,embeddings,file,session_var):
                                 if os.path.exists(original_image_path):
                                     shutil.move(original_image_path, new_image_path)
 
-                                    # Update the placeholder in the paragraph
-                                    new_placeholder = f"----media/ImageNumber:{image_count} PageNumber:Null of FileName:{filename_without_extension}----"
+                                    # Update the placeholder in the paragraph ----media/ImageNumber (\d+) PageNumber Null of FileName (.+)----
+                                    new_placeholder = f"----media/ImageNumber {image_count} PageNumber Null of FileName {filename_without_extension}----"
                                     paragraph = paragraph.replace(f"----media/{image_filename}----", new_placeholder)
                                     cell[paragraph_index] = paragraph
                                     image_count += 1
@@ -304,12 +305,10 @@ def RAG(file_content,embeddings,file,session_var):
 
         # Step 2: Combine the content for each page number
         # combined_page_contents = [{'page_number': page,'filename': filename, 'page_content': ' '.join(contents)} for page, contents in page_contents.items()]
-
+        # pattern_this_end_pptx = r"End of SlideNumber (\d+) with Filename (.+?) ----" 
         combined_page_contents = [
             {
-                'SlideNumber': page,
-                'FileName': filename_without_extension,
-                'page_content': f"{' '.join(contents)} End of SlideNumber:{page} with Filename:{filename_without_extension} ----"
+                'page_content': f"\nSlideNumber {page} FileName {filename_without_extension} ---\n{' '.join(contents)} End of SlideNumber {page} with Filename {filename_without_extension} ---"
             }
             for page, contents in page_contents.items()
         ]
@@ -462,7 +461,7 @@ def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
         chain = LLMChain(prompt=PROMPTS.prompt_LO_CA_GEMINI, llm=llm.bind(response_format={"type": "json_object"}))
     return chain, docs_main, query
 
-def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, summarize_images, language):
+def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary):
     logger.debug("RE_SIMILARITY_SEARCH Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     logger.debug(f"docs from RE_SIMILARITY_SEARCH:\n{docs}",)
@@ -473,20 +472,20 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
             relevant_doc = relevant_doc.page_content
             logger.debug(relevant_doc)
 
-            pattern_this_pptx = r"'SlideNumber': (\d+), 'FileName': '(.+?)'"        # f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
+            pattern_this_pptx = r"SlideNumber (\d+) FileName (.+?) ---"
             # Find all matches for "[This Page is PageNumber:]"
             matches_this_pptx = re.findall(pattern_this_pptx, relevant_doc)
 
-            pattern_this_end_pptx = r"End of SlideNumber:(\d+) with Filename:(.+?) ----"        # f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
+            pattern_this_end_pptx = r"End of SlideNumber (\d+) with Filename (.+?) ---"
             # Find all matches for "[This Page is PageNumber:]"
             matches_this_end_pptx = re.findall(pattern_this_end_pptx, relevant_doc)
 
 
-            pattern_this_doc = r'----media/ImageNumber:(\d+) PageNumber:Null of FileName:(.+)----'
+            pattern_this_doc = r'----media/ImageNumber (\d+) PageNumber Null of FileName (.+)----'
             matches_this_doc = re.findall(pattern_this_doc, relevant_doc)
             
-            pattern_end = r'End of PageNumber:(\d+) of file name:(.+)\n'
-            pattern_this_page = r'The Content of PageNumber:(\d+) of file name:(.+) is:\n'
+            pattern_end = r'End of PageNumber (\d+) of file name (.+)\n'
+            pattern_this_page = r'The Content of PageNumber (\d+) of file name (.+) is:\n'
             # Find all matches for "End of PageNumber:"
             matches_end = re.findall(pattern_end, relevant_doc)
 
@@ -532,14 +531,14 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 return encoded_image
 
 
-
         def summarize_image(encoded_image, basename, language):
+            
             prompt = [
                 SystemMessage(content="You are a bot that is good at analyzing images."),
                 HumanMessage(content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: (exact file name here only without changing anything. DO NOT INCLUDE PageNumber or SlideNumber or ImageNumber in the FileName. The FileName is before what is mentioned as PageNumber or SlideNumber), PageNumber: (image number here only if available) ImageNumber: (image number here only), Description: (short description of image only)'. If the SlideNumber, then replace PageNumber using format as 'FileName: ..., SlideNumber: ... , Description: ...'",                    },
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}.", },
                     {
                         "type": "image_url",
                         "image_url": {
@@ -553,20 +552,29 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: (exact file name here only without changing anything. DO NOT INCLUDE PageNumber or SlideNumber or ImageNumber in the FileName. The FileName is before what is mentioned as PageNumber or SlideNumber), PageNumber: (image number here only if available) ImageNumber: (image number here only), Description: (short description of image only)'. If the SlideNumber, then replace PageNumber using format as 'FileName: ..., SlideNumber: ... , Description: ...'",                    },
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}.", },
                     {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
                 ]
             )
-
+            
             if model_type == 'gemini':
                 logger.debug("Gemini summarizing images NOW")
                 response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).invoke([prompt_gemini])
-                return response.content
+                img_desc = response.content
+                logger.debug(f"Img Summary is: {type(img_desc)}/n{img_desc}")
+                
             else:
                 logger.debug("Openai summarizing images NOW")
                 response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
-                return response.content
+                img_desc = response.content
+                logger.debug(f"Img Summary is: {type(img_desc)}/n{img_desc}")
+            
+            chain = LLMChain(prompt=PROMPTS.prompt_polish_summary,llm=llm_img_summary)
+            polish_summary = chain({"basename": basename,"description": response.content,"language":language})
+            
+            return polish_summary['text']
+            
 
         def url_summarize_image(encoded_image, basename, language):
             prompt = [
@@ -574,7 +582,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 HumanMessage(content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: URL, ImageNumber: (image number here only), Description: (short description of image only)'",
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}.",
                     },
                     {
                         "type": "image_url",
@@ -589,7 +597,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 content=[
                     {
                         "type": "text",
-                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}. In view of the information in '{basename}', your output should have strict format of 'FileName: URL, ImageNumber: (image number here only), Description: (short description of image only)'",
+                        "text": f"Describe the contents of this image in the language of {language}, since your responses are given to {language} speakers and they can only understand the language of {language}.",
                     },  # You can optionally provide text parts
                     {"type": "image_url", "image_url": f"data:image/jpeg;base64,{encoded_image}"},
                 ]
@@ -598,13 +606,20 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
             if model_type == 'gemini':
                 logger.debug("Gemini summarizing images NOW")
                 response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).invoke([prompt_gemini])
-                return response.content
+                img_desc = response.content
+                logger.debug(f"Img Summary is: {type(img_desc)}/n{img_desc}")
+                
             else:
                 logger.debug("Openai summarizing images NOW")
                 response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
-
-                return response.content
+                img_desc = response.content
+                logger.debug(f"Img Summary is: {type(img_desc)}/n{img_desc}")
+            
+            chain = LLMChain(prompt=PROMPTS.prompt_polish_summary,llm=llm_img_summary)
+            polish_summary = chain({"basename": basename,"description": response.content,"language":language})
+            
+            return polish_summary['text']
 
 
         for root, dirs, files in os.walk(output_path):
@@ -1163,9 +1178,9 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
     logger.debug(f"The output is as follows::\n{response['text']}",)
     return response['text'], scenario
 
-
 def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language):
     
+
     if model_type == 'gemini':
         llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
     else:
@@ -1475,10 +1490,10 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
 ###
 
     class image_loc(BaseModel):
-        FileName: str = Field(description="Exact, absolutely Unchanged File name of the image as mentioned in the 'Context'. File name may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others.")
-        PageNumber: Optional[str] = Field(description="If available, write page number of the image. 'Null' if not available. !!!DO NOT USE PageNumber if SlideNumber is available.!!!")
-        SlideNumber: Optional[str] = Field(description="If available, slide number of the image.")
-        ImageNumber: int = Field(description="image number of the image")
+        FileName: str = Field(description="Exact, absolutely Unchanged FileName of the image as mentioned in the 'Context'. FileName may contain special characters such as hyphens (-), underscores (_), semicolons (;), spaces, and others.")
+        # PageNumber: Optional[str] = Field(description="If available, write PageNumber of the image. 'Null' if not available. !!!DO NOT USE PageNumber if SlideNumber is available.!!!")
+        # SlideNumber: Optional[str] = Field(description="If available, slide number of the image.")
+        # ImageNumber: int = Field(description="ImageNumber of the image")
         Description: str = Field(description="Description detail of the image")
         Logic: str = Field(description="Recommend out of MediaBlocks only (identify by title of pertinent MediaBlock) the pertinent image that shall be attached with. If an Image is not relevant to a MediaBlock, output 'NOT RELEVANT' as your response.")
 
@@ -1528,28 +1543,36 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
         result = {}
         for index, img in enumerate(img_response['Image'], start=1):
             logger.debug(f"img: {img}",)
-            if img['FileName']=="URL":
-                # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
-                image_key = f"FileName {img['FileName']} ImageNumber {img['ImageNumber']}"
-                # Add the image key and description to the result dictionary
-                result[f"Image{index}"] = image_key
-                result[f"Description{index}"] = img['Description']
-                result[f"Logic{index}"] = img['Logic']
-            else:
-                if img['PageNumber'] is not None:
-                    # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
-                    image_key = f"FileName {img['FileName']} PageNumber {img['PageNumber']} ImageNumber {img['ImageNumber']}"
-                    # Add the image key and description to the result dictionary
-                    result[f"Image{index}"] = image_key
-                    result[f"Description{index}"] = img['Description']
-                    result[f"Logic{index}"] = img['Logic']
-                else:
-                    # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
-                    image_key = f"FileName {img['FileName']} SlideNumber {img['SlideNumber']} ImageNumber {img['ImageNumber']}"
-                    # Add the image key and description to the result dictionary
-                    result[f"Image{index}"] = image_key
-                    result[f"Description{index}"] = img['Description']
-                    result[f"Logic{index}"] = img['Logic']
+            # if img['FileName']=="URL":
+            #     # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+            #     image_key = f"FileName URL ImageNumber {img['ImageNumber']}"
+            #     # Add the image key and description to the result dictionary
+            #     result[f"Image{index}"] = image_key
+            #     result[f"Description{index}"] = img['Description']
+            #     result[f"Logic{index}"] = img['Logic']
+            # else:
+            #     if img['PageNumber'] is not None:
+            #         # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+            #         image_key = f"FileName {img['FileName']} PageNumber {img['PageNumber']} ImageNumber {img['ImageNumber']}"
+            #         # Add the image key and description to the result dictionary
+            #         result[f"Image{index}"] = image_key
+            #         result[f"Description{index}"] = img['Description']
+            #         result[f"Logic{index}"] = img['Logic']
+            #     else:
+            #         # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+            #         image_key = f"FileName {img['FileName']} SlideNumber {img['SlideNumber']} ImageNumber {img['ImageNumber']}"
+            #         # Add the image key and description to the result dictionary
+            #         result[f"Image{index}"] = image_key
+            #         result[f"Description{index}"] = img['Description']
+            #         result[f"Logic{index}"] = img['Logic']
+
+            # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
+            image_key = f"{img['FileName']}"
+            # Add the image key and description to the result dictionary
+            result[f"Image{index}"] = image_key
+            result[f"Description{index}"] = img['Description']
+            result[f"Logic{index}"] = img['Logic']
+                
         
         return json.dumps(result, indent=4)
 
@@ -1559,3 +1582,25 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
 
     return str(structured_response)
 
+#CODE
+
+# import re
+
+# text = "FileName vector-search-diagram- PageNumber:Null ImageNumber 2.JPG"
+
+# pattern_FileName = r"FileName(.*?)\sPageNumber"
+
+
+# pattern_PageNumber = r"PageNumber(.*?)\sImageNumber"
+
+# pattern_SlideNumber = r"SlideNumber(.*?)\sImageNumber"
+
+# pattern_ImageNumber = r"ImageNumber(.*?)\."
+
+
+# match_FileName = re.search(pattern_PageNumber, text)
+# if match_FileName:
+#     filename = match_FileName.group(1)
+#     print(filename)
+# else:
+#     print("No match found")
