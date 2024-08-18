@@ -344,9 +344,9 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         try:
             text = whisper(temp_path_audio) # Running model here
             raw_text = text['text']
-            print(raw_text)
+            logger.debug(raw_text)
         except Exception as e:
-            print(f"Failed to initialize the Whisper model.Error:{str(e)}")
+            logger.debug(f"Failed to initialize the Whisper model.Error:{str(e)}")
         
         os.remove(temp_path_audio)
 
