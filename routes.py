@@ -53,9 +53,9 @@ cache_dir = 'cache'
 # Check if the cache directory exists, and create it if it does not
 if not os.path.exists(cache_dir):
     os.makedirs(cache_dir)
-    print(f"Cache directory '{cache_dir}' was created.")
+    logger.debug(f"Cache directory '{cache_dir}' was created.")
 else:
-    print(f"Cache directory '{cache_dir}' already exists.")
+    logger.debug(f"Cache directory '{cache_dir}' already exists.")
 
 app.config['BASIC_AUTH_REALM'] = 'realm'
 app.config['BASIC_AUTH_USERNAME'] = os.getenv('BASIC_AUTH_USERNAME')
@@ -176,7 +176,7 @@ else:
 
 ### MODEL CHECK ALREADY DOWNLOADED ?
 global whisper_model
-whisper_model = "whisper-tiny" # Change this line only if a new different model download wanted 
+whisper_model = "whisper-base" # Change this line only if a new different model download wanted 
 # for production use whisper-base. Only tiny model for local checking 
 
 def download_whisper_model(whisper_model):
