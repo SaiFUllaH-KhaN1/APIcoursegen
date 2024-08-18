@@ -283,10 +283,10 @@ def process_data():
                             response = urllib.request.urlopen(request, timeout=3)
                             soup = BeautifulSoup(response.read(), 'html.parser')
                             var = soup.get_text()
-                            print(f"Extracted text length: {len(var)}")
+                            logger.debug(f"Extracted text length: {len(var)}")
                             return  var, soup
                         except (HTTPError, URLError) as e:
-                            print(f"Error with {user_agent}: {str(e)}")
+                            logger.debug(f"Error with {user_agent}: {str(e)}")
                             continue  # Try the next user agent in case of an error
 
                 # Test the function with a given URL
@@ -327,7 +327,7 @@ def process_data():
             extension = filename.rsplit('.', 1)[1].lower()
             if extension =="mp3":
                 temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}")
-                print("temp_path_audio",temp_path_audio)
+                logger.debug("temp_path_audio",temp_path_audio)
                 file.save(temp_path_audio)
             ## AUDIO CHECK END    
 
@@ -655,7 +655,7 @@ def find_images():
                     if key in json_img_response:
                         del json_img_response[key]
 
-                print(f"Type of json_img_response:{type(json_img_response)}") 
+                logger.debug(f"Type of json_img_response:{type(json_img_response)}") 
 
                 end_route_time = time.time()
                 execution_route_time = end_route_time - start_route_time
