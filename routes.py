@@ -134,13 +134,16 @@ def delete_indexes():
         elif os.path.isdir(dir_path) and item.startswith("imagefolder_"):
             logger.debug(f"Deleting image directory: {dir_path}")
             shutil.rmtree(dir_path)
+        elif os.path.isdir(dir_path) and item.startswith("audio_"):
+            logger.debug(f"Deleting audio directory: {dir_path}")
+            shutil.rmtree(dir_path)
 
 @app.route("/cron", methods=['POST'])
 @basic_auth.required
 def cron():
     delete_indexes()
     logger.debug("Deleted FAISS index")
-    return jsonify(message="FAISS and imagefolder index directories deleted")
+    return jsonify(message="FAISS and imagefolder and audio index directories deleted")
 ###     ###     ### 
 
 ### SCHEDULED DELETION OF folders of imagefolder_ and faiss_index_ ###
@@ -151,7 +154,7 @@ def delete_old_directories():
     base_path = os.path.dirname(os.path.abspath(__file__))
     for item in os.listdir(base_path):
         dir_path = os.path.join(base_path, item)
-        if os.path.isdir(dir_path) and item.startswith("faiss_index_") or item.startswith("imagefolder_"):
+        if os.path.isdir(dir_path) and item.startswith("faiss_index_") or item.startswith("imagefolder_") or item.startswith("audio_"):
             # Check if directory is older than a specified time
             dir_age = datetime.fromtimestamp(os.path.getmtime(dir_path))
             if datetime.now() - dir_age > time_to_delete_files_older_than:
@@ -160,9 +163,20 @@ def delete_old_directories():
 ###     ###     ###
 
 
-### WHISPER MODEL CHECK ALREADY DOWNLOADED ?
+### WHISPER MODEL-PREP START
+
+# Configuration for the audio directory
+audio_dir = 'audio_files'
+# Check if the cache directory exists, and create it if it does not
+if not os.path.exists(audio_dir):
+    os.makedirs(audio_dir)
+    logger.debug(f"Audio directory '{audio_dir}' was created.")
+else:
+    logger.debug(f"Audio directory '{audio_dir}' already exists.")
+
+### MODEL CHECK ALREADY DOWNLOADED ?
 global whisper_model
-whisper_model = "whisper-base" # Change this line only if a new different model download wanted 
+whisper_model = "whisper-tiny" # Change this line only if a new different model download wanted 
 # for production use whisper-base. Only tiny model for local checking 
 
 def download_whisper_model(whisper_model):
@@ -173,18 +187,18 @@ def download_whisper_model(whisper_model):
 
     # Check if the model directory exists
     if not os.path.exists(whisper_directory):
-        print("Downloading Whisper model...")
+        logger.debug("Downloading Whisper model...")
         model = WhisperForConditionalGeneration.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
         processor = WhisperProcessor.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
-        print("Model downloaded successfully!")
+        logger.debug("Model downloaded successfully!")
     else:
-        print("Whisper Tiny model already downloaded. Skipping download.")
+        logger.debug("Whisper Tiny model already downloaded. Skipping download.")
         pass
 
 # Calling function
 download_whisper_model(whisper_model)
 
-### MODEL CHECK END
+### WHSIPER END
 
 
 
@@ -312,7 +326,7 @@ def process_data():
             logger.debug("filename is",filename)
             extension = filename.rsplit('.', 1)[1].lower()
             if extension =="mp3":
-                temp_path_audio = os.path.join(f"audio_{session_var}_{filename}")
+                temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}")
                 print("temp_path_audio",temp_path_audio)
                 file.save(temp_path_audio)
             ## AUDIO CHECK END    
