@@ -30,6 +30,8 @@ import openai
 from urllib.error import URLError, HTTPError
 import urllib.request
 from urllib.parse import urlparse, urljoin
+from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
+
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
@@ -157,6 +159,35 @@ def delete_old_directories():
                 shutil.rmtree(dir_path)
 ###     ###     ###
 
+
+### WHISPER MODEL CHECK ALREADY DOWNLOADED ?
+global whisper_model
+whisper_model = "whisper-base" # Change this line only if a new different model download wanted 
+# for production use whisper-base. Only tiny model for local checking 
+
+def download_whisper_model(whisper_model):
+    global whisper  # Ensure we are modifying the global whisper variable
+    whisper = None
+    global whisper_directory 
+    whisper_directory = f"./whisper_local/{whisper_model}"
+
+    # Check if the model directory exists
+    if not os.path.exists(whisper_directory):
+        print("Downloading Whisper model...")
+        model = WhisperForConditionalGeneration.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
+        processor = WhisperProcessor.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
+        print("Model downloaded successfully!")
+    else:
+        print("Whisper Tiny model already downloaded. Skipping download.")
+        pass
+
+# Calling function
+download_whisper_model(whisper_model)
+
+### MODEL CHECK END
+
+
+
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
 
@@ -275,6 +306,17 @@ def process_data():
 
         base_docsearch = None
         for file in f:
+
+            ### ONLY FOR AUDIO CHECK ###
+            filename = file.filename
+            logger.debug("filename is",filename)
+            extension = filename.rsplit('.', 1)[1].lower()
+            if extension =="mp3":
+                temp_path_audio = os.path.join(f"audio_{session_var}_{filename}")
+                print("temp_path_audio",temp_path_audio)
+                file.save(temp_path_audio)
+            ## AUDIO CHECK END    
+
             file_content = io.BytesIO(file.read())
             # file_content = [io.BytesIO(fs.read()) for fs in f]
             logger.debug("LCD initiated!")
@@ -284,7 +326,7 @@ def process_data():
                 else:
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
                 logger.debug(f"Using embeddings of {embeddings}")
-                docsearch = LCD.RAG(file_content,embeddings,file,session_var)
+                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, whisper_directory, whisper_model, language)
             except Exception as e:
                 docsearch = None
                 logger.error(f"Error processing file:{str(e)}")
@@ -327,6 +369,7 @@ def process_data():
     # Return the processed text in JSON format
     # return jsonify({"response": response['text']})
     return jsonify(error="Unexpected Fault or Interruption")
+
 
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
