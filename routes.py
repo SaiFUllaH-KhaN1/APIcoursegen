@@ -30,8 +30,9 @@ import openai
 from urllib.error import URLError, HTTPError
 import urllib.request
 from urllib.parse import urlparse, urljoin
-from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
 
+from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
+from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
