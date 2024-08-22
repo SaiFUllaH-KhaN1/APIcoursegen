@@ -727,40 +727,25 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
 
         logger.debug(f"Semantic Scenario Selected of NAME: {selected}",)
 
-        gamified_route = ['gamified', 'gamified scenario','bot: gamified scenario']
-        simulation_route = ['simulation', 'simulation scenario', 'bot: simulation scenario']
-        linear_route = ['linear', 'linear scenario', 'bot: linear scenario']
-        branched_route = ['branched', 'branched scenario', 'bot: branched scenario']
-
-        gamified_route_embeddings = embeddings.embed_documents(gamified_route)
-        simulation_route_embeddings = embeddings.embed_documents(simulation_route)
-        linear_route_embeddings = embeddings.embed_documents(linear_route)
-        branched_route_embeddings =  embeddings.embed_documents(branched_route)
-
-        query_embedding = embeddings.embed_query(selected)
-
-        gamified_similarity = cosine_similarity([query_embedding],gamified_route_embeddings)[0]
-        simulation_similarity = cosine_similarity([query_embedding],simulation_route_embeddings)[0]
-        linear_similarity = cosine_similarity([query_embedding], linear_route_embeddings)[0]
-        branched_similarity = cosine_similarity([query_embedding], branched_route_embeddings)[0]
-
-        max_similarity = max(max(gamified_similarity), max(simulation_similarity), max(linear_similarity), max(branched_similarity))
-
+        selected = json.loads(selected)
+        max_similarity = selected["Bot"]
+        logger.debug(f"max_similarity is:{max_similarity}")
+        
         ############################
 
-        if max_similarity == max(gamified_similarity):
+        if max_similarity == "Gamified Scenario":
             logger.debug("Gamified Auto Selected")
             scenario = "gamified"
 
-        elif max_similarity == max(linear_similarity):
+        elif max_similarity == "Linear Scenario":
             logger.debug("Linear Auto Selected")
             scenario = "linear"
 
-        elif max_similarity == max(simulation_similarity):
+        elif max_similarity == "Simulation Scenario":
             logger.debug(f"Simulation Auto Selected")
             scenario = "simulation"
 
-        elif max_similarity == max(branched_similarity):
+        elif max_similarity == "Branched Scenario":
             logger.debug(f"Branched Auto Selected")
             scenario = "branched"
 
@@ -768,7 +753,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             logger.debug(f"AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
             scenario = "linear"
 
-
+    
     if scenario == "linear":
         logger.debug(f"SCENARIO ====prompt_linear : {scenario}")
         if model_type == 'gemini':
