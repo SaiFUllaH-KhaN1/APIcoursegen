@@ -162,8 +162,7 @@ def delete_old_directories():
                 shutil.rmtree(dir_path)
 ###     ###     ###
 
-
-### WHISPER MODEL-PREP START
+### WHISPER START
 
 # Configuration for the audio directory
 audio_dir = 'audio_files'
@@ -174,9 +173,10 @@ if not os.path.exists(audio_dir):
 else:
     logger.debug(f"Audio directory '{audio_dir}' already exists.")
 
+
 ### MODEL CHECK ALREADY DOWNLOADED ?
 global whisper_model
-whisper_model = "whisper-base" # Change this line only if a new different model download wanted 
+whisper_model = "whisper-tiny" # Change this line only if a new different model download wanted 
 # for production use whisper-base. Only tiny model for local checking 
 
 def download_whisper_model(whisper_model):
@@ -201,6 +201,35 @@ download_whisper_model(whisper_model)
 ### WHSIPER END
 
 
+### EMBED MODEL START
+global embed_model
+embed_model = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+
+def download_Embed_model(embed_model):
+    
+    global embed_directory
+    embed_directory = f"./embed_local/{embed_model}"
+
+    # Check if the model directory exists
+    if not os.path.exists(embed_directory):
+        logger.debug("Downloading Embed model...")
+
+        embeddings = HuggingFaceBgeEmbeddings(
+            model_name= embed_model,
+            cache_folder = embed_directory,
+            model_kwargs={'device': 'cpu', "trust_remote_code": True},
+            encode_kwargs={'normalize_embeddings': True}
+        )
+        logger.debug("Model downloaded successfully!")
+    else:
+        logger.debug("Embed model already downloaded. Skipping download.")
+        pass
+
+# Call the download function at the start of your application
+download_Embed_model(embed_model)
+
+### EMBED MODEL END
+
 
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
@@ -218,6 +247,7 @@ def process_data():
         
         model_type = request.args.get('model', 'azure') # to set default model
         model_name = request.args.get('modelName', 'gpt') # to set default model name
+        model_local_embed = request.args.get('localEmbed', 'no') # to set default model state
         
         user_agents = request.headers.get('User-Agent') # a user agent of user from frontend if frontend allows
         if not user_agents:
@@ -325,8 +355,8 @@ def process_data():
             filename = file.filename
             logger.debug("filename is",filename)
             extension = filename.rsplit('.', 1)[1].lower()
+            temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}")
             if extension =="mp3":
-                temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}")
                 logger.debug("temp_path_audio",temp_path_audio)
                 file.save(temp_path_audio)
             ## AUDIO CHECK END    
@@ -335,10 +365,17 @@ def process_data():
             # file_content = [io.BytesIO(fs.read()) for fs in f]
             logger.debug("LCD initiated!")
             try:
-                if model_type == 'gemini':
+                if model_type == 'gemini' and model_local_embed == 'no':
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001" )
-                else:
+                elif model_type == 'azure' and model_local_embed == 'no':
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
+                elif model_local_embed=='yes':
+                    embeddings = HuggingFaceBgeEmbeddings(
+                        model_name= embed_model,
+                        cache_folder = embed_directory,
+                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
+                        encode_kwargs={'normalize_embeddings': True}
+                    )
                 logger.debug(f"Using embeddings of {embeddings}")
                 docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, whisper_directory, whisper_model, language)
             except Exception as e:
@@ -384,7 +421,6 @@ def process_data():
     # return jsonify({"response": response['text']})
     return jsonify(error="Unexpected Fault or Interruption")
 
-
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
 def decide():
@@ -396,6 +432,8 @@ def decide():
 
         model_type = request.args.get('model', 'azure') # to set default model
         model_name = request.args.get('modelName', 'gpt') # to set default model name
+        model_local_embed = request.args.get('localEmbed', 'no') # to set default model state
+
         start_time = time.time() # Timer starts at the Post
 
         if scenario:
@@ -405,15 +443,36 @@ def decide():
             logger.debug(f"Prompt loaded!:{prompt}")
 
             try:
-                if model_type == "gemini":
+                if model_type == "gemini"  and model_local_embed=='no':
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-                else:
+
+                elif model_type == "azure" and model_local_embed=='no':
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
-
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
+
+                elif model_type == "gemini"  and  model_local_embed=='yes':
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                    embeddings = HuggingFaceBgeEmbeddings(
+                        model_name= embed_model,
+                        cache_folder = embed_directory,
+                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
+                        encode_kwargs={'normalize_embeddings': True}
+                    )
+
+                elif model_type == "azure"  and  model_local_embed=='yes':
+                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                        )
+                    embeddings = HuggingFaceBgeEmbeddings(
+                        model_name= embed_model,
+                        cache_folder = embed_directory,
+                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
+                        encode_kwargs={'normalize_embeddings': True}
+                    )
+
 
                 logger.debug(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
                 
@@ -473,6 +532,7 @@ def generate_course():
 
         model_type = request.args.get('model', 'azure') # to set default model
         model_name = request.args.get('modelName', 'gpt') # to set default model name
+        model_local_embed = request.args.get('localEmbed', 'no') # to set default model state
         summarize_images = request.args.get('summarizeImages', 'on') # to set default value name
         temp = request.args.get('temp','0.1')
         logger.debug(f"temp selected!: {temp}")
@@ -491,11 +551,12 @@ def generate_course():
             logger.debug(f"Language selected is: {language}")
 
             try:
-                if model_type == 'gemini':
+                if model_type == 'gemini' and model_local_embed=='no':
                     llm = ChatGoogleGenerativeAI(model=model_name,temperature=temp, max_output_tokens=8000) # temp default 0.1
                     llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-                else:
+
+                elif model_type == 'azure' and model_local_embed=='no':
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=temp,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
@@ -503,6 +564,30 @@ def generate_course():
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
+
+                elif model_type == 'gemini' and model_local_embed=='yes':
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=temp, max_output_tokens=8000) # temp default 0.1
+                    llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                    embeddings = HuggingFaceBgeEmbeddings(
+                        model_name= embed_model,
+                        cache_folder = embed_directory,
+                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
+                        encode_kwargs={'normalize_embeddings': True}
+                    )
+
+                elif model_type == 'azure' and model_local_embed=='yes':
+                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=temp,
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                        )
+                    llm_img_summary = AzureChatOpenAI(deployment_name=model_name, temperature=0,
+                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
+                                        )
+                    embeddings = HuggingFaceBgeEmbeddings(
+                        model_name= embed_model,
+                        cache_folder = embed_directory,
+                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
+                        encode_kwargs={'normalize_embeddings': True}
+                    )
 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
@@ -572,7 +657,9 @@ def generate_course():
         
         logger.critical("Unexpected Fault or Interruption")
         return jsonify(error="Unexpected Fault or Interruption")
-    
+
+
+
 @app.route("/find_images", methods=["GET", "POST"])
 @token_required
 def find_images():
