@@ -33,6 +33,7 @@ from urllib.parse import urlparse, urljoin
 # from cairosvg import svg2png
 from bs4 import BeautifulSoup
 import imagehash
+
 from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
 
 
