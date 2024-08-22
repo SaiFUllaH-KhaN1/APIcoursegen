@@ -9,22 +9,39 @@ promptSelector = PromptTemplate(
     informed by evaluating 'Human Input' and 'Input Documents', allowing you to determine the best fit among 
     the following for course development:
 
-    Gamified: A gamified environment that encourages applying subject knowledge to escape a scenario like an Exit Game is designed, 
-    enhancing investigative and critical thinking skills.
-    Linear: Straightforward, step-by-step training on a topic, ending with quizzes to evaluate understanding.
-    Branched: A sandbox-style experience where users can explore various aspects of a topic at 
+    Gamified Scenario: A gamified environment that encourages applying subject knowledge to escape a scenario like an Exit Game is designed, 
+    enhancing investigative and critical thinking skills. This scenario is ideal for subjects that can benefit from problem-solving, exploration, 
+    and creative thinking, such as STEM topics, history, or language learning.
+    
+    Linear Scenario: Straightforward, step-by-step training on a topic, ending with quizzes to evaluate understanding.
+    Use this scenario when the material is best learned in a structured, logical order, where each step 
+    builds upon the previous one. It's particularly effective for topics that require a foundational 
+    understanding before advancing to more complex concepts, such as technical training, 
+    process-oriented tasks, or compliance education. This scenario is ideal for learners who benefit 
+    from clear guidance and a systematic approach, ensuring that they grasp the basics before moving on.
+    
+    Branched Scenario: A sandbox-style experience where users can explore various aspects of a topic at 
     their own pace, including subtopics with quizzes. These Byte-size subtopics help in learning being more digestible.
-    Simulation: A decision-making driven simulation learning experience, where different choices lead to different 
+    Use this scenario when a topic needs to be devided into subtopics for breaking it down into smaller, more 
+    manageable pieces. This method allows learners to focus on each subtopic individually, promoting deeper 
+    understanding and retention.
+    
+    Simulation Scenario: A decision-making driven simulation learning experience, where different choices lead to different 
     outcomes, encouraging exploration of pertinent consequences faced. Hence, learning is achieved via a simulated experience. 
+    Use this scenario when there is a need to practically simulate a topic that benefits from experiential 
+    learning. It's particularly effective when the subject matter involves complex decision-making, real-world 
+    consequences, or when users need to apply theoretical knowledge to practical situations. This scenario is 
+    ideal for training in fields such as healthcare, business, crisis management, or any context where the user 
+    must navigate nuanced decisions with varying outcomes. 
 
     'Human Input': ({human_input})
     'Input Documents': ({input_documents})
 
-    Your reply should be one of the below (Depends on what you find most suitable to be selected):
-    Bot: Gamified Scenario
-    Bot: Simulation Scenario
-    Bot: Linear Scenario
-    Bot: Branched Scenario
+    Your reply should be one of the below in JSON (Depends on what scenario you find most suitable to be selected):
+    {{"Bot": "Gamified Scenario"}}
+    {{"Bot": "Simulation Scenario"}}
+    {{"Bot": "Linear Scenario"}}
+    {{"Bot": "Branched Scenario"}}
     """
 )
 
