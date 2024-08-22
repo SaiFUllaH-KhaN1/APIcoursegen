@@ -176,7 +176,7 @@ else:
 
 ### MODEL CHECK ALREADY DOWNLOADED ?
 global whisper_model
-whisper_model = "whisper-tiny" # Change this line only if a new different model download wanted 
+whisper_model = "whisper-base" # Change this line only if a new different model download wanted 
 # for production use whisper-base. Only tiny model for local checking 
 
 def download_whisper_model(whisper_model):
