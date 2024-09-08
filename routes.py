@@ -537,6 +537,16 @@ def generate_course():
         summarize_images = request.args.get('summarizeImages', 'on') # to set default value name
         temp = request.args.get('temp','0.1')
         logger.debug(f"temp selected!: {temp}")
+
+        # the mpv is declared two times in "argument" and then "form" getting sequence. So, if user using form
+        # sets a value, the mpv of the form variable will priortize over the argument value
+        mpv = None
+        if request.form.get("mpv") is not None:
+            mpv = request.form.get("mpv")
+        else:
+            mpv = request.args.get('mpv', '2') # to set default value to balanced mpv
+        logger.debug(f"mpv is: {mpv}")
+         
         
         start_route_time = time.time() # Timer starts at the Post
 
@@ -609,7 +619,7 @@ def generate_course():
                 start_TALK_WITH_RAG_time = time.time()
 
 
-                response, scenario = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language)
+                response, scenario = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language, mpv)
                 
                 end_TALK_WITH_RAG_time = time.time()
                 execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
@@ -623,7 +633,7 @@ def generate_course():
                 if validity == True:
                     start_REPAIR_SHADOW_EDGES_time = time.time()
 
-                    response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language)
+                    response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
                     
                     end_REPAIR_SHADOW_EDGES_time = time.time()
                     execution_REPAIR_SHADOW_EDGES_time = end_REPAIR_SHADOW_EDGES_time - start_REPAIR_SHADOW_EDGES_time
@@ -658,7 +668,6 @@ def generate_course():
         
         logger.critical("Unexpected Fault or Interruption")
         return jsonify(error="Unexpected Fault or Interruption")
-
 
 
 @app.route("/find_images", methods=["GET", "POST"])
