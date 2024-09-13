@@ -1349,8 +1349,8 @@ prompt_gamified_setup = PromptTemplate(
     without missing or overlooking any information. The teaching content is only limited to the information content of 'Input Documents', since
     'Input Documents' is the verified source of information.
 
-    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and citing the image or images in format of "FileName: ..., PageNumber or SlideNumber: ..., ImageNumber: ... and Description ..." .  
-    Else if the images are NOT relevant then you have the option to not use those images.
+    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and cite the image or images. The relevant images description you mention and cite are important since they will lead me to add visual images based on description of images later.  
+    Else if an image is NOT relevant then you have the option to not use description of that image. You can find image descriptions in the "Useful Image/s for all the above content::" section. But know that not every image description is relevant to the subject matter ('Human Input' and 'Input Documents'). 
 
     INPUT PARAMETERS:
     'Human Input': {human_input};
@@ -1390,8 +1390,8 @@ prompt_gamified_setup_continue = PromptTemplate(
     without missing or overlooking any information. The teaching content is only limited to the information content of 'Input Documents', since
     'Input Documents' is the verified source of information.
 
-    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and citing the image or images in format of "FileName: ..., PageNumber or SlideNumber: ..., ImageNumber: ... and Description ..." .    
-    Else if the images are NOT relevant then you have the option to not use those images.
+    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and cite the image or images. The relevant images description you mention and cite are important since they will lead me to add visual images based on description of images later.  
+    Else if an image is NOT relevant then you have the option to not use description of that image. You can find image descriptions in the "Useful Image/s for all the above content::" section. But know that not every image description is relevant to the subject matter ('Human Input' and 'Input Documents'). 
 
     INPUT PARAMETERS:
     'Human Input': {human_input};
@@ -1416,8 +1416,8 @@ prompt_gamified_json = PromptTemplate(
     where you give a story situation to the student to escape from. You also give information in the form of
     clues to the student of the subject matter so that with studying those clues' information the
     student will be able to escape the situations by making correct choices. This type of game is
-    also known as Exit Game and you are tasked with making Exit Game Scenarios.
-
+    also known as Exit Game and you are tasked with making Exit Game Scenarios.  
+    
     ***WHAT TO DO***
     To accomplish Exit Game creation, YOU will:
 
@@ -1440,8 +1440,8 @@ prompt_gamified_json = PromptTemplate(
     'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio.
     'Simple Branching Block': with timer, title, Proceed To Branch List  
     'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
+    “You are good at this…”. “You can't do this because...”. 
+    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” etc. )
     
     'Goal Block': Title, Score
     'QuestionBlock' with Question text, answers, correct answer, wrong answer message
@@ -1449,34 +1449,36 @@ prompt_gamified_json = PromptTemplate(
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Gamified Scenario: A type of Exit Game scenario structure in which Content Carriers (TextBlocks or MediaBlocks) will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks. These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
-    The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
-    The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
-    The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Simple Branching Block'. This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
+    The Incorrect Choice or Partially-Correct Choice leads to the Branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice or Partially-Correct Choice so user can select the Correct Choice to move forward.
+    The Correct Choice leads to the Correct Choice Branch type that has 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks',  and a 'Simple Branching Block'. This Branch progresses the actual Exit-Game or escape-room story by using the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score
+    that marks the end of the escape-room or Exit Game Gamified scenario.
     ***
     ***YOU WILL BE REWARD IF:
-    All the TextBlocks in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed information so user can get as much knowledge and facts as there is available.
-    Giving detailed and quality clues is one of the most important function of TextBlocks.
-    The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
-    information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
-    described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.    
+    All the TextBlocks or MediaBlocks (TextBlocks or MediaBlocks are collectively known as Content Carrier Block) in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The Content Carrier Blocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
+    Content Carrier Blocks should provide extremely specific and detailed information so student can get as much knowledge and facts as there is available.
+    Giving detailed and quality clues is one of the most important function of Content Carrier Blocks.
+    The MediaBlocks are there to illustrate the subject knowledge so student interest is kept and visuall appeal is there for retention. You can provide a certain
+    information to student either using MediaBlocks or TextBlocks since both are classified as Content Carrier Blocks. However, the MediaBlock Priotization Value
+    described in section 'MediaBlock Priotization Value' below, decides the ratio of number of TextBlocks to MediaBlocks used for conveying information.    
     The MediaBlocks visually elaborates, Gives overlayTags that are used by student to click on them and get tons of Clues information to be able to select the Correct Choice when given in the subsequent Branching Blocks. 
     Giving detailed and quality clues is one of the most important function of MediaBlocks.
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
+    The Overlay tags in MediaBlocks should be extremely specific and detailed so student can get as much information as there is available, and learns like a student from you.
     Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    so the student uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    QuestionBlock/s to be used in each of the Correct Choice Branches.
     ***
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
+    QuestionBlock/s NOT used in each of the Correct Choice Branches.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your Exit Game.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
+    Ensure that Content Carrier Blocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks or MediaBlocks, and are tested via QuestionBlocks.
-    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
-    Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
+    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (Mandatory) and the Correct Choice (Mandatory).
+    Note that the Incorrect Choice or Partially-Correct Choice leads to the branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block' which will lead-back to the Branching Block that offered this Incorrect Choice.
+    Note that the Correct Choice leads to Correct Choice Branch that has a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple number of 'Question Blocks', and a 'Simple Branching Block'. The Simple Branching Block leads to more branches offering choices untill that the Exit Game is concluded with a 'Goal Block'. 
     You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the Exit Game gamified scenario you are creating. 
     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -1488,13 +1490,13 @@ prompt_gamified_json = PromptTemplate(
     Welcome PedagogicalBlock (Welcome message to the scenario and proceedings.)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described/ Clues given in detail)
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter and important clues that will lead user to select the correct choice in Branching Block/s. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered, 1 choice slot is dedicated for Correct Choice and 1 is choice slot has either the Incorrect Choice or Partially-Correct Choice. )
-    Branches (Incorrect Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice, if given in the slot instead of the Incorrect Choice, then, The Partially-Correct Choice leads to the Partially-Correct Choice Branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'.
-    This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. 
-    The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
-    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has TextBlock/s or MediaBlock/s, 'FeedbackAndFeedforwardBlock', 'GoalBlock', QuestionBlock/s and Branching Blocks to give Correct Choice and Incorrect or Partially-Correct Choice. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
-    QuestionBlock/s (Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
+    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered. The First choice slot is dedicated for Incorrect Choice or Partially-Correct Choice and the Second choice slot is dedicated for the Correct Choice.)
+    Branches (Incorrect or Partially-Correct Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
+    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has a 'FeedbackAndFeedforwardBlock', single or multiple number of 
+    'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks', and a 'Simple Branching Block'. The Correct Choice Branch 
+    uses the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent 
+    Correct Choice in the upcoming Branching Block/s. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
+    QuestionBlock/s (Mandatory part of the Correct Choice Branches. Use Single or Multiple QuestionBlock/s. Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
     Note: The blocks of Feedback_And_Feedforward, Learning_Objectives, and Content_Areas are all PedagogicalBlock.  
     \nEnd of Overview structure\n
 
@@ -1525,6 +1527,7 @@ prompt_gamified_json = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####    
 
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
     
     \n\nSAMPLE EXAMPLE\n\n
 {{
@@ -1573,7 +1576,7 @@ prompt_gamified_json = PromptTemplate(
                 ]
             }},
             {{
-                "id": "SBB",
+                "id": "SBB1",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "Purpose": "This block is where you !Divide the Exit Game content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. First Choice is Correct Choice leading to Correct Choice Branch and the Second choice is Incorrect or Partially-Correct Choice leading to subsequent Branch!",
                 "type": "SimpleBranchingBlock",
@@ -1581,36 +1584,48 @@ prompt_gamified_json = PromptTemplate(
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB1_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB1_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh1_B1",
+                "id": "B6",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{"_comment": "Content Carrier Blocks (TextBlock or MediaBlock) in a Partially-Correct Choice or Incorrect Choice Branch type can elaborate and give more clues or information to the student so Correct Choice is understood"}},
+            {{
+                "id": "B7",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "JB1",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB1"
+            }},
+            {{
+                "id": "B8",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B5"
-            }},
-            {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B9",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -1619,20 +1634,9 @@ prompt_gamified_json = PromptTemplate(
                     "(Insert Text Here)"
                 ]
             }},
+            {{"_comment": "It is Mandatory to use Multiple or Single QuestionBlock/s in the Correct Choice Branch to test or reinforce the student's knowledge on subject matter"}},
             {{
-                "id": "SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -1643,78 +1647,7 @@ prompt_gamified_json = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
-                    }}
-                ]
-            }},
-            {{"_comment":"SBB_Bnh2_SBB_Bnh1 in this example is Partially-Correct Choice with Text or Media Blocks after Feedback and Feedforward Block for explaining information such that Student has enough information to answer the Question/s (in this case SBB_Bnh2_SBB_Bnh2_QB1) at the end of the Correct Choice Branch, in this case SBB_Bnh2_SBB_Bnh2's Question/s block/s"}},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B1",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B2",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Branch score"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B1",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_QB1",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -1725,50 +1658,124 @@ prompt_gamified_json = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB",
+                "id": "SBB2",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB2_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB2_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "id": "B11",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
+                "id": "B12",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},            
+            {{
+                "id": "JB2",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "Br2_Br_Br2_Br"
+                "proceedToBlock": "SBB2"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "id": "B13",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B14",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "B15",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
+                "id": "QB3",
+                "type": "QuestionBlock",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},                       
+            {{
+                "id": "SBB3",
+                "timer": "(Insert time in format hh:mm:ss)",
+                "type": "SimpleBranchingBlock",
+                "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "SBB3_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                    }},
+                    {{
+                        "port": "2",
+                        "SBB3_2": "(Insert Text Here)[Correct Choice]"
+                    }}
+                ]
+            }},
+            {{
+                "id": "B16",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B17",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "JB3",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB3"
+            }},
+            {{
+                "id": "B18",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{"_comment": "The below goal block concludes the Exit Game Scenario"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB",
+                "id": "GB1",
                 "type": "GoalBlock",
                 "title": "(Insert Text Here)",
                 "score": "Insert Integer Number Here"
@@ -1797,235 +1804,119 @@ prompt_gamified_json = PromptTemplate(
             }},
             {{
                 "source": "B5",
-                "target": "SBB"
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh1_B1",
+                "source": "SBB1",
+                "target": "B6",
                 "sourceport": "1"
             }},
             {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_JB"
+                "source": "B6",
+                "target": "B7"
             }},
             {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
+                "source": "B7",
+                "target": "JB1"
+            }},            
+            {{
+                "source": "JB1",
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "source": "SBB1",
+                "target": "B8",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B10",
+                "target": "QB1"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_GB"
+                "source": "QB1",
+                "target": "QB2"
+            }},            
+            {{
+                "source": "QB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB2",
+                "target": "B11",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh1_B2"
+                "source": "B11",
+                "target": "B12"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B2",
-                "target": "SBB_Bnh2_SBB_Bnh1_GB"
+                "source": "B12",
+                "target": "JB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_GB",
-                "target": "SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "JB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB2",
+                "target": "B13",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_B2"
+                "source": "B13",
+                "target": "B14"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_B3"
+                "source": "B14",
+                "target": "B15"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B15",
+                "target": "QB3"
+            }},                       
+            {{
+                "source": "QB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB3",
+                "target": "B16",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "B16",
+                "target": "B17"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
+                "source": "B17",
+                "target": "JB3"
+            }},            
+            {{
+                "source": "JB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB3",
+                "target": "B18",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B18",
+                "target": "GB1"
             }}
         ]
 }}
-    \n\nEND OF SAMPLE EXAMPLE\n\n
-    An example of the abstract heirarchichal connection of another SAMPLE EXAMPLE's structure of blocks connection is (except the learning objectives and content areas textblocks):
-    B1(Text Block) -> B2 (Media Block)
-    B2(Media Block) -> B3 (Branching Block (Simple Branching))
-    B3 (Branching Block (Simple Branching)) -> |InCorrect Choice port 1| Br1 
-    B3 (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B3 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (Media Block)
-    Br2_B2 (Media Block) -> Br2_B3 (FeedbackAndFeedforwardBlock)
-    Br2_B3 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (QuestionBlock)
-    Br2_QB1 (QuestionBlock) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Partially-Correct Choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (Text Block sourceport 1)
-    Br2_Br_Br1_B1 (Text Block) -> Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br1_GB (Goal Block)
-    Br2_Br_Br1_GB (Goal Block) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_QB1 (Question Block of the correct second branch of Br2_Br SimpleBranchingBlock)
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-    Br2_Br_Br2_GB (Goal Block) -> Br2_Br_Br2_QB1 (Question Block)
-    Br2_Br_Br2_QB1 (Question Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Incorrect Choice port 1| Br2_Br_Br2_Br_Br1
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2_Br_Br2
-    Br2_Br_Br2_Br_Br1 -> Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br2_Br_Br1_JB
-    Br2_Br_Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br_Br2 -> Br2_Br_Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_Br_Br2_GB (Goal Block)
+    \n\nEND OF SAMPLE EXAMPLE\n\n   
 
-    ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Media Block)
-    Br1_B2 (Media Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_QB2 (Question Block) 
-    Br2_QB2 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Media Block sourceport 2)
-    Br2_Br_Br2_B1 (Media Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) 
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Text Block)
-    Br1_B2 (Text Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> Br2_QB1 (Question Block of the correct second branch of B4 SimpleBranchingBlock)
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1 
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    These Sample Example provides the overview of how creative and diverse you can get with arrangement of the blocks
-    that makeup a Gamified Scenario. Remember the Concept of 2 choices (1 either incorrect or partially-correct 
-    choice and 2nd one the correct choice), and the block structure that is mandatory (for incorrect choice 
-    branch only FeedbackAndFeedforwardBlock with jumpblock used. Partially-correct has text or media block/s 
-    followed by FeedbackAndFeedforwardBlock, goal block and jumpblock, while the correct choice branch has text 
-    or media block/s, FeedbackAndFeedforwardBlock, goalblock, questionblock/s and simplebranching block which 
-    further progresses the scenario or if the scenario is being ended, then the ending correct choice branch 
-    has text or media block/s followed by FeedbackAndFeedforwardBlock, goal block as the end of the whole scenario.  
-    
-    A Jump Block of Incorrect Choice branch leads to back to it's relative Branching Block from which this
-    Incorrect Choice branch originated.
-    A Jump Block of Partially-Correct Choice branch leads to the Question Block of the Correct Choice Branch,
-    that originated from the same relative Branching Block. 
+    The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Content Carrier Blocks, Branching Blocks, Question Blocks, and Pedagogy Blocks, as well as their content and usage.
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -2035,10 +1926,6 @@ prompt_gamified_json = PromptTemplate(
     to be compilable.  
     Give concise, relevant, clear, and descriptive instructions as you are a Exit Game creator that has expertise 
     in molding asked information into the Gamified scenario structure.
-
-    !!IMPORTANT NOTE REGARDING CREATIVITY: Know that you are creative to use as many or as little
-    Text Blocks, Media Blocks, Question Blocks, Branching Blocks as you deem reasonable and fitting to the
-    content and aim of the subject scenario.
 
     NEGATIVE PROMPT: Responding outside the JSON format.     
 
@@ -2097,11 +1984,11 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
     'Text Block': with timer, title, and description
-    'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
+    'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio.
     'Simple Branching Block': with timer, title, Proceed To Branch List  
     'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
+    “You are good at this…”. “You can't do this because...”. 
+    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” etc. )
     
     'Goal Block': Title, Score
     'QuestionBlock' with Question text, answers, correct answer, wrong answer message
@@ -2109,34 +1996,36 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Gamified Scenario: A type of Exit Game scenario structure in which Content Carriers (TextBlocks or MediaBlocks) will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks. These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
-    The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
-    The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
-    The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Simple Branching Block'. This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
+    The Incorrect Choice or Partially-Correct Choice leads to the Branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice or Partially-Correct Choice so user can select the Correct Choice to move forward.
+    The Correct Choice leads to the Correct Choice Branch type that has 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks',  and a 'Simple Branching Block'. This Branch progresses the actual Exit-Game or escape-room story by using the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score
+    that marks the end of the escape-room or Exit Game Gamified scenario.
     ***
     ***YOU WILL BE REWARD IF:
-    All the TextBlocks in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed information so user can get as much knowledge and facts as there is available.
-    Giving detailed and quality clues is one of the most important function of TextBlocks.
-    The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
-    information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
-    described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.    
+    All the TextBlocks or MediaBlocks (TextBlocks or MediaBlocks are collectively known as Content Carrier Block) in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The Content Carrier Blocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
+    Content Carrier Blocks should provide extremely specific and detailed information so student can get as much knowledge and facts as there is available.
+    Giving detailed and quality clues is one of the most important function of Content Carrier Blocks.
+    The MediaBlocks are there to illustrate the subject knowledge so student interest is kept and visuall appeal is there for retention. You can provide a certain
+    information to student either using MediaBlocks or TextBlocks since both are classified as Content Carrier Blocks. However, the MediaBlock Priotization Value
+    described in section 'MediaBlock Priotization Value' below, decides the ratio of number of TextBlocks to MediaBlocks used for conveying information.    
     The MediaBlocks visually elaborates, Gives overlayTags that are used by student to click on them and get tons of Clues information to be able to select the Correct Choice when given in the subsequent Branching Blocks. 
     Giving detailed and quality clues is one of the most important function of MediaBlocks.
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
+    The Overlay tags in MediaBlocks should be extremely specific and detailed so student can get as much information as there is available, and learns like a student from you.
     Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    so the student uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    QuestionBlock/s to be used in each of the Correct Choice Branches.
     ***
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
+    QuestionBlock/s NOT used in each of the Correct Choice Branches.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your Exit Game.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
+    Ensure that Content Carrier Blocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks or MediaBlocks, and are tested via QuestionBlocks.
-    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
-    Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
+    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (Mandatory) and the Correct Choice (Mandatory).
+    Note that the Incorrect Choice or Partially-Correct Choice leads to the branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block' which will lead-back to the Branching Block that offered this Incorrect Choice.
+    Note that the Correct Choice leads to Correct Choice Branch that has a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple number of 'Question Blocks', and a 'Simple Branching Block'. The Simple Branching Block leads to more branches offering choices untill that the Exit Game is concluded with a 'Goal Block'. 
     You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the Exit Game gamified scenario you are creating. 
     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -2148,13 +2037,13 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     Welcome PedagogicalBlock (Welcome message to the scenario and proceedings.)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described/ Clues given in detail)
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter and important clues that will lead user to select the correct choice in Branching Block/s. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered, 1 choice slot is dedicated for Correct Choice and 1 is choice slot has either the Incorrect Choice or Partially-Correct Choice. )
-    Branches (Incorrect Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice, if given in the slot instead of the Incorrect Choice, then, The Partially-Correct Choice leads to the Partially-Correct Choice Branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'.
-    This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. 
-    The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
-    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has TextBlock/s or MediaBlock/s, 'FeedbackAndFeedforwardBlock', 'GoalBlock', QuestionBlock/s and Branching Blocks to give Correct Choice and Incorrect or Partially-Correct Choice. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
-    QuestionBlock/s (Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
+    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered. The First choice slot is dedicated for Incorrect Choice or Partially-Correct Choice and the Second choice slot is dedicated for the Correct Choice.)
+    Branches (Incorrect or Partially-Correct Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
+    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has a 'FeedbackAndFeedforwardBlock', single or multiple number of 
+    'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks', and a 'Simple Branching Block'. The Correct Choice Branch 
+    uses the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent 
+    Correct Choice in the upcoming Branching Block/s. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
+    QuestionBlock/s (Mandatory part of the Correct Choice Branches. Use Single or Multiple QuestionBlock/s. Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
     Note: The blocks of Feedback_And_Feedforward, Learning_Objectives, and Content_Areas are all PedagogicalBlock.  
     \nEnd of Overview structure\n
 
@@ -2185,6 +2074,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####    
 
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
     
     \n\nSAMPLE EXAMPLE\n\n
 {{
@@ -2233,7 +2123,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 ]
             }},
             {{
-                "id": "SBB",
+                "id": "SBB1",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "Purpose": "This block is where you !Divide the Exit Game content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. First Choice is Correct Choice leading to Correct Choice Branch and the Second choice is Incorrect or Partially-Correct Choice leading to subsequent Branch!",
                 "type": "SimpleBranchingBlock",
@@ -2241,36 +2131,48 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB1_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB1_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh1_B1",
+                "id": "B6",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{"_comment": "Content Carrier Blocks (TextBlock or MediaBlock) in a Partially-Correct Choice or Incorrect Choice Branch type can elaborate and give more clues or information to the student so Correct Choice is understood"}},
+            {{
+                "id": "B7",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "JB1",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB1"
+            }},
+            {{
+                "id": "B8",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B5"
-            }},
-            {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B9",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -2279,20 +2181,9 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                     "(Insert Text Here)"
                 ]
             }},
+            {{"_comment": "It is Mandatory to use Multiple or Single QuestionBlock/s in the Correct Choice Branch to test or reinforce the student's knowledge on subject matter"}},
             {{
-                "id": "SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -2303,78 +2194,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
-                    }}
-                ]
-            }},
-            {{"_comment":"SBB_Bnh2_SBB_Bnh1 in this example is Partially-Correct Choice with Text or Media Blocks after Feedback and Feedforward Block for explaining information such that Student has enough information to answer the Question/s (in this case SBB_Bnh2_SBB_Bnh2_QB1) at the end of the Correct Choice Branch, in this case SBB_Bnh2_SBB_Bnh2's Question/s block/s"}},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B1",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B2",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Branch score"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B1",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_QB1",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -2385,50 +2205,124 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB",
+                "id": "SBB2",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB2_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB2_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "id": "B11",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
+                "id": "B12",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},            
+            {{
+                "id": "JB2",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "Br2_Br_Br2_Br"
+                "proceedToBlock": "SBB2"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "id": "B13",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B14",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "B15",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
+                "id": "QB3",
+                "type": "QuestionBlock",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},                       
+            {{
+                "id": "SBB3",
+                "timer": "(Insert time in format hh:mm:ss)",
+                "type": "SimpleBranchingBlock",
+                "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "SBB3_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                    }},
+                    {{
+                        "port": "2",
+                        "SBB3_2": "(Insert Text Here)[Correct Choice]"
+                    }}
+                ]
+            }},
+            {{
+                "id": "B16",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B17",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "JB3",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB3"
+            }},
+            {{
+                "id": "B18",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{"_comment": "The below goal block concludes the Exit Game Scenario"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB",
+                "id": "GB1",
                 "type": "GoalBlock",
                 "title": "(Insert Text Here)",
                 "score": "Insert Integer Number Here"
@@ -2457,235 +2351,119 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
             }},
             {{
                 "source": "B5",
-                "target": "SBB"
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh1_B1",
+                "source": "SBB1",
+                "target": "B6",
                 "sourceport": "1"
             }},
             {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_JB"
+                "source": "B6",
+                "target": "B7"
             }},
             {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
+                "source": "B7",
+                "target": "JB1"
+            }},            
+            {{
+                "source": "JB1",
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "source": "SBB1",
+                "target": "B8",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B10",
+                "target": "QB1"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_GB"
+                "source": "QB1",
+                "target": "QB2"
+            }},            
+            {{
+                "source": "QB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB2",
+                "target": "B11",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh1_B2"
+                "source": "B11",
+                "target": "B12"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B2",
-                "target": "SBB_Bnh2_SBB_Bnh1_GB"
+                "source": "B12",
+                "target": "JB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_GB",
-                "target": "SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "JB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB2",
+                "target": "B13",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_B2"
+                "source": "B13",
+                "target": "B14"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_B3"
+                "source": "B14",
+                "target": "B15"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B15",
+                "target": "QB3"
+            }},                       
+            {{
+                "source": "QB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB3",
+                "target": "B16",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "B16",
+                "target": "B17"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
+                "source": "B17",
+                "target": "JB3"
+            }},            
+            {{
+                "source": "JB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB3",
+                "target": "B18",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B18",
+                "target": "GB1"
             }}
         ]
 }}
-    \n\nEND OF SAMPLE EXAMPLE\n\n
-    An example of the abstract heirarchichal connection of another SAMPLE EXAMPLE's structure of blocks connection is (except the learning objectives and content areas textblocks):
-    B1(Text Block) -> B2 (Media Block)
-    B2(Media Block) -> B3 (Branching Block (Simple Branching))
-    B3 (Branching Block (Simple Branching)) -> |InCorrect Choice port 1| Br1 
-    B3 (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B3 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (Media Block)
-    Br2_B2 (Media Block) -> Br2_B3 (FeedbackAndFeedforwardBlock)
-    Br2_B3 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (QuestionBlock)
-    Br2_QB1 (QuestionBlock) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Partially-Correct Choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (Text Block sourceport 1)
-    Br2_Br_Br1_B1 (Text Block) -> Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br1_GB (Goal Block)
-    Br2_Br_Br1_GB (Goal Block) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_QB1 (Question Block of the correct second branch of Br2_Br SimpleBranchingBlock)
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-    Br2_Br_Br2_GB (Goal Block) -> Br2_Br_Br2_QB1 (Question Block)
-    Br2_Br_Br2_QB1 (Question Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Incorrect Choice port 1| Br2_Br_Br2_Br_Br1
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2_Br_Br2
-    Br2_Br_Br2_Br_Br1 -> Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br2_Br_Br1_JB
-    Br2_Br_Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br_Br2 -> Br2_Br_Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_Br_Br2_GB (Goal Block)
+    \n\nEND OF SAMPLE EXAMPLE\n\n   
 
-    ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Media Block)
-    Br1_B2 (Media Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_QB2 (Question Block) 
-    Br2_QB2 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Media Block sourceport 2)
-    Br2_Br_Br2_B1 (Media Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) 
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Text Block)
-    Br1_B2 (Text Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> Br2_QB1 (Question Block of the correct second branch of B4 SimpleBranchingBlock)
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1 
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    These Sample Example provides the overview of how creative and diverse you can get with arrangement of the blocks
-    that makeup a Gamified Scenario. Remember the Concept of 2 choices (1 either incorrect or partially-correct 
-    choice and 2nd one the correct choice), and the block structure that is mandatory (for incorrect choice 
-    branch only FeedbackAndFeedforwardBlock with jumpblock used. Partially-correct has text or media block/s 
-    followed by FeedbackAndFeedforwardBlock, goal block and jumpblock, while the correct choice branch has text 
-    or media block/s, FeedbackAndFeedforwardBlock, goalblock, questionblock/s and simplebranching block which 
-    further progresses the scenario or if the scenario is being ended, then the ending correct choice branch 
-    has text or media block/s followed by FeedbackAndFeedforwardBlock, goal block as the end of the whole scenario.  
-    
-    A Jump Block of Incorrect Choice branch leads to back to it's relative Branching Block from which this
-    Incorrect Choice branch originated.
-    A Jump Block of Partially-Correct Choice branch leads to the Question Block of the Correct Choice Branch,
-    that originated from the same relative Branching Block. 
+    The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Content Carrier Blocks, Branching Blocks, Question Blocks, and Pedagogy Blocks, as well as their content and usage.
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -2696,14 +2474,10 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     Give concise, relevant, clear, and descriptive instructions as you are a Exit Game creator that has expertise 
     in molding asked information into the Gamified scenario structure.
 
-    !!IMPORTANT NOTE REGARDING CREATIVITY: Know that you are creative to use as many or as little
-    Text Blocks, Media Blocks, Question Blocks, Branching Blocks as you deem reasonable and fitting to the
-    content and aim of the subject scenario.
-
     NEGATIVE PROMPT: Responding outside the JSON format.     
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly. 
+    Just start the JSON response directly.  
     ]
 
     !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
@@ -2743,11 +2517,11 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
     'Text Block': with timer, title, and description
-    'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
+    'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio.
     'Simple Branching Block': with timer, title, Proceed To Branch List  
     'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
+    “You are good at this…”. “You can't do this because...”. 
+    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” etc. )
     
     'Goal Block': Title, Score
     'QuestionBlock' with Question text, answers, correct answer, wrong answer message
@@ -2755,34 +2529,36 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Gamified Scenario: A type of Exit Game scenario structure in which Content Carriers (TextBlocks or MediaBlocks) will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks. These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
-    The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
-    The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
-    The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Simple Branching Block'. This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
+    The Incorrect Choice or Partially-Correct Choice leads to the Branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice or Partially-Correct Choice so user can select the Correct Choice to move forward.
+    The Correct Choice leads to the Correct Choice Branch type that has 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks',  and a 'Simple Branching Block'. This Branch progresses the actual Exit-Game or escape-room story by using the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score
+    that marks the end of the escape-room or Exit Game Gamified scenario.
     ***
     ***YOU WILL BE REWARD IF:
-    All the TextBlocks in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed information so user can get as much knowledge and facts as there is available.
-    Giving detailed and quality clues is one of the most important function of TextBlocks.
-    The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
-    information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
-    described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.    
+    All the TextBlocks or MediaBlocks (TextBlocks or MediaBlocks are collectively known as Content Carrier Block) in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The Content Carrier Blocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
+    Content Carrier Blocks should provide extremely specific and detailed information so student can get as much knowledge and facts as there is available.
+    Giving detailed and quality clues is one of the most important function of Content Carrier Blocks.
+    The MediaBlocks are there to illustrate the subject knowledge so student interest is kept and visuall appeal is there for retention. You can provide a certain
+    information to student either using MediaBlocks or TextBlocks since both are classified as Content Carrier Blocks. However, the MediaBlock Priotization Value
+    described in section 'MediaBlock Priotization Value' below, decides the ratio of number of TextBlocks to MediaBlocks used for conveying information.    
     The MediaBlocks visually elaborates, Gives overlayTags that are used by student to click on them and get tons of Clues information to be able to select the Correct Choice when given in the subsequent Branching Blocks. 
     Giving detailed and quality clues is one of the most important function of MediaBlocks.
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
+    The Overlay tags in MediaBlocks should be extremely specific and detailed so student can get as much information as there is available, and learns like a student from you.
     Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    so the student uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    QuestionBlock/s to be used in each of the Correct Choice Branches.
     ***
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
+    QuestionBlock/s NOT used in each of the Correct Choice Branches.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your Exit Game.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
+    Ensure that Content Carrier Blocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks or MediaBlocks, and are tested via QuestionBlocks.
-    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
-    Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
+    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (Mandatory) and the Correct Choice (Mandatory).
+    Note that the Incorrect Choice or Partially-Correct Choice leads to the branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block' which will lead-back to the Branching Block that offered this Incorrect Choice.
+    Note that the Correct Choice leads to Correct Choice Branch that has a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple number of 'Question Blocks', and a 'Simple Branching Block'. The Simple Branching Block leads to more branches offering choices untill that the Exit Game is concluded with a 'Goal Block'. 
     You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the Exit Game gamified scenario you are creating. 
     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -2794,13 +2570,13 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     Welcome PedagogicalBlock (Welcome message to the scenario and proceedings.)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described/ Clues given in detail)
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter and important clues that will lead user to select the correct choice in Branching Block/s. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered, 1 choice slot is dedicated for Correct Choice and 1 is choice slot has either the Incorrect Choice or Partially-Correct Choice. )
-    Branches (Incorrect Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice, if given in the slot instead of the Incorrect Choice, then, The Partially-Correct Choice leads to the Partially-Correct Choice Branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'.
-    This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. 
-    The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
-    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has TextBlock/s or MediaBlock/s, 'FeedbackAndFeedforwardBlock', 'GoalBlock', QuestionBlock/s and Branching Blocks to give Correct Choice and Incorrect or Partially-Correct Choice. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
-    QuestionBlock/s (Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
+    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered. The First choice slot is dedicated for Incorrect Choice or Partially-Correct Choice and the Second choice slot is dedicated for the Correct Choice.)
+    Branches (Incorrect or Partially-Correct Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
+    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has a 'FeedbackAndFeedforwardBlock', single or multiple number of 
+    'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks', and a 'Simple Branching Block'. The Correct Choice Branch 
+    uses the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent 
+    Correct Choice in the upcoming Branching Block/s. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
+    QuestionBlock/s (Mandatory part of the Correct Choice Branches. Use Single or Multiple QuestionBlock/s. Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
     Note: The blocks of Feedback_And_Feedforward, Learning_Objectives, and Content_Areas are all PedagogicalBlock.  
     \nEnd of Overview structure\n
 
@@ -2831,6 +2607,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####    
 
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
     
     \n\nSAMPLE EXAMPLE\n\n
 {{
@@ -2879,7 +2656,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 ]
             }},
             {{
-                "id": "SBB",
+                "id": "SBB1",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "Purpose": "This block is where you !Divide the Exit Game content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. First Choice is Correct Choice leading to Correct Choice Branch and the Second choice is Incorrect or Partially-Correct Choice leading to subsequent Branch!",
                 "type": "SimpleBranchingBlock",
@@ -2887,36 +2664,48 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB1_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB1_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh1_B1",
+                "id": "B6",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{"_comment": "Content Carrier Blocks (TextBlock or MediaBlock) in a Partially-Correct Choice or Incorrect Choice Branch type can elaborate and give more clues or information to the student so Correct Choice is understood"}},
+            {{
+                "id": "B7",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "JB1",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB1"
+            }},
+            {{
+                "id": "B8",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B5"
-            }},
-            {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B9",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -2925,20 +2714,9 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                     "(Insert Text Here)"
                 ]
             }},
+            {{"_comment": "It is Mandatory to use Multiple or Single QuestionBlock/s in the Correct Choice Branch to test or reinforce the student's knowledge on subject matter"}},
             {{
-                "id": "SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -2949,78 +2727,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
-                    }}
-                ]
-            }},
-            {{"_comment":"SBB_Bnh2_SBB_Bnh1 in this example is Partially-Correct Choice with Text or Media Blocks after Feedback and Feedforward Block for explaining information such that Student has enough information to answer the Question/s (in this case SBB_Bnh2_SBB_Bnh2_QB1) at the end of the Correct Choice Branch, in this case SBB_Bnh2_SBB_Bnh2's Question/s block/s"}},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B1",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B2",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Branch score"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B1",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_QB1",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -3031,50 +2738,124 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB",
+                "id": "SBB2",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB2_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB2_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "id": "B11",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
+                "id": "B12",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},            
+            {{
+                "id": "JB2",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "Br2_Br_Br2_Br"
+                "proceedToBlock": "SBB2"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "id": "B13",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B14",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "B15",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
+                "id": "QB3",
+                "type": "QuestionBlock",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},                       
+            {{
+                "id": "SBB3",
+                "timer": "(Insert time in format hh:mm:ss)",
+                "type": "SimpleBranchingBlock",
+                "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "SBB3_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                    }},
+                    {{
+                        "port": "2",
+                        "SBB3_2": "(Insert Text Here)[Correct Choice]"
+                    }}
+                ]
+            }},
+            {{
+                "id": "B16",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B17",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "JB3",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB3"
+            }},
+            {{
+                "id": "B18",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{"_comment": "The below goal block concludes the Exit Game Scenario"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB",
+                "id": "GB1",
                 "type": "GoalBlock",
                 "title": "(Insert Text Here)",
                 "score": "Insert Integer Number Here"
@@ -3103,235 +2884,119 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
             }},
             {{
                 "source": "B5",
-                "target": "SBB"
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh1_B1",
+                "source": "SBB1",
+                "target": "B6",
                 "sourceport": "1"
             }},
             {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_JB"
+                "source": "B6",
+                "target": "B7"
             }},
             {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
+                "source": "B7",
+                "target": "JB1"
+            }},            
+            {{
+                "source": "JB1",
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "source": "SBB1",
+                "target": "B8",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B10",
+                "target": "QB1"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_GB"
+                "source": "QB1",
+                "target": "QB2"
+            }},            
+            {{
+                "source": "QB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB2",
+                "target": "B11",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh1_B2"
+                "source": "B11",
+                "target": "B12"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B2",
-                "target": "SBB_Bnh2_SBB_Bnh1_GB"
+                "source": "B12",
+                "target": "JB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_GB",
-                "target": "SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "JB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB2",
+                "target": "B13",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_B2"
+                "source": "B13",
+                "target": "B14"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_B3"
+                "source": "B14",
+                "target": "B15"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B15",
+                "target": "QB3"
+            }},                       
+            {{
+                "source": "QB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB3",
+                "target": "B16",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "B16",
+                "target": "B17"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
+                "source": "B17",
+                "target": "JB3"
+            }},            
+            {{
+                "source": "JB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB3",
+                "target": "B18",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B18",
+                "target": "GB1"
             }}
         ]
 }}
-    \n\nEND OF SAMPLE EXAMPLE\n\n
-    An example of the abstract heirarchichal connection of another SAMPLE EXAMPLE's structure of blocks connection is (except the learning objectives and content areas textblocks):
-    B1(Text Block) -> B2 (Media Block)
-    B2(Media Block) -> B3 (Branching Block (Simple Branching))
-    B3 (Branching Block (Simple Branching)) -> |InCorrect Choice port 1| Br1 
-    B3 (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B3 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (Media Block)
-    Br2_B2 (Media Block) -> Br2_B3 (FeedbackAndFeedforwardBlock)
-    Br2_B3 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (QuestionBlock)
-    Br2_QB1 (QuestionBlock) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Partially-Correct Choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (Text Block sourceport 1)
-    Br2_Br_Br1_B1 (Text Block) -> Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br1_GB (Goal Block)
-    Br2_Br_Br1_GB (Goal Block) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_QB1 (Question Block of the correct second branch of Br2_Br SimpleBranchingBlock)
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-    Br2_Br_Br2_GB (Goal Block) -> Br2_Br_Br2_QB1 (Question Block)
-    Br2_Br_Br2_QB1 (Question Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Incorrect Choice port 1| Br2_Br_Br2_Br_Br1
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2_Br_Br2
-    Br2_Br_Br2_Br_Br1 -> Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br2_Br_Br1_JB
-    Br2_Br_Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br_Br2 -> Br2_Br_Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_Br_Br2_GB (Goal Block)
+    \n\nEND OF SAMPLE EXAMPLE\n\n   
 
-    ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Media Block)
-    Br1_B2 (Media Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_QB2 (Question Block) 
-    Br2_QB2 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Media Block sourceport 2)
-    Br2_Br_Br2_B1 (Media Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) 
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Text Block)
-    Br1_B2 (Text Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> Br2_QB1 (Question Block of the correct second branch of B4 SimpleBranchingBlock)
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1 
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    These Sample Example provides the overview of how creative and diverse you can get with arrangement of the blocks
-    that makeup a Gamified Scenario. Remember the Concept of 2 choices (1 either incorrect or partially-correct 
-    choice and 2nd one the correct choice), and the block structure that is mandatory (for incorrect choice 
-    branch only FeedbackAndFeedforwardBlock with jumpblock used. Partially-correct has text or media block/s 
-    followed by FeedbackAndFeedforwardBlock, goal block and jumpblock, while the correct choice branch has text 
-    or media block/s, FeedbackAndFeedforwardBlock, goalblock, questionblock/s and simplebranching block which 
-    further progresses the scenario or if the scenario is being ended, then the ending correct choice branch 
-    has text or media block/s followed by FeedbackAndFeedforwardBlock, goal block as the end of the whole scenario.  
-    
-    A Jump Block of Incorrect Choice branch leads to back to it's relative Branching Block from which this
-    Incorrect Choice branch originated.
-    A Jump Block of Partially-Correct Choice branch leads to the Question Block of the Correct Choice Branch,
-    that originated from the same relative Branching Block. 
+    The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Content Carrier Blocks, Branching Blocks, Question Blocks, and Pedagogy Blocks, as well as their content and usage.
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -3341,10 +3006,6 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     to be compilable.  
     Give concise, relevant, clear, and descriptive instructions as you are a Exit Game creator that has expertise 
     in molding asked information into the Gamified scenario structure.
-
-    !!IMPORTANT NOTE REGARDING CREATIVITY: Know that you are creative to use as many or as little
-    Text Blocks, Media Blocks, Question Blocks, Branching Blocks as you deem reasonable and fitting to the
-    content and aim of the subject scenario.
 
     NEGATIVE PROMPT: Responding outside the JSON format.     
 
@@ -3419,11 +3080,11 @@ prompt_gamify_shadow_edges = PromptTemplate(
     The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
     'Text Block': with timer, title, and description
-    'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
+    'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio.
     'Simple Branching Block': with timer, title, Proceed To Branch List  
     'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
+    “You are good at this…”. “You can't do this because...”. 
+    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” etc. )
     
     'Goal Block': Title, Score
     'QuestionBlock' with Question text, answers, correct answer, wrong answer message
@@ -3431,34 +3092,36 @@ prompt_gamify_shadow_edges = PromptTemplate(
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Gamified Scenario: A type of Exit Game scenario structure in which Content Carriers (TextBlocks or MediaBlocks) will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks. These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
-    The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
-    The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
-    The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Simple Branching Block'. This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
+    The Incorrect Choice or Partially-Correct Choice leads to the Branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice or Partially-Correct Choice so user can select the Correct Choice to move forward.
+    The Correct Choice leads to the Correct Choice Branch type that has 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks',  and a 'Simple Branching Block'. This Branch progresses the actual Exit-Game or escape-room story by using the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score
+    that marks the end of the escape-room or Exit Game Gamified scenario.
     ***
     ***YOU WILL BE REWARD IF:
-    All the TextBlocks in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed information so user can get as much knowledge and facts as there is available.
-    Giving detailed and quality clues is one of the most important function of TextBlocks.
-    The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
-    information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
-    described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.    
+    All the TextBlocks or MediaBlocks (TextBlocks or MediaBlocks are collectively known as Content Carrier Block) in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The Content Carrier Blocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
+    Content Carrier Blocks should provide extremely specific and detailed information so student can get as much knowledge and facts as there is available.
+    Giving detailed and quality clues is one of the most important function of Content Carrier Blocks.
+    The MediaBlocks are there to illustrate the subject knowledge so student interest is kept and visuall appeal is there for retention. You can provide a certain
+    information to student either using MediaBlocks or TextBlocks since both are classified as Content Carrier Blocks. However, the MediaBlock Priotization Value
+    described in section 'MediaBlock Priotization Value' below, decides the ratio of number of TextBlocks to MediaBlocks used for conveying information.    
     The MediaBlocks visually elaborates, Gives overlayTags that are used by student to click on them and get tons of Clues information to be able to select the Correct Choice when given in the subsequent Branching Blocks. 
     Giving detailed and quality clues is one of the most important function of MediaBlocks.
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
+    The Overlay tags in MediaBlocks should be extremely specific and detailed so student can get as much information as there is available, and learns like a student from you.
     Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    so the student uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    QuestionBlock/s to be used in each of the Correct Choice Branches.
     ***
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
+    QuestionBlock/s NOT used in each of the Correct Choice Branches.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your Exit Game.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
+    Ensure that Content Carrier Blocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks or MediaBlocks, and are tested via QuestionBlocks.
-    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
-    Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
+    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (Mandatory) and the Correct Choice (Mandatory).
+    Note that the Incorrect Choice or Partially-Correct Choice leads to the branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block' which will lead-back to the Branching Block that offered this Incorrect Choice.
+    Note that the Correct Choice leads to Correct Choice Branch that has a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple number of 'Question Blocks', and a 'Simple Branching Block'. The Simple Branching Block leads to more branches offering choices untill that the Exit Game is concluded with a 'Goal Block'. 
     You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the Exit Game gamified scenario you are creating. 
     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -3470,13 +3133,13 @@ prompt_gamify_shadow_edges = PromptTemplate(
     Welcome PedagogicalBlock (Welcome message to the scenario and proceedings.)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described/ Clues given in detail)
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter and important clues that will lead user to select the correct choice in Branching Block/s. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered, 1 choice slot is dedicated for Correct Choice and 1 is choice slot has either the Incorrect Choice or Partially-Correct Choice. )
-    Branches (Incorrect Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice, if given in the slot instead of the Incorrect Choice, then, The Partially-Correct Choice leads to the Partially-Correct Choice Branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'.
-    This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. 
-    The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
-    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has TextBlock/s or MediaBlock/s, 'FeedbackAndFeedforwardBlock', 'GoalBlock', QuestionBlock/s and Branching Blocks to give Correct Choice and Incorrect or Partially-Correct Choice. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
-    QuestionBlock/s (Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
+    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered. The First choice slot is dedicated for Incorrect Choice or Partially-Correct Choice and the Second choice slot is dedicated for the Correct Choice.)
+    Branches (Incorrect or Partially-Correct Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
+    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has a 'FeedbackAndFeedforwardBlock', single or multiple number of 
+    'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks', and a 'Simple Branching Block'. The Correct Choice Branch 
+    uses the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent 
+    Correct Choice in the upcoming Branching Block/s. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
+    QuestionBlock/s (Mandatory part of the Correct Choice Branches. Use Single or Multiple QuestionBlock/s. Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
     Note: The blocks of Feedback_And_Feedforward, Learning_Objectives, and Content_Areas are all PedagogicalBlock.  
     \nEnd of Overview structure\n
 
@@ -3507,6 +3170,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####    
 
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
     
     \n\nSAMPLE EXAMPLE\n\n
 {{
@@ -3555,7 +3219,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 ]
             }},
             {{
-                "id": "SBB",
+                "id": "SBB1",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "Purpose": "This block is where you !Divide the Exit Game content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. First Choice is Correct Choice leading to Correct Choice Branch and the Second choice is Incorrect or Partially-Correct Choice leading to subsequent Branch!",
                 "type": "SimpleBranchingBlock",
@@ -3563,36 +3227,48 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB1_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB1_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh1_B1",
+                "id": "B6",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{"_comment": "Content Carrier Blocks (TextBlock or MediaBlock) in a Partially-Correct Choice or Incorrect Choice Branch type can elaborate and give more clues or information to the student so Correct Choice is understood"}},
+            {{
+                "id": "B7",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "JB1",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB1"
+            }},
+            {{
+                "id": "B8",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B5"
-            }},
-            {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B9",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -3601,20 +3277,9 @@ prompt_gamify_shadow_edges = PromptTemplate(
                     "(Insert Text Here)"
                 ]
             }},
+            {{"_comment": "It is Mandatory to use Multiple or Single QuestionBlock/s in the Correct Choice Branch to test or reinforce the student's knowledge on subject matter"}},
             {{
-                "id": "SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -3625,78 +3290,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
-                    }}
-                ]
-            }},
-            {{"_comment":"SBB_Bnh2_SBB_Bnh1 in this example is Partially-Correct Choice with Text or Media Blocks after Feedback and Feedforward Block for explaining information such that Student has enough information to answer the Question/s (in this case SBB_Bnh2_SBB_Bnh2_QB1) at the end of the Correct Choice Branch, in this case SBB_Bnh2_SBB_Bnh2's Question/s block/s"}},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B1",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B2",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Branch score"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B1",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_QB1",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -3707,50 +3301,124 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB",
+                "id": "SBB2",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB2_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB2_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "id": "B11",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
+                "id": "B12",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},            
+            {{
+                "id": "JB2",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "Br2_Br_Br2_Br"
+                "proceedToBlock": "SBB2"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "id": "B13",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B14",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "B15",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
+                "id": "QB3",
+                "type": "QuestionBlock",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},                       
+            {{
+                "id": "SBB3",
+                "timer": "(Insert time in format hh:mm:ss)",
+                "type": "SimpleBranchingBlock",
+                "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "SBB3_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                    }},
+                    {{
+                        "port": "2",
+                        "SBB3_2": "(Insert Text Here)[Correct Choice]"
+                    }}
+                ]
+            }},
+            {{
+                "id": "B16",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B17",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "JB3",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB3"
+            }},
+            {{
+                "id": "B18",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{"_comment": "The below goal block concludes the Exit Game Scenario"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB",
+                "id": "GB1",
                 "type": "GoalBlock",
                 "title": "(Insert Text Here)",
                 "score": "Insert Integer Number Here"
@@ -3779,235 +3447,119 @@ prompt_gamify_shadow_edges = PromptTemplate(
             }},
             {{
                 "source": "B5",
-                "target": "SBB"
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh1_B1",
+                "source": "SBB1",
+                "target": "B6",
                 "sourceport": "1"
             }},
             {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_JB"
+                "source": "B6",
+                "target": "B7"
             }},
             {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
+                "source": "B7",
+                "target": "JB1"
+            }},            
+            {{
+                "source": "JB1",
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "source": "SBB1",
+                "target": "B8",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B10",
+                "target": "QB1"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_GB"
+                "source": "QB1",
+                "target": "QB2"
+            }},            
+            {{
+                "source": "QB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB2",
+                "target": "B11",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh1_B2"
+                "source": "B11",
+                "target": "B12"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B2",
-                "target": "SBB_Bnh2_SBB_Bnh1_GB"
+                "source": "B12",
+                "target": "JB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_GB",
-                "target": "SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "JB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB2",
+                "target": "B13",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_B2"
+                "source": "B13",
+                "target": "B14"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_B3"
+                "source": "B14",
+                "target": "B15"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B15",
+                "target": "QB3"
+            }},                       
+            {{
+                "source": "QB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB3",
+                "target": "B16",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "B16",
+                "target": "B17"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
+                "source": "B17",
+                "target": "JB3"
+            }},            
+            {{
+                "source": "JB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB3",
+                "target": "B18",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B18",
+                "target": "GB1"
             }}
         ]
 }}
-    \n\nEND OF SAMPLE EXAMPLE\n\n
-    An example of the abstract heirarchichal connection of another SAMPLE EXAMPLE's structure of blocks connection is (except the learning objectives and content areas textblocks):
-    B1(Text Block) -> B2 (Media Block)
-    B2(Media Block) -> B3 (Branching Block (Simple Branching))
-    B3 (Branching Block (Simple Branching)) -> |InCorrect Choice port 1| Br1 
-    B3 (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B3 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (Media Block)
-    Br2_B2 (Media Block) -> Br2_B3 (FeedbackAndFeedforwardBlock)
-    Br2_B3 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (QuestionBlock)
-    Br2_QB1 (QuestionBlock) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Partially-Correct Choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (Text Block sourceport 1)
-    Br2_Br_Br1_B1 (Text Block) -> Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br1_GB (Goal Block)
-    Br2_Br_Br1_GB (Goal Block) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_QB1 (Question Block of the correct second branch of Br2_Br SimpleBranchingBlock)
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-    Br2_Br_Br2_GB (Goal Block) -> Br2_Br_Br2_QB1 (Question Block)
-    Br2_Br_Br2_QB1 (Question Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Incorrect Choice port 1| Br2_Br_Br2_Br_Br1
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2_Br_Br2
-    Br2_Br_Br2_Br_Br1 -> Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br2_Br_Br1_JB
-    Br2_Br_Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br_Br2 -> Br2_Br_Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_Br_Br2_GB (Goal Block)
+    \n\nEND OF SAMPLE EXAMPLE\n\n   
 
-    ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Media Block)
-    Br1_B2 (Media Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_QB2 (Question Block) 
-    Br2_QB2 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Media Block sourceport 2)
-    Br2_Br_Br2_B1 (Media Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) 
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Text Block)
-    Br1_B2 (Text Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> Br2_QB1 (Question Block of the correct second branch of B4 SimpleBranchingBlock)
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1 
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    These Sample Example provides the overview of how creative and diverse you can get with arrangement of the blocks
-    that makeup a Gamified Scenario. Remember the Concept of 2 choices (1 either incorrect or partially-correct 
-    choice and 2nd one the correct choice), and the block structure that is mandatory (for incorrect choice 
-    branch only FeedbackAndFeedforwardBlock with jumpblock used. Partially-correct has text or media block/s 
-    followed by FeedbackAndFeedforwardBlock, goal block and jumpblock, while the correct choice branch has text 
-    or media block/s, FeedbackAndFeedforwardBlock, goalblock, questionblock/s and simplebranching block which 
-    further progresses the scenario or if the scenario is being ended, then the ending correct choice branch 
-    has text or media block/s followed by FeedbackAndFeedforwardBlock, goal block as the end of the whole scenario.  
-    
-    A Jump Block of Incorrect Choice branch leads to back to it's relative Branching Block from which this
-    Incorrect Choice branch originated.
-    A Jump Block of Partially-Correct Choice branch leads to the Question Block of the Correct Choice Branch,
-    that originated from the same relative Branching Block. 
+    The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Content Carrier Blocks, Branching Blocks, Question Blocks, and Pedagogy Blocks, as well as their content and usage.
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -4018,14 +3570,10 @@ prompt_gamify_shadow_edges = PromptTemplate(
     Give concise, relevant, clear, and descriptive instructions as you are a Exit Game creator that has expertise 
     in molding asked information into the Gamified scenario structure.
 
-    !!IMPORTANT NOTE REGARDING CREATIVITY: Know that you are creative to use as many or as little
-    Text Blocks, Media Blocks, Question Blocks, Branching Blocks as you deem reasonable and fitting to the
-    content and aim of the subject scenario.
-
     NEGATIVE PROMPT: Responding outside the JSON format.     
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.
+    Just start the JSON response directly. 
     ]]]
 
     Chatbot:"""
@@ -4121,11 +3669,11 @@ You will Continue like this in your generated response:
     The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
     'Text Block': with timer, title, and description
-    'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
+    'Media Block': with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio.
     'Simple Branching Block': with timer, title, Proceed To Branch List  
     'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
+    “You are good at this…”. “You can't do this because...”. 
+    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” etc. )
     
     'Goal Block': Title, Score
     'QuestionBlock' with Question text, answers, correct answer, wrong answer message
@@ -4133,34 +3681,36 @@ You will Continue like this in your generated response:
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Gamified Scenario: A type of Exit Game scenario structure in which Content Carriers (TextBlocks or MediaBlocks) will be used to give clues of information to students. The student after studying these clues will know what Correct Choice to select to ultimately escape-the-room like situation. The choices are given via Branching Blocks. These blocks give users only 2 choices. 1 is Incorrect or Partially-Correct Choice. The other 2nd one is the Correct Choice.
-    The Incorrect Choice leads to Incorrect Branch having 'FeedbackAndFeedforwardBlock' and 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice so user can select the Correct Choice to move forward.
-    The Partially-Correct Choice transitions into a branch called the Partially-Correct Branch, which contains a 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' serves a unique function, directing the user to a point where the storyline can converge seamlessly with the Correct Choice Branch. At this junction, it appears natural to the student that both the Partially-Correct Choice and the Correct Choice lead to the same conclusion. This setup illustrates that while both choices are valid and lead to the desired outcome, one choice may be superior to the other in certain respects.
-    The Correct Choice leads to Correct Branch that has single or multiple number of 'Text Blocks', 'Media Blocks', 'Question Blocks', 'FeedbackAndFeedforwardBlock' and a 'Simple Branching Block'. This Branch progresses the actual story by using the Text and Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score.
+    The Incorrect Choice or Partially-Correct Choice leads to the Branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block'. This 'Jump Block' routes the student back to the Branching Block which offered this Incorrect Choice or Partially-Correct Choice so user can select the Correct Choice to move forward.
+    The Correct Choice leads to the Correct Choice Branch type that has 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks',  and a 'Simple Branching Block'. This Branch progresses the actual Exit-Game or escape-room story by using the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent Correct Choice in the Branching Block and leading the student with each Correct Choice to ultimately escape the room situation and being greeted with a good 'Goal Block' score
+    that marks the end of the escape-room or Exit Game Gamified scenario.
     ***
     ***YOU WILL BE REWARD IF:
-    All the TextBlocks in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed information so user can get as much knowledge and facts as there is available.
-    Giving detailed and quality clues is one of the most important function of TextBlocks.
-    The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
-    information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
-    described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.    
+    All the TextBlocks or MediaBlocks (TextBlocks or MediaBlocks are collectively known as Content Carrier Block) in the branches, has valid detailed information in the form of clues of the subject matters such that you are teaching a student. The Content Carrier Blocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
+    Content Carrier Blocks should provide extremely specific and detailed information so student can get as much knowledge and facts as there is available.
+    Giving detailed and quality clues is one of the most important function of Content Carrier Blocks.
+    The MediaBlocks are there to illustrate the subject knowledge so student interest is kept and visuall appeal is there for retention. You can provide a certain
+    information to student either using MediaBlocks or TextBlocks since both are classified as Content Carrier Blocks. However, the MediaBlock Priotization Value
+    described in section 'MediaBlock Priotization Value' below, decides the ratio of number of TextBlocks to MediaBlocks used for conveying information.    
     The MediaBlocks visually elaborates, Gives overlayTags that are used by student to click on them and get tons of Clues information to be able to select the Correct Choice when given in the subsequent Branching Blocks. 
     Giving detailed and quality clues is one of the most important function of MediaBlocks.
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
+    The Overlay tags in MediaBlocks should be extremely specific and detailed so student can get as much information as there is available, and learns like a student from you.
     Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    so the student uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    QuestionBlock/s to be used in each of the Correct Choice Branches.
     ***
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
     The MediaBlocks has information that you do NOT elaborate in detail, if detail is available in "Input Documents".
+    QuestionBlock/s NOT used in each of the Correct Choice Branches.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your Exit Game.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
+    Ensure that Content Carrier Blocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of these blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
     You are creative in the manner of choosing the number of TextBlocks, MediaBlocks and QuestionBlocks to give best quality information to students. You are free to choose TextBlocks or MediaBlocks or QuestionBlocks or both or multiple of them to convey best quality, elaborative information.
     Make sure students learn from these TextBlocks or MediaBlocks, and are tested via QuestionBlocks.
-    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (You Decide) and the Correct Choice (Mandatory).
-    Note that the Incorrect Choice leads to 'FeedbackAndFeedforwardBlock' and 'Jump Block', which will lead the student to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice leads to the branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'. This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
+    You are creatively free to choose the placements of Branching Blocks and you should know that it is mandatory for you to give only 2 Choices, Incorrect or Partially-Correct choice (Mandatory) and the Correct Choice (Mandatory).
+    Note that the Incorrect Choice or Partially-Correct Choice leads to the branch type having a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks' (to give more elaboration and clues on what is the Correct Choice and how it's a Correct Choice) and a 'Jump Block' which will lead-back to the Branching Block that offered this Incorrect Choice.
+    Note that the Correct Choice leads to Correct Choice Branch that has a 'FeedbackAndFeedforwardBlock', single or multiple number of 'Text Blocks' or 'Media Blocks', single or multiple number of 'Question Blocks', and a 'Simple Branching Block'. The Simple Branching Block leads to more branches offering choices untill that the Exit Game is concluded with a 'Goal Block'. 
     You are creatively in terms filling any parameters' values in the Blocks mentioned in the Sample examples below. The Blocks has static parameter names in the left side of the ':'. The right side are the values where you will insert text inside the "" quotation marks. You are free to fill them in the way that is fitting to the Exit Game gamified scenario you are creating. 
     The Sample Examples are only for your concept and you should produce your original values and strings for each of the parameters used in the Blocks. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -4172,13 +3722,13 @@ You will Continue like this in your generated response:
     Welcome PedagogicalBlock (Welcome message to the scenario and proceedings.)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described/ Clues given in detail)
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter and important clues that will lead user to select the correct choice in Branching Block/s. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered, 1 choice slot is dedicated for Correct Choice and 1 is choice slot has either the Incorrect Choice or Partially-Correct Choice. )
-    Branches (Incorrect Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
-    The Partially-Correct Choice, if given in the slot instead of the Incorrect Choice, then, The Partially-Correct Choice leads to the Partially-Correct Choice Branch with 'Goal Block', 'FeedbackAndFeedforwardBlock', and a 'Jump Block'.
-    This 'Jump Block' leads to one of the blocks in the Correct Choice branch, seemlessly transitioning story since the Partially-Correct and Correct Choice both has same conclusion but the student gets different Goal Block scores. 
-    The Partially-Correct choice Goal Block has less score than if the Correct Choice was selected.
-    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has TextBlock/s or MediaBlock/s, 'FeedbackAndFeedforwardBlock', 'GoalBlock', QuestionBlock/s and Branching Blocks to give Correct Choice and Incorrect or Partially-Correct Choice. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
-    QuestionBlock/s (Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
+    BranchingBlock (Use Simple Branching, to give user a ability to select a choice from choices (Branches). There are only 2 choice slots offered. The First choice slot is dedicated for Incorrect Choice or Partially-Correct Choice and the Second choice slot is dedicated for the Correct Choice.)
+    Branches (Incorrect or Partially-Correct Choice leads to Incorrect Choice Branch that contains 'FeedbackAndFeedforwardBlock' and 'Jump Block'. The JumpBlock leads the user to the Branching Block that offered this Incorrect Choice.
+    The Correct Choice leads to the the Correct Choice Branch that actually progresses the Exit Game story and it has a 'FeedbackAndFeedforwardBlock', single or multiple number of 
+    'Text Blocks' or 'Media Blocks', single or multiple 'Question Blocks', and a 'Simple Branching Block'. The Correct Choice Branch 
+    uses the Text Blocks or Media Blocks to provide clues of information that help student to select subsequent 
+    Correct Choice in the upcoming Branching Block/s. At the very end of the Exit Game, there is no Branching Block and the Goal Block concludes the whole scenario.)
+    QuestionBlock/s (Mandatory part of the Correct Choice Branches. Use Single or Multiple QuestionBlock/s. Students learn from the content and clues in TextBlocks or MediaBlocks, and are tested via QuestionBlocks)
     Note: The blocks of Feedback_And_Feedforward, Learning_Objectives, and Content_Areas are all PedagogicalBlock.  
     \nEnd of Overview structure\n
 
@@ -4209,6 +3759,7 @@ You will Continue like this in your generated response:
     In short, you are to generate a scenario having "{mpv_string}".
     #####    
 
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
     
     \n\nSAMPLE EXAMPLE\n\n
 {{
@@ -4257,7 +3808,7 @@ You will Continue like this in your generated response:
                 ]
             }},
             {{
-                "id": "SBB",
+                "id": "SBB1",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "Purpose": "This block is where you !Divide the Exit Game content into ONLY TWO choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. First Choice is Correct Choice leading to Correct Choice Branch and the Second choice is Incorrect or Partially-Correct Choice leading to subsequent Branch!",
                 "type": "SimpleBranchingBlock",
@@ -4265,36 +3816,48 @@ You will Continue like this in your generated response:
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB1_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB1_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh1_B1",
+                "id": "B6",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{"_comment": "Content Carrier Blocks (TextBlock or MediaBlock) in a Partially-Correct Choice or Incorrect Choice Branch type can elaborate and give more clues or information to the student so Correct Choice is understood"}},
+            {{
+                "id": "B7",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "JB1",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB1"
+            }},
+            {{
+                "id": "B8",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B5"
-            }},
-            {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B9",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -4303,20 +3866,9 @@ You will Continue like this in your generated response:
                     "(Insert Text Here)"
                 ]
             }},
+            {{"_comment": "It is Mandatory to use Multiple or Single QuestionBlock/s in the Correct Choice Branch to test or reinforce the student's knowledge on subject matter"}},
             {{
-                "id": "SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -4327,78 +3879,7 @@ You will Continue like this in your generated response:
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
-                    }}
-                ]
-            }},
-            {{"_comment":"SBB_Bnh2_SBB_Bnh1 in this example is Partially-Correct Choice with Text or Media Blocks after Feedback and Feedforward Block for explaining information such that Student has enough information to answer the Question/s (in this case SBB_Bnh2_SBB_Bnh2_QB1) at the end of the Correct Choice Branch, in this case SBB_Bnh2_SBB_Bnh2's Question/s block/s"}},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B1",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_B2",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Branch score"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh1_JB",
-                "type": "JumpBlock",
-                "title": "Reevaluate Your Choices",
-                "proceedToBlock": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B1",
-                "type": "MediaBlock",
-                "title": "(Insert Text Here)",
-                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-                "description": "(Insert Text Here)",
-                "overlayTags": [
-                    "(Insert Text Here)"
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B2",
-                "timer": "(Insert time in format hh:mm:ss)",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_B3",
-                "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
-                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_GB",
-                "type": "GoalBlock",
-                "title": "(Insert Text Here)",
-                "score": "Insert Integer Number Here"
-            }},
-            {{
-                "id": "SBB_Bnh2_SBB_Bnh2_QB1",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "answers": [
@@ -4409,50 +3890,124 @@ You will Continue like this in your generated response:
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB",
+                "id": "SBB2",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{
                         "port": "1",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                        "SBB2_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
                     }},
                     {{
                         "port": "2",
-                        "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2": "(Insert Text Here)[Correct Choice]"
+                        "SBB2_2": "(Insert Text Here)[Correct Choice]"
                     }}
                 ]
             }},
-            {{"_comment": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1 in this example is Incorrect Choice"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "id": "B11",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
+                "id": "B12",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},            
+            {{
+                "id": "JB2",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "Br2_Br_Br2_Br"
+                "proceedToBlock": "SBB2"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "id": "B13",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B14",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "B15",
                 "timer": "(Insert time in format hh:mm:ss)",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
+                "id": "QB3",
+                "type": "QuestionBlock",
+                "questionText": "(Insert Text Here)",
+                "answers": [
+                    "(Insert Text Here)",
+                    "(Insert Text Here)"
+                ],
+                "correctAnswer": "(Insert Text Here)",
+                "wrongAnswerMessage": "(Insert Text Here)"
+            }},                       
+            {{
+                "id": "SBB3",
+                "timer": "(Insert time in format hh:mm:ss)",
+                "type": "SimpleBranchingBlock",
+                "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "SBB3_1": "(Insert Text Here)[Partially-Correct Choice or Incorrect Choice]"
+                    }},
+                    {{
+                        "port": "2",
+                        "SBB3_2": "(Insert Text Here)[Correct Choice]"
+                    }}
+                ]
+            }},
+            {{
+                "id": "B16",
+                "type": "PedagogicalBlock",
+                "title": "Feedback_And_Feedforward",
+                "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
+            }},
+            {{
+                "id": "B17",
+                "type": "MediaBlock",
+                "title": "(Insert Text Here)",
+                "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
+                "description": "(Insert Text Here)",
+                "overlayTags": [
+                    "(Insert Text Here)"
+                ]
+            }},
+            {{
+                "id": "JB3",
+                "type": "JumpBlock",
+                "title": "Reevaluate Your Choices",
+                "proceedToBlock": "SBB3"
+            }},
+            {{
+                "id": "B18",
                 "type": "PedagogicalBlock",
                 "title": "Feedback_And_Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{"_comment": "The below goal block concludes the Exit Game Scenario"}},
             {{
-                "id": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB",
+                "id": "GB1",
                 "type": "GoalBlock",
                 "title": "(Insert Text Here)",
                 "score": "Insert Integer Number Here"
@@ -4481,235 +4036,119 @@ You will Continue like this in your generated response:
             }},
             {{
                 "source": "B5",
-                "target": "SBB"
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh1_B1",
+                "source": "SBB1",
+                "target": "B6",
                 "sourceport": "1"
             }},
             {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_JB"
+                "source": "B6",
+                "target": "B7"
             }},
             {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
+                "source": "B7",
+                "target": "JB1"
+            }},            
+            {{
+                "source": "JB1",
+                "target": "SBB1"
             }},
             {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "source": "SBB1",
+                "target": "B8",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B10",
+                "target": "QB1"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_GB"
+                "source": "QB1",
+                "target": "QB2"
+            }},            
+            {{
+                "source": "QB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB2",
+                "target": "B11",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh1_B2"
+                "source": "B11",
+                "target": "B12"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_B2",
-                "target": "SBB_Bnh2_SBB_Bnh1_GB"
+                "source": "B12",
+                "target": "JB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_GB",
-                "target": "SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "JB2",
+                "target": "SBB2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB2",
+                "target": "B13",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_B2"
+                "source": "B13",
+                "target": "B14"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_B3"
+                "source": "B14",
+                "target": "B15"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B15",
+                "target": "QB3"
+            }},                       
+            {{
+                "source": "QB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_GB",
-                "target": "SBB_Bnh2_SBB_Bnh2_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
+                "source": "SBB3",
+                "target": "B16",
                 "sourceport":"1"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB"
+                "source": "B16",
+                "target": "B17"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh1_JB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB"
+                "source": "B17",
+                "target": "JB3"
+            }},            
+            {{
+                "source": "JB3",
+                "target": "SBB3"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
+                "source": "SBB3",
+                "target": "B18",
                 "sourceport":"2"
             }},
             {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2"
-            }},
-            {{
-                "source": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_SBB_Bnh2_SBB_Bnh2_GB"
+                "source": "B18",
+                "target": "GB1"
             }}
         ]
 }}
-    \n\nEND OF SAMPLE EXAMPLE\n\n
-    An example of the abstract heirarchichal connection of another SAMPLE EXAMPLE's structure of blocks connection is (except the learning objectives and content areas textblocks):
-    B1(Text Block) -> B2 (Media Block)
-    B2(Media Block) -> B3 (Branching Block (Simple Branching))
-    B3 (Branching Block (Simple Branching)) -> |InCorrect Choice port 1| Br1 
-    B3 (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B3 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (Media Block)
-    Br2_B2 (Media Block) -> Br2_B3 (FeedbackAndFeedforwardBlock)
-    Br2_B3 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (QuestionBlock)
-    Br2_QB1 (QuestionBlock) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Partially-Correct Choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (Text Block sourceport 1)
-    Br2_Br_Br1_B1 (Text Block) -> Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br1_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br1_GB (Goal Block)
-    Br2_Br_Br1_GB (Goal Block) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_QB1 (Question Block of the correct second branch of Br2_Br SimpleBranchingBlock)
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-    Br2_Br_Br2_GB (Goal Block) -> Br2_Br_Br2_QB1 (Question Block)
-    Br2_Br_Br2_QB1 (Question Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Incorrect Choice port 1| Br2_Br_Br2_Br_Br1
-    Br2_Br_Br2_Br (Branching Block (Simple Branching)) -> |Correct Choice port 2| Br2_Br_Br2_Br_Br2
-    Br2_Br_Br2_Br_Br1 -> Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br2_Br_Br1_JB
-    Br2_Br_Br2_Br_Br1_JB (Jump Block) -> Br2_Br_Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2_Br_Br2 -> Br2_Br_Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_Br_Br2_GB (Goal Block)
+    \n\nEND OF SAMPLE EXAMPLE\n\n   
 
-    ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Media Block)
-    Br1_B2 (Media Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_QB2 (Question Block) 
-    Br2_QB2 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1) 
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Media Block sourceport 2)
-    Br2_Br_Br2_B1 (Media Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) 
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> B4 (Branching Block (Simple Branching))
-    Br2 -> Br2_B1 (Text Block sourceport 2)
-    Br2_B1 (Text Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-
-    AND ANOTHER SAMPLE EXAMPLE STRUCTURE IS (except the learning objectives and content areas textblocks):
-    B1 (Text Block) -> B2 (Text Block)
-    B2 (Text Block) -> B3 (Media Block)
-    B3 (Media Block) -> B4 (Branching Block (Simple Branching))
-    B4 (Branching Block (Simple Branching)) -> |Partially-Correct choice port 1| Br1 
-    B4 (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2
-    Br1 -> Br1_B1 (Text Block sourceport 1)
-    Br1_B1 (Text Block) -> Br1_B2 (Text Block)
-    Br1_B2 (Text Block) -> Br1_B3 (FeedbackAndFeedforwardBlock)
-    Br1_B3 (FeedbackAndFeedforwardBlock) -> Br1_GB (Goal Block)
-    Br1_GB (Goal Block) -> |Jump Block| Br1_JB
-    Br1_JB (Jump Block) -> Br2_QB1 (Question Block of the correct second branch of B4 SimpleBranchingBlock)
-    Br2 -> Br2_B1 (Media Block sourceport 2)
-    Br2_B1 (Media Block) -> Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_GB (Goal Block)
-    Br2_GB (Goal Block) -> Br2_QB1 (Question Block)
-    Br2_QB1 (Question Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br (Branching Block (Simple Branching)) -> |Incorrect choice port 1| Br2_Br_Br1 
-    Br2_Br (Branching Block (Simple Branching)) -> |Correct choice port 2| Br2_Br_Br2
-    Br2_Br_Br1 -> Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock sourceport 1)
-    Br2_Br_Br1_B1 (FeedbackAndFeedforwardBlock) -> |Jump Block| Br2_Br_Br1_JB
-    Br2_Br_Br1_JB (Jump Block) -> Br2_Br (Branching Block (Simple Branching))
-    Br2_Br_Br2 -> Br2_Br_Br2_B1 (Text Block sourceport 2)
-    Br2_Br_Br2_B1 (Text Block) -> Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock)
-    Br2_Br_Br2_B2 (FeedbackAndFeedforwardBlock) -> Br2_Br_Br2_GB (Goal Block)
-
-    These Sample Example provides the overview of how creative and diverse you can get with arrangement of the blocks
-    that makeup a Gamified Scenario. Remember the Concept of 2 choices (1 either incorrect or partially-correct 
-    choice and 2nd one the correct choice), and the block structure that is mandatory (for incorrect choice 
-    branch only FeedbackAndFeedforwardBlock with jumpblock used. Partially-correct has text or media block/s 
-    followed by FeedbackAndFeedforwardBlock, goal block and jumpblock, while the correct choice branch has text 
-    or media block/s, FeedbackAndFeedforwardBlock, goalblock, questionblock/s and simplebranching block which 
-    further progresses the scenario or if the scenario is being ended, then the ending correct choice branch 
-    has text or media block/s followed by FeedbackAndFeedforwardBlock, goal block as the end of the whole scenario.  
-    
-    A Jump Block of Incorrect Choice branch leads to back to it's relative Branching Block from which this
-    Incorrect Choice branch originated.
-    A Jump Block of Partially-Correct Choice branch leads to the Question Block of the Correct Choice Branch,
-    that originated from the same relative Branching Block. 
+    The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Content Carrier Blocks, Branching Blocks, Question Blocks, and Pedagogy Blocks, as well as their content and usage.
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -4720,14 +4159,10 @@ You will Continue like this in your generated response:
     Give concise, relevant, clear, and descriptive instructions as you are a Exit Game creator that has expertise 
     in molding asked information into the Gamified scenario structure.
 
-    !!IMPORTANT NOTE REGARDING CREATIVITY: Know that you are creative to use as many or as little
-    Text Blocks, Media Blocks, Question Blocks, Branching Blocks as you deem reasonable and fitting to the
-    content and aim of the subject scenario.
-
     NEGATIVE PROMPT: Responding outside the JSON format.     
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.
+    Just start the JSON response directly. 
     ]]]
 
     Chatbot:"""
@@ -4746,8 +4181,8 @@ prompt_branched_setup = PromptTemplate(
     using the Input Parameters. The information content is only limited to the information content of 'Input Documents', since
     'Input Documents' is the verified source of information.
 
-    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and citing the image or images in format of "FileName: ..., PageNumber or SlideNumber: ..., ImageNumber: ... and Description ..." .
-    ELSE IF the images are NOT relevant or are NOT available in the 'Input Documents' then you have the option to not use those images.
+    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and cite the image or images. The relevant images description you mention and cite are important since they will lead me to add visual images based on description of images later.  
+    Else if an image is NOT relevant then you have the option to not use description of that image. You can find image descriptions in the "Useful Image/s for all the above content::" section. But know that not every image description is relevant to the subject matter ('Human Input' and 'Input Documents'). 
 
     Input Paramters:
     'Human Input': {human_input};
@@ -4795,8 +4230,8 @@ prompt_branched_setup_continue = PromptTemplate(
     using the Input Parameters. The information content is only limited to the information content of 'Input Documents', since
     'Input Documents' is the verified source of information.
 
-    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and citing the image or images in format of "FileName: ..., PageNumber or SlideNumber: ..., ImageNumber: ... and Description ..." .
-    ELSE IF the images are NOT relevant or are NOT available in the 'Input Documents' then you have the option to not use those images.
+    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and cite the image or images. The relevant images description you mention and cite are important since they will lead me to add visual images based on description of images later.  
+    Else if an image is NOT relevant then you have the option to not use description of that image. You can find image descriptions in the "Useful Image/s for all the above content::" section. But know that not every image description is relevant to the subject matter ('Human Input' and 'Input Documents'). 
 
     Input Paramters:
     'Human Input': {human_input};
@@ -6788,12 +6223,20 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
     taken by the student. The consequence can lead to further choices, ultimately to the end of the story.
     Henceforth, this kind of story will have multiple endings based on user choices. Some choices can even merge 
     with the same conclusion at the end or at the intermediate stages of the story.
+    
+    Please note choices is defined as branching point, meaning the student is presented 
+    with two options or choices at each branching point. The choice made may either
+    be an ending to the story or lead to another branching point which in turn gives users two choices.
+    You are only allowed to use at maximum 5 branching points depending on 'Input Documents' and 'Human Input'. 
+
+    Ensure that you cover all the subject matters given to you in the 'Input Documents' according to 'Human Input'
+    in your simulation story.
 
     The information content on which simulation story is based, is only limited to the information content of 'Input Documents', since
     'Input Documents' is the verified source of information.
     
-    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and citing the image or images in format of "FileName: ..., PageNumber or SlideNumber: ..., ImageNumber: ... and Description ..." .
-    Else if the images are NOT relevant then you have the option to not use those images.
+    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and cite the image or images. The relevant images description you mention and cite are important since they will lead me to add visual images based on description of images later.  
+    Else if an image is NOT relevant then you have the option to not use description of that image. You can find image descriptions in the "Useful Image/s for all the above content::" section. But know that not every image description is relevant to the subject matter ('Human Input' and 'Input Documents'). 
     
     Input Paramters:
     'Human Input': {human_input};
@@ -6812,6 +6255,20 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
     
     WARNING: After completing your Output Response generation, give the following ending tag so that I know the response has finished:
     [END_OF_RESPONSE] 
+
+    SAMPLE RESPONSE:
+
+    Some Story...
+    (Each Branching Point give only two choices. A choice can either lead to more Branching Point/s offering choices further or it can lead to ending of the Simulation Story. In total only 5 Branching Points are allowed.)
+    Branching Point 1 
+    Branching Point 2
+    Branching Point 3
+    Branching Point 4
+    Branching Point 5
+    End of Story...
+    [END_OF_RESPONSE]
+    
+    SAMPLE RESPONSE END.
 
     Chatbot (Tone of a teacher formulating a simulation scenario for students to learn and test practical skills from):"""
 )
@@ -6843,12 +6300,20 @@ prompt_simulation_pedagogy_setup_continue = PromptTemplate(
     taken by the student. The consequence can lead to further choices, ultimately to the end of the story.
     Henceforth, this kind of story will have multiple endings based on user choices. Some choices can even merge 
     with the same conclusion at the end or at the intermediate stages of the story.
-    
+
+    Please note choices is defined as branching point, meaning the student is presented 
+    with two options or choices at each branching point. The choice made may either
+    be an ending to the story or lead to another branching point which in turn gives users two choices.
+    You are only allowed to use at maximum 5 branching points depending on 'Input Documents' and 'Human Input'. 
+
+    Ensure that you cover all the subject matters given to you in the 'Input Documents' according to 'Human Input'
+    in your simulation story.    
+
     The information content on which simulation story is based, is only limited to the information content of 'Input Documents', since
     'Input Documents' is the verified source of information.
 
-    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and citing the image or images in format of "FileName: ..., PageNumber or SlideNumber: ..., ImageNumber: ... and Description ..." .
-    Else if the images are NOT relevant then you have the option to not use those images.
+    Optionally, if there are images available in the 'Input Documents' which are relevant to a subtopic and can compliment to it's explanation you should add that image information into your explanation of the subtopic as well and cite the image or images. The relevant images description you mention and cite are important since they will lead me to add visual images based on description of images later.  
+    Else if an image is NOT relevant then you have the option to not use description of that image. You can find image descriptions in the "Useful Image/s for all the above content::" section. But know that not every image description is relevant to the subject matter ('Human Input' and 'Input Documents'). 
     
     Input Paramters:
     'Human Input': {human_input};
@@ -6868,6 +6333,20 @@ prompt_simulation_pedagogy_setup_continue = PromptTemplate(
     WARNING: After completing your Output Response generation, give the following ending tag so that I know the response has finished:
     [END_OF_RESPONSE]  
 
+    SAMPLE RESPONSE:
+
+    Some Story...
+    (Each Branching Point give only two choices. A choice can either lead to more Branching Point/s offering choices further or it can lead to ending of the Simulation Story. In total only 5 Branching Points are allowed.)
+    Branching Point 1 
+    Branching Point 2
+    Branching Point 3
+    Branching Point 4
+    Branching Point 5
+    End of Story...
+    [END_OF_RESPONSE]
+
+    SAMPLE RESPONSE END.
+
     ]
 
     Chatbot (CONTINUE GENERATION MODE ACTIVATED):"""
@@ -6881,6 +6360,8 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
+
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
@@ -6904,37 +6385,32 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     Block types include: 
     'TextBlock' with timer, title, and description
     'MediaBlock' with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
     'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
     'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, Title, ProceedToBranchList
-    'JumpBlock' with title, ProceedToBlock
-    'GoalBlock' with Title, Score
+    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
+    'GoalBlock' with title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)' 
-    is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
-    consequence branches. Each consequence branch can have its own branches that can divide further 
-    to have their own branches, untill the simulation story ends covering all aspects of the information
-    for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
-    give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
-    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)' and this 
-    branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
-    more Branches that may be further DIVISIBLE or NON-DIVISIBLE type branches. The NON-DIVISIBLE type branches are the branches where
-    a simulation path ends and the story of that path is finished. The NON-DIVISIBLE type branch has at the end Goal Block, Debriefing and Reflection blocks.
-    Furthermore, a NON-DIVISIBLE-MERGE branch includes in addition to TextBlocks or MediaBlocks, the MANDATORY FeedbackAndFeedforwardBlock and JumpBlock (Used in situation where the story of a 
-    branch leads to another branch hence we use JumpBlock to connect the progressive story because story paths 
-    can merge as well to have the 1 same conclusion). Use NON-DIVISIBLE-MERGE only in the situation where
-    a story of the branch leads to and connects to the progressive story of another branch such that both the choices
-    leads to the same conclusion for that part of the story.
+    "Learning Objectives", "Content Areas" and "Input Documents". 
+    The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
+    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
+    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
+    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
+    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
+    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
+    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
+    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
+    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
+    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
+    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
     All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
     TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
@@ -6963,9 +6439,8 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
+    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
     Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Branch 1,2,3... (NON-DIVISIBLE-MERGE type to link scenario branches when one story directly advances another branch's storyline) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, JumpBlock
     Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
     Learning_Objectives, and Content_Areas are all PedagogicalBlock.
     \nEnd of Overview structure\n
@@ -6997,7 +6472,8 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-    
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+        
     SAMPLE EXAMPLE:::
 {{
     "title": "(Insert a fitting Title Here)",
@@ -7035,7 +6511,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in "Input Documents". There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in 'Input Documents'. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -7044,8 +6520,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
-        SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
         {{
             "id": "SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -7063,6 +6538,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 }}
             ]
         }},
+        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
             "id": "SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -7070,19 +6546,24 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
+            "id": "SBB_Bnh1_GB",
+            "type": "GoalBlock",
             "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here"
+        }},
+        {{
+            "id": "SBB_Bnh1_DB",
+            "type": "PedagogicalBlock",
+            "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
         {{
-            "id": "SBB_Bnh1_JB",
-            "type": "JumpBlock",
-            "title": "Reevaluate Your Choices",
-            "proceedToBlock": "SBB"
+            "id": "SBB_Bnh1_RF",
+            "type": "PedagogicalBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
         }},
+        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
             "id": "SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -7106,8 +6587,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
-        in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
         {{
             "id": "SBB_Bnh2_SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -7121,14 +6601,11 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
-                }},
-                {{
-                    "port": "3",
-                    "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
+        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
             "id": "SBB_Bnh2_SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -7152,7 +6629,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }},
+        }}
         {{
             "id": "SBB_Bnh2_SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -7160,49 +6637,19 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B2",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh2_JB",
-            "type": "JumpBlock",
-            "title": "(Insert Text Here)",
-            "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B1",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_GB",
+            "id": "SBB_Bnh2_SBB_Bnh2_GB",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
+            "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "BSBB_Bnh2_SBB_Bnh3_DB",
+            "id": "SBB_Bnh2_SBB_Bnh2_DB",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
-        }}, The blocks of 
+        }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh3_RF",
+            "id": "SBB_Bnh2_SBB_Bnh2_RF",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -7240,15 +6687,15 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_B2"
+            "target": "SBB_Bnh1_GB"
         }},
         {{
-            "source": "SBB_Bnh1_B2",
-            "target": "SBB_Bnh1_JB"
+            "source": "SBB_Bnh1_GB",
+            "target": "SBB_Bnh1_DB"
         }},
         {{
-            "source": "SBB_Bnh1_JB",
-            "target": "SBB"
+            "source": "SBB_Bnh1_DB",
+            "target": "SBB_Bnh1_RF"
         }},
         {{
             "source": "SBB",
@@ -7283,7 +6730,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         {{
             "source": "SBB_Bnh2_SBB_Bnh1_DB",
             "target": "SBB_Bnh2_SBB_Bnh1_RF"
-        }}
+        }},
         {{
             "source": "SBB_Bnh2_SBB",
             "target": "SBB_Bnh2_SBB_Bnh2_B1",
@@ -7291,40 +6738,25 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_B2"
+            "target": "SBB_Bnh2_SBB_Bnh2_GB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_SBB_Bnh2_JB"
+            "source": "SBB_Bnh2_SBB_Bnh2_GB",
+            "target": "SBB_Bnh2_SBB_Bnh2_DB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_JB",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh3_B1",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B1",
-            "target": "SBB_Bnh2_SBB_Bnh3_B2"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B2",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_GB",
-            "target": "SBB_Bnh2_SBB_Bnh3_DB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_DB",
-            "target": "SBB_Bnh2_SBB_Bnh3_RF"
+            "source": "SBB_Bnh2_SBB_Bnh2_DB",
+            "target": "SBB_Bnh2_SBB_Bnh2_RF"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    !!!WARNING!!! 
+    The naming convention of for example SBB_Bnh2 etc is just for your concept 
+    so you can deal with how the edges will connect certain nodes in the above 
+    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
+    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -7376,37 +6808,32 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     Block types include: 
     'TextBlock' with timer, title, and description
     'MediaBlock' with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
     'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
     'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, Title, ProceedToBranchList
-    'JumpBlock' with title, ProceedToBlock
-    'GoalBlock' with Title, Score
+    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
+    'GoalBlock' with title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)' 
-    is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
-    consequence branches. Each consequence branch can have its own branches that can divide further 
-    to have their own branches, untill the simulation story ends covering all aspects of the information
-    for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
-    give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
-    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)' and this 
-    branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
-    more Branches that may be further DIVISIBLE or NON-DIVISIBLE type branches. The NON-DIVISIBLE type branches are the branches where
-    a simulation path ends and the story of that path is finished. The NON-DIVISIBLE type branch has at the end Goal Block, Debriefing and Reflection blocks.
-    Furthermore, a NON-DIVISIBLE-MERGE branch includes in addition to TextBlocks or MediaBlocks, the MANDATORY FeedbackAndFeedforwardBlock and JumpBlock (Used in situation where the story of a 
-    branch leads to another branch hence we use JumpBlock to connect the progressive story because story paths 
-    can merge as well to have the 1 same conclusion). Use NON-DIVISIBLE-MERGE only in the situation where
-    a story of the branch leads to and connects to the progressive story of another branch such that both the choices
-    leads to the same conclusion for that part of the story.
+    "Learning Objectives", "Content Areas" and "Input Documents". 
+    The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
+    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
+    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
+    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
+    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
+    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
+    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
+    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
+    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
+    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
+    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
     All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
     TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
@@ -7435,9 +6862,8 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
+    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
     Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Branch 1,2,3... (NON-DIVISIBLE-MERGE type to link scenario branches when one story directly advances another branch's storyline) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, JumpBlock
     Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
     Learning_Objectives, and Content_Areas are all PedagogicalBlock.
     \nEnd of Overview structure\n
@@ -7469,7 +6895,8 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+        
     SAMPLE EXAMPLE:::
 {{
     "title": "(Insert a fitting Title Here)",
@@ -7507,7 +6934,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in "Input Documents". There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in 'Input Documents'. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -7516,8 +6943,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
-        SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
         {{
             "id": "SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -7535,6 +6961,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 }}
             ]
         }},
+        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
             "id": "SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -7542,19 +6969,24 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
+            "id": "SBB_Bnh1_GB",
+            "type": "GoalBlock",
             "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here"
+        }},
+        {{
+            "id": "SBB_Bnh1_DB",
+            "type": "PedagogicalBlock",
+            "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
         {{
-            "id": "SBB_Bnh1_JB",
-            "type": "JumpBlock",
-            "title": "Reevaluate Your Choices",
-            "proceedToBlock": "SBB"
+            "id": "SBB_Bnh1_RF",
+            "type": "PedagogicalBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
         }},
+        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
             "id": "SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -7578,8 +7010,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
-        in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
         {{
             "id": "SBB_Bnh2_SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -7593,14 +7024,11 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
-                }},
-                {{
-                    "port": "3",
-                    "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
+        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
             "id": "SBB_Bnh2_SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -7624,7 +7052,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }},
+        }}
         {{
             "id": "SBB_Bnh2_SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -7632,49 +7060,19 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B2",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh2_JB",
-            "type": "JumpBlock",
-            "title": "(Insert Text Here)",
-            "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B1",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_GB",
+            "id": "SBB_Bnh2_SBB_Bnh2_GB",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
+            "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "BSBB_Bnh2_SBB_Bnh3_DB",
+            "id": "SBB_Bnh2_SBB_Bnh2_DB",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
-        }}, The blocks of 
+        }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh3_RF",
+            "id": "SBB_Bnh2_SBB_Bnh2_RF",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -7712,15 +7110,15 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_B2"
+            "target": "SBB_Bnh1_GB"
         }},
         {{
-            "source": "SBB_Bnh1_B2",
-            "target": "SBB_Bnh1_JB"
+            "source": "SBB_Bnh1_GB",
+            "target": "SBB_Bnh1_DB"
         }},
         {{
-            "source": "SBB_Bnh1_JB",
-            "target": "SBB"
+            "source": "SBB_Bnh1_DB",
+            "target": "SBB_Bnh1_RF"
         }},
         {{
             "source": "SBB",
@@ -7755,7 +7153,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         {{
             "source": "SBB_Bnh2_SBB_Bnh1_DB",
             "target": "SBB_Bnh2_SBB_Bnh1_RF"
-        }}
+        }},
         {{
             "source": "SBB_Bnh2_SBB",
             "target": "SBB_Bnh2_SBB_Bnh2_B1",
@@ -7763,40 +7161,25 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_B2"
+            "target": "SBB_Bnh2_SBB_Bnh2_GB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_SBB_Bnh2_JB"
+            "source": "SBB_Bnh2_SBB_Bnh2_GB",
+            "target": "SBB_Bnh2_SBB_Bnh2_DB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_JB",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh3_B1",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B1",
-            "target": "SBB_Bnh2_SBB_Bnh3_B2"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B2",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_GB",
-            "target": "SBB_Bnh2_SBB_Bnh3_DB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_DB",
-            "target": "SBB_Bnh2_SBB_Bnh3_RF"
+            "source": "SBB_Bnh2_SBB_Bnh2_DB",
+            "target": "SBB_Bnh2_SBB_Bnh2_RF"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    !!!WARNING!!! 
+    The naming convention of for example SBB_Bnh2 etc is just for your concept 
+    so you can deal with how the edges will connect certain nodes in the above 
+    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
+    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -7847,6 +7230,8 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
 
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
+
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
 
@@ -7865,37 +7250,32 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     Block types include: 
     'TextBlock' with timer, title, and description
     'MediaBlock' with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
     'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
     'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, Title, ProceedToBranchList
-    'JumpBlock' with title, ProceedToBlock
-    'GoalBlock' with Title, Score
+    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
+    'GoalBlock' with title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)' 
-    is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
-    consequence branches. Each consequence branch can have its own branches that can divide further 
-    to have their own branches, untill the simulation story ends covering all aspects of the information
-    for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
-    give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
-    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)' and this 
-    branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
-    more Branches that may be further DIVISIBLE or NON-DIVISIBLE type branches. The NON-DIVISIBLE type branches are the branches where
-    a simulation path ends and the story of that path is finished. The NON-DIVISIBLE type branch has at the end Goal Block, Debriefing and Reflection blocks.
-    Furthermore, a NON-DIVISIBLE-MERGE branch includes in addition to TextBlocks or MediaBlocks, the MANDATORY FeedbackAndFeedforwardBlock and JumpBlock (Used in situation where the story of a 
-    branch leads to another branch hence we use JumpBlock to connect the progressive story because story paths 
-    can merge as well to have the 1 same conclusion). Use NON-DIVISIBLE-MERGE only in the situation where
-    a story of the branch leads to and connects to the progressive story of another branch such that both the choices
-    leads to the same conclusion for that part of the story.
+    "Learning Objectives", "Content Areas" and "Input Documents". 
+    The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
+    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
+    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
+    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
+    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
+    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
+    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
+    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
+    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
+    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
+    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
     All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
     TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
@@ -7924,9 +7304,8 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
+    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
     Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Branch 1,2,3... (NON-DIVISIBLE-MERGE type to link scenario branches when one story directly advances another branch's storyline) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, JumpBlock
     Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
     Learning_Objectives, and Content_Areas are all PedagogicalBlock.
     \nEnd of Overview structure\n
@@ -7958,7 +7337,8 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+        
     SAMPLE EXAMPLE:::
 {{
     "title": "(Insert a fitting Title Here)",
@@ -7996,7 +7376,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in "Input Documents". There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in 'Input Documents'. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -8005,8 +7385,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
-        SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
         {{
             "id": "SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -8024,6 +7403,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 }}
             ]
         }},
+        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
             "id": "SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -8031,19 +7411,24 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
+            "id": "SBB_Bnh1_GB",
+            "type": "GoalBlock",
             "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here"
+        }},
+        {{
+            "id": "SBB_Bnh1_DB",
+            "type": "PedagogicalBlock",
+            "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
         {{
-            "id": "SBB_Bnh1_JB",
-            "type": "JumpBlock",
-            "title": "Reevaluate Your Choices",
-            "proceedToBlock": "SBB"
+            "id": "SBB_Bnh1_RF",
+            "type": "PedagogicalBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
         }},
+        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
             "id": "SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -8067,8 +7452,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
-        in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
         {{
             "id": "SBB_Bnh2_SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -8082,14 +7466,11 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
-                }},
-                {{
-                    "port": "3",
-                    "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
+        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
             "id": "SBB_Bnh2_SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -8113,7 +7494,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }},
+        }}
         {{
             "id": "SBB_Bnh2_SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -8121,49 +7502,19 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B2",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh2_JB",
-            "type": "JumpBlock",
-            "title": "(Insert Text Here)",
-            "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B1",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_GB",
+            "id": "SBB_Bnh2_SBB_Bnh2_GB",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
+            "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "BSBB_Bnh2_SBB_Bnh3_DB",
+            "id": "SBB_Bnh2_SBB_Bnh2_DB",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
-        }}, The blocks of 
+        }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh3_RF",
+            "id": "SBB_Bnh2_SBB_Bnh2_RF",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -8201,15 +7552,15 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_B2"
+            "target": "SBB_Bnh1_GB"
         }},
         {{
-            "source": "SBB_Bnh1_B2",
-            "target": "SBB_Bnh1_JB"
+            "source": "SBB_Bnh1_GB",
+            "target": "SBB_Bnh1_DB"
         }},
         {{
-            "source": "SBB_Bnh1_JB",
-            "target": "SBB"
+            "source": "SBB_Bnh1_DB",
+            "target": "SBB_Bnh1_RF"
         }},
         {{
             "source": "SBB",
@@ -8244,7 +7595,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         {{
             "source": "SBB_Bnh2_SBB_Bnh1_DB",
             "target": "SBB_Bnh2_SBB_Bnh1_RF"
-        }}
+        }},
         {{
             "source": "SBB_Bnh2_SBB",
             "target": "SBB_Bnh2_SBB_Bnh2_B1",
@@ -8252,40 +7603,25 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_B2"
+            "target": "SBB_Bnh2_SBB_Bnh2_GB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_SBB_Bnh2_JB"
+            "source": "SBB_Bnh2_SBB_Bnh2_GB",
+            "target": "SBB_Bnh2_SBB_Bnh2_DB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_JB",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh3_B1",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B1",
-            "target": "SBB_Bnh2_SBB_Bnh3_B2"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B2",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_GB",
-            "target": "SBB_Bnh2_SBB_Bnh3_DB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_DB",
-            "target": "SBB_Bnh2_SBB_Bnh3_RF"
+            "source": "SBB_Bnh2_SBB_Bnh2_DB",
+            "target": "SBB_Bnh2_SBB_Bnh2_RF"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    !!!WARNING!!! 
+    The naming convention of for example SBB_Bnh2 etc is just for your concept 
+    so you can deal with how the edges will connect certain nodes in the above 
+    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
+    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -8352,58 +7688,55 @@ prompt_simulation_shadow_edges = PromptTemplate(
     [[[
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
-    a system of blocks. You give step-by-step instructions and provide detail information such that
+    a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
+
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
 
     1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents"
+    2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
     and create the scenario according to these very "Learning Objectives" and "Content Areas" specified.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
     The educational content in the Simulation Scenario Format generated by you is only limited to the educational content of 'Input Documents', since
-    'Input Documents' is the verified source of information.    
+    'Input Documents' is the verified source of information.       
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
-
+    
     ***WHAT TO DO END***
 
-
+    
     The Simulation Scenario are built using blocks, each having its own parameters.
-    Block types include:
+    Block types include: 
     'TextBlock' with timer, title, and description
     'MediaBlock' with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement.
+    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding)
+    'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
     'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, Title, ProceedToBranchList
-    'JumpBlock' with title, ProceedToBlock
-    'GoalBlock' with Title, Score
+    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
+    'GoalBlock' with title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)' 
-    is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
-    consequence branches. Each consequence branch can have its own branches that can divide further 
-    to have their own branches, untill the simulation story ends covering all aspects of the information
-    for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
-    give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
-    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)' and this 
-    branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
-    more Branches that may be further DIVISIBLE or NON-DIVISIBLE type branches. The NON-DIVISIBLE type branches are the branches where
-    a simulation path ends and the story of that path is finished. The NON-DIVISIBLE type branch has at the end Goal Block, Debriefing and Reflection blocks.
-    Furthermore, a NON-DIVISIBLE-MERGE branch includes in addition to TextBlocks or MediaBlocks, the MANDATORY FeedbackAndFeedforwardBlock and JumpBlock (Used in situation where the story of a 
-    branch leads to another branch hence we use JumpBlock to connect the progressive story because story paths 
-    can merge as well to have the 1 same conclusion). Use NON-DIVISIBLE-MERGE only in the situation where
-    a story of the branch leads to and connects to the progressive story of another branch such that both the choices
-    leads to the same conclusion for that part of the story.
+    "Learning Objectives", "Content Areas" and "Input Documents". 
+    The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
+    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
+    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
+    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
+    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
+    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
+    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
+    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
+    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
+    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
+    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
     All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
     TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
@@ -8432,9 +7765,8 @@ prompt_simulation_shadow_edges = PromptTemplate(
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
+    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
     Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Branch 1,2,3... (NON-DIVISIBLE-MERGE type to link scenario branches when one story directly advances another branch's storyline) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, JumpBlock
     Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
     Learning_Objectives, and Content_Areas are all PedagogicalBlock.
     \nEnd of Overview structure\n
@@ -8466,7 +7798,8 @@ prompt_simulation_shadow_edges = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+        
     SAMPLE EXAMPLE:::
 {{
     "title": "(Insert a fitting Title Here)",
@@ -8504,7 +7837,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in "Input Documents". There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in 'Input Documents'. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -8513,8 +7846,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
-        SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
         {{
             "id": "SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -8532,6 +7864,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 }}
             ]
         }},
+        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
             "id": "SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -8539,19 +7872,24 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
+            "id": "SBB_Bnh1_GB",
+            "type": "GoalBlock",
             "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here"
+        }},
+        {{
+            "id": "SBB_Bnh1_DB",
+            "type": "PedagogicalBlock",
+            "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
         {{
-            "id": "SBB_Bnh1_JB",
-            "type": "JumpBlock",
-            "title": "Reevaluate Your Choices",
-            "proceedToBlock": "SBB"
+            "id": "SBB_Bnh1_RF",
+            "type": "PedagogicalBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
         }},
+        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
             "id": "SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -8575,8 +7913,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
-        in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
         {{
             "id": "SBB_Bnh2_SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -8590,14 +7927,11 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
-                }},
-                {{
-                    "port": "3",
-                    "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
+        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
             "id": "SBB_Bnh2_SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -8621,7 +7955,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }},
+        }}
         {{
             "id": "SBB_Bnh2_SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -8629,49 +7963,19 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B2",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh2_JB",
-            "type": "JumpBlock",
-            "title": "(Insert Text Here)",
-            "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B1",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_GB",
+            "id": "SBB_Bnh2_SBB_Bnh2_GB",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
+            "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "BSBB_Bnh2_SBB_Bnh3_DB",
+            "id": "SBB_Bnh2_SBB_Bnh2_DB",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
-        }}, The blocks of 
+        }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh3_RF",
+            "id": "SBB_Bnh2_SBB_Bnh2_RF",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -8709,15 +8013,15 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_B2"
+            "target": "SBB_Bnh1_GB"
         }},
         {{
-            "source": "SBB_Bnh1_B2",
-            "target": "SBB_Bnh1_JB"
+            "source": "SBB_Bnh1_GB",
+            "target": "SBB_Bnh1_DB"
         }},
         {{
-            "source": "SBB_Bnh1_JB",
-            "target": "SBB"
+            "source": "SBB_Bnh1_DB",
+            "target": "SBB_Bnh1_RF"
         }},
         {{
             "source": "SBB",
@@ -8752,7 +8056,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
         {{
             "source": "SBB_Bnh2_SBB_Bnh1_DB",
             "target": "SBB_Bnh2_SBB_Bnh1_RF"
-        }}
+        }},
         {{
             "source": "SBB_Bnh2_SBB",
             "target": "SBB_Bnh2_SBB_Bnh2_B1",
@@ -8760,40 +8064,25 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_B2"
+            "target": "SBB_Bnh2_SBB_Bnh2_GB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_SBB_Bnh2_JB"
+            "source": "SBB_Bnh2_SBB_Bnh2_GB",
+            "target": "SBB_Bnh2_SBB_Bnh2_DB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_JB",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh3_B1",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B1",
-            "target": "SBB_Bnh2_SBB_Bnh3_B2"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B2",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_GB",
-            "target": "SBB_Bnh2_SBB_Bnh3_DB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_DB",
-            "target": "SBB_Bnh2_SBB_Bnh3_RF"
+            "source": "SBB_Bnh2_SBB_Bnh2_DB",
+            "target": "SBB_Bnh2_SBB_Bnh2_RF"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    !!!WARNING!!! 
+    The naming convention of for example SBB_Bnh2 etc is just for your concept 
+    so you can deal with how the edges will connect certain nodes in the above 
+    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
+    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -8883,58 +8172,55 @@ You will Continue like this in your generated response:
     [[[
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
-    a system of blocks. You give step-by-step instructions and provide detail information such that
+    a system of blocks. You give step-by-step instructions and provide detail information such that 
     you are instructing and teaching a student.
+
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
 
     1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents"
+    2. According to the "Learning Objectives" and "Content Areas", you will utilize the meta-information in the "Input Documents" 
     and create the scenario according to these very "Learning Objectives" and "Content Areas" specified.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
     The educational content in the Simulation Scenario Format generated by you is only limited to the educational content of 'Input Documents', since
-    'Input Documents' is the verified source of information.    
+    'Input Documents' is the verified source of information.       
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
-
+    
     ***WHAT TO DO END***
 
-
+    
     The Simulation Scenario are built using blocks, each having its own parameters.
-    Block types include:
+    Block types include: 
     'TextBlock' with timer, title, and description
     'MediaBlock' with title, Media Type (Text, Image, 360-image, Video, audio), Description of the Media used, Overlay tags used as hotspots on the Media as text, video or audio
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement.
+    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'Debriefing' with description(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding)
-    'Reflection' with description(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, Title, ProceedToBranchList
-    'JumpBlock' with title, ProceedToBlock
-    'GoalBlock' with Title, Score
+    'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
+    'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
+    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
+    'GoalBlock' with title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Input Documents". The 'Branching Block (Simple Branching)' 
-    is used to divide the choices for the student to take. Then, for selected choices, branches the Simulation Scneario into 
-    consequence branches. Each consequence branch can have its own branches that can divide further 
-    to have their own branches, untill the simulation story ends covering all aspects of the information
-    for scenario creation. The start of the scenario has Briefing. The end of each of that branch that ends the simulation story and
-    give score via a Goal Block, this type of branch has FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. 
-    There are two types branches. The DIVISIBLE type branch divides further via a 'Branching Block (Simple Branching)' and this 
-    branch type has NO Goal Block, FeedbackAndFeedforwardBlock, Debriefing and Reflection blocks. The DIVISIBLE branch type gives rise to
-    more Branches that may be further DIVISIBLE or NON-DIVISIBLE type branches. The NON-DIVISIBLE type branches are the branches where
-    a simulation path ends and the story of that path is finished. The NON-DIVISIBLE type branch has at the end Goal Block, Debriefing and Reflection blocks.
-    Furthermore, a NON-DIVISIBLE-MERGE branch includes in addition to TextBlocks or MediaBlocks, the MANDATORY FeedbackAndFeedforwardBlock and JumpBlock (Used in situation where the story of a 
-    branch leads to another branch hence we use JumpBlock to connect the progressive story because story paths 
-    can merge as well to have the 1 same conclusion). Use NON-DIVISIBLE-MERGE only in the situation where
-    a story of the branch leads to and connects to the progressive story of another branch such that both the choices
-    leads to the same conclusion for that part of the story.
+    "Learning Objectives", "Content Areas" and "Input Documents". 
+    The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
+    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
+    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
+    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
+    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
+    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
+    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
+    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
+    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
+    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.
+    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
     All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
     TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
@@ -8963,9 +8249,8 @@ You will Continue like this in your generated response:
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
     MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. See if you have any already Image summary or summaries available. The already available images will have FileName, PageNumber/SlideNumber and ImageNumber mentioned with their description in the 'Input Documents'. If you can find such Images AVAILABLE in 'Input Documents', then incorporate them in the Media Block or Blocks and use their description for the the Media Block or Blocks. Alternatively, IF such images are NOT AVAILABLE in 'Input Documents', then USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image, Video, 360-Image, Audio) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
+    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
     Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Branch 1,2,3... (NON-DIVISIBLE-MERGE type to link scenario branches when one story directly advances another branch's storyline) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, JumpBlock
     Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
     Learning_Objectives, and Content_Areas are all PedagogicalBlock.
     \nEnd of Overview structure\n
@@ -8997,7 +8282,8 @@ You will Continue like this in your generated response:
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+        
     SAMPLE EXAMPLE:::
 {{
     "title": "(Insert a fitting Title Here)",
@@ -9035,7 +8321,7 @@ You will Continue like this in your generated response:
         }},
         {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in "Input Documents". There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information in 'Input Documents'. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -9044,8 +8330,7 @@ You will Continue like this in your generated response:
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches.
-        SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
         {{
             "id": "SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -9063,6 +8348,7 @@ You will Continue like this in your generated response:
                 }}
             ]
         }},
+        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
             "id": "SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -9070,19 +8356,24 @@ You will Continue like this in your generated response:
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
+            "id": "SBB_Bnh1_GB",
+            "type": "GoalBlock",
             "title": "(Insert Text Here)",
+            "score": "Insert Integer Number Here"
+        }},
+        {{
+            "id": "SBB_Bnh1_DB",
+            "type": "PedagogicalBlock",
+            "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh1_JB in this case is a story path that lead nowhere and brought the player back to the previous branching block SBB"}},
         {{
-            "id": "SBB_Bnh1_JB",
-            "type": "JumpBlock",
-            "title": "Reevaluate Your Choices",
-            "proceedToBlock": "SBB"
+            "id": "SBB_Bnh1_RF",
+            "type": "PedagogicalBlock",
+            "title": "Reflection",
+            "description": "(Insert Text Here)"
         }},
+        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
             "id": "SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -9106,8 +8397,7 @@ You will Continue like this in your generated response:
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which
-        in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
         {{
             "id": "SBB_Bnh2_SBB",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -9121,14 +8411,11 @@ You will Continue like this in your generated response:
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE-MERGE)"
-                }},
-                {{
-                    "port": "3",
-                    "SBB_Bnh2_SBB_Bnh3": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
+        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
             "id": "SBB_Bnh2_SBB_Bnh1_B1",
             "type": "PedagogicalBlock",
@@ -9152,7 +8439,7 @@ You will Continue like this in your generated response:
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }},
+        }}
         {{
             "id": "SBB_Bnh2_SBB_Bnh2_B1",
             "type": "PedagogicalBlock",
@@ -9160,49 +8447,19 @@ You will Continue like this in your generated response:
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B2",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},
-        {{"_comment": "Jump blocks can be used for different reasons. Below SBB_Bnh2_SBB_Bnh2_JB in this case is a story path that lead the player to same outcome as another branch's goal block result of Bnh2_Bnh_Bnh3. Logically, it is possible that two paths taken by player can lead to a same outcome"}},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh2_JB",
-            "type": "JumpBlock",
-            "title": "(Insert Text Here)",
-            "proceedToBlock": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B1",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_B2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "SBB_Bnh2_SBB_Bnh3_GB",
+            "id": "SBB_Bnh2_SBB_Bnh2_GB",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here. Give smaller score then the relevant Correct Choice Bnhanch score"
+            "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "BSBB_Bnh2_SBB_Bnh3_DB",
+            "id": "SBB_Bnh2_SBB_Bnh2_DB",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
-        }}, The blocks of 
+        }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh3_RF",
+            "id": "SBB_Bnh2_SBB_Bnh2_RF",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -9240,15 +8497,15 @@ You will Continue like this in your generated response:
         }},
         {{
             "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_B2"
+            "target": "SBB_Bnh1_GB"
         }},
         {{
-            "source": "SBB_Bnh1_B2",
-            "target": "SBB_Bnh1_JB"
+            "source": "SBB_Bnh1_GB",
+            "target": "SBB_Bnh1_DB"
         }},
         {{
-            "source": "SBB_Bnh1_JB",
-            "target": "SBB"
+            "source": "SBB_Bnh1_DB",
+            "target": "SBB_Bnh1_RF"
         }},
         {{
             "source": "SBB",
@@ -9283,7 +8540,7 @@ You will Continue like this in your generated response:
         {{
             "source": "SBB_Bnh2_SBB_Bnh1_DB",
             "target": "SBB_Bnh2_SBB_Bnh1_RF"
-        }}
+        }},
         {{
             "source": "SBB_Bnh2_SBB",
             "target": "SBB_Bnh2_SBB_Bnh2_B1",
@@ -9291,40 +8548,25 @@ You will Continue like this in your generated response:
         }},
         {{
             "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_B2"
+            "target": "SBB_Bnh2_SBB_Bnh2_GB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_SBB_Bnh2_JB"
+            "source": "SBB_Bnh2_SBB_Bnh2_GB",
+            "target": "SBB_Bnh2_SBB_Bnh2_DB"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_JB",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh3_B1",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B1",
-            "target": "SBB_Bnh2_SBB_Bnh3_B2"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_B2",
-            "target": "SBB_Bnh2_SBB_Bnh3_GB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_GB",
-            "target": "SBB_Bnh2_SBB_Bnh3_DB"
-        }},
-        {{
-            "source": "SBB_Bnh2_SBB_Bnh3_DB",
-            "target": "SBB_Bnh2_SBB_Bnh3_RF"
+            "source": "SBB_Bnh2_SBB_Bnh2_DB",
+            "target": "SBB_Bnh2_SBB_Bnh2_RF"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    !!!WARNING!!! 
+    The naming convention of for example SBB_Bnh2 etc is just for your concept 
+    so you can deal with how the edges will connect certain nodes in the above 
+    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
+    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
