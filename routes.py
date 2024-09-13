@@ -33,6 +33,7 @@ from urllib.parse import urlparse, urljoin
 
 from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
+import traceback
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
@@ -382,6 +383,7 @@ def process_data():
             except Exception as e:
                 docsearch = None
                 logger.error(f"Error processing file:{str(e)}")
+                logger.error(traceback.format_exc())
                 return jsonify(error=f"Error processing file:{str(e)}")
             if base_docsearch is None:
                 base_docsearch = docsearch  # For the first file
@@ -507,6 +509,7 @@ def decide():
 
             except Exception as e:
                 logger.error(f"An error occurred or abrupt Model change: {str(e)}")
+                logger.error(traceback.format_exc())
                 return jsonify(error=f"An error occurred or abrupt Model change: {str(e)}")
 
         else:
@@ -563,7 +566,7 @@ def generate_course():
 
             try:
                 if model_type == 'gemini' and model_local_embed=='no':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=temp, max_output_tokens=8000) # temp default 0.1
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=temp) # temp default 0.1
                     llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
@@ -577,7 +580,7 @@ def generate_course():
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
                 elif model_type == 'gemini' and model_local_embed=='yes':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=temp, max_output_tokens=8000) # temp default 0.1
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=temp) # temp default 0.1
                     llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = HuggingFaceBgeEmbeddings(
                         model_name= embed_model,
@@ -661,6 +664,7 @@ def generate_course():
                 # return jsonify(message=f"""{response}""")
             except Exception as e:
                 logger.error(f"An error occurred or abrupt Model change: {str(e)}")
+                logger.error(traceback.format_exc())
                 return jsonify(error=f"An error occurred or abrupt Model change: {str(e)}")
 
         else:
@@ -668,8 +672,7 @@ def generate_course():
         
         logger.critical("Unexpected Fault or Interruption")
         return jsonify(error="Unexpected Fault or Interruption")
-
-
+    
 @app.route("/find_images", methods=["GET", "POST"])
 @token_required
 def find_images():
@@ -767,6 +770,7 @@ def find_images():
                 return jsonify(json_img_response) #This one works
             except Exception as e:
                 logger.error(f"An error occurred or abrupt Model change: {str(e)}")
+                logger.error(traceback.format_exc())
                 return jsonify(error=f"An error occurred or abrupt Model change: {str(e)}")
 
 
