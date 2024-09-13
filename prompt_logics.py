@@ -36,7 +36,6 @@ import imagehash
 
 from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
 
-
 # Logging Declaration
 log_format = '%(asctime)s - %(levelname)s - %(message)s'
 logger = logging
@@ -318,7 +317,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         os.remove(temp_path)
 
     elif extension=="txt":
-        logger.debug(f"TExt file name is ::{filename}")
+        logger.debug(f"Text file name is ::{filename}")
         temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         file.save(temp_path)
@@ -347,11 +346,11 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
             raw_text = text['text']
             logger.debug(raw_text)
         except Exception as e:
-            logger.debug(f"Failed to initialize the Whisper model.Error:{str(e)}")
+            logger.error(f"Failed to initialize the Whisper model.Error:{str(e)}")
         
         os.remove(temp_path_audio)
 
-    
+
     # chunking recursively without semantic search, this does not uses openai embeddings for chunking
     text_splitter = RecursiveCharacterTextSplitter(
     chunk_size = 1536,
@@ -1196,6 +1195,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
     return response['text'], scenario
 
 def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language, mpv):
+    txt_output = None
 
     mpv_string = mpv_list[int(mpv)]
     logger.debug(f"mpv list string is: {mpv_string}")
@@ -1291,7 +1291,8 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
             logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
             output['edges']  = shadow_response['edges']  
-            logger.debug(output)
+            logger.debug(f"{output} of {type(output)}")
+            output = json.dumps(output, indent=2) # converts to dict to str
             is_valid_output, result = is_json_parseable(output)
 
             if is_valid_output == False:
@@ -1347,7 +1348,8 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
             logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
             output['edges']  = shadow_response['edges']  
-            logger.debug(output)
+            logger.debug(f"{output} of {type(output)}")
+            output = json.dumps(output, indent=2) # converts to dict to str
             is_valid_output, result = is_json_parseable(output)
 
             if is_valid_output == False:
@@ -1403,7 +1405,8 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
             logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
             output['edges']  = shadow_response['edges']  
-            logger.debug(output)
+            logger.debug(f"{output} of {type(output)}")
+            output = json.dumps(output, indent=2) # converts to dict to str
             is_valid_output, result = is_json_parseable(output)
 
             if is_valid_output == False:
@@ -1459,17 +1462,19 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
             logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
             output['edges']  = shadow_response['edges']  
-            logger.debug(output)
+            logger.debug(f"{output} of {type(output)}")
+            output = json.dumps(output, indent=2) # converts to dict to str
             is_valid_output, result = is_json_parseable(output)
 
             if is_valid_output == False:
                 output = original_txt
                 logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
-
-
+ 
+        
     else:
         logger.debug(f"Since error_flag is {error_flag}, no shadow edges found!")
 
+    
     return output
 
 
@@ -1524,6 +1529,16 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     prompt = PromptTemplate(
     template="""
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    
+    !!!
+    NEGATIVE PROMPT: RESPONDING OUTSIDE THE JSON FORMAT.   
+    DO NOT START YOUR RESPONSE THAT STARTS WITH ```json and ENDS WITH ```
+    The ticks you enclose JSON in, deems the JSON parseability unsuccessful.
+    Just start the JSON response directly.
+    Remove Line Breaks: Combined multi-line Description fields into single lines.
+    Escape Single Quotes: Removed unnecessary escaping of single quotes since they're not needed in JSON strings.
+    !!!    
+    
     Search for those image or images only, whose descriptions in a MediaBlock of the 'Response Text' matches
     with the descriptions in the 'Context' data. Output only those image's or images' description from the 
     'Context' data.
