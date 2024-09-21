@@ -1,4 +1,5 @@
 PyMuPDF
+PyMuPDFb
 scipy
 scikit-learn
 sentence-transformers
