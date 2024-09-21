@@ -1,3 +1,4 @@
+PyMuPDF
 scipy
 scikit-learn
 sentence-transformers
@@ -138,7 +139,6 @@ pycparser==2.21
 pydantic==2.5.3
 pydantic_core==2.14.6
 pyparsing==3.1.1
-PyPDF2==3.0.1
 PyPika==0.48.9
 pyproject_hooks==1.0.0
 pyreadline3==3.4.1
