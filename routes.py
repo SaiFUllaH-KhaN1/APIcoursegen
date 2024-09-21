@@ -34,6 +34,7 @@ from urllib.parse import urlparse, urljoin
 from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 import traceback
+import fitz
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
@@ -232,7 +233,6 @@ download_Embed_model(embed_model)
 
 ### EMBED MODEL END
 
-
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
 
@@ -301,7 +301,7 @@ def process_data():
                     pdf_bytes.seek(0)
                     # with open('extracted_content.pdf', 'wb') as pdf_file:
                     #     pdf_file.write(pdf_bytes.getvalue())
-                    pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf') #still not unique for the same session so either url or youtube url processed at the same time
+                    pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf') # still not unique for the same session so either url or youtube url processed at the same time
                     pdf_file_wrapper.seek(0)
                     f.append(pdf_file_wrapper)
                 
@@ -352,15 +352,22 @@ def process_data():
 
         base_docsearch = None
         for file in f:
-
+            fitz_pdf_reader = None
             ### ONLY FOR AUDIO CHECK ###
             filename = file.filename
             logger.debug("filename is",filename)
             extension = filename.rsplit('.', 1)[1].lower()
-            temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}")
+            temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}") # declared here for overcoming reference before assignment error
+
+            if not os.path.exists(f"pdf_dir{session_var}"):
+                os.makedirs(f"pdf_dir{session_var}")         
+            
+            temp_pdf_file = os.path.join(f"pdf_dir{session_var}", f"{session_var}{filename}")
             if extension =="mp3":
                 logger.debug("temp_path_audio",temp_path_audio)
                 file.save(temp_path_audio)
+            elif extension =="pdf" and f'extracted_content{session_var}.pdf' not in filename:
+                file.save(temp_pdf_file)
             ## AUDIO CHECK END    
 
             file_content = io.BytesIO(file.read())
@@ -379,7 +386,9 @@ def process_data():
                         encode_kwargs={'normalize_embeddings': True}
                     )
                 logger.debug(f"Using embeddings of {embeddings}")
-                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, whisper_directory, whisper_model, language)
+                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, whisper_directory, whisper_model, language, temp_pdf_file)
+                if os.path.exists(f"pdf_dir{session_var}"):
+                    shutil.rmtree(f"pdf_dir{session_var}")
             except Exception as e:
                 docsearch = None
                 logger.error(f"Error processing file:{str(e)}")
@@ -419,10 +428,11 @@ def process_data():
         logger.error("None")
 
     logger.critical("Unexpected Fault or Interruption")
-
+    logger.critical(traceback.format_exc())
     # Return the processed text in JSON format
     # return jsonify({"response": response['text']})
     return jsonify(error="Unexpected Fault or Interruption")
+
 
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
