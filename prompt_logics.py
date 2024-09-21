@@ -35,13 +35,15 @@ from bs4 import BeautifulSoup
 import imagehash
 
 from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
+import traceback
+import fitz
 
 # Logging Declaration
 log_format = '%(asctime)s - %(levelname)s - %(message)s'
 logger = logging
 logger.basicConfig(level= logging.DEBUG, format= log_format)
 
-def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension,whisper_directory, whisper_model, language):
+def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension,whisper_directory, whisper_model, language, temp_pdf_file):
     logger.debug(f"file is: {file}",)
     
     filename_without_extension = filename.rsplit('.', 1)[0].lower()
@@ -56,40 +58,57 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
 
         # For Image processing
         if f'extracted_content{session_var}.pdf' not in filename:
-            pdf_reader = PdfReader(file_content)
+            fitz_pdf_reader = fitz.open(temp_pdf_file)
             pgcount=0
-            for i, page in enumerate(pdf_reader.pages):
-                text_instant = page.extract_text()
+            for page_num in range(len(fitz_pdf_reader)):
+                page = fitz_pdf_reader.load_page(page_num)
                 pgcount += 1
                 imgcount = 1
-                #               pattern_end = r'End of PageNumber (\d+) of file name (.+)\n'
-                #               pattern_this_page = r'The Content of PageNumber (\d+) of file name (.+) is:\n'
+                text_instant = page.get_text()
                 text_instant = f"\nThe Content of PageNumber {pgcount} of file name {filename_without_extension} is:\n{text_instant}.\nEnd of PageNumber {pgcount} of file name {filename_without_extension}\n"
                 try:
-                    for image_file_object in page.images:
-                        # base_name = os.path.splitext(os.path.basename(image_file_object.name))[0]  # Get the base file name without extension
-                        extension = os.path.splitext(image_file_object.name)[1]  # Get the file extension
-                        base_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}"  # Construct new file name with count
+                    images = page.get_images(full=True)
+                    for img_index, img in enumerate(images, start=1):
+                        xref = img[0]
+                        base_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}"
+                        try:
+                            base_image = fitz_pdf_reader.extract_image(xref)
+                        except Exception as e:
+                            logger.info(f"Error base image : {e}. Lets resolve via cmyk dealing")
+                            logger.info(traceback.format_exc())
+                            pix = fitz.Pixmap(fitz_pdf_reader, xref) # create a Pixmap
+                            if pix.n > 4: # CMYK: convert to RGB first
+                                pix = fitz.Pixmap(fitz.csRGB, pix)
+                            png_filename = f"{base_name}.png"
+                            png_path = os.path.join(output_path_byfile, png_filename)
+                            pix.writePNG(png_path)  # Write image content to PNG
+                            pix = None
+                            logger.info(f"Error base image Resolved as far as cmyk is concerned")
+                            continue
+                        
+                        image_bytes = base_image["image"]
+                        extension = base_image["ext"]
+                        logger.info(f"Img extension is: {extension} and img base name is: {base_name}")
                         if extension == ".jp2":
-                            logger.debug(f"Checking Image Extension {extension}",)
+                            logger.info(f"Checking Image Extension {extension}",)
                             image_path = os.path.join(output_path_byfile, base_name)  # Construct the full output path
                             imgcount += 1
                             with open(image_path, "wb") as fp:
-                                fp.write(image_file_object.data)
+                                fp.write(image_bytes)
                             with Image.open(image_path) as im:
                                 new_image_name = base_name + ".png"  # New image name for PNG
                                 new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
                                 im.save(new_image_path)  # Save the image as PNG
                                 os.remove(image_path)
                         else:
-                            image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}{extension}"  # Construct new file name with count
+                            image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}.{extension}"  # Construct new file name with count
                             image_path = os.path.join(output_path_byfile, image_name)  # Construct the full output path
                             imgcount += 1
                             with open(image_path, "wb") as fp:
-                                fp.write(image_file_object.data)
+                                fp.write(image_bytes)
                             with Image.open(image_path) as im:
                                 if im.mode in ["P", "PA"]:
-                                    logger.debug(f"Image of P or PA Mode detected:{im.mode}",)
+                                    logger.info(f"Image of P or PA Mode detected:{im.mode}",)
                                     im = im.convert("RGBA")  # Convert palette-based images to RGBA
                                     new_image_name = base_name + ".png"  # New image name for PNG
                                     new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
@@ -97,13 +116,16 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
                                     os.remove(image_path)
                                 else:
                                     pass
-                        
 
+                    logger.info("filler print")
                 except Exception as e:
-                    logger.error(f"Error processing image {image_file_object.name}: {e}")
-                    continue  # Skip to the next image
+                    logger.info(f"Error processing image {base_name}: {e}")
+                    logger.info(traceback.format_exc())
+                    pass
+                
                 if text_instant:
                     texts += text_instant
+                    
             # at this point we got text and images extracted, stored in ./images folder, lets summarize images
 
             # Get image summaries
