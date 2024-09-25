@@ -35,6 +35,7 @@ from transformers import pipeline, WhisperProcessor, WhisperForConditionalGenera
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 import traceback
 import fitz
+import validators
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
@@ -140,6 +141,9 @@ def delete_indexes():
         elif os.path.isdir(dir_path) and item.startswith("audio_"):
             logger.debug(f"Deleting audio directory: {dir_path}")
             shutil.rmtree(dir_path)
+        elif os.path.isdir(dir_path) and item.startswith("pdf_dir"):
+            logger.debug(f"Deleting pdf directory: {dir_path}")
+            shutil.rmtree(dir_path)
 
 @app.route("/cron", methods=['POST'])
 @basic_auth.required
@@ -157,7 +161,7 @@ def delete_old_directories():
     base_path = os.path.dirname(os.path.abspath(__file__))
     for item in os.listdir(base_path):
         dir_path = os.path.join(base_path, item)
-        if os.path.isdir(dir_path) and item.startswith("faiss_index_") or item.startswith("imagefolder_") or item.startswith("audio_"):
+        if os.path.isdir(dir_path) and item.startswith("faiss_index_") or item.startswith("imagefolder_") or item.startswith("audio_") or item.startswith("pdf_dir"):
             # Check if directory is older than a specified time
             dir_age = datetime.fromtimestamp(os.path.getmtime(dir_path))
             if datetime.now() - dir_age > time_to_delete_files_older_than:
@@ -263,7 +267,6 @@ def process_data():
             logger.debug(f"user_agent alternate: {user_agents}")
         else:
             logger.debug(f"user_agent from client: {user_agents}")
-
         
         prompt = request.form.get("prompt")
         url_doc = request.form.get('url_doc')
@@ -280,7 +283,7 @@ def process_data():
             logger.debug(f"Language Selected is:{language}")
 
 
-        if url_doc:
+        if url_doc and validators.url(url_doc): # checks if url there and is valid
             if url_doc and ('www.youtube.com' in url_doc or 'youtu.be' in url_doc):
                 loader = YoutubeLoader.from_youtube_url(
                 url_doc, add_video_info=False)
@@ -309,22 +312,25 @@ def process_data():
                 def fetch_url(url):
                     for user_agent in user_agents:
                         headers = {'User-Agent': user_agent}
-                        request = urllib.request.Request(url, headers=headers)
-                        
                         try:
+                            request = urllib.request.Request(url, headers=headers)
                             response = urllib.request.urlopen(request, timeout=3)
                             soup = BeautifulSoup(response.read(), 'html.parser')
                             var = soup.get_text()
                             logger.debug(f"Extracted text length: {len(var)}")
                             return  var, soup
                         except (HTTPError, URLError) as e:
-                            logger.debug(f"Error with {user_agent}: {str(e)}")
+                            logger.error(f"Error with {user_agent}: {str(e)}")
                             continue  # Try the next user agent in case of an error
 
                 # Test the function with a given URL
-                var, soup = fetch_url(url_doc)
+                try:
+                    var, soup = fetch_url(url_doc)
+                except Exception as e:
+                    logger.error(f"Error with URL processing:{str(e)}")
+                    return jsonify(error=f"Error with URL processing:{str(e)}")
 
-                if var:
+                if var: 
                     pdf_bytes = io.BytesIO()
                     c = canvas.Canvas(pdf_bytes, pagesize=A4)
                     text = c.beginText(40, 750)
@@ -346,13 +352,15 @@ def process_data():
                     parsed_url = urlparse(url_doc) # parse url for getting base url only
                     base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
                     LCD.URL_IMG_EXTRACT(soup, session_var, base_url) # images extracted by this function
+        else:
+            logger.warning(f"Invalid URL Spotted! {url_doc}")
+            return jsonify(error=f"Invalid URL Spotted! {url_doc}")
 
         filename = [f_name.filename for f_name in f]
         logger.debug(f"Filename is::{filename}")
 
         base_docsearch = None
         for file in f:
-            fitz_pdf_reader = None
             ### ONLY FOR AUDIO CHECK ###
             filename = file.filename
             logger.debug("filename is",filename)
@@ -559,8 +567,9 @@ def generate_course():
         else:
             mpv = request.args.get('mpv', '2') # to set default value to balanced mpv
         logger.debug(f"mpv is: {mpv}")
+        if not validators.between(mpv, min=0, max=4):
+            return jsonify(error="mpv value should be between min 0 and max 4 value")
          
-        
         start_route_time = time.time() # Timer starts at the Post
 
         if learning_obj and content_areas:
