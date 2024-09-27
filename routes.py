@@ -283,78 +283,79 @@ def process_data():
             logger.debug(f"Language Selected is:{language}")
 
 
-        if url_doc and validators.url(url_doc): # checks if url there and is valid
-            if url_doc and ('www.youtube.com' in url_doc or 'youtu.be' in url_doc):
-                loader = YoutubeLoader.from_youtube_url(
-                url_doc, add_video_info=False)
-                var_load = loader.load()
-                raw_text = ''
-                var = raw_text.join(document.page_content + '\n\n' for document in var_load)
-                if var:
-                    pdf_bytes = io.BytesIO()
-                    c = canvas.Canvas(pdf_bytes, pagesize=A4)
-                    text = c.beginText(40, 750)
-                    text.setFont("Helvetica", 6)
-                    lines = var.split('\n')
-                    for line in lines:
-                        text.textLine(line)
-                    c.drawText(text)
-                    c.showPage()
-                    c.save()
-                    pdf_bytes.seek(0)
-                    # with open('extracted_content.pdf', 'wb') as pdf_file:
-                    #     pdf_file.write(pdf_bytes.getvalue())
-                    pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf') # still not unique for the same session so either url or youtube url processed at the same time
-                    pdf_file_wrapper.seek(0)
-                    f.append(pdf_file_wrapper)
-                
-            else:
-                def fetch_url(url):
-                    for user_agent in user_agents:
-                        headers = {'User-Agent': user_agent}
-                        try:
-                            request = urllib.request.Request(url, headers=headers)
-                            response = urllib.request.urlopen(request, timeout=3)
-                            soup = BeautifulSoup(response.read(), 'html.parser')
-                            var = soup.get_text()
-                            logger.debug(f"Extracted text length: {len(var)}")
-                            return  var, soup
-                        except (HTTPError, URLError) as e:
-                            logger.error(f"Error with {user_agent}: {str(e)}")
-                            continue  # Try the next user agent in case of an error
-
-                # Test the function with a given URL
-                try:
-                    var, soup = fetch_url(url_doc)
-                except Exception as e:
-                    logger.error(f"Error with URL processing:{str(e)}")
-                    return jsonify(error=f"Error with URL processing:{str(e)}")
-
-                if var: 
-                    pdf_bytes = io.BytesIO()
-                    c = canvas.Canvas(pdf_bytes, pagesize=A4)
-                    text = c.beginText(40, 750)
-                    text.setFont("Helvetica", 6)
-                    lines = var.split('\n')
-                    for line in lines:
-                        text.textLine(line)
-                    c.drawText(text)
-                    c.showPage()
-                    c.save()
-                    pdf_bytes.seek(0)
-                    # with open('extracted_content.pdf', 'wb') as pdf_file:
-                    #     pdf_file.write(pdf_bytes.getvalue())
-                    pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf')
-                    pdf_file_wrapper.seek(0)
-                    f.append(pdf_file_wrapper) # here the file is formed and appended with other user uploaded files
+        if url_doc: 
+            if validators.url(url_doc): # checks if url there and is valid
+                if url_doc and ('www.youtube.com' in url_doc or 'youtu.be' in url_doc):
+                    loader = YoutubeLoader.from_youtube_url(
+                    url_doc, add_video_info=False)
+                    var_load = loader.load()
+                    raw_text = ''
+                    var = raw_text.join(document.page_content + '\n\n' for document in var_load)
+                    if var:
+                        pdf_bytes = io.BytesIO()
+                        c = canvas.Canvas(pdf_bytes, pagesize=A4)
+                        text = c.beginText(40, 750)
+                        text.setFont("Helvetica", 6)
+                        lines = var.split('\n')
+                        for line in lines:
+                            text.textLine(line)
+                        c.drawText(text)
+                        c.showPage()
+                        c.save()
+                        pdf_bytes.seek(0)
+                        # with open('extracted_content.pdf', 'wb') as pdf_file:
+                        #     pdf_file.write(pdf_bytes.getvalue())
+                        pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf') # still not unique for the same session so either url or youtube url processed at the same time
+                        pdf_file_wrapper.seek(0)
+                        f.append(pdf_file_wrapper)
                     
-                    # Starting Image extraction now
-                    parsed_url = urlparse(url_doc) # parse url for getting base url only
-                    base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
-                    LCD.URL_IMG_EXTRACT(soup, session_var, base_url) # images extracted by this function
-        else:
-            logger.warning(f"Invalid URL Spotted! {url_doc}")
-            return jsonify(error=f"Invalid URL Spotted! {url_doc}")
+                else:
+                    def fetch_url(url):
+                        for user_agent in user_agents:
+                            headers = {'User-Agent': user_agent}
+                            try:
+                                request = urllib.request.Request(url, headers=headers)
+                                response = urllib.request.urlopen(request, timeout=3)
+                                soup = BeautifulSoup(response.read(), 'html.parser')
+                                var = soup.get_text()
+                                logger.debug(f"Extracted text length: {len(var)}")
+                                return  var, soup
+                            except (HTTPError, URLError) as e:
+                                logger.error(f"Error with {user_agent}: {str(e)}")
+                                continue  # Try the next user agent in case of an error
+
+                    # Test the function with a given URL
+                    try:
+                        var, soup = fetch_url(url_doc)
+                    except Exception as e:
+                        logger.error(f"Error with URL processing:{str(e)}")
+                        return jsonify(error=f"Error with URL processing:{str(e)}")
+
+                    if var: 
+                        pdf_bytes = io.BytesIO()
+                        c = canvas.Canvas(pdf_bytes, pagesize=A4)
+                        text = c.beginText(40, 750)
+                        text.setFont("Helvetica", 6)
+                        lines = var.split('\n')
+                        for line in lines:
+                            text.textLine(line)
+                        c.drawText(text)
+                        c.showPage()
+                        c.save()
+                        pdf_bytes.seek(0)
+                        # with open('extracted_content.pdf', 'wb') as pdf_file:
+                        #     pdf_file.write(pdf_bytes.getvalue())
+                        pdf_file_wrapper = FileStorage(stream=pdf_bytes, filename=f'extracted_content{session_var}.pdf', content_type='application/pdf')
+                        pdf_file_wrapper.seek(0)
+                        f.append(pdf_file_wrapper) # here the file is formed and appended with other user uploaded files
+                        
+                        # Starting Image extraction now
+                        parsed_url = urlparse(url_doc) # parse url for getting base url only
+                        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
+                        LCD.URL_IMG_EXTRACT(soup, session_var, base_url) # images extracted by this function
+            else:
+                logger.warning(f"Invalid URL Spotted! {url_doc}")
+                return jsonify(error=f"Invalid URL Spotted! {url_doc}")
 
         filename = [f_name.filename for f_name in f]
         logger.debug(f"Filename is::{filename}")
