@@ -568,8 +568,11 @@ def generate_course():
         else:
             mpv = request.args.get('mpv', '2') # to set default value to balanced mpv
         logger.debug(f"mpv is: {mpv}")
-        if not validators.between(mpv, min=0, max=4):
-            return jsonify(error="mpv value should be between min 0 and max 4 value")
+        if mpv is not None:
+            mpv = int(mpv)  # Convert mpv to an integer
+
+            if not (0 <= mpv <= 4):
+                return jsonify(error="mpv value should be between min 0 and max 4")
          
         start_route_time = time.time() # Timer starts at the Post
 
