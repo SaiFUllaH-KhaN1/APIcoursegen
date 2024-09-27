@@ -1,9 +1,24 @@
-# Dockerfile example
 FROM python:3.9.0
-
+# Set the working directory
 WORKDIR /app
-COPY requirements.txt requirements.txt
+# Copy the requirements.txt and install dependencies
+COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+# Download the gzipped model files from Google Drive
+RUN apt-get update && apt-get install -y curl && \
+    curl -L -o whisper_local.tar.gz "https://drive.google.com/uc?export=download&id=14Qt_Bldxsg_aNmdCNfPhau0DyrP4jkXm" && \
+    curl -L -o embed_local.tar.gz "https://drive.google.com/uc?export=download&id=1_UYjykqoaZZ5W-C-KkrLsh_H_O9BqI6Z"
+# Unzip the model files and move them to their respective directories
+RUN mkdir -p /app/whisper_local /app/embed_local \
+    && tar -xvzf whisper_local.tar.gz -C /app/whisper_local --strip-components=1 \
+    && tar -xvzf embed_local.tar.gz -C /app/embed_local --strip-components=1
+# Clean up the tar.gz files
+RUN rm whisper_local.tar.gz embed_local.tar.gz
+
+# Copy the rest of the application code
 COPY . .
+# Expose port 5000 for the app
 EXPOSE 5000
+# Command to run the application
 CMD ["gunicorn", "--workers=4", "--timeout", "600", "routes:app", "--bind", "0.0.0.0:5000"]
