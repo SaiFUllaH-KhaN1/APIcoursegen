@@ -6520,7 +6520,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
         {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
             "id": "SBB1",
@@ -6531,21 +6531,22 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
             "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
+        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
         {{
             "id": "GB1",
             "type": "GoalBlock",
@@ -6564,7 +6565,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
         {{
             "id": "B9",
             "type": "PedagogicalBlock",
@@ -6587,8 +6588,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
+        }},       
         {{
             "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -6598,15 +6598,15 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
         {{
             "id": "B12",
             "type": "PedagogicalBlock",
@@ -6630,7 +6630,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }}
+        }},
         {{
             "id": "B15",
             "type": "PedagogicalBlock",
@@ -6944,7 +6944,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
         {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
             "id": "SBB1",
@@ -6955,21 +6955,22 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
             "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
+        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
         {{
             "id": "GB1",
             "type": "GoalBlock",
@@ -6988,7 +6989,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
         {{
             "id": "B9",
             "type": "PedagogicalBlock",
@@ -7011,8 +7012,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
+        }},       
         {{
             "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -7022,15 +7022,15 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
         {{
             "id": "B12",
             "type": "PedagogicalBlock",
@@ -7054,7 +7054,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }}
+        }},
         {{
             "id": "B15",
             "type": "PedagogicalBlock",
@@ -7387,7 +7387,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
         {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
             "id": "SBB1",
@@ -7398,21 +7398,22 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
             "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
+        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
         {{
             "id": "GB1",
             "type": "GoalBlock",
@@ -7431,7 +7432,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
         {{
             "id": "B9",
             "type": "PedagogicalBlock",
@@ -7454,8 +7455,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
+        }},       
         {{
             "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -7465,15 +7465,15 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
         {{
             "id": "B12",
             "type": "PedagogicalBlock",
@@ -7497,7 +7497,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }}
+        }},
         {{
             "id": "B15",
             "type": "PedagogicalBlock",
@@ -7849,7 +7849,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
         {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
             "id": "SBB1",
@@ -7860,21 +7860,22 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
             "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
+        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
         {{
             "id": "GB1",
             "type": "GoalBlock",
@@ -7893,7 +7894,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
         {{
             "id": "B9",
             "type": "PedagogicalBlock",
@@ -7916,8 +7917,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
+        }},       
         {{
             "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -7927,15 +7927,15 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
         {{
             "id": "B12",
             "type": "PedagogicalBlock",
@@ -7959,7 +7959,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }}
+        }},
         {{
             "id": "B15",
             "type": "PedagogicalBlock",
@@ -8334,7 +8334,7 @@ You will Continue like this in your generated response:
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
         {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
             "id": "SBB1",
@@ -8345,21 +8345,22 @@ You will Continue like this in your generated response:
             "branches": [
                 {{
                     "port": "1",
-                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
             "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
+        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
         {{
             "id": "GB1",
             "type": "GoalBlock",
@@ -8378,7 +8379,7 @@ You will Continue like this in your generated response:
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
         {{
             "id": "B9",
             "type": "PedagogicalBlock",
@@ -8401,8 +8402,7 @@ You will Continue like this in your generated response:
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
+        }},       
         {{
             "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
@@ -8412,15 +8412,15 @@ You will Continue like this in your generated response:
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
         {{
             "id": "B12",
             "type": "PedagogicalBlock",
@@ -8444,7 +8444,7 @@ You will Continue like this in your generated response:
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
-        }}
+        }},
         {{
             "id": "B15",
             "type": "PedagogicalBlock",
