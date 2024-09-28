@@ -6520,9 +6520,10 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
-            "id": "SBB",
+            "id": "SBB1",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -6530,55 +6531,55 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
-            "id": "SBB_Bnh1_B1",
+            "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_GB",
+            "id": "GB1",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh1_DB",
+            "id": "B7",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_RF",
+            "id": "B8",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
-            "id": "SBB_Bnh2_B1",
+            "id": "B9",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B2",
+            "id": "B10",
             "timer": "(Insert time in format hh:mm:ss)",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B3",
+            "id": "B11",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -6587,9 +6588,9 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
         {{
-            "id": "SBB_Bnh2_SBB",
+            "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -6597,59 +6598,59 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_B1",
+            "id": "B12",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_GB",
+            "id": "GB2",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_DB",
+            "id": "B13",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_RF",
+            "id": "B14",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }}
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B1",
+            "id": "B15",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_GB",
+            "id": "GB3",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_DB",
+            "id": "B16",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_RF",
+            "id": "B17",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -6678,75 +6679,75 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "source": "B5",
-            "target": "SBB"
+            "target": "SBB1"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh1_B1",
+            "source": "SBB1",
+            "target": "B6",
             "sourceport": "1"
         }},
         {{
-            "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_GB"
+            "source": "B6",
+            "target": "GB1"
         }},
         {{
-            "source": "SBB_Bnh1_GB",
-            "target": "SBB_Bnh1_DB"
+            "source": "GB1",
+            "target": "B7"
         }},
         {{
-            "source": "SBB_Bnh1_DB",
-            "target": "SBB_Bnh1_RF"
+            "source": "B7",
+            "target": "B8"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh2_B1",
+            "source": "SBB1",
+            "target": "B9",
             "sourceport": "2"
         }},
         {{
-            "source": "SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_B2"
+            "source": "B9",
+            "target": "B10"
         }},
         {{
-            "source": "SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_B3"
+            "source": "B10",
+            "target": "B11"
         }},
         {{
-            "source": "SBB_Bnh2_B3",
-            "target": "SBB_Bnh2_SBB"
+            "source": "B11",
+            "target": "SBB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh1_B1",
+            "source": "SBB2",
+            "target": "B12",
             "sourceport":"1"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_B1",
-            "target": "SBB_Bnh2_SBB_Bnh1_GB"
+            "source": "B12",
+            "target": "GB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_GB",
-            "target": "SBB_Bnh2_SBB_Bnh1_DB"
+            "source": "GB2",
+            "target": "B13"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_DB",
-            "target": "SBB_Bnh2_SBB_Bnh1_RF"
+            "source": "B13",
+            "target": "B14"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh2_B1",
+            "source": "SBB2",
+            "target": "B15",
             "sourceport":"2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_GB"
+            "source": "B15",
+            "target": "GB3"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_GB",
-            "target": "SBB_Bnh2_SBB_Bnh2_DB"
+            "source": "GB3",
+            "target": "B16"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_DB",
-            "target": "SBB_Bnh2_SBB_Bnh2_RF"
+            "source": "B16",
+            "target": "B17"
         }}
     ]
 }}
@@ -6943,9 +6944,10 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
-            "id": "SBB",
+            "id": "SBB1",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -6953,55 +6955,55 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
-            "id": "SBB_Bnh1_B1",
+            "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_GB",
+            "id": "GB1",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh1_DB",
+            "id": "B7",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_RF",
+            "id": "B8",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
-            "id": "SBB_Bnh2_B1",
+            "id": "B9",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B2",
+            "id": "B10",
             "timer": "(Insert time in format hh:mm:ss)",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B3",
+            "id": "B11",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -7010,9 +7012,9 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
         {{
-            "id": "SBB_Bnh2_SBB",
+            "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -7020,59 +7022,59 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_B1",
+            "id": "B12",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_GB",
+            "id": "GB2",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_DB",
+            "id": "B13",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_RF",
+            "id": "B14",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }}
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B1",
+            "id": "B15",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_GB",
+            "id": "GB3",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_DB",
+            "id": "B16",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_RF",
+            "id": "B17",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -7101,75 +7103,75 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "source": "B5",
-            "target": "SBB"
+            "target": "SBB1"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh1_B1",
+            "source": "SBB1",
+            "target": "B6",
             "sourceport": "1"
         }},
         {{
-            "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_GB"
+            "source": "B6",
+            "target": "GB1"
         }},
         {{
-            "source": "SBB_Bnh1_GB",
-            "target": "SBB_Bnh1_DB"
+            "source": "GB1",
+            "target": "B7"
         }},
         {{
-            "source": "SBB_Bnh1_DB",
-            "target": "SBB_Bnh1_RF"
+            "source": "B7",
+            "target": "B8"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh2_B1",
+            "source": "SBB1",
+            "target": "B9",
             "sourceport": "2"
         }},
         {{
-            "source": "SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_B2"
+            "source": "B9",
+            "target": "B10"
         }},
         {{
-            "source": "SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_B3"
+            "source": "B10",
+            "target": "B11"
         }},
         {{
-            "source": "SBB_Bnh2_B3",
-            "target": "SBB_Bnh2_SBB"
+            "source": "B11",
+            "target": "SBB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh1_B1",
+            "source": "SBB2",
+            "target": "B12",
             "sourceport":"1"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_B1",
-            "target": "SBB_Bnh2_SBB_Bnh1_GB"
+            "source": "B12",
+            "target": "GB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_GB",
-            "target": "SBB_Bnh2_SBB_Bnh1_DB"
+            "source": "GB2",
+            "target": "B13"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_DB",
-            "target": "SBB_Bnh2_SBB_Bnh1_RF"
+            "source": "B13",
+            "target": "B14"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh2_B1",
+            "source": "SBB2",
+            "target": "B15",
             "sourceport":"2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_GB"
+            "source": "B15",
+            "target": "GB3"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_GB",
-            "target": "SBB_Bnh2_SBB_Bnh2_DB"
+            "source": "GB3",
+            "target": "B16"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_DB",
-            "target": "SBB_Bnh2_SBB_Bnh2_RF"
+            "source": "B16",
+            "target": "B17"
         }}
     ]
 }}
@@ -7385,9 +7387,10 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
-            "id": "SBB",
+            "id": "SBB1",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -7395,55 +7398,55 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
-            "id": "SBB_Bnh1_B1",
+            "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_GB",
+            "id": "GB1",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh1_DB",
+            "id": "B7",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_RF",
+            "id": "B8",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
-            "id": "SBB_Bnh2_B1",
+            "id": "B9",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B2",
+            "id": "B10",
             "timer": "(Insert time in format hh:mm:ss)",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B3",
+            "id": "B11",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -7452,9 +7455,9 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
         {{
-            "id": "SBB_Bnh2_SBB",
+            "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -7462,59 +7465,59 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_B1",
+            "id": "B12",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_GB",
+            "id": "GB2",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_DB",
+            "id": "B13",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_RF",
+            "id": "B14",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }}
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B1",
+            "id": "B15",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_GB",
+            "id": "GB3",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_DB",
+            "id": "B16",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_RF",
+            "id": "B17",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -7543,75 +7546,75 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "source": "B5",
-            "target": "SBB"
+            "target": "SBB1"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh1_B1",
+            "source": "SBB1",
+            "target": "B6",
             "sourceport": "1"
         }},
         {{
-            "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_GB"
+            "source": "B6",
+            "target": "GB1"
         }},
         {{
-            "source": "SBB_Bnh1_GB",
-            "target": "SBB_Bnh1_DB"
+            "source": "GB1",
+            "target": "B7"
         }},
         {{
-            "source": "SBB_Bnh1_DB",
-            "target": "SBB_Bnh1_RF"
+            "source": "B7",
+            "target": "B8"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh2_B1",
+            "source": "SBB1",
+            "target": "B9",
             "sourceport": "2"
         }},
         {{
-            "source": "SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_B2"
+            "source": "B9",
+            "target": "B10"
         }},
         {{
-            "source": "SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_B3"
+            "source": "B10",
+            "target": "B11"
         }},
         {{
-            "source": "SBB_Bnh2_B3",
-            "target": "SBB_Bnh2_SBB"
+            "source": "B11",
+            "target": "SBB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh1_B1",
+            "source": "SBB2",
+            "target": "B12",
             "sourceport":"1"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_B1",
-            "target": "SBB_Bnh2_SBB_Bnh1_GB"
+            "source": "B12",
+            "target": "GB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_GB",
-            "target": "SBB_Bnh2_SBB_Bnh1_DB"
+            "source": "GB2",
+            "target": "B13"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_DB",
-            "target": "SBB_Bnh2_SBB_Bnh1_RF"
+            "source": "B13",
+            "target": "B14"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh2_B1",
+            "source": "SBB2",
+            "target": "B15",
             "sourceport":"2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_GB"
+            "source": "B15",
+            "target": "GB3"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_GB",
-            "target": "SBB_Bnh2_SBB_Bnh2_DB"
+            "source": "GB3",
+            "target": "B16"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_DB",
-            "target": "SBB_Bnh2_SBB_Bnh2_RF"
+            "source": "B16",
+            "target": "B17"
         }}
     ]
 }}
@@ -7846,9 +7849,10 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
-            "id": "SBB",
+            "id": "SBB1",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -7856,55 +7860,55 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
-            "id": "SBB_Bnh1_B1",
+            "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_GB",
+            "id": "GB1",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh1_DB",
+            "id": "B7",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_RF",
+            "id": "B8",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
-            "id": "SBB_Bnh2_B1",
+            "id": "B9",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B2",
+            "id": "B10",
             "timer": "(Insert time in format hh:mm:ss)",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B3",
+            "id": "B11",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -7913,9 +7917,9 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
         {{
-            "id": "SBB_Bnh2_SBB",
+            "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -7923,59 +7927,59 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_B1",
+            "id": "B12",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_GB",
+            "id": "GB2",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_DB",
+            "id": "B13",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_RF",
+            "id": "B14",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }}
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B1",
+            "id": "B15",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_GB",
+            "id": "GB3",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_DB",
+            "id": "B16",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_RF",
+            "id": "B17",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -8004,75 +8008,75 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "source": "B5",
-            "target": "SBB"
+            "target": "SBB1"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh1_B1",
+            "source": "SBB1",
+            "target": "B6",
             "sourceport": "1"
         }},
         {{
-            "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_GB"
+            "source": "B6",
+            "target": "GB1"
         }},
         {{
-            "source": "SBB_Bnh1_GB",
-            "target": "SBB_Bnh1_DB"
+            "source": "GB1",
+            "target": "B7"
         }},
         {{
-            "source": "SBB_Bnh1_DB",
-            "target": "SBB_Bnh1_RF"
+            "source": "B7",
+            "target": "B8"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh2_B1",
+            "source": "SBB1",
+            "target": "B9",
             "sourceport": "2"
         }},
         {{
-            "source": "SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_B2"
+            "source": "B9",
+            "target": "B10"
         }},
         {{
-            "source": "SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_B3"
+            "source": "B10",
+            "target": "B11"
         }},
         {{
-            "source": "SBB_Bnh2_B3",
-            "target": "SBB_Bnh2_SBB"
+            "source": "B11",
+            "target": "SBB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh1_B1",
+            "source": "SBB2",
+            "target": "B12",
             "sourceport":"1"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_B1",
-            "target": "SBB_Bnh2_SBB_Bnh1_GB"
+            "source": "B12",
+            "target": "GB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_GB",
-            "target": "SBB_Bnh2_SBB_Bnh1_DB"
+            "source": "GB2",
+            "target": "B13"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_DB",
-            "target": "SBB_Bnh2_SBB_Bnh1_RF"
+            "source": "B13",
+            "target": "B14"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh2_B1",
+            "source": "SBB2",
+            "target": "B15",
             "sourceport":"2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_GB"
+            "source": "B15",
+            "target": "GB3"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_GB",
-            "target": "SBB_Bnh2_SBB_Bnh2_DB"
+            "source": "GB3",
+            "target": "B16"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_DB",
-            "target": "SBB_Bnh2_SBB_Bnh2_RF"
+            "source": "B16",
+            "target": "B17"
         }}
     ]
 }}
@@ -8330,9 +8334,10 @@ You will Continue like this in your generated response:
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"The SBB below means SimpleBranchingBlock. The Bnh1, Bnh2 and so on are the branches. SBB_Bnh2 for example suggests it is the second branch from the SBB block."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second branch from the SBB1 block."}},
+        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
         {{
-            "id": "SBB",
+            "id": "SBB1",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -8340,55 +8345,55 @@ You will Continue like this in your generated response:
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB1_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2": "(Insert Text Here) (DIVISIBLE)"
+                    "SBB1_2": "(Insert Text Here) (DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment": "Note that since SBB_Bnh1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
+        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE, than by definition of NON-DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, a GoalBlock, a Debriefing, and a Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}}
         {{
-            "id": "SBB_Bnh1_B1",
+            "id": "B6",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_GB",
+            "id": "GB1",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh1_DB",
+            "id": "B7",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh1_RF",
+            "id": "B8",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "Note that since SBB_Bnh2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
+        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a SimpleBranchingBlock."}}
         {{
-            "id": "SBB_Bnh2_B1",
+            "id": "B9",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B2",
+            "id": "B10",
             "timer": "(Insert time in format hh:mm:ss)",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_B3",
+            "id": "B11",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image (Preferred)/ 360-image/ Video/ Audio (Give one of these in your response)",
@@ -8397,9 +8402,9 @@ You will Continue like this in your generated response:
                 "(Insert Text Here)"
             ]
         }},
-        {{"_comment":"SBB_Bnh2_SBB_Bnh3 for example suggests, if read and traced from backwards, it is the Third branch from the SBB block which in turn is from a Second branch that came from the very first SBB."}},
+        {{"_comment":"The SBB2 below shows that it has 2 NON-DIVISIBLE Branches in this case. You are free to choose whether both choices are DIVISIBLE or one of the branches is DIVISIBLE or both choices are NON-DIVISBLE depending upon content and length of the overall simulation story which we need to be concise and short in length."}},
         {{
-            "id": "SBB_Bnh2_SBB",
+            "id": "SBB2",
             "timer": "(Insert time in format hh:mm:ss)",
             "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
             "type": "SimpleBranchingBlock",
@@ -8407,59 +8412,59 @@ You will Continue like this in your generated response:
             "branches": [
                 {{
                     "port": "1",
-                    "SBB_Bnh2_SBB_Bnh1": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_1": "(Insert Text Here) (NON-DIVISIBLE)"
                 }},
                 {{
                     "port": "2",
-                    "SBB_Bnh2_SBB_Bnh2": "(Insert Text Here) (NON-DIVISIBLE)"
+                    "SBB2_2": "(Insert Text Here) (NON-DIVISIBLE)"
                 }}
             ]
         }},
-        {{"_comment":"Notice in SBB_Bnh2_SBB there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods can yield same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
+        {{"_comment":"Notice in SBB2 there are 2 NON-DIVISIBLE choices or in other words 2 different endings. You can also give the same ending to 2 choices as well, to show that two methods may yield the same consequence as well. You are allowed to add at-most 2 choices per SimpleBranchingBlock"}},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_B1",
+            "id": "B12",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_GB",
+            "id": "GB2",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_DB",
+            "id": "B13",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh1_RF",
+            "id": "B14",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
         }}
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_B1",
+            "id": "B15",
             "type": "PedagogicalBlock",
             "title": "Feedback_And_Feedforward",
             "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_GB",
+            "id": "GB3",
             "type": "GoalBlock",
             "title": "(Insert Text Here)",
             "score": "Insert Integer Number Here"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_DB",
+            "id": "B16",
             "type": "PedagogicalBlock",
             "title": "Debriefing",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "SBB_Bnh2_SBB_Bnh2_RF",
+            "id": "B17",
             "type": "PedagogicalBlock",
             "title": "Reflection",
             "description": "(Insert Text Here)"
@@ -8488,75 +8493,75 @@ You will Continue like this in your generated response:
         }},
         {{
             "source": "B5",
-            "target": "SBB"
+            "target": "SBB1"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh1_B1",
+            "source": "SBB1",
+            "target": "B6",
             "sourceport": "1"
         }},
         {{
-            "source": "SBB_Bnh1_B1",
-            "target": "SBB_Bnh1_GB"
+            "source": "B6",
+            "target": "GB1"
         }},
         {{
-            "source": "SBB_Bnh1_GB",
-            "target": "SBB_Bnh1_DB"
+            "source": "GB1",
+            "target": "B7"
         }},
         {{
-            "source": "SBB_Bnh1_DB",
-            "target": "SBB_Bnh1_RF"
+            "source": "B7",
+            "target": "B8"
         }},
         {{
-            "source": "SBB",
-            "target": "SBB_Bnh2_B1",
+            "source": "SBB1",
+            "target": "B9",
             "sourceport": "2"
         }},
         {{
-            "source": "SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_B2"
+            "source": "B9",
+            "target": "B10"
         }},
         {{
-            "source": "SBB_Bnh2_B2",
-            "target": "SBB_Bnh2_B3"
+            "source": "B10",
+            "target": "B11"
         }},
         {{
-            "source": "SBB_Bnh2_B3",
-            "target": "SBB_Bnh2_SBB"
+            "source": "B11",
+            "target": "SBB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh1_B1",
+            "source": "SBB2",
+            "target": "B12",
             "sourceport":"1"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_B1",
-            "target": "SBB_Bnh2_SBB_Bnh1_GB"
+            "source": "B12",
+            "target": "GB2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_GB",
-            "target": "SBB_Bnh2_SBB_Bnh1_DB"
+            "source": "GB2",
+            "target": "B13"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh1_DB",
-            "target": "SBB_Bnh2_SBB_Bnh1_RF"
+            "source": "B13",
+            "target": "B14"
         }},
         {{
-            "source": "SBB_Bnh2_SBB",
-            "target": "SBB_Bnh2_SBB_Bnh2_B1",
+            "source": "SBB2",
+            "target": "B15",
             "sourceport":"2"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_B1",
-            "target": "SBB_Bnh2_SBB_Bnh2_GB"
+            "source": "B15",
+            "target": "GB3"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_GB",
-            "target": "SBB_Bnh2_SBB_Bnh2_DB"
+            "source": "GB3",
+            "target": "B16"
         }},
         {{
-            "source": "SBB_Bnh2_SBB_Bnh2_DB",
-            "target": "SBB_Bnh2_SBB_Bnh2_RF"
+            "source": "B16",
+            "target": "B17"
         }}
     ]
 }}
