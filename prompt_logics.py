@@ -117,7 +117,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
                                 else:
                                     pass
 
-                    logger.info("filler print")
+                    #logger.info("filler print") # suggests that the try block has executed
                 except Exception as e:
                     logger.info(f"Error processing image {base_name}: {e}")
                     logger.info(traceback.format_exc())
