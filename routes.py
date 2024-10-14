@@ -51,6 +51,7 @@ genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
 
+
 # Configuration for the cache directory
 cache_dir = 'cache'
 
@@ -237,6 +238,7 @@ download_Embed_model(embed_model)
 
 ### EMBED MODEL END
 
+
 @app.route("/process_data", methods=["GET", "POST"])
 def process_data():
 
@@ -364,7 +366,7 @@ def process_data():
         for file in f:
             ### ONLY FOR AUDIO CHECK ###
             filename = file.filename
-            logger.debug("filename is",filename)
+            logger.debug(f"filename is {filename}")
             extension = filename.rsplit('.', 1)[1].lower()
             temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}") # declared here for overcoming reference before assignment error
 
