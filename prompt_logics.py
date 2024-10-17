@@ -360,7 +360,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
             # ALERT--ALERT 
             # for ThingLink github, use only "soffice" in the command
             command = [
-                'E:\Softwares Installed\LIBREOFFICE\program\soffice.exe',
+                'soffice',
                 '--headless',
                 '--convert-to',
                 'pdf',
