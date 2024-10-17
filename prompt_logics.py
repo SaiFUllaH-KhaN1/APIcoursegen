@@ -275,34 +275,44 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
                 image_number = 1
                 logger.debug(f"slide {slide}",)
                 for shape in slide.shapes:
-                    if shape.shape_type == MSO_SHAPE_TYPE.GROUP:
-                        for s in shape.shapes:
-                            if s.shape_type == MSO_SHAPE_TYPE.PICTURE:
-                                image = shape.image
-                                logger.debug(f"image_number {image_number}",)
-                                image_filename = f'FileName {filename_without_extension} SlideNumber {slide_number} ImageNumber {image_number}.{image.ext}'
-                                # img = f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
-                                image_number += 1
-                                logger.debug(image_filename)
-                                # img_names.append(img)
+                    try:
+                        if shape.shape_type == MSO_SHAPE_TYPE.GROUP:
+                            for s in shape.shapes:
+                                if s.shape_type == MSO_SHAPE_TYPE.PICTURE:
+                                    image = shape.image
+                                    logger.debug(f"image_number {image_number}",)
+                                    image_filename = f'FileName {filename_without_extension} SlideNumber {slide_number} ImageNumber {image_number}.{image.ext}'
+                                    # img = f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
+                                    image_number += 1
+                                    logger.debug(image_filename)
+                                    # img_names.append(img)
 
-                                image_path = os.path.join(output_path_byfile, image_filename)
-                                with open(image_path, "wb") as fp:
-                                    fp.write(image.blob)
-
-                    if shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
-                        image = shape.image
-                        logger.debug(f"image_number {image_number}",)
-                        image_filename = f'FileName {filename_without_extension} SlideNumber {slide_number} ImageNumber {image_number}.{image.ext}'
-                        # img = f'SlideNumber:{slide_number} of FileName:{filename_without_extension} with ImageNumber:{image_number}\n'
-                        image_number += 1
-                        logger.debug(image_filename)
-                        # img_names.append(img)
-                        image_path = os.path.join(output_path_byfile, image_filename)
-                        with open(image_path, "wb") as fp:
-                            fp.write(image.blob)
+                                    image_path = os.path.join(output_path_byfile, image_filename)
+                                    with open(image_path, "wb") as fp:
+                                        fp.write(image.blob)
+                    except Exception as e:
+                        logger.info(f"Error processing image of slide {slide_number} and img no: {image_number}: {e}")
+                        logger.info(traceback.format_exc())
+                        pass 
+                    try:
+                        if shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
+                            image = shape.image
+                            logger.debug(f"image_number {image_number}",)
+                            image_filename = f'FileName {filename_without_extension} SlideNumber {slide_number} ImageNumber {image_number}.{image.ext}'
+                            # img = f'SlideNumber:{slide_number} of FileName:{filename_without_extension} with ImageNumber:{image_number}\n'
+                            image_number += 1
+                            logger.debug(image_filename)
+                            # img_names.append(img)
+                            image_path = os.path.join(output_path_byfile, image_filename)
+                            with open(image_path, "wb") as fp:
+                                fp.write(image.blob)
+                    except Exception as e:
+                        logger.info(f"Error processing image of slide {slide_number} and img no: {image_number}: {e}")
+                        logger.info(traceback.format_exc())
+                        pass 
+                    
                 slide_number += 1  
-
+               
 
         iter_picture_shapes(Presentation(file_content))
 
