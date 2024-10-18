@@ -349,13 +349,13 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         logger.debug(texts)
         os.remove(temp_path)
 
-    elif extension=="ppt":
-        logger.debug(f"PPT file name is ::{filename}")
+    elif extension=="ppt" or extension=="doc":
+        logger.debug(f"PPT or DOC file name is ::{filename}")
         temp_path = os.path.join(f"{session_var}{filename}")
         file.seek(0)
         file.save(temp_path)
 
-        def convert_pptx_to_pdf(input_path, output_dir):
+        def convert_pptordoc_to_pdf(input_path, output_dir):
             # Construct the command to convert pptx to pdf
             # ALERT--ALERT 
             # for ThingLink github, use only "soffice" in the command
@@ -373,7 +373,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
             print(f'Converted {input_path} to PDF and saved in {output_dir}')
         
         # Convert the .pptx file to PDF
-        convert_pptx_to_pdf(temp_path, f"pdf_dir{session_var}")
+        convert_pptordoc_to_pdf(temp_path, f"pdf_dir{session_var}")
         os.remove(temp_path)
 
         # Processing created PDF from ppt
