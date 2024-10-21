@@ -58,9 +58,9 @@ cache_dir = 'cache'
 # Check if the cache directory exists, and create it if it does not
 if not os.path.exists(cache_dir):
     os.makedirs(cache_dir)
-    logger.debug(f"Cache directory '{cache_dir}' was created.")
+    logger.info(f"Cache directory '{cache_dir}' was created.")
 else:
-    logger.debug(f"Cache directory '{cache_dir}' already exists.")
+    logger.info(f"Cache directory '{cache_dir}' already exists.")
 
 app.config['BASIC_AUTH_REALM'] = 'realm'
 app.config['BASIC_AUTH_USERNAME'] = os.getenv('BASIC_AUTH_USERNAME')
@@ -107,7 +107,7 @@ def token_required(f):
             decoded = jwt.decode(token, app.secret_key, algorithms=['HS256'])
             # Extract uuid4 from the decoded token
             g.user_uuid = decoded['uuid4']
-            logger.debug(f"Token Decoded Success!:{g.user_uuid}") # NOT FOR PRODUCTION
+            logger.info(f"Token Decoded Success!:{g.user_uuid}") # NOT FOR PRODUCTION
 
         except jwt.ExpiredSignatureError:
             logger.critical("message: Token has expired")
@@ -134,30 +134,30 @@ def delete_indexes():
     for item in os.listdir(base_path):
         dir_path = os.path.join(base_path, item)
         if os.path.isdir(dir_path) and item.startswith("faiss_index_"):
-            logger.debug(f"Deleting Faiss directory: {dir_path}")
+            logger.info(f"Deleting Faiss directory: {dir_path}")
             shutil.rmtree(dir_path)
         elif os.path.isdir(dir_path) and item.startswith("imagefolder_"):
-            logger.debug(f"Deleting image directory: {dir_path}")
+            logger.info(f"Deleting image directory: {dir_path}")
             shutil.rmtree(dir_path)
         elif os.path.isdir(dir_path) and item.startswith("audio_"):
-            logger.debug(f"Deleting audio directory: {dir_path}")
+            logger.info(f"Deleting audio directory: {dir_path}")
             shutil.rmtree(dir_path)
         elif os.path.isdir(dir_path) and item.startswith("pdf_dir"):
-            logger.debug(f"Deleting pdf directory: {dir_path}")
+            logger.info(f"Deleting pdf directory: {dir_path}")
             shutil.rmtree(dir_path)
 
 @app.route("/cron", methods=['POST'])
 @basic_auth.required
 def cron():
     delete_indexes()
-    logger.debug("Deleted FAISS index")
+    logger.info("Deleted FAISS index")
     return jsonify(message="FAISS and imagefolder and audio index directories deleted")
 ###     ###     ### 
 
 ### SCHEDULED DELETION OF folders of imagefolder_ and faiss_index_ ###
 def delete_old_directories():
     time_to_delete_files_older_than = timedelta(hours=6)
-    logger.debug(f"Scheduler is running the delete_old_directories function to delete files older than {time_to_delete_files_older_than}.")
+    logger.info(f"Scheduler is running the delete_old_directories function to delete files older than {time_to_delete_files_older_than}.")
     
     base_path = os.path.dirname(os.path.abspath(__file__))
     for item in os.listdir(base_path):
@@ -166,7 +166,7 @@ def delete_old_directories():
             # Check if directory is older than a specified time
             dir_age = datetime.fromtimestamp(os.path.getmtime(dir_path))
             if datetime.now() - dir_age > time_to_delete_files_older_than:
-                logger.debug(f"Deleting directory: {dir_path}, it has modified date of {dir_age}")
+                logger.info(f"Deleting directory: {dir_path}, it has modified date of {dir_age}")
                 shutil.rmtree(dir_path)
 ###     ###     ###
 
@@ -177,9 +177,9 @@ audio_dir = 'audio_files'
 # Check if the cache directory exists, and create it if it does not
 if not os.path.exists(audio_dir):
     os.makedirs(audio_dir)
-    logger.debug(f"Audio directory '{audio_dir}' was created.")
+    logger.info(f"Audio directory '{audio_dir}' was created.")
 else:
-    logger.debug(f"Audio directory '{audio_dir}' already exists.")
+    logger.info(f"Audio directory '{audio_dir}' already exists.")
 
 
 ### MODEL CHECK ALREADY DOWNLOADED ?
@@ -195,12 +195,12 @@ def download_whisper_model(whisper_model):
 
     # Check if the model directory exists
     if not os.path.exists(whisper_directory):
-        logger.debug("Downloading Whisper model...")
+        logger.info("Downloading Whisper model...")
         model = WhisperForConditionalGeneration.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
         processor = WhisperProcessor.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
-        logger.debug("Model downloaded successfully!")
+        logger.info("Model downloaded successfully!")
     else:
-        logger.debug("Whisper Tiny model already downloaded. Skipping download.")
+        logger.info("Whisper Tiny model already downloaded. Skipping download.")
         pass
 
 # Calling function
@@ -220,7 +220,7 @@ def download_Embed_model(embed_model):
 
     # Check if the model directory exists
     if not os.path.exists(embed_directory):
-        logger.debug("Downloading Embed model...")
+        logger.info("Downloading Embed model...")
 
         embeddings = HuggingFaceBgeEmbeddings(
             model_name= embed_model,
@@ -228,9 +228,9 @@ def download_Embed_model(embed_model):
             model_kwargs={'device': 'cpu', "trust_remote_code": True},
             encode_kwargs={'normalize_embeddings': True}
         )
-        logger.debug("Model downloaded successfully!")
+        logger.info("Model downloaded successfully!")
     else:
-        logger.debug("Embed model already downloaded. Skipping download.")
+        logger.info("Embed model already downloaded. Skipping download.")
         pass
 
 # Call the download function at the start of your application
@@ -266,14 +266,14 @@ def process_data():
                         'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
                         'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko'
                         ]
-            logger.debug(f"user_agent alternate: {user_agents}")
+            logger.info(f"user_agent alternate: {user_agents}")
         else:
-            logger.debug(f"user_agent from client: {user_agents}")
+            logger.info(f"user_agent from client: {user_agents}")
         
         prompt = request.form.get("prompt")
         url_doc = request.form.get('url_doc')
         f = request.files.getlist('file')
-        logger.debug("There is a File")
+        logger.info("There is a File")
 
         language = request.form.get("language","english").lower()
         allowed_languages = ["english","finnish","spanish","german","italian","french"]
@@ -282,7 +282,7 @@ def process_data():
             logger.error("Invalid Language Selected. Select out of english,finnish,spanish,german,italian or french.")
             return jsonify(error="Invalid Language Selected. Select out of english,finnish,spanish,german,italian or french.")
         else:
-            logger.debug(f"Language Selected is:{language}")
+            logger.info(f"Language Selected is:{language}")
 
 
         if url_doc: 
@@ -320,7 +320,7 @@ def process_data():
                                 response = urllib.request.urlopen(request, timeout=3)
                                 soup = BeautifulSoup(response.read(), 'html.parser')
                                 var = soup.get_text()
-                                logger.debug(f"Extracted text length: {len(var)}")
+                                logger.info(f"Extracted text length: {len(var)}")
                                 return  var, soup
                             except (HTTPError, URLError) as e:
                                 logger.error(f"Error with {user_agent}: {str(e)}")
@@ -360,13 +360,13 @@ def process_data():
                 return jsonify(error=f"Invalid URL Spotted! {url_doc}")
 
         filename = [f_name.filename for f_name in f]
-        logger.debug(f"Filename is::{filename}")
+        logger.info(f"Filename is::{filename}")
 
         base_docsearch = None
         for file in f:
             ### ONLY FOR AUDIO CHECK ###
             filename = file.filename
-            logger.debug(f"filename is {filename}")
+            logger.info(f"filename is {filename}")
             extension = filename.rsplit('.', 1)[1].lower()
             temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}") # declared here for overcoming reference before assignment error
 
@@ -375,7 +375,7 @@ def process_data():
             
             temp_pdf_file = os.path.join(f"pdf_dir{session_var}", f"{session_var}{filename}")
             if extension =="mp3":
-                logger.debug("temp_path_audio",temp_path_audio)
+                logger.info("temp_path_audio",temp_path_audio)
                 file.save(temp_path_audio)
             elif extension =="pdf" and f'extracted_content{session_var}.pdf' not in filename:
                 file.save(temp_pdf_file)
@@ -383,7 +383,7 @@ def process_data():
 
             file_content = io.BytesIO(file.read())
             # file_content = [io.BytesIO(fs.read()) for fs in f]
-            logger.debug("LCD initiated!")
+            logger.info("LCD initiated!")
             try:
                 if model_type == 'gemini' and model_local_embed == 'no':
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001" )
@@ -396,7 +396,7 @@ def process_data():
                         model_kwargs={'device': 'cpu', "trust_remote_code": True},
                         encode_kwargs={'normalize_embeddings': True}
                     )
-                logger.debug(f"Using embeddings of {embeddings}")
+                logger.info(f"Using embeddings of {embeddings}")
                 docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, whisper_directory, whisper_model, language, temp_pdf_file)
                 if os.path.exists(f"pdf_dir{session_var}"):
                     shutil.rmtree(f"pdf_dir{session_var}")
@@ -430,7 +430,7 @@ def process_data():
             token = jwt.encode({'uuid4': session_var,'exp': datetime.utcnow() + timedelta(days=7)}, app.secret_key, algorithm='HS256')
             response_with_time['token'] = token  # Add token as a string under the key 'token'
 
-            logger.debug(f"{json.dumps(response_with_time)}")
+            logger.info(f"{json.dumps(response_with_time)}")
             return Response(json.dumps(response_with_time), mimetype='application/json')
 
     else:
@@ -452,7 +452,7 @@ def decide():
     user_id = g.user_uuid
     if request.method == 'POST':
         scenario = request.form.get('scenario')
-        logger.debug(f"Scenario type:{scenario}")
+        logger.info(f"Scenario type:{scenario}")
 
         model_type = request.args.get('model', 'azure') # to set default model
         model_name = request.args.get('modelName', 'gpt') # to set default model name
@@ -464,7 +464,7 @@ def decide():
 
             prompt = cache.get(f"prompt_{user_id}")
             language = cache.get(f"language_{user_id}")
-            logger.debug(f"Prompt loaded!:{prompt}")
+            logger.info(f"Prompt loaded!:{prompt}")
 
             try:
                 if model_type == "gemini"  and model_local_embed=='no':
@@ -498,17 +498,17 @@ def decide():
                     )
 
 
-                logger.debug(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
+                logger.info(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
                 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 
                 chain, docs_main, query = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type)
-                logger.debug(f"1st Docs_main of /Decide route:{docs_main}")
+                logger.info(f"1st Docs_main of /Decide route:{docs_main}")
 
-                logger.debug("response_LO_CA started")
+                logger.info("response_LO_CA started")
                 response_LO_CA = chain({"input_documents": docs_main,"human_input": query, "language":language})
-                logger.debug(f"{response_LO_CA}")
-                logger.debug("response_LO_CA ended")
+                logger.info(f"{response_LO_CA}")
+                logger.info("response_LO_CA ended")
 
                 cache.set(f"scenario_{user_id}", scenario,timeout=0)
                 end_time = time.time()
@@ -516,10 +516,10 @@ def decide():
                 minutes, seconds = divmod(execution_time, 60)
                 formatted_time = f"{int(minutes):02}:{int(seconds):02}"
                 execution_time_block = {"executionTime":f"{formatted_time}"}
-                logger.debug(f"{response_LO_CA['text']}")
+                logger.info(f"{response_LO_CA['text']}")
                 response_with_time = json.loads(response_LO_CA['text']) 
                 response_with_time.update(execution_time_block)
-                logger.debug(f"{json.dumps(response_with_time)}")
+                logger.info(f"{json.dumps(response_with_time)}")
 
                 # Strategic placement of image removal is placed so less time taking route is used
                 output_path = f"./imagefolder_{user_id}"
@@ -560,7 +560,7 @@ def generate_course():
         model_local_embed = request.args.get('localEmbed', 'no') # to set default model state
         summarize_images = request.args.get('summarizeImages', 'on') # to set default value name
         temp = request.args.get('temp','0.1')
-        logger.debug(f"temp selected!: {temp}")
+        logger.info(f"temp selected!: {temp}")
 
         # the mpv is declared two times in "argument" and then "form" getting sequence. So, if user using form
         # sets a value, the mpv of the form variable will priortize over the argument value
@@ -569,7 +569,7 @@ def generate_course():
             mpv = request.form.get("mpv")
         else:
             mpv = request.args.get('mpv', '2') # to set default value to balanced mpv
-        logger.debug(f"mpv is: {mpv}")
+        logger.info(f"mpv is: {mpv}")
         if mpv is not None:
             mpv = int(mpv)  # Convert mpv to an integer
 
@@ -581,13 +581,13 @@ def generate_course():
         if learning_obj and content_areas:
 
             prompt = cache.get(f"prompt_{user_id}")
-            logger.debug(f"Prompt loaded!: {prompt}")
+            logger.info(f"Prompt loaded!: {prompt}")
 
             scenario = cache.get(f"scenario_{user_id}")
-            logger.debug(f"scenario loaded!: {scenario}")
+            logger.info(f"scenario loaded!: {scenario}")
 
             language = cache.get(f"language_{user_id}")
-            logger.debug(f"Language selected is: {language}")
+            logger.info(f"Language selected is: {language}")
 
             try:
                 if model_type == 'gemini' and model_local_embed=='no':
@@ -639,8 +639,8 @@ def generate_course():
                 minutes, seconds = divmod(execution_RE_SIMILARITY_SEARCH_time, 60)
                 formatted_RE_SIMILARITY_SEARCH_time = f"{int(minutes):02}:{int(seconds):02} with summarize_images switched = {summarize_images} " # for docs retreival and image summarizer
 
-                logger.debug(f"2nd Docs_main:\n{docs_main}")
-                logger.debug(f"combined_prompt\n{combined_prompt}")
+                logger.info(f"2nd Docs_main:\n{docs_main}")
+                logger.info(f"combined_prompt\n{combined_prompt}")
             # doc_main has all the unfiltered meta image summaries appended with and not in vectorstore, however...
             # ... it has been list of images are chosen to be atleast reletive to the topic at hand
                 
@@ -684,7 +684,7 @@ def generate_course():
                 response_with_time = json.loads(response) 
                 response_with_time.update(execution_time_block)
 
-                logger.debug(f"{json.dumps(response_with_time, indent=4)}")
+                logger.info(f"{json.dumps(response_with_time, indent=4)}")
                 return Response(json.dumps(response_with_time), mimetype='application/json')
                 # return jsonify(message=f"""{response}""")
             except Exception as e:
@@ -711,7 +711,7 @@ def find_images():
         output_path = f"./imagefolder_{user_id}"
 
         language = cache.get(f"language_{user_id}")
-        logger.debug(f"Language seleted is:{language}")
+        logger.info(f"Language seleted is:{language}")
 
         start_route_time = time.time() # Timer starts at the Post
 
@@ -727,7 +727,7 @@ def find_images():
                 img_response = LCD.ANSWER_IMG(response_text, llm,docs_main,language,model_type)
 
                 json_img_response = json.loads(img_response)
-                logger.debug(f"""json_img_response is:: {str(json_img_response)}""")
+                logger.info(f"""json_img_response is:: {str(json_img_response)}""")
 
                 def encode_image(image_path):
                     with open(image_path, "rb") as f:
@@ -740,10 +740,10 @@ def find_images():
                         normalized_value = value.lower()  # Normalize as filenames may vary
                         matched = False
                         for imgfolder in os.listdir(output_path):
-                            logger.debug(f"Image folder is ::{imgfolder}")
+                            logger.info(f"Image folder is ::{imgfolder}")
                             imgfolder = os.path.join(output_path, imgfolder)
                             for image_file in os.listdir(imgfolder):
-                                logger.debug(f"Image file is::{image_file}")
+                                logger.info(f"Image file is::{image_file}")
                                 if image_file.endswith(('.png', '.jpg', '.jpeg', '.webp', '.JPG')):
                                     if normalized_value in image_file.lower():  # Case insensitive comparison
                                         image_path = os.path.join(imgfolder, image_file)
@@ -752,13 +752,13 @@ def find_images():
                                         matched = True
                                         break  # Stop searching once a match is found for this key
                             if not matched:
-                                logger.debug(f"No match found for: {value}")
+                                logger.info(f"No match found for: {value}")
                 
                 count_var = 0
                 for r in image_elements:
                     count_var += 1
                     json_img_response[f"base64_Image{count_var}"] = r
-                    logger.debug(f"""{str(json_img_response)}""")
+                    logger.info(f"""{str(json_img_response)}""")
 
                 # logic to delete NOT RELEVANT keys
 
@@ -780,7 +780,7 @@ def find_images():
                     if key in json_img_response:
                         del json_img_response[key]
 
-                logger.debug(f"Type of json_img_response:{type(json_img_response)}") 
+                logger.info(f"Type of json_img_response:{type(json_img_response)}") 
 
                 end_route_time = time.time()
                 execution_route_time = end_route_time - start_route_time
@@ -790,7 +790,7 @@ def find_images():
                 execution_time_block = {"executionTime":f"""For whole Route is {formatted_route_time}"""}
                 json_img_response.update(execution_time_block) # already type dict json_img_response
 
-                logger.debug(f"{json.dumps(json_img_response, indent=4)}") # for indentational debug
+                logger.info(f"{json.dumps(json_img_response, indent=4)}") # for indentational debug
 
                 return jsonify(json_img_response) #This one works
             except Exception as e:
