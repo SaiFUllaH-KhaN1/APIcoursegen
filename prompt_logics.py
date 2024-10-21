@@ -37,7 +37,7 @@ import imagehash
 from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
 import traceback
 import fitz
-import subprocess
+# import subprocess # Used for the libreoffice command for ppt and doc support (NOT pptx AND docx) 
 
 # Logging Declaration
 log_format = '%(asctime)s - %(levelname)s - %(message)s'
@@ -349,102 +349,104 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         logger.info(texts)
         os.remove(temp_path)
 
-    elif extension=="ppt" or extension=="doc":
-        logger.info(f"PPT or DOC file name is ::{filename}")
-        temp_path = os.path.join(f"{session_var}{filename}")
-        file.seek(0)
-        file.save(temp_path)
+########################Below is the ppt and doc compatibility code(use libreoffice in docker to work)########################
+    # elif extension=="ppt" or extension=="doc":
+    #     logger.info(f"PPT or DOC file name is ::{filename}")
+    #     temp_path = os.path.join(f"{session_var}{filename}")
+    #     file.seek(0)
+    #     file.save(temp_path)
 
-        def convert_pptordoc_to_pdf(input_path, output_dir):
-            # Construct the command to convert pptx to pdf
-            # ALERT--ALERT 
-            # for ThingLink github, use only "soffice" in the command
-            command = [
-                'soffice',
-                '--headless',
-                '--convert-to',
-                'pdf',
-                '--outdir',
-                output_dir,
-                input_path
-            ]
-            # Execute the command
-            subprocess.run(command, check=True)
-            print(f'Converted {input_path} to PDF and saved in {output_dir}')
+    #     def convert_pptordoc_to_pdf(input_path, output_dir):
+    #         # Construct the command to convert pptx to pdf
+    #         # ALERT--ALERT 
+    #         # for ThingLink github, use only "soffice" in the command
+    #         command = [
+    #             'soffice',
+    #             '--headless',
+    #             '--convert-to',
+    #             'pdf',
+    #             '--outdir',
+    #             output_dir,
+    #             input_path
+    #         ]
+    #         # Execute the command
+    #         subprocess.run(command, check=True)
+    #         print(f'Converted {input_path} to PDF and saved in {output_dir}')
         
-        # Convert the .pptx file to PDF
-        convert_pptordoc_to_pdf(temp_path, f"pdf_dir{session_var}")
-        os.remove(temp_path)
+    #     # Convert the .pptx file to PDF
+    #     convert_pptordoc_to_pdf(temp_path, f"pdf_dir{session_var}")
+    #     os.remove(temp_path)
 
-        # Processing created PDF from ppt
-        temp_pdf_file = os.path.join(f"pdf_dir{session_var}", f"{session_var}{filename_without_extension}.pdf")
-        fitz_pdf_reader = fitz.open(temp_pdf_file)
-        pgcount=0
-        for page_num in range(len(fitz_pdf_reader)):
-            page = fitz_pdf_reader.load_page(page_num)
-            pgcount += 1
-            imgcount = 1
-            text_instant = page.get_text()
-            text_instant = f"\nThe Content of PageNumber {pgcount} of file name {filename_without_extension} is:\n{text_instant}.\nEnd of PageNumber {pgcount} of file name {filename_without_extension}\n"
-            try:
-                images = page.get_images(full=True)
-                for img_index, img in enumerate(images, start=1):
-                    xref = img[0]
-                    base_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}"
-                    try:
-                        base_image = fitz_pdf_reader.extract_image(xref)
-                    except Exception as e:
-                        logger.info(f"Error base image : {e}. Lets resolve via cmyk dealing")
-                        logger.info(traceback.format_exc())
-                        pix = fitz.Pixmap(fitz_pdf_reader, xref) # create a Pixmap
-                        if pix.n > 4: # CMYK: convert to RGB first
-                            pix = fitz.Pixmap(fitz.csRGB, pix)
-                        png_filename = f"{base_name}.png"
-                        png_path = os.path.join(output_path_byfile, png_filename)
-                        pix.writePNG(png_path)  # Write image content to PNG
-                        pix = None
-                        logger.info(f"Error base image Resolved as far as cmyk is concerned")
-                        continue
+    #     # Processing created PDF from ppt
+    #     temp_pdf_file = os.path.join(f"pdf_dir{session_var}", f"{session_var}{filename_without_extension}.pdf")
+    #     fitz_pdf_reader = fitz.open(temp_pdf_file)
+    #     pgcount=0
+    #     for page_num in range(len(fitz_pdf_reader)):
+    #         page = fitz_pdf_reader.load_page(page_num)
+    #         pgcount += 1
+    #         imgcount = 1
+    #         text_instant = page.get_text()
+    #         text_instant = f"\nThe Content of PageNumber {pgcount} of file name {filename_without_extension} is:\n{text_instant}.\nEnd of PageNumber {pgcount} of file name {filename_without_extension}\n"
+    #         try:
+    #             images = page.get_images(full=True)
+    #             for img_index, img in enumerate(images, start=1):
+    #                 xref = img[0]
+    #                 base_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}"
+    #                 try:
+    #                     base_image = fitz_pdf_reader.extract_image(xref)
+    #                 except Exception as e:
+    #                     logger.info(f"Error base image : {e}. Lets resolve via cmyk dealing")
+    #                     logger.info(traceback.format_exc())
+    #                     pix = fitz.Pixmap(fitz_pdf_reader, xref) # create a Pixmap
+    #                     if pix.n > 4: # CMYK: convert to RGB first
+    #                         pix = fitz.Pixmap(fitz.csRGB, pix)
+    #                     png_filename = f"{base_name}.png"
+    #                     png_path = os.path.join(output_path_byfile, png_filename)
+    #                     pix.writePNG(png_path)  # Write image content to PNG
+    #                     pix = None
+    #                     logger.info(f"Error base image Resolved as far as cmyk is concerned")
+    #                     continue
                     
-                    image_bytes = base_image["image"]
-                    extension = base_image["ext"]
-                    logger.info(f"Img extension is: {extension} and img base name is: {base_name}")
-                    if extension == ".jp2":
-                        logger.info(f"Checking Image Extension {extension}",)
-                        image_path = os.path.join(output_path_byfile, base_name)  # Construct the full output path
-                        imgcount += 1
-                        with open(image_path, "wb") as fp:
-                            fp.write(image_bytes)
-                        with Image.open(image_path) as im:
-                            new_image_name = base_name + ".png"  # New image name for PNG
-                            new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
-                            im.save(new_image_path)  # Save the image as PNG
-                            os.remove(image_path)
-                    else:
-                        image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}.{extension}"  # Construct new file name with count
-                        image_path = os.path.join(output_path_byfile, image_name)  # Construct the full output path
-                        imgcount += 1
-                        with open(image_path, "wb") as fp:
-                            fp.write(image_bytes)
-                        with Image.open(image_path) as im:
-                            if im.mode in ["P", "PA"]:
-                                logger.info(f"Image of P or PA Mode detected:{im.mode}",)
-                                im = im.convert("RGBA")  # Convert palette-based images to RGBA
-                                new_image_name = base_name + ".png"  # New image name for PNG
-                                new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
-                                im.save(new_image_path)  # Save the image as PNG
-                                os.remove(image_path)
-                            else:
-                                pass
+    #                 image_bytes = base_image["image"]
+    #                 extension = base_image["ext"]
+    #                 logger.info(f"Img extension is: {extension} and img base name is: {base_name}")
+    #                 if extension == ".jp2":
+    #                     logger.info(f"Checking Image Extension {extension}",)
+    #                     image_path = os.path.join(output_path_byfile, base_name)  # Construct the full output path
+    #                     imgcount += 1
+    #                     with open(image_path, "wb") as fp:
+    #                         fp.write(image_bytes)
+    #                     with Image.open(image_path) as im:
+    #                         new_image_name = base_name + ".png"  # New image name for PNG
+    #                         new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
+    #                         im.save(new_image_path)  # Save the image as PNG
+    #                         os.remove(image_path)
+    #                 else:
+    #                     image_name = f"FileName {filename_without_extension} PageNumber {pgcount} ImageNumber {imgcount}.{extension}"  # Construct new file name with count
+    #                     image_path = os.path.join(output_path_byfile, image_name)  # Construct the full output path
+    #                     imgcount += 1
+    #                     with open(image_path, "wb") as fp:
+    #                         fp.write(image_bytes)
+    #                     with Image.open(image_path) as im:
+    #                         if im.mode in ["P", "PA"]:
+    #                             logger.info(f"Image of P or PA Mode detected:{im.mode}",)
+    #                             im = im.convert("RGBA")  # Convert palette-based images to RGBA
+    #                             new_image_name = base_name + ".png"  # New image name for PNG
+    #                             new_image_path = os.path.join(output_path_byfile, new_image_name)  # New full path for PNG
+    #                             im.save(new_image_path)  # Save the image as PNG
+    #                             os.remove(image_path)
+    #                         else:
+    #                             pass
 
-                #logger.info("filler print") # suggests that the try block has executed
-            except Exception as e:
-                logger.info(f"Error processing image {base_name}: {e}")
-                logger.info(traceback.format_exc())
-                pass
+    #             #logger.info("filler print") # suggests that the try block has executed
+    #         except Exception as e:
+    #             logger.info(f"Error processing image {base_name}: {e}")
+    #             logger.info(traceback.format_exc())
+    #             pass
             
-            if text_instant:
-                texts += text_instant
+    #         if text_instant:
+    #             texts += text_instant
+########################Above is the ppt and doc compatibility########################
     
     elif extension=="txt":
         logger.info(f"Text file name is ::{filename}")
