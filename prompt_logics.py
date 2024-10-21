@@ -45,14 +45,14 @@ logger = logging
 logger.basicConfig(level= logging.DEBUG, format= log_format)
 
 def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension,whisper_directory, whisper_model, language, temp_pdf_file):
-    logger.debug(f"file is: {file}",)
+    logger.info(f"file is: {file}",)
     
     filename_without_extension = filename.rsplit('.', 1)[0].lower()
     if f"extracted_content{session_var}" not in filename_without_extension:
         output_path_byfile = f"./imagefolder_{session_var}/images_{session_var}_{filename_without_extension}"
         if not os.path.exists(output_path_byfile):
             os.makedirs(output_path_byfile) 
-    logger.debug(f"Extension is: {extension}",)
+    logger.info(f"Extension is: {extension}",)
     raw_text = ''
     texts = '' # for pdf image path only!
     if extension=="pdf":
@@ -173,7 +173,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
             # print(text_merged) # Will be used onwards to create the faiss_index text database
             
         else:
-            logger.debug("We are processing for url or youtube's extracted_content.pdf")
+            logger.info("We are processing for url or youtube's extracted_content.pdf")
             # Without the Image Processing
             doc_reader = PdfReader(file_content)
 
@@ -212,13 +212,13 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         def extract_and_rename_images(docx_path, output_dir):
             # Extract the contents of the DOCX file
             content = docx2python(docx_path, extract_image=True,  image_folder=output_dir)
-            logger.debug(content)
+            logger.info(content)
             # Flatten the list of lists containing the images
             images = content.images
             image_info = []
             for image_name in images.keys():
                 base_name, ext = os.path.splitext(image_name)
-                logger.debug(f"Base Name: {base_name}, Extension: {ext}")
+                logger.info(f"Base Name: {base_name}, Extension: {ext}")
                 image_info.append((base_name, ext))
             # Rename images based on their location
             image_count = 1
@@ -258,7 +258,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
             return texts
 
         texts = extract_and_rename_images(file_content, output_path_byfile)
-        logger.debug(f"texts is:::{texts}",)
+        logger.info(f"texts is:::{texts}",)
 
     elif extension=="pptx":
         # temp_path = os.path.join(filename)
@@ -274,18 +274,18 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
             # img_names = []
             for slide in prs.slides:
                 image_number = 1
-                logger.debug(f"slide {slide}",)
+                logger.info(f"slide {slide}",)
                 for shape in slide.shapes:
                     try:
                         if shape.shape_type == MSO_SHAPE_TYPE.GROUP:
                             for s in shape.shapes:
                                 if s.shape_type == MSO_SHAPE_TYPE.PICTURE:
                                     image = shape.image
-                                    logger.debug(f"image_number {image_number}",)
+                                    logger.info(f"image_number {image_number}",)
                                     image_filename = f'FileName {filename_without_extension} SlideNumber {slide_number} ImageNumber {image_number}.{image.ext}'
                                     # img = f'SlideNumber:{slide_number} of FileName:{filename_without_extension}-ImageNumber {image_number}'
                                     image_number += 1
-                                    logger.debug(image_filename)
+                                    logger.info(image_filename)
                                     # img_names.append(img)
 
                                     image_path = os.path.join(output_path_byfile, image_filename)
@@ -298,11 +298,11 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
                     try:
                         if shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
                             image = shape.image
-                            logger.debug(f"image_number {image_number}",)
+                            logger.info(f"image_number {image_number}",)
                             image_filename = f'FileName {filename_without_extension} SlideNumber {slide_number} ImageNumber {image_number}.{image.ext}'
                             # img = f'SlideNumber:{slide_number} of FileName:{filename_without_extension} with ImageNumber:{image_number}\n'
                             image_number += 1
-                            logger.debug(image_filename)
+                            logger.info(image_filename)
                             # img_names.append(img)
                             image_path = os.path.join(output_path_byfile, image_filename)
                             with open(image_path, "wb") as fp:
@@ -323,7 +323,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         file.save(temp_path)
         loader = UnstructuredPowerPointLoader(temp_path,mode='elements')
         data = loader.load()
-        logger.debug(f"data:\n{data}",)
+        logger.info(f"data:\n{data}",)
 
         # Step 1: Collect content for each page number
         page_contents = {}
@@ -346,11 +346,11 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         ]
 
         texts = str(combined_page_contents)
-        logger.debug(texts)
+        logger.info(texts)
         os.remove(temp_path)
 
     elif extension=="ppt" or extension=="doc":
-        logger.debug(f"PPT or DOC file name is ::{filename}")
+        logger.info(f"PPT or DOC file name is ::{filename}")
         temp_path = os.path.join(f"{session_var}{filename}")
         file.seek(0)
         file.save(temp_path)
@@ -447,7 +447,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
                 texts += text_instant
     
     elif extension=="txt":
-        logger.debug(f"Text file name is ::{filename}")
+        logger.info(f"Text file name is ::{filename}")
         temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         file.save(temp_path)
@@ -457,10 +457,10 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         os.remove(temp_path)
 
     elif extension=="mp3":
-        logger.debug(f"audio file name is ::{filename}")
+        logger.info(f"audio file name is ::{filename}")
         processor = WhisperProcessor.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
         forced_decoder_ids = processor.get_decoder_prompt_ids(language=language, task="transcribe")
-        logger.debug(f"forced_decoder_ids:{forced_decoder_ids}")
+        logger.info(f"forced_decoder_ids:{forced_decoder_ids}")
         model = WhisperForConditionalGeneration.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory, forced_decoder_ids=forced_decoder_ids)
 
         whisper = pipeline(
@@ -474,7 +474,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         try:
             text = whisper(temp_path_audio) # Running model here
             raw_text = text['text']
-            logger.debug(raw_text)
+            logger.info(raw_text)
         except Exception as e:
             logger.error(f"Failed to initialize the Whisper model.Error:{str(e)}")
         
@@ -489,45 +489,45 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
     )
     # uses openai embeddings for chunking, costs time and money but gives good performances, not ideal for real-time
     # text_splitter = SemanticChunker(OpenAIEmbeddings(), breakpoint_threshold_type="percentile", number_of_chunks= 10000)
-    logger.debug("Before Embeddings!",)
+    logger.info("Before Embeddings!",)
     
-    logger.debug("Now Doing Embeddings!")
+    logger.info("Now Doing Embeddings!")
     
     docsearch = None
 
     try:
         if texts:
-            logger.debug("Running Text Merged (Pdfs other than extractedcontent.pdf)")
+            logger.info("Running Text Merged (Pdfs other than extractedcontent.pdf)")
             text_splitter_formerged = RecursiveCharacterTextSplitter(chunk_size=1536, chunk_overlap=128, length_function=len)
             text_chunks = text_splitter_formerged.split_text(texts)
 
             batch_size = 100  # As per the limit mentioned in your error
             total_chunks = len(text_chunks)
-            logger.debug(f"total_chunks: {total_chunks}",)
+            logger.info(f"total_chunks: {total_chunks}",)
 
             for i in range(0, total_chunks, batch_size):
                 batch = text_chunks[i:i + batch_size]
 
                 docsearch = FAISS.from_texts(batch, embeddings)
-                logger.debug(f"docsearch made for batch,{len(batch)} of the total {total_chunks}")
+                logger.info(f"docsearch made for batch,{len(batch)} of the total {total_chunks}")
 
         elif raw_text:
             raw_text_splitted_chunks = text_splitter.split_text(raw_text)
 
             batch_size = 100  # As per the limit mentioned in your error
             total_chunks = len(raw_text_splitted_chunks)
-            logger.debug(f"total_chunks: {total_chunks}",)
+            logger.info(f"total_chunks: {total_chunks}",)
 
             for i in range(0, total_chunks, batch_size):
                 batch_raw_text = raw_text_splitted_chunks[i:i + batch_size]
 
                 docsearch = FAISS.from_texts(batch_raw_text, embeddings)
-                logger.debug(f"docsearch made for batch,{len(batch_raw_text)} of the total {total_chunks}")
+                logger.info(f"docsearch made for batch,{len(batch_raw_text)} of the total {total_chunks}")
 
     except Exception as e:
         logger.error(f"Error with vectorization:{str(e)}")
 
-    logger.debug("docsearch made")
+    logger.info("docsearch made")
     return docsearch
 
 def URL_IMG_EXTRACT(soup, session_var, base_url):
@@ -538,11 +538,11 @@ def URL_IMG_EXTRACT(soup, session_var, base_url):
     skip_patterns = ['/icons/', '/logos/', '/ads/', '/footer/']
     for image in soup.find_all('img'):
         try:
-            logger.debug(f"{image}")
+            logger.info(f"{image}")
             image_src = image['src']
-            logger.debug(f"image_src: {image_src}",)
+            logger.info(f"image_src: {image_src}",)
             extension_src = image_src.split('.')[-1]
-            logger.debug(f"extension image_src: {extension_src}",)
+            logger.info(f"extension image_src: {extension_src}",)
             if extension_src not in ['png', 'jpg', 'jpeg', 'JPG', 'webp']:
                 continue
             if any(pattern in image_src for pattern in skip_patterns):
@@ -550,7 +550,7 @@ def URL_IMG_EXTRACT(soup, session_var, base_url):
             if any('logo' in cls for cls in image.get('class', [])):
                 continue
             full_image_url = urljoin(base_url, image_src)
-            logger.debug(f"Selected: {full_image_url}")
+            logger.info(f"Selected: {full_image_url}")
             img_filename = os.path.join(output_path_byfile, f'FileName URL ImageNumber {index}.{extension_src}')
             # if extension_src == 'svg':
             #     svg_filename = os.path.join(output_path_byfile, f'URL image_{index}.png')
@@ -590,7 +590,7 @@ def REMOVE_DUP_IMG(image_dir):
       for filename in files:
           if filename.endswith(('.png', '.jpg', '.jpeg', '.webp', '.JPG')):
             file_path = os.path.join(root, filename) # root returns the file path including subfolder
-            logger.debug(file_path)
+            logger.info(file_path)
             with Image.open(file_path) as img:
                 # generate the perceptual hash for the image
                 hash = imagehash.phash(img)
@@ -598,15 +598,15 @@ def REMOVE_DUP_IMG(image_dir):
                 # seeing if this hash already exists in the dictionary
                 if hash in hashes:
                     duplicates.append(filename)
-                    logger.debug(f"Duplicate found: {filename} is a duplicate of {hashes[hash]}")
+                    logger.info(f"Duplicate found: {filename} is a duplicate of {hashes[hash]}")
                     os.remove(file_path)  # Delete the duplicate file
                 else:
                     hashes[hash] = filename
 
-    logger.debug("Duplicate removal complete. Removed files:", duplicates)
+    logger.info("Duplicate removal complete. Removed files:", duplicates)
 
 def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
-    logger.debug("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
+    logger.info("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
     docs = docsearch.similarity_search(query, k=3)
     docs_main = " ".join([d.page_content for d in docs])
     if model_type=="gemini":
@@ -616,15 +616,15 @@ def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type):
     return chain, docs_main, query
 
 def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary):
-    logger.debug("RE_SIMILARITY_SEARCH Initiated!")
+    logger.info("RE_SIMILARITY_SEARCH Initiated!")
     docs = docsearch.similarity_search(query, k=3)
-    logger.debug(f"docs from RE_SIMILARITY_SEARCH:\n{docs}",)
+    logger.info(f"docs from RE_SIMILARITY_SEARCH:\n{docs}",)
     if summarize_images == "on":
-        logger.debug(f"Tells me to summarize images, {summarize_images}")
+        logger.info(f"Tells me to summarize images, {summarize_images}")
         PageNumberList = []
         for relevant_doc in docs:
             relevant_doc = relevant_doc.page_content
-            logger.debug(relevant_doc)
+            logger.info(relevant_doc)
 
             pattern_this_pptx = r"SlideNumber (\d+) FileName (.+?) ---"
             # Find all matches for "[This Page is PageNumber:]"
@@ -651,7 +651,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                 PageNumberList.append(num)
 
             PageNumberList = list(set(PageNumberList))
-            logger.debug(f"PageNumberList:\n{PageNumberList}",)
+            logger.info(f"PageNumberList:\n{PageNumberList}",)
 
         image_elements = []
         image_summaries = []
@@ -660,7 +660,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
             basename = os.path.basename(image_path)
             with Image.open(image_path) as img:
                 width, height = img.size
-                logger.debug(f"{basename} size is {width},{height}")
+                logger.info(f"{basename} size is {width},{height}")
                 if width*height > 262144:
                     # Resize the image
                     img = img.resize((512, 512))
@@ -678,7 +678,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                     # Remove the temporary file
                     os.remove(temp_patha)
                 else:
-                    logger.debug(f"{basename} is less than 262144 having {width}, {height}")
+                    logger.info(f"{basename} is less than 262144 having {width}, {height}")
                     with open(image_path, "rb") as f:
                         encoded_image = base64.b64encode(f.read()).decode('utf-8')
 
@@ -712,17 +712,17 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
             )
             
             if model_type == 'gemini':
-                logger.debug("Gemini summarizing images NOW")
+                logger.info("Gemini summarizing images NOW")
                 response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).invoke([prompt_gemini])
                 img_desc = response.content
-                logger.debug(f"Img Summary is: {type(img_desc)}/n{img_desc}")
+                logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
             else:
-                logger.debug("Openai summarizing images NOW")
+                logger.info("Openai summarizing images NOW")
                 response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
                 img_desc = response.content
-                logger.debug(f"Img Summary is: {type(img_desc)}/n{img_desc}")
+                logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
             
             chain = LLMChain(prompt=PROMPTS.prompt_polish_summary,llm=llm_img_summary)
             polish_summary = chain({"basename": basename,"description": response.content,"language":language})
@@ -758,17 +758,17 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
             )
 
             if model_type == 'gemini':
-                logger.debug("Gemini summarizing images NOW")
+                logger.info("Gemini summarizing images NOW")
                 response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).invoke([prompt_gemini])
                 img_desc = response.content
-                logger.debug(f"Img Summary is: {type(img_desc)}/n{img_desc}")
+                logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
             else:
-                logger.debug("Openai summarizing images NOW")
+                logger.info("Openai summarizing images NOW")
                 response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
                                             openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
                 img_desc = response.content
-                logger.debug(f"Img Summary is: {type(img_desc)}/n{img_desc}")
+                logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
             
             chain = LLMChain(prompt=PROMPTS.prompt_polish_summary,llm=llm_img_summary)
             polish_summary = chain({"basename": basename,"description": response.content,"language":language})
@@ -783,7 +783,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                     if "URL" in i:
                         image_path = os.path.join(root, i)
                         basename = os.path.basename(image_path)
-                        logger.debug(os.path.basename(image_path))
+                        logger.info(os.path.basename(image_path))
                         encoded_image = encode_image(image_path)
                         image_elements.append(encoded_image)
                         summary = url_summarize_image(encoded_image,basename, language)
@@ -793,7 +793,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                             if f"FileName {file} PageNumber {page_number}" in i:
                                 image_path = os.path.join(root, i)
                                 basename = os.path.basename(image_path)
-                                logger.debug(os.path.basename(image_path))
+                                logger.info(os.path.basename(image_path))
                                 encoded_image = encode_image(image_path)
                                 image_elements.append(encoded_image)
                                 summary = summarize_image(encoded_image,basename, language)
@@ -801,7 +801,7 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                             elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
                                 image_path = os.path.join(root, i)
                                 basename = os.path.basename(image_path)
-                                logger.debug(os.path.basename(image_path))
+                                logger.info(os.path.basename(image_path))
                                 encoded_image = encode_image(image_path)
                                 image_elements.append(encoded_image)
                                 summary = summarize_image(encoded_image,basename, language)
@@ -809,13 +809,13 @@ def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, s
                             elif f"FileName {file} SlideNumber {page_number}" in i:
                                 image_path = os.path.join(root, i)
                                 basename = os.path.basename(image_path)
-                                logger.debug(os.path.basename(image_path))
+                                logger.info(os.path.basename(image_path))
                                 encoded_image = encode_image(image_path)
                                 image_elements.append(encoded_image)
                                 summary = summarize_image(encoded_image,basename, language)
                                 image_summaries.append(summary)
 
-        logger.debug(f"image_summaries::\n{image_summaries}",)
+        logger.info(f"image_summaries::\n{image_summaries}",)
 
         image_summaries_string = "\n".join(image_summaries) #convert list to string to add in the langchain Document data type
         docs.append(Document(page_content=f"Useful Image/s for all the above content::\n{image_summaries_string}"))
@@ -827,14 +827,14 @@ mpv_list = ["NO number of MediaBlock/s and ONLY TextBlock/s", "more TextBlock/s 
        "more MediaBlock/s compared to TextBlock/s", "ONLY MediaBlock/s and NO number of TextBlock/s"]
 
 def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings, language, mpv):
-    logger.debug("TALK_WITH_RAG Initiated!")
+    logger.info("TALK_WITH_RAG Initiated!")
     # if we are getting docs_main already from the process_data flask route then comment, else
     # UNcomment if you want more similarity_searching based on Learning obj and content areas!
     # docs = docsearch.similarity_search(query, k=3)
     # docs_main = " ".join([d.page_content for d in docs])
     
     mpv_string = mpv_list[int(mpv)]
-    logger.debug(f"mpv list string is: {mpv_string}")
+    logger.info(f"mpv list string is: {mpv_string}")
 
     responses = ''
     def is_json_parseable(json_string):
@@ -845,7 +845,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         return True, json_object
 
     if scenario == "auto":
-        logger.debug(f"SCENARIO ====PROMPT{scenario}",)
+        logger.info(f"SCENARIO ====PROMPT{scenario}",)
         # chain = prompt | llm | {f"{llm_memory}": RunnablePassthrough()}
         
 
@@ -861,37 +861,37 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         
         selected = llm_auto_chain.run({"input_documents": docs_main, "human_input": query})
 
-        logger.debug(f"Semantic Scenario Selected of NAME: {selected}",)
+        logger.info(f"Semantic Scenario Selected of NAME: {selected}",)
 
         selected = json.loads(selected)
         max_similarity = selected["Bot"]
-        logger.debug(f"max_similarity is:{max_similarity}")
+        logger.info(f"max_similarity is:{max_similarity}")
 
         ############################
 
         if max_similarity == "Gamified Scenario":
-            logger.debug("Gamified Auto Selected")
+            logger.info("Gamified Auto Selected")
             scenario = "gamified"
 
         elif max_similarity == "Linear Scenario":
-            logger.debug("Linear Auto Selected")
+            logger.info("Linear Auto Selected")
             scenario = "linear"
 
         elif max_similarity == "Simulation Scenario":
-            logger.debug(f"Simulation Auto Selected")
+            logger.info(f"Simulation Auto Selected")
             scenario = "simulation"
 
         elif max_similarity == "Branched Scenario":
-            logger.debug(f"Branched Auto Selected")
+            logger.info(f"Branched Auto Selected")
             scenario = "branched"
 
         else:
-            logger.debug(f"AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
+            logger.info(f"AUTO SELECTION FAILED, Selecting Default Scenario of LINEAR SCENARIO")
             scenario = "linear"
 
 
     if scenario == "linear":
-        logger.debug(f"SCENARIO ====prompt_linear : {scenario}")
+        logger.info(f"SCENARIO ====prompt_linear : {scenario}")
         if model_type == 'gemini':
             chain = LLMChain(prompt=PROMPTS.prompt_linear,llm=llm)
         else:
@@ -903,27 +903,27 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         countd=1
         while not is_valid and countd<=2:
             txt = response['text']
-            logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}")
+            logger.info(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}")
             ### REGEX to remove last incomplete id block ###
             modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
             if modified_txt:
                 modified_txt = modified_txt[0]  # Get the matched string
             else:
                 modified_txt = txt  # No match found, return original
-            logger.debug(f"original:::\n{txt}")
-            logger.debug(f"changed:::\n{modified_txt}")
+            logger.info(f"original:::\n{txt}")
+            logger.info(f"changed:::\n{modified_txt}")
 
             # Finding if corrupt edges exists further and to remove it via if loop
             find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
             if find_edges:
                 find_edges = find_edges[0]  # Get the matched string
-                logger.debug(f"Corrupt edges found:\n{find_edges}")
+                logger.info(f"Corrupt edges found:\n{find_edges}")
                 # Using regex to replace the specific pattern
                 modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                logger.debug(f"Corrected corrupt edges:\n{modified_txt}")
+                logger.info(f"Corrected corrupt edges:\n{modified_txt}")
 
             responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-            logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+            logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
             if model_type == 'gemini':
                 chain_retry = LLMChain(prompt=PROMPTS.prompt_linear_retry,llm=llm)
@@ -931,29 +931,29 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 chain_retry = LLMChain(prompt=PROMPTS.prompt_linear_retry,llm=llm)
 
             response_retry = chain_retry({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-            logger.debug(f"response contd... is:\n{response_retry['text']}",)
+            logger.info(f"response contd... is:\n{response_retry['text']}",)
 
             responses = modified_txt + response_retry['text'] #changed modified_text to responses
-            logger.debug(f"responses+continued Combined is:\n{responses}",)
+            logger.info(f"responses+continued Combined is:\n{responses}",)
 
             # Finding if corrupt edges exists AFTER combined prompts
             find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
             if find_edges:
                 find_edges = find_edges[0]  # Get the matched string
-                logger.debug(f"Corrupt edges found:\n{find_edges}",)
+                logger.info(f"Corrupt edges found:\n{find_edges}",)
                 # Using regex to replace the specific pattern
                 responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                logger.debug(f"Corrected corrupt edges:\n{responses}", )
+                logger.info(f"Corrected corrupt edges:\n{responses}", )
 
             response['text'] = responses
 
             is_valid, result = is_json_parseable(responses)
-            logger.debug(f"Parseability status:\n{result}", )
+            logger.info(f"Parseability status:\n{result}", )
             countd+=1
-            logger.debug(f"contd count is:\n{countd}",)
+            logger.info(f"contd count is:\n{countd}",)
 
         if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-            logger.debug(f"The retry is also not parseable!\n{responses}", )
+            logger.info(f"The retry is also not parseable!\n{responses}", )
             max_attempts = 1  # Maximum number of attempts
             attempts = 1
             while attempts <= max_attempts:
@@ -967,15 +967,15 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                 if is_valid_retry_simplify == True:
                     response['text'] = response_retry_simplify['text']
-                    logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
+                    logger.info(f"Result successfull for simplified response:\n{response['text']}",)
                     break
                 else:
-                    logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                    logger.info(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
                     
 
     elif scenario == "branched":
-        logger.debug(f"SCENARIO ====branched : {scenario}",)
+        logger.info(f"SCENARIO ====branched : {scenario}",)
         
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
@@ -999,18 +999,18 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         if "[END_OF_RESPONSE]" not in response1['text']:
             count_setup_retry = 0
             while "[END_OF_RESPONSE]" not in response1['text'] and count_setup_retry<=3:
-                logger.debug("[END_OF_RESPONSE] not found")
+                logger.info("[END_OF_RESPONSE] not found")
                 contd_response1 = response1['text'] + "[CONTINUE_EXACTLY_FROM_HERE]"
                 chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_branched_setup_continue,llm=llm_setup_continue)
                 response1 = chain_setup_retry({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                logger.debug(f"CONTINUED Response 1 IS::\n{response1['text']}")
+                logger.info(f"CONTINUED Response 1 IS::\n{response1['text']}")
                 response1['text'] = contd_response1 + response1['text']
                 response1['text'] = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1['text'])
                 
-                logger.debug(f"JOINED Response 1 IS::\n{response1['text']}")
+                logger.info(f"JOINED Response 1 IS::\n{response1['text']}")
                 count_setup_retry += 1
         else:
-            logger.debug(f"Response 1 is::\n{response1['text']}",)
+            logger.info(f"Response 1 is::\n{response1['text']}",)
 
 
         response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
@@ -1019,27 +1019,27 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         countd=1
         while not is_valid and countd<=2:
             txt = response['text']
-            logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
+            logger.info(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
             ### REGEX to remove last incomplete id block ###
             modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
             if modified_txt:
                 modified_txt = modified_txt[0]  # Get the matched string
             else:
                 modified_txt = txt  # No match found, return original
-            logger.debug(f"original:::\n{txt}",)
-            logger.debug(f"changed:::\n{modified_txt}",)
+            logger.info(f"original:::\n{txt}",)
+            logger.info(f"changed:::\n{modified_txt}",)
 
             # Finding if corrupt edges exists further and to remove it via if loop
             find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
             if find_edges:
                 find_edges = find_edges[0]  # Get the matched string
-                logger.debug(f"Corrupt edges found:\n{find_edges}",)
+                logger.info(f"Corrupt edges found:\n{find_edges}",)
                 # Using regex to replace the specific pattern
                 modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                logger.debug(f"Corrected corrupt edges:\n{modified_txt}", )
+                logger.info(f"Corrected corrupt edges:\n{modified_txt}", )
 
             responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-            logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+            logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
             if model_type == 'gemini':
                 chain_retry = LLMChain(prompt=PROMPTS.prompt_branched_retry,llm=llm)
@@ -1047,29 +1047,29 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 chain_retry = LLMChain(prompt=PROMPTS.prompt_branched_retry,llm=llm)
 
             response_retry = chain_retry({"incomplete_response": responses,"micro_subtopics":response1['text'], "language":language, "mpv":mpv, "mpv_string":mpv_string})
-            logger.debug(f"response contd... is:\n{response_retry['text']}",)
+            logger.info(f"response contd... is:\n{response_retry['text']}",)
 
             responses = modified_txt + response_retry['text'] #changed modified_text to responses
-            logger.debug(f"responses+continued Combined is:\n{responses}",)
+            logger.info(f"responses+continued Combined is:\n{responses}",)
 
             # Finding if corrupt edges exists AFTER combined prompts
             find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
             if find_edges:
                 find_edges = find_edges[0]  # Get the matched string
-                logger.debug(f"Corrupt edges found:\n{find_edges}",)
+                logger.info(f"Corrupt edges found:\n{find_edges}",)
                 # Using regex to replace the specific pattern
                 responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                logger.debug(f"Corrected corrupt edges:\n{responses}", )
+                logger.info(f"Corrected corrupt edges:\n{responses}", )
 
             response['text'] = responses
 
             is_valid, result = is_json_parseable(responses)
-            logger.debug(f"Parseability status:\n{result}", )
+            logger.info(f"Parseability status:\n{result}", )
             countd+=1
-            logger.debug(f"contd count is:\n{countd}",)
+            logger.info(f"contd count is:\n{countd}",)
 
         if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-            logger.debug(f"The retry is also not parseable!:\n{responses}", )
+            logger.info(f"The retry is also not parseable!:\n{responses}", )
             max_attempts = 1  # Maximum number of attempts
             attempts = 1
             while attempts <= max_attempts:
@@ -1083,15 +1083,15 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                 if is_valid_retry_simplify == True:
                     response['text'] = response_retry_simplify['text']
-                    logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
+                    logger.info(f"Result successfull for simplified response:\n{response['text']}",)
                     break
                 else:
-                    logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                    logger.info(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
                     
 
     elif scenario == "simulation":
-        logger.debug(f"SCENARIO ====prompt_simulation_pedagogy : {scenario}",)
+        logger.info(f"SCENARIO ====prompt_simulation_pedagogy : {scenario}",)
         # summarized first, then response
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
@@ -1115,18 +1115,18 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         if "[END_OF_RESPONSE]" not in response1['text']:
             count_setup_retry = 0
             while "[END_OF_RESPONSE]" not in response1['text'] and count_setup_retry<=3:
-                logger.debug("[END_OF_RESPONSE] not found")
+                logger.info("[END_OF_RESPONSE] not found")
                 contd_response1 = response1['text'] + "[CONTINUE_EXACTLY_FROM_HERE]"
                 chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_setup_continue,llm=llm_setup_continue)
                 response1 = chain_setup_retry({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                logger.debug(f"CONTINUED Response 1 IS::\n{response1['text']}")
+                logger.info(f"CONTINUED Response 1 IS::\n{response1['text']}")
                 response1['text'] = contd_response1 + response1['text']
                 response1['text'] = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1['text'])
                 
-                logger.debug(f"JOINED Response 1 IS::\n{response1['text']}")
+                logger.info(f"JOINED Response 1 IS::\n{response1['text']}")
                 count_setup_retry += 1
         else:
-            logger.debug(f"Response 1 is::\n{response1['text']}",)
+            logger.info(f"Response 1 is::\n{response1['text']}",)
 
 
         response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
@@ -1135,27 +1135,27 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         countd=1
         while not is_valid and countd<=2:
             txt = response['text']
-            logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
+            logger.info(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
             ### REGEX to remove last incomplete id block ###
             modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
             if modified_txt:
                 modified_txt = modified_txt[0]  # Get the matched string
             else:
                 modified_txt = txt  # No match found, return original
-            logger.debug(f"original:::\n{txt}",)
-            logger.debug(f"changed:::\n{modified_txt}",)
+            logger.info(f"original:::\n{txt}",)
+            logger.info(f"changed:::\n{modified_txt}",)
 
             # Finding if corrupt edges exists further and to remove it via if loop
             find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
             if find_edges:
                 find_edges = find_edges[0]  # Get the matched string
-                logger.debug(f"Corrupt edges found:\n{find_edges}",)
+                logger.info(f"Corrupt edges found:\n{find_edges}",)
                 # Using regex to replace the specific pattern
                 modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                logger.debug(f"Corrected corrupt edges:\n{modified_txt}", )
+                logger.info(f"Corrected corrupt edges:\n{modified_txt}", )
 
             responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-            logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+            logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
             if model_type == 'gemini':
                 chain_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_retry_gemini,llm=llm)
@@ -1163,29 +1163,29 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 chain_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_retry_gemini,llm=llm)
 
             response_retry = chain_retry({"incomplete_response": responses,"simulation_story":response1['text'], "language":language, "mpv":mpv, "mpv_string":mpv_string})
-            logger.debug(f"response contd... is:\n{response_retry['text']}",)
+            logger.info(f"response contd... is:\n{response_retry['text']}",)
 
             responses = modified_txt + response_retry['text'] #changed modified_text to responses
-            logger.debug(f"responses+continued Combined is:\n{responses}",)
+            logger.info(f"responses+continued Combined is:\n{responses}",)
 
             # Finding if corrupt edges exists AFTER combined prompts
             find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
             if find_edges:
                 find_edges = find_edges[0]  # Get the matched string
-                logger.debug(f"Corrupt edges found:\n{find_edges}",)
+                logger.info(f"Corrupt edges found:\n{find_edges}",)
                 # Using regex to replace the specific pattern
                 responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                logger.debug(f"Corrected corrupt edges:\n{responses}", )
+                logger.info(f"Corrected corrupt edges:\n{responses}", )
 
             response['text'] = responses
 
             is_valid, result = is_json_parseable(responses)
-            logger.debug(f"Parseability status:\n{result}", )
+            logger.info(f"Parseability status:\n{result}", )
             countd+=1
-            logger.debug(f"contd count is:{countd}",)
+            logger.info(f"contd count is:{countd}",)
 
         if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-            logger.debug(f"The retry is also not parseable!:\n{responses}", )
+            logger.info(f"The retry is also not parseable!:\n{responses}", )
             max_attempts = 1  # Maximum number of attempts
             attempts = 1
             while attempts <= max_attempts:
@@ -1199,15 +1199,15 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                 if is_valid_retry_simplify == True:
                     response['text'] = response_retry_simplify['text']
-                    logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
+                    logger.info(f"Result successfull for simplified response:\n{response['text']}",)
                     break
                 else:
-                    logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                    logger.info(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
                             
 
     elif scenario == "gamified":
-        logger.debug(f"SCENARIO ====prompt_gamified : {scenario}",)
+        logger.info(f"SCENARIO ====prompt_gamified : {scenario}",)
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
             llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
@@ -1230,18 +1230,18 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         if "[END_OF_RESPONSE]" not in response1['text']:
             count_setup_retry = 0
             while "[END_OF_RESPONSE]" not in response1['text'] and count_setup_retry<=3:
-                logger.debug("[END_OF_RESPONSE] not found")
+                logger.info("[END_OF_RESPONSE] not found")
                 contd_response1 = response1['text'] + "[CONTINUE_EXACTLY_FROM_HERE]"
                 chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_gamified_setup_continue,llm=llm_setup_continue)
                 response1 = chain_setup_retry({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
-                logger.debug(f"CONTINUED Response 1 IS::\n{response1['text']}")
+                logger.info(f"CONTINUED Response 1 IS::\n{response1['text']}")
                 response1['text'] = contd_response1 + response1['text']
                 response1['text'] = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1['text'])
                 
-                logger.debug(f"JOINED Response 1 IS::\n{response1['text']}")
+                logger.info(f"JOINED Response 1 IS::\n{response1['text']}")
                 count_setup_retry += 1
         else:
-            logger.debug(f"Response 1 is::\n{response1['text']}",)
+            logger.info(f"Response 1 is::\n{response1['text']}",)
 
 
         response = chain({"response_of_bot": response1['text'],"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
@@ -1250,27 +1250,27 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
         countd=1
         while not is_valid and countd<=2:
             txt = response['text']
-            logger.debug(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
+            logger.info(f"CHAIN_RETRY BEGINS for the failed response:\n{txt}", )
             ### REGEX to remove last incomplete id block ###
             modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
             if modified_txt:
                 modified_txt = modified_txt[0]  # Get the matched string
             else:
                 modified_txt = txt  # No match found, return original
-            logger.debug(f"original:::\n{txt}",)
-            logger.debug(f"changed:::\n{modified_txt}",)
+            logger.info(f"original:::\n{txt}",)
+            logger.info(f"changed:::\n{modified_txt}",)
 
             # Finding if corrupt edges exists further and to remove it via if loop
             find_edges = re.findall(r'.*}, "edges": \[', modified_txt, re.DOTALL)
             if find_edges:
                 find_edges = find_edges[0]  # Get the matched string
-                logger.debug(f"Corrupt edges found:\n{find_edges}",)
+                logger.info(f"Corrupt edges found:\n{find_edges}",)
                 # Using regex to replace the specific pattern
                 modified_txt = re.sub(r'}(?=, "edges": \[)', '}]', modified_txt, flags=re.DOTALL)
-                logger.debug(f"Corrected corrupt edges:\n{modified_txt}", )
+                logger.info(f"Corrected corrupt edges:\n{modified_txt}", )
 
             responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-            logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+            logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
             if model_type == 'gemini':
                 chain_retry = LLMChain(prompt=PROMPTS.prompt_gamified_pedagogy_retry_gemini,llm=llm)
@@ -1278,29 +1278,29 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 chain_retry = LLMChain(prompt=PROMPTS.prompt_gamified_pedagogy_retry_gemini,llm=llm)
 
             response_retry = chain_retry({"incomplete_response": responses,"exit_game_story":response1['text'], "language":language, "mpv":mpv, "mpv_string":mpv_string})
-            logger.debug(f"response contd... is:\n{response_retry['text']}",)
+            logger.info(f"response contd... is:\n{response_retry['text']}",)
 
             responses = modified_txt + response_retry['text'] #changed modified_text to responses
-            logger.debug(f"responses+continued Combined is:\n{responses}",)
+            logger.info(f"responses+continued Combined is:\n{responses}",)
 
             # Finding if corrupt edges exists AFTER combined prompts
             find_edges = re.findall(r'.*}, "edges": \[', responses, re.DOTALL)
             if find_edges:
                 find_edges = find_edges[0]  # Get the matched string
-                logger.debug(f"Corrupt edges found:\n{find_edges}",)
+                logger.info(f"Corrupt edges found:\n{find_edges}",)
                 # Using regex to replace the specific pattern
                 responses = re.sub(r'}(?=, "edges": \[)', '}]', responses, flags=re.DOTALL)
-                logger.debug(f"Corrected corrupt edges:\n{responses}", )
+                logger.info(f"Corrected corrupt edges:\n{responses}", )
 
             response['text'] = responses
 
             is_valid, result = is_json_parseable(responses)
-            logger.debug(f"Parseability status:\n{result}", )
+            logger.info(f"Parseability status:\n{result}", )
             countd+=1
-            logger.debug(f"contd count is:{countd}",)
+            logger.info(f"contd count is:{countd}",)
 
         if is_valid == False and countd==3: #countd==4 shows while loop has exited with failure 
-            logger.debug(f"The retry is also not parseable!:\n{responses}", )
+            logger.info(f"The retry is also not parseable!:\n{responses}", )
             max_attempts = 1  # Maximum number of attempts
             attempts = 1
             while attempts <= max_attempts:
@@ -1314,21 +1314,21 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify['text'])
                 if is_valid_retry_simplify == True:
                     response['text'] = response_retry_simplify['text']
-                    logger.debug(f"Result successfull for simplified response:\n{response['text']}",)
+                    logger.info(f"Result successfull for simplified response:\n{response['text']}",)
                     break
                 else:
-                    logger.debug(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
+                    logger.info(f"Attempt {attempts} also failed to parse JSON. Error:\n {response_retry_simplify['text']}")
                     attempts += 1
                     
      
-    logger.debug(f"The output is as follows::\n{response['text']}",)
+    logger.info(f"The output is as follows::\n{response['text']}",)
     return response['text'], scenario
 
 def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language, mpv):
     txt_output = None
 
     mpv_string = mpv_list[int(mpv)]
-    logger.debug(f"mpv list string is: {mpv_string}")
+    logger.info(f"mpv list string is: {mpv_string}")
 
     if model_type == 'gemini':
         llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
@@ -1356,7 +1356,7 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
             target_exists = edge['target'] in node_ids
 
             if not source_exists or not target_exists:
-                logger.debug(f"Error occured:\n{edge}")
+                logger.info(f"Error occured:\n{edge}")
                 edge['SHADOW EDGE BLOCK'] = 'SHADOW EDGES IN THIS BLOCK'  # Add error directly to the edge
                 error_flag = True
                 # If you want to find all errors, remove the break statement
@@ -1366,11 +1366,11 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
         return shadow_result, error_flag
 
     output, error_flag = validate_edges(original_txt)
-    logger.debug(f"error_flag: {error_flag}")
+    logger.info(f"error_flag: {error_flag}")
 
     if error_flag == True:
 
-        logger.debug(f"Error flag is: {error_flag} and so output is:\n{output}")
+        logger.info(f"Error flag is: {error_flag} and so output is:\n{output}")
 
         if scenario == "linear":
 
@@ -1390,44 +1390,44 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
                     modified_txt = modified_txt[0]  # Get the matched string
                 else:
                     modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}")
-                logger.debug(f"changed:::\n{modified_txt}")
+                logger.info(f"original:::\n{txt}")
+                logger.info(f"changed:::\n{modified_txt}")
 
                 responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+                logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
                 chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges_retry, llm=llm)
                 response_retry = chain_edges_retry({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
+                logger.info(f"response contd... is:\n{response_retry['text']}",)
 
                 responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
+                logger.info(f"responses+continued Combined is:\n{responses}",)
                 
                 shadow_response['text'] = responses
 
                 is_valid, result = is_json_parseable(shadow_response['text'])
-                logger.debug(f"Parseability status:\n{result}", )
+                logger.info(f"Parseability status:\n{result}", )
                 countd+=1
-                logger.debug(f"contd count is:\n{countd}",)
+                logger.info(f"contd count is:\n{countd}",)
 
-            logger.debug("Success shadow repair!:",shadow_response['text'])
+            logger.info("Success shadow repair!:",shadow_response['text'])
             shadow_response = shadow_response['text']
-            logger.debug(f"shadow_response type before: {type(shadow_response)}")
-            logger.debug(f"output type before: {type(output)}")
+            logger.info(f"shadow_response type before: {type(shadow_response)}")
+            logger.info(f"output type before: {type(output)}")
 
             shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
             output = json.loads(output)  # Convert JSON string into dictionary
 
-            logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
+            logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
             output['edges']  = shadow_response['edges']  
-            logger.debug(f"{output} of {type(output)}")
+            logger.info(f"{output} of {type(output)}")
             output = json.dumps(output, indent=2) # converts to dict to str
             is_valid_output, result = is_json_parseable(output)
 
             if is_valid_output == False:
                 output = original_txt
-                logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+                logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
 
 
         elif scenario == "branched":
@@ -1447,44 +1447,44 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
                     modified_txt = modified_txt[0]  # Get the matched string
                 else:
                     modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}")
-                logger.debug(f"changed:::\n{modified_txt}")
+                logger.info(f"original:::\n{txt}")
+                logger.info(f"changed:::\n{modified_txt}")
 
                 responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+                logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
                 chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges_retry, llm=llm)
                 response_retry = chain_edges_retry({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
+                logger.info(f"response contd... is:\n{response_retry['text']}",)
 
                 responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
+                logger.info(f"responses+continued Combined is:\n{responses}",)
                 
                 shadow_response['text'] = responses
 
                 is_valid, result = is_json_parseable(shadow_response['text'])
-                logger.debug(f"Parseability status:\n{result}", )
+                logger.info(f"Parseability status:\n{result}", )
                 countd+=1
-                logger.debug(f"contd count is:\n{countd}",)
+                logger.info(f"contd count is:\n{countd}",)
 
-            logger.debug("Success shadow repair!:",shadow_response['text'])
+            logger.info("Success shadow repair!:",shadow_response['text'])
             shadow_response = shadow_response['text']
-            logger.debug(f"shadow_response type before: {type(shadow_response)}")
-            logger.debug(f"output type before: {type(output)}")
+            logger.info(f"shadow_response type before: {type(shadow_response)}")
+            logger.info(f"output type before: {type(output)}")
 
             shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
             output = json.loads(output)  # Convert JSON string into dictionary
 
-            logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
+            logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
             output['edges']  = shadow_response['edges']  
-            logger.debug(f"{output} of {type(output)}")
+            logger.info(f"{output} of {type(output)}")
             output = json.dumps(output, indent=2) # converts to dict to str
             is_valid_output, result = is_json_parseable(output)
 
             if is_valid_output == False:
                 output = original_txt
-                logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+                logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
 
 
         elif scenario == "simulation":
@@ -1504,44 +1504,44 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
                     modified_txt = modified_txt[0]  # Get the matched string
                 else:
                     modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}")
-                logger.debug(f"changed:::\n{modified_txt}")
+                logger.info(f"original:::\n{txt}")
+                logger.info(f"changed:::\n{modified_txt}")
 
                 responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+                logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
                 chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges_retry, llm=llm)
                 response_retry = chain_edges_retry({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
+                logger.info(f"response contd... is:\n{response_retry['text']}",)
 
                 responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
+                logger.info(f"responses+continued Combined is:\n{responses}",)
                 
                 shadow_response['text'] = responses
 
                 is_valid, result = is_json_parseable(shadow_response['text'])
-                logger.debug(f"Parseability status:\n{result}", )
+                logger.info(f"Parseability status:\n{result}", )
                 countd+=1
-                logger.debug(f"contd count is:\n{countd}",)
+                logger.info(f"contd count is:\n{countd}",)
 
-            logger.debug("Success shadow repair!:",shadow_response['text'])
+            logger.info("Success shadow repair!:",shadow_response['text'])
             shadow_response = shadow_response['text']
-            logger.debug(f"shadow_response type before: {type(shadow_response)}")
-            logger.debug(f"output type before: {type(output)}")
+            logger.info(f"shadow_response type before: {type(shadow_response)}")
+            logger.info(f"output type before: {type(output)}")
 
             shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
             output = json.loads(output)  # Convert JSON string into dictionary
 
-            logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
+            logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
             output['edges']  = shadow_response['edges']  
-            logger.debug(f"{output} of {type(output)}")
+            logger.info(f"{output} of {type(output)}")
             output = json.dumps(output, indent=2) # converts to dict to str
             is_valid_output, result = is_json_parseable(output)
 
             if is_valid_output == False:
                 output = original_txt
-                logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+                logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
 
 
         elif scenario == "gamified":
@@ -1561,48 +1561,48 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
                     modified_txt = modified_txt[0]  # Get the matched string
                 else:
                     modified_txt = txt  # No match found, return original
-                logger.debug(f"original:::\n{txt}")
-                logger.debug(f"changed:::\n{modified_txt}")
+                logger.info(f"original:::\n{txt}")
+                logger.info(f"changed:::\n{modified_txt}")
 
                 responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.debug(f"\nThe responses_modification to LLM is:\n{responses}",)
+                logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
                 chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges_retry, llm=llm)
                 response_retry = chain_edges_retry({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-                logger.debug(f"response contd... is:\n{response_retry['text']}",)
+                logger.info(f"response contd... is:\n{response_retry['text']}",)
 
                 responses = modified_txt + response_retry['text'] #changed modified_text to responses
-                logger.debug(f"responses+continued Combined is:\n{responses}",)
+                logger.info(f"responses+continued Combined is:\n{responses}",)
                 
                 shadow_response['text'] = responses
 
                 is_valid, result = is_json_parseable(shadow_response['text'])
-                logger.debug(f"Parseability status:\n{result}", )
+                logger.info(f"Parseability status:\n{result}", )
                 countd+=1
-                logger.debug(f"contd count is:\n{countd}",)
+                logger.info(f"contd count is:\n{countd}",)
 
-            logger.debug("Success shadow repair!:",shadow_response['text'])
+            logger.info("Success shadow repair!:",shadow_response['text'])
             shadow_response = shadow_response['text']
-            logger.debug(f"shadow_response type before: {type(shadow_response)}")
-            logger.debug(f"output type before: {type(output)}")
+            logger.info(f"shadow_response type before: {type(shadow_response)}")
+            logger.info(f"output type before: {type(output)}")
 
             shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
             output = json.loads(output)  # Convert JSON string into dictionary
 
-            logger.debug(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
+            logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
             output['edges']  = shadow_response['edges']  
-            logger.debug(f"{output} of {type(output)}")
+            logger.info(f"{output} of {type(output)}")
             output = json.dumps(output, indent=2) # converts to dict to str
             is_valid_output, result = is_json_parseable(output)
 
             if is_valid_output == False:
                 output = original_txt
-                logger.debug(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+                logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
  
         
     else:
-        logger.debug(f"Since error_flag is {error_flag}, no shadow edges found!")
+        logger.info(f"Since error_flag is {error_flag}, no shadow edges found!")
 
     
     return output
@@ -1693,12 +1693,12 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
 
     # just to debug the format_instructions and response_text
     format_instructions = parser.get_format_instructions()
-    logger.debug(f"response_text:\n{response_text}",)
-    logger.debug(f"format_instructions:\n{format_instructions}",)
+    logger.info(f"response_text:\n{response_text}",)
+    logger.info(f"format_instructions:\n{format_instructions}",)
 
     # invoking or running the img_response
     img_response = chain.invoke({"response_text": response_text, "context": relevant_doc, "language": language})
-    logger.debug(f"img_response is::{img_response}",)
+    logger.info(f"img_response is::{img_response}",)
 
     
 
@@ -1706,7 +1706,7 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     def create_structured_json(img_response):
         result = {}
         for index, img in enumerate(img_response['Image'], start=1):
-            logger.debug(f"img: {img}",)
+            logger.info(f"img: {img}",)
             # if img['FileName']=="URL":
             #     # Constructing the key format: "file_name_{filename}_page_{page}_image_{image}"
             #     image_key = f"FileName URL ImageNumber {img['ImageNumber']}"
@@ -1742,7 +1742,7 @@ def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
 
     # Using the function to transform the data
     structured_response = create_structured_json(img_response)
-    logger.debug(structured_response)
+    logger.info(structured_response)
 
     return str(structured_response)
 
