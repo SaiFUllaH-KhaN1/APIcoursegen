@@ -7,10 +7,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# for installing libreoffice
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends libreoffice && \
-    rm -rf /var/lib/apt/lists/*
+# for installing libreoffice if in future a need for ppt or doc support or libreoffice is required (pptx and docx works without this libreoffice dependancy)
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends libreoffice && \
+#     rm -rf /var/lib/apt/lists/*
 
 # Install gdown to download from Google Drive
 RUN pip install gdown
