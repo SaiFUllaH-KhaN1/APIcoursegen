@@ -57,7 +57,7 @@ cache_dir = 'cache'
 
 # Check if the cache directory exists, and create it if it does not
 if not os.path.exists(cache_dir):
-    os.makedirs(cache_dir)
+    os.makedirs(cache_dir, exist_ok=True)
     logger.info(f"Cache directory '{cache_dir}' was created.")
 else:
     logger.info(f"Cache directory '{cache_dir}' already exists.")
@@ -183,7 +183,7 @@ scheduler.start()
 audio_dir = 'audio_files'
 # Check if the cache directory exists, and create it if it does not
 if not os.path.exists(audio_dir):
-    os.makedirs(audio_dir)
+    os.makedirs(audio_dir, exist_ok=True)
     logger.info(f"Audio directory '{audio_dir}' was created.")
 else:
     logger.info(f"Audio directory '{audio_dir}' already exists.")
@@ -294,7 +294,7 @@ def process_data():
 
         output_path = f"./imagefolder_{session_var}"
         if not os.path.exists(output_path):
-            os.makedirs(output_path)
+            os.makedirs(output_path, exist_ok=True)
 
         if url_doc: 
             if validators.url(url_doc): # checks if url there and is valid
@@ -382,7 +382,7 @@ def process_data():
             temp_path_audio = os.path.join(audio_dir, f"audio_{session_var}_{filename}") # declared here for overcoming reference before assignment error
 
             if not os.path.exists(f"pdf_dir{session_var}"):
-                os.makedirs(f"pdf_dir{session_var}")         
+                os.makedirs(f"pdf_dir{session_var}", exist_ok=True)         
             
             temp_pdf_file = os.path.join(f"pdf_dir{session_var}", f"{session_var}{filename}")
             if extension =="mp3":
