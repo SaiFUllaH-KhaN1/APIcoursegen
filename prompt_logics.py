@@ -52,7 +52,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
     if f"extracted_content{session_var}" not in filename_without_extension:
         output_path_byfile = f"./imagefolder_{session_var}/images_{session_var}_{filename_without_extension}"
         if not os.path.exists(output_path_byfile):
-            os.makedirs(output_path_byfile) 
+            os.makedirs(output_path_byfile, exist_ok=True) 
     logger.info(f"Extension is: {extension}",)
     raw_text = ''
     texts = '' # for pdf image path only!
@@ -546,7 +546,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
 def URL_IMG_EXTRACT(soup, session_var, base_url):
     output_path_byfile = f"./imagefolder_{session_var}/images_{session_var}_URL"
     if not os.path.exists(output_path_byfile):
-        os.makedirs(output_path_byfile) 
+        os.makedirs(output_path_byfile, exist_ok=True) 
     index = 1
     skip_patterns = ['/icons/', '/logos/', '/ads/', '/footer/']
     for image in soup.find_all('img'):
