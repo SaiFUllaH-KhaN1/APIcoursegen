@@ -35,6 +35,7 @@ from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 import traceback
 import fitz
 import validators
+import sys, socket
 # from gevent.pywsgi import WSGIServer # in local development use, for gevent in local served
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
@@ -173,9 +174,15 @@ def delete_old_directories():
                 shutil.rmtree(dir_path)
 ###     ###     ###
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(delete_old_directories, 'interval', hours=6)
-scheduler.start()
+try:
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind(("0.0.0.0", 47200))
+except socket.error:
+    logger.info("!!!scheduler already started, DO NOTHING")
+else:
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(delete_old_directories, 'interval', hours=6)
+    scheduler.start()
 
 ### WHISPER START
 
@@ -980,11 +987,6 @@ def find_images():
         logger.critical("Unexpected Fault or Interruption")
         return jsonify(error="Unexpected Fault or Interruption")
         
-@app.teardown_appcontext
-def shutdown_scheduler(exception=None):
-    # This app route shutsdown scheduler when app context is destroyed
-    if scheduler.running:
-        scheduler.shutdown()
 
 if __name__ == '__main__': # runs in local deployment only, and NOT in docker since CMD command takes care of it
 
