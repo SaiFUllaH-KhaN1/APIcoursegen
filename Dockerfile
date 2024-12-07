@@ -6,7 +6,7 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # unzip the model files and move them to their respective directories
-RUN mkdir -p /app/whisper_local /app/embed_local \
+RUN mkdir -p /app/whisper_local /app/embed_local
 
 COPY . .
 
