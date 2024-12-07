@@ -352,7 +352,7 @@ async def process_data():
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
                 logger.info(f"Using embeddings of {embeddings}")
-                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, whisper_directory, whisper_model, language, temp_pdf_file)
+                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file)
                 if os.path.exists(f"pdf_dir{session_var}"):
                     shutil.rmtree(f"pdf_dir{session_var}")
             except Exception as e:
