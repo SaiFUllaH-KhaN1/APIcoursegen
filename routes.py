@@ -36,6 +36,7 @@ import traceback
 import fitz
 import validators
 import sys, socket
+import asyncio
 # from gevent.pywsgi import WSGIServer # in local development use, for gevent in local served
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
@@ -254,7 +255,7 @@ download_Embed_model(embed_model)
 
 
 @app.route("/process_data", methods=["GET", "POST"])
-def process_data():
+async def process_data():
 
     if request.method == 'POST':
         start_time = time.time() # Timer starts at the Post
@@ -464,7 +465,7 @@ def process_data():
 
 
 @app.route("/process_data_without_file", methods=["GET", "POST"])
-def process_data_without_file():
+async def process_data_without_file():
     try:
         prompt = request.args.get('prompt')
         language = request.args.get('language') # Already checked security in process_data route
@@ -500,7 +501,7 @@ def process_data_without_file():
 
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
-def decide():
+async def decide():
 
     user_id = g.user_uuid
     if request.method == 'POST':
@@ -599,7 +600,7 @@ def decide():
 
 @app.route("/decide_without_file", methods=["GET", "POST"])
 @token_required
-def decide_without_file():
+async def decide_without_file():
     start_time = time.time()
     user_id = g.user_uuid
     try:
@@ -647,7 +648,7 @@ def is_json_parseable(json_string):
 
 @app.route("/generate_course", methods=["GET", "POST"])
 @token_required
-def generate_course():
+async def generate_course():
 
     user_id = g.user_uuid
     if request.method == 'POST':
@@ -806,7 +807,7 @@ def generate_course():
 
 @app.route("/generate_course_without_file", methods=["GET", "POST"])
 @token_required
-def generate_course_without_file():
+async def generate_course_without_file():
     start_time = time.time()
     user_id = g.user_uuid
     try:
@@ -870,7 +871,7 @@ def generate_course_without_file():
 
 @app.route("/find_images", methods=["GET", "POST"])
 @token_required
-def find_images():
+async def find_images():
     user_id = g.user_uuid
     if request.method == 'POST':
         model_type = request.args.get('model', 'azure') # default select openai
