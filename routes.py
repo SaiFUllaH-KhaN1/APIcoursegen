@@ -30,7 +30,6 @@ import openai
 from urllib.error import URLError, HTTPError
 from urllib.parse import urlparse, urljoin
 
-from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 import traceback
 import fitz
@@ -197,63 +196,6 @@ else:
     logger.info(f"Audio directory '{audio_dir}' already exists.")
 
 
-### MODEL CHECK ALREADY DOWNLOADED ?
-global whisper_model
-whisper_model = "whisper-base" # Change this line only if a new different model download wanted 
-# for production use whisper-base. Only tiny model for local checking 
-
-def download_whisper_model(whisper_model):
-    global whisper  # Ensure we are modifying the global whisper variable
-    whisper = None
-    global whisper_directory 
-    whisper_directory = f"./whisper_local/{whisper_model}"
-
-    # Check if the model directory exists
-    if not os.path.exists(whisper_directory):
-        logger.info("Downloading Whisper model...")
-        model = WhisperForConditionalGeneration.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
-        processor = WhisperProcessor.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
-        logger.info("Model downloaded successfully!")
-    else:
-        logger.info("Whisper Tiny model already downloaded. Skipping download.")
-        pass
-
-# Calling function
-download_whisper_model(whisper_model)
-
-### WHSIPER END
-
-
-### EMBED MODEL START
-global embed_model
-embed_model = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-
-def download_Embed_model(embed_model):
-    
-    global embed_directory
-    embed_directory = f"./embed_local/{embed_model}"
-
-    # Check if the model directory exists
-    if not os.path.exists(embed_directory):
-        logger.info("Downloading Embed model...")
-
-        embeddings = HuggingFaceBgeEmbeddings(
-            model_name= embed_model,
-            cache_folder = embed_directory,
-            model_kwargs={'device': 'cpu', "trust_remote_code": True},
-            encode_kwargs={'normalize_embeddings': True}
-        )
-        logger.info("Model downloaded successfully!")
-    else:
-        logger.info("Embed model already downloaded. Skipping download.")
-        pass
-
-# Call the download function at the start of your application
-download_Embed_model(embed_model)
-
-### EMBED MODEL END
-
-
 @app.route("/process_data", methods=["GET", "POST"])
 async def process_data():
 
@@ -408,13 +350,7 @@ async def process_data():
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001" )
                 elif model_type == 'azure' and model_local_embed == 'no':
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
-                elif model_local_embed=='yes':
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
+
                 logger.info(f"Using embeddings of {embeddings}")
                 docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, whisper_directory, whisper_model, language, temp_pdf_file)
                 if os.path.exists(f"pdf_dir{session_var}"):
@@ -536,25 +472,6 @@ async def decide():
                                         )
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
-                elif model_type == "gemini"  and  model_local_embed=='yes':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
-
-                elif model_type == "azure"  and  model_local_embed=='yes':
-                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
 
                 logger.info(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
 
@@ -710,29 +627,6 @@ async def generate_course():
                                         )
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
-                elif model_type == 'gemini' and model_local_embed=='yes':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp)) # temp default 0.1
-                    llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
-
-                elif model_type == 'azure' and model_local_embed=='yes':
-                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=float(temp),
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
-                    llm_img_summary = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
