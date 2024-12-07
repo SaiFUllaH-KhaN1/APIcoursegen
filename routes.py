@@ -30,7 +30,6 @@ import openai
 from urllib.error import URLError, HTTPError
 from urllib.parse import urlparse, urljoin
 
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 import traceback
 import fitz
 import validators
@@ -98,8 +97,7 @@ cors = CORS(app, supports_credentials=True, resources={
 ### TOKEN DECORATORS ###
 def token_required(f):
     @wraps(f)
-    def decorated(*args, **kwargs):
-        # Extract the token from the Authorization header
+    async def decorated(*args, **kwargs):
         auth_header = request.headers.get('Authorization')
         if not auth_header or 'Bearer ' not in auth_header:
             logger.critical("message: Missing or malformed token")
@@ -107,12 +105,9 @@ def token_required(f):
         
         token = auth_header.split(" ")[1]
         try:
-            # Decode the token using PyJWT's built-in expiration verification
             decoded = jwt.decode(token, app.secret_key, algorithms=['HS256'])
-            # Extract uuid4 from the decoded token
             g.user_uuid = decoded['uuid4']
             logger.info(f"Token Decoded Success!:{g.user_uuid}") # NOT FOR PRODUCTION
-
         except jwt.ExpiredSignatureError:
             logger.critical("message: Token has expired")
             return jsonify({"message": "Token has expired"}), 401
@@ -120,13 +115,11 @@ def token_required(f):
             logger.critical("message: Invalid token")
             return jsonify({"message": "Invalid token"}), 401
         except Exception as e:
-            # Catch other exceptions, such as no 'uuid4' in token
             logger.critical(f"message: Invalid token: {str(e)}")
             return jsonify({"message": "Error for Token : " + str(e)}), 401
         
-        return f(*args, **kwargs)
+        return await f(*args, **kwargs)
     return decorated
-
 
 
 ### MANUAL DELETION OF all folders starting with faiss_index_ ###
