@@ -45,7 +45,7 @@ log_format = '%(asctime)s - %(levelname)s - %(message)s'
 logger = logging
 logger.basicConfig(level= logging.DEBUG, format= log_format)
 
-def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension,whisper_directory, whisper_model, language, temp_pdf_file):
+def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file):
     logger.info(f"file is: {file}",)
     
     filename_without_extension = filename.rsplit('.', 1)[0].lower()
