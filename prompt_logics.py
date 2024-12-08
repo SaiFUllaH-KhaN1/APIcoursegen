@@ -35,7 +35,7 @@ from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
 import imagehash
 
-from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
+
 import traceback
 import fitz
 # import subprocess # Used for the libreoffice command for ppt and doc support (NOT pptx AND docx) 
@@ -45,7 +45,7 @@ log_format = '%(asctime)s - %(levelname)s - %(message)s'
 logger = logging
 logger.basicConfig(level= logging.DEBUG, format= log_format)
 
-def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension,whisper_directory, whisper_model, language, temp_pdf_file):
+def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file):
     logger.info(f"file is: {file}",)
     
     filename_without_extension = filename.rsplit('.', 1)[0].lower()
@@ -468,31 +468,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         data = loader.load()
         raw_text = raw_text.join(document.page_content for document in data)
         os.remove(temp_path)
-
-    elif extension=="mp3":
-        logger.info(f"audio file name is ::{filename}")
-        processor = WhisperProcessor.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
-        forced_decoder_ids = processor.get_decoder_prompt_ids(language=language, task="transcribe")
-        logger.info(f"forced_decoder_ids:{forced_decoder_ids}")
-        model = WhisperForConditionalGeneration.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory, forced_decoder_ids=forced_decoder_ids)
-
-        whisper = pipeline(
-            "automatic-speech-recognition",
-            model=model,
-            tokenizer=processor.tokenizer,
-            feature_extractor=processor.feature_extractor,
-            model_kwargs={"cache_dir": whisper_directory}
-        )
-        
-        try:
-            text = whisper(temp_path_audio) # Running model here
-            raw_text = text['text']
-            logger.info(raw_text)
-        except Exception as e:
-            logger.error(f"Failed to initialize the Whisper model.Error:{str(e)}")
-        
-        os.remove(temp_path_audio)
-
+     
 
     # chunking recursively without semantic search, this does not uses openai embeddings for chunking
     text_splitter = RecursiveCharacterTextSplitter(
