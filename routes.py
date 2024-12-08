@@ -1,3 +1,5 @@
+from gevent import monkey
+monkey.patch_all()
 from flask import g, Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
 from prompt_logics import logger
 import jwt
@@ -37,7 +39,7 @@ import sys, socket
 import asyncio
 # from gevent.pywsgi import WSGIServer # in local development use, for gevent in local served
 
-load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
+load_dotenv(dotenv_path="E:\downloads\THINGLINK\dante\HUGGINGFACEHUB_API_TOKEN.env")
 
 openai.api_type = os.getenv("OPENAI_API_TYPE")
 openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
@@ -118,7 +120,10 @@ def token_required(f):
             logger.critical(f"message: Invalid token: {str(e)}")
             return jsonify({"message": "Error for Token : " + str(e)}), 401
         
-        return await f(*args, **kwargs)
+        if asyncio.iscoroutinefunction(f):
+            return await f(*args, **kwargs)
+        else:
+            return f(*args, **kwargs)
     return decorated
 
 
@@ -433,6 +438,7 @@ async def process_data_without_file():
 async def decide():
 
     user_id = g.user_uuid
+    
     if request.method == 'POST':
         scenario = request.form.get('scenario')
         logger.info(f"Scenario type:{scenario}")
@@ -450,6 +456,7 @@ async def decide():
             language = cache.get(f"language_{user_id}")
             logger.info(f"language:{language}")
             noFile = cache.get(f"noFile_{user_id}")
+            logger.info(f"noFile:{noFile}")
                 
             if noFile=="1":
                 return redirect(url_for("decide_without_file", model_name=model_name, model_type=model_type, scenario=scenario))
