@@ -1,3 +1,5 @@
+from gevent import monkey
+monkey.patch_all()
 from flask import g, Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
 from prompt_logics import logger
 import jwt
@@ -30,12 +32,11 @@ import openai
 from urllib.error import URLError, HTTPError
 from urllib.parse import urlparse, urljoin
 
-from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 import traceback
 import fitz
 import validators
 import sys, socket
+import asyncio
 # from gevent.pywsgi import WSGIServer # in local development use, for gevent in local served
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
@@ -98,8 +99,7 @@ cors = CORS(app, supports_credentials=True, resources={
 ### TOKEN DECORATORS ###
 def token_required(f):
     @wraps(f)
-    def decorated(*args, **kwargs):
-        # Extract the token from the Authorization header
+    async def decorated(*args, **kwargs):
         auth_header = request.headers.get('Authorization')
         if not auth_header or 'Bearer ' not in auth_header:
             logger.critical("message: Missing or malformed token")
@@ -107,12 +107,9 @@ def token_required(f):
         
         token = auth_header.split(" ")[1]
         try:
-            # Decode the token using PyJWT's built-in expiration verification
             decoded = jwt.decode(token, app.secret_key, algorithms=['HS256'])
-            # Extract uuid4 from the decoded token
             g.user_uuid = decoded['uuid4']
             logger.info(f"Token Decoded Success!:{g.user_uuid}") # NOT FOR PRODUCTION
-
         except jwt.ExpiredSignatureError:
             logger.critical("message: Token has expired")
             return jsonify({"message": "Token has expired"}), 401
@@ -120,13 +117,14 @@ def token_required(f):
             logger.critical("message: Invalid token")
             return jsonify({"message": "Invalid token"}), 401
         except Exception as e:
-            # Catch other exceptions, such as no 'uuid4' in token
             logger.critical(f"message: Invalid token: {str(e)}")
             return jsonify({"message": "Error for Token : " + str(e)}), 401
         
-        return f(*args, **kwargs)
+        if asyncio.iscoroutinefunction(f):
+            return await f(*args, **kwargs)
+        else:
+            return f(*args, **kwargs)
     return decorated
-
 
 
 ### MANUAL DELETION OF all folders starting with faiss_index_ ###
@@ -196,65 +194,8 @@ else:
     logger.info(f"Audio directory '{audio_dir}' already exists.")
 
 
-### MODEL CHECK ALREADY DOWNLOADED ?
-global whisper_model
-whisper_model = "whisper-base" # Change this line only if a new different model download wanted 
-# for production use whisper-base. Only tiny model for local checking 
-
-def download_whisper_model(whisper_model):
-    global whisper  # Ensure we are modifying the global whisper variable
-    whisper = None
-    global whisper_directory 
-    whisper_directory = f"./whisper_local/{whisper_model}"
-
-    # Check if the model directory exists
-    if not os.path.exists(whisper_directory):
-        logger.info("Downloading Whisper model...")
-        model = WhisperForConditionalGeneration.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
-        processor = WhisperProcessor.from_pretrained(f"openai/{whisper_model}", cache_dir=whisper_directory)
-        logger.info("Model downloaded successfully!")
-    else:
-        logger.info("Whisper Tiny model already downloaded. Skipping download.")
-        pass
-
-# Calling function
-download_whisper_model(whisper_model)
-
-### WHSIPER END
-
-
-### EMBED MODEL START
-global embed_model
-embed_model = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-
-def download_Embed_model(embed_model):
-    
-    global embed_directory
-    embed_directory = f"./embed_local/{embed_model}"
-
-    # Check if the model directory exists
-    if not os.path.exists(embed_directory):
-        logger.info("Downloading Embed model...")
-
-        embeddings = HuggingFaceBgeEmbeddings(
-            model_name= embed_model,
-            cache_folder = embed_directory,
-            model_kwargs={'device': 'cpu', "trust_remote_code": True},
-            encode_kwargs={'normalize_embeddings': True}
-        )
-        logger.info("Model downloaded successfully!")
-    else:
-        logger.info("Embed model already downloaded. Skipping download.")
-        pass
-
-# Call the download function at the start of your application
-download_Embed_model(embed_model)
-
-### EMBED MODEL END
-
-
 @app.route("/process_data", methods=["GET", "POST"])
-def process_data():
+async def process_data():
 
     if request.method == 'POST':
         start_time = time.time() # Timer starts at the Post
@@ -407,15 +348,9 @@ def process_data():
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001" )
                 elif model_type == 'azure' and model_local_embed == 'no':
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
-                elif model_local_embed=='yes':
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
+
                 logger.info(f"Using embeddings of {embeddings}")
-                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, whisper_directory, whisper_model, language, temp_pdf_file)
+                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file)
                 if os.path.exists(f"pdf_dir{session_var}"):
                     shutil.rmtree(f"pdf_dir{session_var}")
             except Exception as e:
@@ -464,7 +399,7 @@ def process_data():
 
 
 @app.route("/process_data_without_file", methods=["GET", "POST"])
-def process_data_without_file():
+async def process_data_without_file():
     try:
         prompt = request.args.get('prompt')
         language = request.args.get('language') # Already checked security in process_data route
@@ -500,9 +435,10 @@ def process_data_without_file():
 
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
-def decide():
+async def decide():
 
     user_id = g.user_uuid
+    
     if request.method == 'POST':
         scenario = request.form.get('scenario')
         logger.info(f"Scenario type:{scenario}")
@@ -520,6 +456,7 @@ def decide():
             language = cache.get(f"language_{user_id}")
             logger.info(f"language:{language}")
             noFile = cache.get(f"noFile_{user_id}")
+            logger.info(f"noFile:{noFile}")
                 
             if noFile=="1":
                 return redirect(url_for("decide_without_file", model_name=model_name, model_type=model_type, scenario=scenario))
@@ -535,25 +472,6 @@ def decide():
                                         )
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
-                elif model_type == "gemini"  and  model_local_embed=='yes':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
-
-                elif model_type == "azure"  and  model_local_embed=='yes':
-                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
 
                 logger.info(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
 
@@ -599,7 +517,7 @@ def decide():
 
 @app.route("/decide_without_file", methods=["GET", "POST"])
 @token_required
-def decide_without_file():
+async def decide_without_file():
     start_time = time.time()
     user_id = g.user_uuid
     try:
@@ -647,7 +565,7 @@ def is_json_parseable(json_string):
 
 @app.route("/generate_course", methods=["GET", "POST"])
 @token_required
-def generate_course():
+async def generate_course():
 
     user_id = g.user_uuid
     if request.method == 'POST':
@@ -709,29 +627,6 @@ def generate_course():
                                         )
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
-                elif model_type == 'gemini' and model_local_embed=='yes':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp)) # temp default 0.1
-                    llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
-
-                elif model_type == 'azure' and model_local_embed=='yes':
-                    llm = AzureChatOpenAI(deployment_name=model_name, temperature=float(temp),
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
-                    llm_img_summary = AzureChatOpenAI(deployment_name=model_name, temperature=0,
-                                        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
-                                        )
-                    embeddings = HuggingFaceBgeEmbeddings(
-                        model_name= embed_model,
-                        cache_folder = embed_directory,
-                        model_kwargs={'device': 'cpu', "trust_remote_code": True},
-                        encode_kwargs={'normalize_embeddings': True}
-                    )
 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
@@ -806,7 +701,7 @@ def generate_course():
 
 @app.route("/generate_course_without_file", methods=["GET", "POST"])
 @token_required
-def generate_course_without_file():
+async def generate_course_without_file():
     start_time = time.time()
     user_id = g.user_uuid
     try:
@@ -870,7 +765,7 @@ def generate_course_without_file():
 
 @app.route("/find_images", methods=["GET", "POST"])
 @token_required
-def find_images():
+async def find_images():
     user_id = g.user_uuid
     if request.method == 'POST':
         model_type = request.args.get('model', 'azure') # default select openai
