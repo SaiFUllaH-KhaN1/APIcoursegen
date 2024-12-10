@@ -605,7 +605,7 @@ def REMOVE_DUP_IMG(image_dir):
 
 def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, language):
     logger.info("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
-    docs = docsearch.similarity_search(query, k=3)
+    docs = docsearch.similarity_search(query, k=2)
     docs_main = " ".join([d.page_content for d in docs])
     logger.info(f"1st Docs_main of /Decide route:{docs_main}")
 
