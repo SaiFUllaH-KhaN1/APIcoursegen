@@ -182,8 +182,6 @@ else:
     scheduler.add_job(delete_old_directories, 'interval', hours=6)
     scheduler.start()
 
-### WHISPER START
-
 # Configuration for the audio directory
 audio_dir = 'audio_files'
 # Check if the cache directory exists, and create it if it does not
@@ -477,13 +475,8 @@ async def decide():
 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
 
-                chain, docs_main, query = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type)
-                logger.info(f"1st Docs_main of /Decide route:{docs_main}")
+                response_LO_CA = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type, language)
 
-                logger.info("response_LO_CA started")
-                response_LO_CA = chain({"input_documents": docs_main,"human_input": query, "language":language})
-                logger.info(f"{response_LO_CA}")
-                logger.info("response_LO_CA ended")
 
                 cache.set(f"scenario_{user_id}", scenario,timeout=0)
                 end_time = time.time()
@@ -491,8 +484,8 @@ async def decide():
                 minutes, seconds = divmod(execution_time, 60)
                 formatted_time = f"{int(minutes):02}:{int(seconds):02}"
                 execution_time_block = {"executionTime":f"{formatted_time}"}
-                logger.info(f"{response_LO_CA['text']}")
-                response_with_time = json.loads(response_LO_CA['text']) 
+                logger.info(f"{response_LO_CA.content}")
+                response_with_time = json.loads(response_LO_CA.content) 
                 response_with_time.update(execution_time_block)
                 logger.info(f"{json.dumps(response_with_time)}")
 
@@ -544,8 +537,8 @@ async def decide_without_file():
         minutes, seconds = divmod(execution_time, 60)
         formatted_time = f"{int(minutes):02}:{int(seconds):02}"
         execution_time_block = {"executionTime":f"{formatted_time}"}
-        logger.info(f"{response_LO_CA['text']}")
-        response_with_time = json.loads(response_LO_CA['text']) 
+        logger.info(f"{response_LO_CA.content}")
+        response_with_time = json.loads(response_LO_CA.content) 
         response_with_time.update(execution_time_block)
         logger.info(f"{json.dumps(response_with_time)}")
     
