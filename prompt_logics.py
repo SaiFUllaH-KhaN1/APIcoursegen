@@ -197,20 +197,31 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
     elif extension=="csv":
         temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
-        file.save(temp_path)
-        loader = CSVLoader(file_path=temp_path)
-        data = loader.load()
-        raw_text = raw_text.join(document.page_content + '\n\n' for document in data)
-        os.remove(temp_path)
+        try:
+            file.save(temp_path)
+            loader = CSVLoader(file_path=temp_path)
+            data = loader.load()
+            raw_text = raw_text.join(document.page_content + '\n\n' for document in data)
+            os.remove(temp_path)
+        except Exception as e:
+            logger.info(f"Error in {filename}: {e}")
+            logger.info(traceback.format_exc())
+            os.remove(temp_path)
 
     elif extension=="xlsx" or extension=="xls":
         temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
-        file.save(temp_path)
-        loader = UnstructuredExcelLoader(temp_path)
-        data = loader.load()
-        raw_text = raw_text.join(document.page_content + '\n\n' for document in data)
-        os.remove(temp_path)
+        try:
+            file.save(temp_path)
+            loader = UnstructuredExcelLoader(temp_path)
+            data = loader.load()
+            raw_text = raw_text.join(document.page_content + '\n\n' for document in data)
+            os.remove(temp_path)
+        except Exception as e:
+            logger.info(f"Error in {filename}: {e}")
+            logger.info(traceback.format_exc())
+            os.remove(temp_path)
+
 
     elif extension=="docx":
         # temp_path = os.path.join(filename)
@@ -325,40 +336,45 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
 
                 slide_number += 1  
                
+        try:
+            iter_picture_shapes(Presentation(file_content))
 
-        iter_picture_shapes(Presentation(file_content))
+            # langchain unstructuredworddoc method
+            temp_path = os.path.join(f"{filename}{session_var}")
+            file.seek(0)
+            file.save(temp_path)
+            loader = UnstructuredPowerPointLoader(temp_path,mode='elements')
+            data = loader.load()
+            logger.info(f"data:\n{data}",)
 
-        # langchain unstructuredworddoc method
-        temp_path = os.path.join(f"{filename}{session_var}")
-        file.seek(0)
-        file.save(temp_path)
-        loader = UnstructuredPowerPointLoader(temp_path,mode='elements')
-        data = loader.load()
-        logger.info(f"data:\n{data}",)
+            # Step 1: Collect content for each page number
+            page_contents = {}
+            for doc in data:
+                # Access the metadata and page content correctly
+                page_number = doc.metadata.get('page_number')
+                if page_number is not None:
+                    if page_number not in page_contents:
+                        page_contents[page_number] = []
+                    page_contents[page_number].append(doc.page_content)
 
-        # Step 1: Collect content for each page number
-        page_contents = {}
-        for doc in data:
-            # Access the metadata and page content correctly
-            page_number = doc.metadata.get('page_number')
-            if page_number is not None:
-                if page_number not in page_contents:
-                    page_contents[page_number] = []
-                page_contents[page_number].append(doc.page_content)
+            # Step 2: Combine the content for each page number
+            # combined_page_contents = [{'page_number': page,'filename': filename, 'page_content': ' '.join(contents)} for page, contents in page_contents.items()]
+            # pattern_this_end_pptx = r"End of SlideNumber (\d+) with Filename (.+?) ----" 
+            combined_page_contents = [
+                {
+                    'page_content': f"\nSlideNumber {page} FileName {filename_without_extension} ---\n{' '.join(contents)} End of SlideNumber {page} with Filename {filename_without_extension} ---"
+                }
+                for page, contents in page_contents.items()
+            ]
 
-        # Step 2: Combine the content for each page number
-        # combined_page_contents = [{'page_number': page,'filename': filename, 'page_content': ' '.join(contents)} for page, contents in page_contents.items()]
-        # pattern_this_end_pptx = r"End of SlideNumber (\d+) with Filename (.+?) ----" 
-        combined_page_contents = [
-            {
-                'page_content': f"\nSlideNumber {page} FileName {filename_without_extension} ---\n{' '.join(contents)} End of SlideNumber {page} with Filename {filename_without_extension} ---"
-            }
-            for page, contents in page_contents.items()
-        ]
+            texts = str(combined_page_contents)
+            logger.info(texts)
+            os.remove(temp_path)
 
-        texts = str(combined_page_contents)
-        logger.info(texts)
-        os.remove(temp_path)
+        except Exception as e:
+            logger.info(f"Error in {filename}: {e}")
+            logger.info(traceback.format_exc())
+            os.remove(temp_path)
 
 ########################Below is the ppt and doc compatibility code(use libreoffice in docker to work)########################
     # elif extension=="ppt" or extension=="doc":
@@ -463,11 +479,16 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         logger.info(f"Text file name is ::{filename}")
         temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
-        file.save(temp_path)
-        loader = TextLoader(temp_path)
-        data = loader.load()
-        raw_text = raw_text.join(document.page_content for document in data)
-        os.remove(temp_path)
+        try:
+            file.save(temp_path)
+            loader = TextLoader(temp_path)
+            data = loader.load()
+            raw_text = raw_text.join(document.page_content for document in data)
+            os.remove(temp_path)
+        except Exception as e:
+            logger.info(f"Error in {filename}: {e}")
+            logger.info(traceback.format_exc())
+            os.remove(temp_path)
      
 
     # chunking recursively without semantic search, this does not uses openai embeddings for chunking
@@ -485,7 +506,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
     docsearch = None
 
     try:
-        if texts:
+        if texts: # for pptx, docx, pdf
             logger.info("Running Text Merged (Pdfs other than extractedcontent.pdf)")
             text_splitter_formerged = RecursiveCharacterTextSplitter(chunk_size=1536, chunk_overlap=128, length_function=len)
             text_chunks = text_splitter_formerged.split_text(texts)
