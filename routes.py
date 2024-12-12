@@ -355,6 +355,8 @@ async def process_data():
                 docsearch = None
                 logger.error(f"Error processing file:{str(e)}")
                 logger.error(traceback.format_exc())
+                if os.path.exists(f"pdf_dir{session_var}"):
+                    shutil.rmtree(f"pdf_dir{session_var}")
                 return jsonify(error=f"Error processing file:{str(e)}")
             if base_docsearch is None:
                 base_docsearch = docsearch  # For the first file
