@@ -2379,26 +2379,3 @@ async def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     logger.info(structured_response)
 
     return str(structured_response)
-
-#CODE
-
-# import re
-
-# text = "FileName vector-search-diagram- PageNumber:Null ImageNumber 2.JPG"
-
-# pattern_FileName = r"FileName(.*?)\sPageNumber"
-
-
-# pattern_PageNumber = r"PageNumber(.*?)\sImageNumber"
-
-# pattern_SlideNumber = r"SlideNumber(.*?)\sImageNumber"
-
-# pattern_ImageNumber = r"ImageNumber(.*?)\."
-
-
-# match_FileName = re.search(pattern_PageNumber, text)
-# if match_FileName:
-#     filename = match_FileName.group(1)
-#     print(filename)
-# else:
-#     print("No match found")
