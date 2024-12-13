@@ -1,5 +1,5 @@
-from gevent import monkey
-monkey.patch_all()
+# from gevent import monkey
+# monkey.patch_all()
 from flask import g, Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
 from prompt_logics import logger
 import jwt
@@ -348,7 +348,7 @@ async def process_data():
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
                 logger.info(f"Using embeddings of {embeddings}")
-                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file)
+                docsearch = await LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file)
                 if os.path.exists(f"pdf_dir{session_var}"):
                     shutil.rmtree(f"pdf_dir{session_var}")
             except Exception as e:
@@ -475,9 +475,9 @@ async def decide():
 
                 logger.info(f"LLM is :: {llm}\n embedding is :: {embeddings}\n")
 
-                load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
+                load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings, allow_dangerous_deserialization=True)
 
-                response_LO_CA = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type, language)
+                response_LO_CA = await LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type, language)
 
 
                 cache.set(f"scenario_{user_id}", scenario,timeout=0)
@@ -531,7 +531,7 @@ async def decide_without_file():
                                 openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"))
 
 
-        response_LO_CA = LCD.PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(prompt, llm, model_type, language)
+        response_LO_CA = await LCD.PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(prompt, llm, model_type, language)
 
         cache.set(f"scenario_{user_id}", scenario,timeout=0)
         end_time = time.time()
@@ -623,12 +623,12 @@ async def generate_course():
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
 
-                load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings,allow_dangerous_deserialization=True)
+                load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings, allow_dangerous_deserialization=True)
                 combined_prompt = f"{prompt}\n{learning_obj}\n{content_areas}"
                 output_path = f"./imagefolder_{user_id}"
 
                 start_RE_SIMILARITY_SEARCH_time = time.time()
-                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary)
+                docs_main = await LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary)
                 end_RE_SIMILARITY_SEARCH_time = time.time()
                 execution_RE_SIMILARITY_SEARCH_time = end_RE_SIMILARITY_SEARCH_time - start_RE_SIMILARITY_SEARCH_time
                 minutes, seconds = divmod(execution_RE_SIMILARITY_SEARCH_time, 60)
@@ -642,7 +642,7 @@ async def generate_course():
                 start_TALK_WITH_RAG_time = time.time()
 
 
-                response, scenario = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language, mpv)
+                response, scenario = await LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language, mpv)
                 
                 end_TALK_WITH_RAG_time = time.time()
                 execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
@@ -656,7 +656,7 @@ async def generate_course():
                 if validity == True:
                     start_REPAIR_SHADOW_EDGES_time = time.time()
 
-                    response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
+                    response = await LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
                     
                     end_REPAIR_SHADOW_EDGES_time = time.time()
                     execution_REPAIR_SHADOW_EDGES_time = end_REPAIR_SHADOW_EDGES_time - start_REPAIR_SHADOW_EDGES_time
@@ -728,14 +728,14 @@ async def generate_course_without_file():
             llm = AzureChatOpenAI(deployment_name=model_name, temperature=float(temp),
                                 openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"))
             
-        response = LCD.TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, prompt, llm, model_type, model_name, language, mpv)
+        response = await LCD.TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, prompt, llm, model_type, model_name, language, mpv)
 
         original_txt = response
 
         validity, result = is_json_parseable(original_txt)
 
         if validity == True:
-            response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv, repair_shadows_without_file)
+            response = await LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv, repair_shadows_without_file)
         else:
             logger.error("JSON of original_txt is NOT VALID")
             return jsonify(error="Failed to complete the scenario. JSON is NOT VALID")
@@ -784,7 +784,7 @@ async def find_images():
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
 
-                img_response = LCD.ANSWER_IMG(response_text, llm,docs_main,language,model_type)
+                img_response = await LCD.ANSWER_IMG(response_text, llm,docs_main,language,model_type)
 
                 json_img_response = json.loads(img_response)
                 logger.info(f"""json_img_response is:: {str(json_img_response)}""")
