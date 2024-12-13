@@ -38,6 +38,7 @@ import validators
 import sys, socket
 import asyncio
 # from gevent.pywsgi import WSGIServer # in local development use, for gevent in local served
+from langchain_community.chat_models import ChatLiteLLM
 
 load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
@@ -46,8 +47,8 @@ openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 openai.api_key = os.getenv("AZURE_OPENAI_API_KEY")
 openai.azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
 
-os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+os.environ["GEMINI_API_KEY"] = os.getenv("GOOGLE_API_KEY")
+# genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
 
 app = Flask(__name__)
@@ -463,7 +464,8 @@ async def decide():
 
             try:
                 if model_type == "gemini"  and model_local_embed=='no':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                    llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=0)
+                    # llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
                 elif model_type == "azure" and model_local_embed=='no':
