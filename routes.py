@@ -526,7 +526,8 @@ async def decide_without_file():
         scenario = request.args.get('scenario')
 
         if model_type == "gemini":
-            llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+            llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=0)
+            # llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
 
         elif model_type == "azure":
             llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
@@ -611,8 +612,10 @@ async def generate_course():
 
             try:
                 if model_type == 'gemini' and model_local_embed=='no':
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp)) # temp default 0.1
-                    llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                    llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=float(temp)) # temp default 0.1
+                    # llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp)) # temp default 0.1
+                    llm_img_summary = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
+                    # llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
                 elif model_type == 'azure' and model_local_embed=='no':
@@ -724,7 +727,8 @@ async def generate_course_without_file():
         logger.info(f"Language selected is: {language}")
 
         if model_type == "gemini":
-            llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp))
+            llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=float(temp))
+            # llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp))
 
         elif model_type == "azure":
             llm = AzureChatOpenAI(deployment_name=model_name, temperature=float(temp),
@@ -780,7 +784,8 @@ async def find_images():
         if response_text and docs_main:
             try:
                 if model_type == "gemini":
-                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
+                    llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
+                    # llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
                 else:
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
