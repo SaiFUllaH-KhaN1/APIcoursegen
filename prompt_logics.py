@@ -39,6 +39,7 @@ import imagehash
 import traceback
 import fitz
 # import subprocess # Used for the libreoffice command for ppt and doc support (NOT pptx AND docx) 
+from langchain_community.chat_models import ChatLiteLLM
 
 # Logging Declaration
 log_format = '%(asctime)s - %(levelname)s - %(message)s'
@@ -762,7 +763,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
             
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = await ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).ainvoke([prompt_gemini])
+                response = await ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).ainvoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
@@ -809,7 +810,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
 
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = await ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).ainvoke([prompt_gemini])
+                response = await ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).ainvoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
@@ -854,7 +855,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
             
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = await ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=2048).ainvoke([prompt_gemini])
+                response = await ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=2048).ainvoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
@@ -960,7 +961,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
 
         ### SEMANTIC ROUTES LOGIC ###
         if model_type == 'gemini':
-            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32) 
+            llm_auto = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.4, max_output_tokens=32) 
             # llm_auto_chain = LLMChain(prompt=PROMPTS.promptSelector, llm=llm_auto.bind(generation_config={"response_mime_type": "application/json"})) 
             llm_auto_chain = PROMPTS.promptSelector | llm_auto.bind(generation_config={"response_mime_type": "application/json"})
         else:
@@ -1095,8 +1096,8 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
         logger.info(f"SCENARIO ====branched : {scenario}",)
         
         if model_type == 'gemini':
-            llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-            llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
+            llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
+            llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
             # chain = LLMChain(prompt=PROMPTS.prompt_branched,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             chain = PROMPTS.prompt_branched | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
@@ -1221,8 +1222,8 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
         logger.info(f"SCENARIO ====prompt_simulation_pedagogy : {scenario}",)
         # summarized first, then response
         if model_type == 'gemini':
-            llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
-            llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
+            llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.3)
+            llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
             # chain = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             chain = PROMPTS.prompt_simulation_pedagogy_gemini | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
@@ -1345,8 +1346,8 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
     elif scenario == "gamified":
         logger.info(f"SCENARIO ====prompt_gamified : {scenario}",)
         if model_type == 'gemini':
-            llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
-            llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
+            llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
+            llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
             # chain = LLMChain(prompt=PROMPTS.prompt_gamified_json,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             chain = PROMPTS.prompt_gamified_json | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
@@ -1488,7 +1489,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
         ### SEMANTIC ROUTES LOGIC ###
         if model_type == 'gemini':
-            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32) 
+            llm_auto = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.4, max_output_tokens=32) 
             # llm_auto_chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.promptSelector, llm=llm_auto.bind(generation_config={"response_mime_type": "application/json"})) 
             llm_auto_chain = PROMPTS_WITHOUT_FILE.promptSelector | llm_auto.bind(generation_config={"response_mime_type": "application/json"})
         else:
@@ -1901,7 +1902,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
     logger.info(f"mpv list string is: {mpv_string}")
 
     if model_type == 'gemini':
-        llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+        llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
     else:
         llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                     openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
