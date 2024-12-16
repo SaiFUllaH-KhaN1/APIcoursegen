@@ -69,12 +69,15 @@ prompt_linear = PromptTemplate(
     
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'SelfAssessmentTextBlock' with title, and descritpion(This is part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
+    Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'GoalBlock' with Title, Score
 
@@ -311,12 +314,15 @@ prompt_linear_retry = PromptTemplate(
     
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'SelfAssessmentTextBlock' with title, and descritpion(This is part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
+    Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'GoalBlock' with Title, Score
 
@@ -542,12 +548,15 @@ prompt_linear_simplify = PromptTemplate(
     
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'SelfAssessmentTextBlock' with title, and descritpion(This is part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
+    Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'GoalBlock' with Title, Score
 
@@ -804,12 +813,15 @@ prompt_linear_shadow_edges = PromptTemplate(
     
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'SelfAssessmentTextBlock' with title, and descritpion(This is part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
+    Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'GoalBlock' with Title, Score
 
@@ -1092,12 +1104,15 @@ You will Continue like this in your generated response:
     
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'SelfAssessmentTextBlock' with title, and descritpion(This is part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
+    Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'GoalBlock' with Title, Score
 
@@ -1322,14 +1337,17 @@ prompt_branched = PromptTemplate(
     ***WHAT TO DO END***
 
     
-    The Micro Learning Scenario are built using blocks, each having its own parameters.
-    Block types include: 
+    The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
+    Block types include:
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
-    'TestBlocks' contains QuestionBlock/s
+    To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
     'JumpBlock' with title, ProceedToBlock
@@ -1363,7 +1381,7 @@ prompt_branched = PromptTemplate(
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, a FeedbackAndFeedforwardBlock, and a JumpBlock.
+    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -1694,14 +1712,17 @@ prompt_branched_retry = PromptTemplate(
     ***WHAT TO DO END***
 
     
-    The Micro Learning Scenario are built using blocks, each having its own parameters.
-    Block types include: 
+    The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
+    Block types include:
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
-    'TestBlocks' contains QuestionBlock/s
+    To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
     'JumpBlock' with title, ProceedToBlock
@@ -1735,7 +1756,7 @@ prompt_branched_retry = PromptTemplate(
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, a FeedbackAndFeedforwardBlock, and a JumpBlock.
+    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -2053,14 +2074,17 @@ prompt_branched_simplify = PromptTemplate(
     ***WHAT TO DO END***
 
     
-    The Micro Learning Scenario are built using blocks, each having its own parameters.
-    Block types include: 
+    The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
+    Block types include:
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
-    'TestBlocks' contains QuestionBlock/s
+    To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
     'JumpBlock' with title, ProceedToBlock
@@ -2094,7 +2118,7 @@ prompt_branched_simplify = PromptTemplate(
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, a FeedbackAndFeedforwardBlock, and a JumpBlock.
+    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -2443,14 +2467,17 @@ prompt_branched_shadow_edges = PromptTemplate(
     ***WHAT TO DO END***
 
     
-    The Micro Learning Scenario are built using blocks, each having its own parameters.
-    Block types include: 
+    The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
+    Block types include:
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
-    'TestBlocks' contains QuestionBlock/s
+    To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
     'JumpBlock' with title, ProceedToBlock
@@ -2484,7 +2511,7 @@ prompt_branched_shadow_edges = PromptTemplate(
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, a FeedbackAndFeedforwardBlock, and a JumpBlock.
+    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -2859,14 +2886,17 @@ You will Continue like this in your generated response:
     ***WHAT TO DO END***
 
     
-    The Micro Learning Scenario are built using blocks, each having its own parameters.
-    Block types include: 
+    The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
+    Block types include:
+    'StartBlock' initiates the scenario. 
     'TextBlock' with timer(optional), title, and description
     'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description(FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
+    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
-    'TestBlocks' contains QuestionBlock/s
+    To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
     'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
     'JumpBlock' with title, ProceedToBlock
@@ -2900,7 +2930,7 @@ You will Continue like this in your generated response:
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective,TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, a FeedbackAndFeedforwardBlock, and a JumpBlock.
+    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
