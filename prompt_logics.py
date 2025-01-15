@@ -1385,8 +1385,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
         else:
             logger.info(f"Response 1 is::\n{response1.content}",)
 
-
-        response = chain({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = await chain.ainvoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
