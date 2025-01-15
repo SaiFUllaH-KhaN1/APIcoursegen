@@ -272,6 +272,8 @@ prompt_linear = PromptTemplate(
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
 
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
+
     Chatbot (Tone of a teacher teaching student in great detail):"""
 )
 
@@ -516,6 +518,8 @@ prompt_linear_retry = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
     ]
 
     !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
@@ -750,6 +754,8 @@ prompt_linear_simplify = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
 
     Chatbot:"""
 )
@@ -1015,6 +1021,8 @@ prompt_linear_shadow_edges = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
     ]]]
 
     Chatbot:"""
@@ -1306,6 +1314,8 @@ You will Continue like this in your generated response:
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
     ]]]
 
     Chatbot:"""
@@ -1666,6 +1676,8 @@ prompt_branched = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
 
     Chatbot (Tone of a teacher teaching student in great detail):"""
 )
@@ -2041,6 +2053,8 @@ prompt_branched_retry = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
     ]
 
     !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
@@ -2403,6 +2417,8 @@ prompt_branched_simplify = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
 
     Chatbot:"""
 )
@@ -2796,6 +2812,8 @@ prompt_branched_shadow_edges = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
     ]]]
 
     Chatbot:"""
@@ -3215,6 +3233,8 @@ You will Continue like this in your generated response:
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly.
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
     ]]]
 
     Chatbot:"""
