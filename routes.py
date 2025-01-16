@@ -40,7 +40,7 @@ import asyncio
 # from gevent.pywsgi import WSGIServer # in local development use, for gevent in local served
 # from langchain_community.chat_models import ChatLiteLLM
 
-load_dotenv(dotenv_path="E:\downloads\THINGLINK\dante\HUGGINGFACEHUB_API_TOKEN.env")
+load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
 
 openai.api_type = os.getenv("OPENAI_API_TYPE")
 openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
