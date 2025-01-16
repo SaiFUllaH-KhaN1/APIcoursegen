@@ -38,9 +38,9 @@ import validators
 import sys, socket
 import asyncio
 # from gevent.pywsgi import WSGIServer # in local development use, for gevent in local served
-from langchain_community.chat_models import ChatLiteLLM
+# from langchain_community.chat_models import ChatLiteLLM
 
-load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
+load_dotenv(dotenv_path="E:\downloads\THINGLINK\dante\HUGGINGFACEHUB_API_TOKEN.env")
 
 openai.api_type = os.getenv("OPENAI_API_TYPE")
 openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
@@ -100,7 +100,7 @@ cors = CORS(app, supports_credentials=True, resources={
 ### TOKEN DECORATORS ###
 def token_required(f):
     @wraps(f)
-    async def decorated(*args, **kwargs):
+    def decorated(*args, **kwargs):
         auth_header = request.headers.get('Authorization')
         if not auth_header or 'Bearer ' not in auth_header:
             logger.critical("message: Missing or malformed token")
@@ -121,10 +121,7 @@ def token_required(f):
             logger.critical(f"message: Invalid token: {str(e)}")
             return jsonify({"message": "Error for Token : " + str(e)}), 401
         
-        if asyncio.iscoroutinefunction(f):
-            return await f(*args, **kwargs)
-        else:
-            return f(*args, **kwargs)
+        return f(*args, **kwargs)
     return decorated
 
 
@@ -194,7 +191,7 @@ else:
 
 
 @app.route("/process_data", methods=["GET", "POST"])
-async def process_data():
+def process_data():
 
     if request.method == 'POST':
         start_time = time.time() # Timer starts at the Post
@@ -349,7 +346,7 @@ async def process_data():
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
                 logger.info(f"Using embeddings of {embeddings}")
-                docsearch = await LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file)
+                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file)
                 if os.path.exists(f"pdf_dir{session_var}"):
                     shutil.rmtree(f"pdf_dir{session_var}")
             except Exception as e:
@@ -400,7 +397,7 @@ async def process_data():
 
 
 @app.route("/process_data_without_file", methods=["GET", "POST"])
-async def process_data_without_file():
+def process_data_without_file():
     try:
         prompt = request.args.get('prompt')
         language = request.args.get('language') # Already checked security in process_data route
@@ -436,7 +433,7 @@ async def process_data_without_file():
 
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
-async def decide():
+def decide():
 
     user_id = g.user_uuid
     
@@ -464,8 +461,8 @@ async def decide():
 
             try:
                 if model_type == "gemini"  and model_local_embed=='no':
-                    llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=0)
-                    # llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                    # llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=0)
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
                 elif model_type == "azure" and model_local_embed=='no':
@@ -479,7 +476,7 @@ async def decide():
 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings, allow_dangerous_deserialization=True)
 
-                response_LO_CA = await LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type, language)
+                response_LO_CA = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type, language)
 
 
                 cache.set(f"scenario_{user_id}", scenario,timeout=0)
@@ -514,7 +511,7 @@ async def decide():
 
 @app.route("/decide_without_file", methods=["GET", "POST"])
 @token_required
-async def decide_without_file():
+def decide_without_file():
     start_time = time.time()
     user_id = g.user_uuid
     try:
@@ -526,15 +523,15 @@ async def decide_without_file():
         scenario = request.args.get('scenario')
 
         if model_type == "gemini":
-            llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=0)
-            # llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+            # llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=0)
+            llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
 
         elif model_type == "azure":
             llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                 openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"))
 
 
-        response_LO_CA = await LCD.PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(prompt, llm, model_type, language)
+        response_LO_CA = LCD.PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(prompt, llm, model_type, language)
 
         cache.set(f"scenario_{user_id}", scenario,timeout=0)
         end_time = time.time()
@@ -563,7 +560,7 @@ def is_json_parseable(json_string):
 
 @app.route("/generate_course", methods=["GET", "POST"])
 @token_required
-async def generate_course():
+def generate_course():
 
     user_id = g.user_uuid
     if request.method == 'POST':
@@ -612,10 +609,10 @@ async def generate_course():
 
             try:
                 if model_type == 'gemini' and model_local_embed=='no':
-                    llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=float(temp)) # temp default 0.1
-                    # llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp)) # temp default 0.1
-                    llm_img_summary = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
-                    # llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+                    # llm = ChatLiteLLM(model=f"gemini/{model_name}", temperature=float(temp)) # temp default 0.1
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp)) # temp default 0.1
+                    # llm_img_summary = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
+                    llm_img_summary = ChatGoogleGenerativeAI(model=model_name,temperature=0)
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
                 elif model_type == 'azure' and model_local_embed=='no':
@@ -633,7 +630,7 @@ async def generate_course():
                 output_path = f"./imagefolder_{user_id}"
 
                 start_RE_SIMILARITY_SEARCH_time = time.time()
-                docs_main = await LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary)
+                docs_main = LCD.RE_SIMILARITY_SEARCH(combined_prompt, load_docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary)
                 end_RE_SIMILARITY_SEARCH_time = time.time()
                 execution_RE_SIMILARITY_SEARCH_time = end_RE_SIMILARITY_SEARCH_time - start_RE_SIMILARITY_SEARCH_time
                 minutes, seconds = divmod(execution_RE_SIMILARITY_SEARCH_time, 60)
@@ -647,7 +644,7 @@ async def generate_course():
                 start_TALK_WITH_RAG_time = time.time()
 
 
-                response, scenario = await LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language, mpv)
+                response, scenario = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language, mpv)
                 
                 end_TALK_WITH_RAG_time = time.time()
                 execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
@@ -661,7 +658,7 @@ async def generate_course():
                 if validity == True:
                     start_REPAIR_SHADOW_EDGES_time = time.time()
 
-                    response = await LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
+                    response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
                     
                     end_REPAIR_SHADOW_EDGES_time = time.time()
                     execution_REPAIR_SHADOW_EDGES_time = end_REPAIR_SHADOW_EDGES_time - start_REPAIR_SHADOW_EDGES_time
@@ -701,7 +698,7 @@ async def generate_course():
 
 @app.route("/generate_course_without_file", methods=["GET", "POST"])
 @token_required
-async def generate_course_without_file():
+def generate_course_without_file():
     start_time = time.time()
     user_id = g.user_uuid
     try:
@@ -727,21 +724,21 @@ async def generate_course_without_file():
         logger.info(f"Language selected is: {language}")
 
         if model_type == "gemini":
-            llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=float(temp))
-            # llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp))
+            # llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=float(temp))
+            llm = ChatGoogleGenerativeAI(model=model_name,temperature=float(temp))
 
         elif model_type == "azure":
             llm = AzureChatOpenAI(deployment_name=model_name, temperature=float(temp),
                                 openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"))
             
-        response = await LCD.TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, prompt, llm, model_type, model_name, language, mpv)
+        response = LCD.TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, prompt, llm, model_type, model_name, language, mpv)
 
         original_txt = response
 
         validity, result = is_json_parseable(original_txt)
 
         if validity == True:
-            response = await LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv, repair_shadows_without_file)
+            response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv, repair_shadows_without_file)
         else:
             logger.error("JSON of original_txt is NOT VALID")
             return jsonify(error="Failed to complete the scenario. JSON is NOT VALID")
@@ -766,7 +763,7 @@ async def generate_course_without_file():
 
 @app.route("/find_images", methods=["GET", "POST"])
 @token_required
-async def find_images():
+def find_images():
     user_id = g.user_uuid
     if request.method == 'POST':
         model_type = request.args.get('model', 'azure') # default select openai
@@ -784,14 +781,14 @@ async def find_images():
         if response_text and docs_main:
             try:
                 if model_type == "gemini":
-                    llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
-                    # llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
+                    # llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
+                    llm = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
                 else:
                     llm = AzureChatOpenAI(deployment_name=model_name, temperature=0.1,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
                                         )
 
-                img_response = await LCD.ANSWER_IMG(response_text, llm,docs_main,language,model_type)
+                img_response = LCD.ANSWER_IMG(response_text, llm,docs_main,language,model_type)
 
                 json_img_response = json.loads(img_response)
                 logger.info(f"""json_img_response is:: {str(json_img_response)}""")
