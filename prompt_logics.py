@@ -39,14 +39,14 @@ import imagehash
 import traceback
 import fitz
 # import subprocess # Used for the libreoffice command for ppt and doc support (NOT pptx AND docx) 
-from langchain_community.chat_models import ChatLiteLLM
+# from langchain_community.chat_models import ChatLiteLLM
 
 # Logging Declaration
 log_format = '%(asctime)s - %(levelname)s - %(message)s'
 logger = logging
 logger.basicConfig(level= logging.DEBUG, format= log_format)
 
-async def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file):
+def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file):
     logger.info(f"file is: {file}",)
     
     filename_without_extension = filename.rsplit('.', 1)[0].lower()
@@ -519,7 +519,7 @@ async def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename
             for i in range(0, total_chunks, batch_size):
                 batch = text_chunks[i:i + batch_size]
 
-                docsearch = await FAISS.afrom_texts(batch, embeddings)
+                docsearch = FAISS.from_texts(batch, embeddings)
                 logger.info(f"docsearch made for batch,{len(batch)} of the total {total_chunks}")
 
         elif raw_text:
@@ -532,7 +532,7 @@ async def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename
             for i in range(0, total_chunks, batch_size):
                 batch_raw_text = raw_text_splitted_chunks[i:i + batch_size]
 
-                docsearch = await FAISS.afrom_texts(batch_raw_text, embeddings)
+                docsearch = FAISS.from_texts(batch_raw_text, embeddings)
                 logger.info(f"docsearch made for batch,{len(batch_raw_text)} of the total {total_chunks}")
 
     except Exception as e:
@@ -625,14 +625,14 @@ def REMOVE_DUP_IMG(image_dir):
 
     logger.info(f"Duplicate removal complete. Removed files: {duplicates}",)
 
-async def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, language):
+def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, language):
     logger.info("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
-    docs = await docsearch.asimilarity_search(query, k=2)
+    docs = docsearch.similarity_search(query, k=2)
     docs_main = " ".join([d.page_content for d in docs])
     logger.info(f"1st Docs_main of /Decide route:{docs_main}")
 
     if model_type=="gemini":
-        chain = PROMPTS.prompt_LO_CA_GEMINI | llm.bind(response_format={"type": "json_object"})
+        chain = PROMPTS.prompt_LO_CA_GEMINI | llm.bind(generation_config={"response_mime_type": "application/json"})
         # chain = LLMChain(prompt=PROMPTS.prompt_LO_CA_GEMINI, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
     else:
         chain = PROMPTS.prompt_LO_CA_GEMINI | llm.bind(response_format={"type": "json_object"})
@@ -647,11 +647,11 @@ async def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, languag
 
     return response_LO_CA
 
-async def PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(query, llm, model_type, language):
+def PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(query, llm, model_type, language):
     logger.info("PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE Initiated!")
 
     if model_type=="gemini":
-        chain = PROMPTS_WITHOUT_FILE.prompt_LO_CA_GEMINI | llm.bind(response_format={"type": "json_object"})
+        chain = PROMPTS_WITHOUT_FILE.prompt_LO_CA_GEMINI | llm.bind(generation_config={"response_mime_type": "application/json"})
         # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_LO_CA_GEMINI, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
     else:
         chain = PROMPTS_WITHOUT_FILE.prompt_LO_CA_GEMINI | llm.bind(response_format={"type": "json_object"})
@@ -661,9 +661,9 @@ async def PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(query, llm, model_type, langu
     
     return response_LO_CA
 
-async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary):
+def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary):
     logger.info("RE_SIMILARITY_SEARCH Initiated!")
-    docs = await docsearch.asimilarity_search(query, k=2)
+    docs = docsearch.similarity_search(query, k=2)
     logger.info(f"docs from RE_SIMILARITY_SEARCH:\n{docs}",)
     if summarize_images == "on":
         logger.info(f"Tells me to summarize images, {summarize_images}")
@@ -737,7 +737,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
                 return encoded_image
 
 
-        async def summarize_image(encoded_image, basename, language):
+        def summarize_image(encoded_image, basename, language):
             logger.info(f"language is: {language}")
             prompt = [
                 SystemMessage(content="You are a bot that is good at analyzing images."),
@@ -765,7 +765,8 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
             
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).invoke([prompt_gemini])
+                response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).invoke([prompt_gemini])
+                # response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).invoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
@@ -783,7 +784,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
             return polish_summary.content
             
 
-        async def url_summarize_image(encoded_image, basename, language):
+        def url_summarize_image(encoded_image, basename, language):
             prompt = [
                 SystemMessage(content="You are a bot that is good at analyzing images."),
                 HumanMessage(content=[
@@ -812,7 +813,8 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
 
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).invoke([prompt_gemini])
+                response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=250).invoke([prompt_gemini])
+                # response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).invoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
@@ -829,7 +831,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
             
             return polish_summary.content
 
-        async def pixmapped_summarize_image(encoded_image, basename, language):
+        def pixmapped_summarize_image(encoded_image, basename, language):
             
             prompt = [
                 SystemMessage(content="You are a bot that describes only the figures present in this pdf page's image."),
@@ -857,7 +859,8 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
             
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=2048).invoke([prompt_gemini])
+                response = ChatGoogleGenerativeAI(model=model_name,temperature=0,max_output_tokens=2048).invoke([prompt_gemini])
+                # response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=2048).invoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
@@ -881,7 +884,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
                         encoded_image = encode_image(image_path)
                         if encoded_image is not None:
                             image_elements.append(encoded_image)
-                            summary = await url_summarize_image(encoded_image,basename, language)
+                            summary = url_summarize_image(encoded_image,basename, language)
                             image_summaries.append(summary)
 
                     else:
@@ -895,7 +898,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
                                     encoded_image = encode_image(image_path)
                                     if encoded_image is not None:
                                         image_elements.append(encoded_image)
-                                        summary = await pixmapped_summarize_image(encoded_image,basename, language)
+                                        summary = pixmapped_summarize_image(encoded_image,basename, language)
                                         pixmapped_image_summaries.append(summary)
                                         image_summaries_string = "\n".join(pixmapped_image_summaries) #convert list to string to add in the langchain Document data type                                                                        
                                         docs.append(Document(page_content=f"\nThe Content of PageNumber {page_number} of file name {file} is:\nThis PIXMAPPED IMAGE described as: {image_summaries_string}.\nEnd of PageNumber {page_number} of file name {file}\n"))                                        
@@ -906,7 +909,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
                                     encoded_image = encode_image(image_path)
                                     if encoded_image is not None:
                                         image_elements.append(encoded_image)
-                                        summary = await summarize_image(encoded_image,basename, language)
+                                        summary = summarize_image(encoded_image,basename, language)
                                         image_summaries.append(summary)
                             elif f"FileName {file} PageNumber Null ImageNumber {page_number}" in i:
                                 image_path = os.path.join(root, i)
@@ -915,7 +918,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
                                 encoded_image = encode_image(image_path)
                                 if encoded_image is not None:
                                     image_elements.append(encoded_image)
-                                    summary = await summarize_image(encoded_image,basename, language)
+                                    summary = summarize_image(encoded_image,basename, language)
                                     image_summaries.append(summary)
                             elif f"FileName {file} SlideNumber {page_number}" in i:
                                 image_path = os.path.join(root, i)
@@ -924,7 +927,7 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
                                 encoded_image = encode_image(image_path)
                                 if encoded_image is not None:
                                     image_elements.append(encoded_image)
-                                    summary = await summarize_image(encoded_image,basename, language)
+                                    summary = summarize_image(encoded_image,basename, language)
                                     image_summaries.append(summary)
 
         logger.info(f"image_summaries::\n{image_summaries}",)
@@ -938,7 +941,14 @@ mpv_list = ["NO number of MediaBlock/s and ONLY TextBlock/s", "more TextBlock/s 
        "BALANCED number of MediaBlock/s compared to TextBlock/s",
        "more MediaBlock/s compared to TextBlock/s", "ONLY MediaBlock/s and NO number of TextBlock/s"]
 
-async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings, language, mpv):
+def is_json_parseable(json_string):
+    try:
+        json_object = json.loads(json_string)
+    except ValueError as e:
+        return False, str(e)
+    return True, json_object
+
+def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings, language, mpv):
     logger.info("TALK_WITH_RAG Initiated!")
     # if we are getting docs_main already from the process_data flask route then comment, else
     # UNcomment if you want more similarity_searching based on Learning obj and content areas!
@@ -949,12 +959,6 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
     logger.info(f"mpv list string is: {mpv_string}")
 
     responses = ''
-    def is_json_parseable(json_string):
-        try:
-            json_object = json.loads(json_string)
-        except ValueError as e:
-            return False, str(e)
-        return True, json_object
 
     if scenario == "auto":
         logger.info(f"SCENARIO ====PROMPT{scenario}",)
@@ -963,7 +967,9 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
 
         ### SEMANTIC ROUTES LOGIC ###
         if model_type == 'gemini':
-            llm_auto = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.4, max_output_tokens=32) 
+            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32)
+            # llm_auto = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.4, max_output_tokens=32) 
+
             # llm_auto_chain = LLMChain(prompt=PROMPTS.promptSelector, llm=llm_auto.bind(generation_config={"response_mime_type": "application/json"})) 
             llm_auto_chain = PROMPTS.promptSelector | llm_auto.bind(response_format={"type": "json_object"})
         else:
@@ -1007,7 +1013,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
     if scenario == "linear":
         logger.info(f"SCENARIO ====prompt_linear : {scenario}")
         if model_type == 'gemini':
-            chain = PROMPTS.prompt_linear | llm.bind(response_format={"type": "json_object"})
+            chain = PROMPTS.prompt_linear | llm.bind(generation_config={"response_mime_type": "application/json"})
             # chain = LLMChain(prompt=PROMPTS.prompt_linear,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
         else:
             chain = PROMPTS.prompt_linear | llm
@@ -1042,7 +1048,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
             if model_type == 'gemini':
-                chain_retry = PROMPTS.prompt_linear_retry | llm.bind(response_format={"type": "json_object"})
+                chain_retry = PROMPTS.prompt_linear_retry | llm.bind(generation_config={"response_mime_type": "application/json"})
                 # chain_retry = LLMChain(prompt=PROMPTS.prompt_linear_retry,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             else:
                 chain_retry = PROMPTS.prompt_linear_retry | llm
@@ -1077,7 +1083,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             while attempts <= max_attempts:
 
                 if model_type == 'gemini':
-                    chain_simplify = PROMPTS.prompt_linear_simplify | llm.bind(response_format={"type": "json_object"})
+                    chain_simplify = PROMPTS.prompt_linear_simplify | llm.bind(generation_config={"response_mime_type": "application/json"})
                     # chain_simplify = LLMChain(prompt=PROMPTS.prompt_linear_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
                 else:
                     chain_simplify = PROMPTS.prompt_linear_simplify | llm
@@ -1098,10 +1104,13 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
         logger.info(f"SCENARIO ====branched : {scenario}",)
         
         if model_type == 'gemini':
-            llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
-            llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
+            llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+            llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
+            # llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
+            # llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
+
             # chain = LLMChain(prompt=PROMPTS.prompt_branched,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-            chain = PROMPTS.prompt_branched | llm.bind(response_format={"type": "json_object"})
+            chain = PROMPTS.prompt_branched | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
@@ -1168,7 +1177,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
             if model_type == 'gemini':
-                chain_retry = PROMPTS.prompt_branched_retry | llm.bind(response_format={"type": "json_object"})
+                chain_retry = PROMPTS.prompt_branched_retry | llm.bind(generation_config={"response_mime_type": "application/json"})
                 # chain_retry = LLMChain(prompt=PROMPTS.prompt_branched_retry,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             else:
                 chain_retry = PROMPTS.prompt_branched_retry | llm
@@ -1203,7 +1212,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             while attempts <= max_attempts:
 
                 if model_type == 'gemini':
-                    chain_simplify = PROMPTS.prompt_branched_simplify | llm.bind(response_format={"type": "json_object"})
+                    chain_simplify = PROMPTS.prompt_branched_simplify | llm.bind(generation_config={"response_mime_type": "application/json"})
                     # chain_simplify = LLMChain(prompt=PROMPTS.prompt_branched_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
                 else:
                     chain_simplify = PROMPTS.prompt_branched_simplify | llm
@@ -1224,10 +1233,13 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
         logger.info(f"SCENARIO ====prompt_simulation_pedagogy : {scenario}",)
         # summarized first, then response
         if model_type == 'gemini':
-            llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.3)
-            llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
+            llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
+            llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
+            # llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.3)
+            # llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
+
             # chain = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-            chain = PROMPTS.prompt_simulation_pedagogy_gemini | llm.bind(response_format={"type": "json_object"})
+            chain = PROMPTS.prompt_simulation_pedagogy_gemini | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0.3,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
@@ -1293,7 +1305,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
             if model_type == 'gemini':
-                chain_retry = PROMPTS.prompt_simulation_pedagogy_retry_gemini | llm.bind(response_format={"type": "json_object"})
+                chain_retry = PROMPTS.prompt_simulation_pedagogy_retry_gemini | llm.bind(generation_config={"response_mime_type": "application/json"})
                 # chain_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_retry_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             else:
                 chain_retry = PROMPTS.prompt_simulation_pedagogy_retry_gemini | llm
@@ -1328,7 +1340,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             while attempts <= max_attempts:
 
                 if model_type == 'gemini':
-                    chain_simplify = PROMPTS.prompt_simulation_pedagogy_gemini_simplify | llm.bind(response_format={"type": "json_object"})
+                    chain_simplify = PROMPTS.prompt_simulation_pedagogy_gemini_simplify | llm.bind(generation_config={"response_mime_type": "application/json"})
                     # chain_simplify = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
                 else:
                     chain_simplify = PROMPTS.prompt_simulation_pedagogy_gemini_simplify | llm
@@ -1348,10 +1360,13 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
     elif scenario == "gamified":
         logger.info(f"SCENARIO ====prompt_gamified : {scenario}",)
         if model_type == 'gemini':
-            llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
-            llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
+            llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+            llm_setup_continue = ChatGoogleGenerativeAI(model=model_name,temperature=0.1)
+            # llm_setup = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
+            # llm_setup_continue = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.1)
+
             # chain = LLMChain(prompt=PROMPTS.prompt_gamified_json,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-            chain = PROMPTS.prompt_gamified_json | llm.bind(response_format={"type": "json_object"})
+            chain = PROMPTS.prompt_gamified_json | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
             llm_setup = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                         openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
@@ -1416,7 +1431,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
 
             if model_type == 'gemini':
-                chain_retry = PROMPTS.prompt_gamified_pedagogy_retry_gemini | llm.bind(response_format={"type": "json_object"})
+                chain_retry = PROMPTS.prompt_gamified_pedagogy_retry_gemini | llm.bind(generation_config={"response_mime_type": "application/json"})
                 # chain_retry = LLMChain(prompt=PROMPTS.prompt_gamified_pedagogy_retry_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
             else:
                 chain_retry = PROMPTS.prompt_gamified_pedagogy_retry_gemini | llm
@@ -1451,7 +1466,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             while attempts <= max_attempts:
 
                 if model_type == 'gemini':
-                    chain_simplify = PROMPTS.prompt_gamify_pedagogy_gemini_simplify | llm.bind(response_format={"type": "json_object"})
+                    chain_simplify = PROMPTS.prompt_gamify_pedagogy_gemini_simplify | llm.bind(generation_config={"response_mime_type": "application/json"})
                     # chain_simplify = LLMChain(prompt=PROMPTS.prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
                 else:
                     chain_simplify = PROMPTS.prompt_gamify_pedagogy_gemini_simplify | llm
@@ -1471,17 +1486,11 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
     logger.info(f"The output is as follows::\n{response.content}",)
     return response.content, scenario
 
-async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, query, llm, model_type, model_name, language, mpv):
+def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, query, llm, model_type, model_name, language, mpv):
     mpv_string = mpv_list[int(mpv)]
     logger.info(f"mpv list string is: {mpv_string}")
 
     responses = ''
-    def is_json_parseable(json_string):
-        try:
-            json_object = json.loads(json_string)
-        except ValueError as e:
-            return False, str(e)
-        return True, json_object
 
     if scenario == "auto":
         logger.info(f"SCENARIO ====PROMPT{scenario}",)
@@ -1490,7 +1499,9 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
         ### SEMANTIC ROUTES LOGIC ###
         if model_type == 'gemini':
-            llm_auto = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.4, max_output_tokens=32) 
+            llm_auto = ChatGoogleGenerativeAI(model=model_name,temperature=0.4, max_output_tokens=32) 
+            # llm_auto = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0.4, max_output_tokens=32) 
+
             # llm_auto_chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.promptSelector, llm=llm_auto.bind(generation_config={"response_mime_type": "application/json"})) 
             llm_auto_chain = PROMPTS_WITHOUT_FILE.promptSelector | llm_auto.bind(response_format={"type": "json_object"})
         else:
@@ -1535,7 +1546,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
         logger.info(f"SCENARIO ====prompt_linear : {scenario}")
         if model_type == 'gemini':
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-            chain = PROMPTS_WITHOUT_FILE.prompt_linear | llm.bind(response_format={"type": "json_object"})
+            chain = PROMPTS_WITHOUT_FILE.prompt_linear | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear,llm=llm)   
             chain = PROMPTS_WITHOUT_FILE.prompt_linear | llm
@@ -1570,7 +1581,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
             if model_type == 'gemini':
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_retry,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                chain_retry = PROMPTS_WITHOUT_FILE.prompt_linear_retry | llm.bind(response_format={"type": "json_object"})
+                chain_retry = PROMPTS_WITHOUT_FILE.prompt_linear_retry | llm.bind(generation_config={"response_mime_type": "application/json"})
             else:
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_retry,llm=llm)
                 chain_retry = PROMPTS_WITHOUT_FILE.prompt_linear_retry | llm
@@ -1605,7 +1616,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
                 if model_type == 'gemini':
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                    chain_simplify = PROMPTS_WITHOUT_FILE.prompt_linear_simplify | llm.bind(response_format={"type": "json_object"})
+                    chain_simplify = PROMPTS_WITHOUT_FILE.prompt_linear_simplify | llm.bind(generation_config={"response_mime_type": "application/json"})
                 else:
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_simplify,llm=llm)
                     chain_simplify = PROMPTS_WITHOUT_FILE.prompt_linear_simplify | llm
@@ -1626,7 +1637,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
         
         if model_type == 'gemini':
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-            chain = PROMPTS_WITHOUT_FILE.prompt_branched | llm.bind(response_format={"type": "json_object"})
+            chain = PROMPTS_WITHOUT_FILE.prompt_branched | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched,llm=llm)   
             chain = PROMPTS_WITHOUT_FILE.prompt_branched | llm
@@ -1661,7 +1672,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
             if model_type == 'gemini':
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_retry,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                chain_retry = PROMPTS_WITHOUT_FILE.prompt_branched_retry | llm.bind(response_format={"type": "json_object"})
+                chain_retry = PROMPTS_WITHOUT_FILE.prompt_branched_retry | llm.bind(generation_config={"response_mime_type": "application/json"})
             else:
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_retry,llm=llm)
                 chain_retry = PROMPTS_WITHOUT_FILE.prompt_branched_retry | llm
@@ -1696,7 +1707,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
                 if model_type == 'gemini':
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                    chain_simplify = PROMPTS_WITHOUT_FILE.prompt_branched_simplify | llm.bind(response_format={"type": "json_object"})
+                    chain_simplify = PROMPTS_WITHOUT_FILE.prompt_branched_simplify | llm.bind(generation_config={"response_mime_type": "application/json"})
                 else:
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_simplify,llm=llm)
                     chain_simplify = PROMPTS_WITHOUT_FILE.prompt_branched_simplify | llm
@@ -1716,7 +1727,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
         logger.info(f"SCENARIO ====prompt_simulation_pedagogy : {scenario}",)
         if model_type == 'gemini':
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-            chain = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini | llm.bind(response_format={"type": "json_object"})
+            chain = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini,llm=llm)   
             chain = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini | llm
@@ -1751,7 +1762,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
             if model_type == 'gemini':
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_retry_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                chain_retry = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_retry_gemini | llm.bind(response_format={"type": "json_object"})
+                chain_retry = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_retry_gemini | llm.bind(generation_config={"response_mime_type": "application/json"})
             else:
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_retry_gemini,llm=llm)
                 chain_retry = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_retry_gemini | llm
@@ -1786,7 +1797,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
                 if model_type == 'gemini':
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                    chain_simplify = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini_simplify | llm.bind(response_format={"type": "json_object"})
+                    chain_simplify = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini_simplify | llm.bind(generation_config={"response_mime_type": "application/json"})
                 else:
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini_simplify,llm=llm)
                     chain_simplify = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini_simplify | llm
@@ -1806,7 +1817,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
         logger.info(f"SCENARIO ====prompt_gamified : {scenario}",)
         if model_type == 'gemini':
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamified_json,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-            chain = PROMPTS_WITHOUT_FILE.prompt_gamified_json | llm.bind(response_format={"type": "json_object"})
+            chain = PROMPTS_WITHOUT_FILE.prompt_gamified_json | llm.bind(generation_config={"response_mime_type": "application/json"})
         else:
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamified_json,llm=llm)   
             chain = PROMPTS_WITHOUT_FILE.prompt_gamified_json | llm
@@ -1841,7 +1852,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
             if model_type == 'gemini':
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamified_pedagogy_retry_gemini,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                chain_retry = PROMPTS_WITHOUT_FILE.prompt_gamified_pedagogy_retry_gemini | llm.bind(response_format={"type": "json_object"})
+                chain_retry = PROMPTS_WITHOUT_FILE.prompt_gamified_pedagogy_retry_gemini | llm.bind(generation_config={"response_mime_type": "application/json"})
             else:
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamified_pedagogy_retry_gemini,llm=llm)
                 chain_retry = PROMPTS_WITHOUT_FILE.prompt_gamified_pedagogy_retry_gemini | llm
@@ -1876,7 +1887,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
 
                 if model_type == 'gemini':
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamify_pedagogy_gemini_simplify,llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                    chain_simplify = PROMPTS_WITHOUT_FILE.prompt_gamify_pedagogy_gemini_simplify | llm.bind(response_format={"type": "json_object"})
+                    chain_simplify = PROMPTS_WITHOUT_FILE.prompt_gamify_pedagogy_gemini_simplify | llm.bind(generation_config={"response_mime_type": "application/json"})
                 else:
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamify_pedagogy_gemini_simplify,llm=llm)
                     chain_simplify = PROMPTS_WITHOUT_FILE.prompt_gamify_pedagogy_gemini_simplify | llm
@@ -1896,14 +1907,15 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
     return response.content
 
 
-async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language, mpv, repair_shadows_without_file='0'):
+def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language, mpv, repair_shadows_without_file='0'):
     txt_output = None
 
     mpv_string = mpv_list[int(mpv)]
     logger.info(f"mpv list string is: {mpv_string}")
 
     if model_type == 'gemini':
-        llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
+        llm = ChatGoogleGenerativeAI(model=model_name,temperature=0)
+        # llm = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0)
     else:
         llm = AzureChatOpenAI(deployment_name=model_name, temperature=0,
                                     openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
@@ -1949,10 +1961,10 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
             if model_type=="gemini":
                 if repair_shadows_without_file != "1":
                     # chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                    chain = PROMPTS.prompt_linear_shadow_edges | llm.bind(response_format={"type": "json_object"})
+                    chain = PROMPTS.prompt_linear_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
                 else:
                     # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
-                    chain = PROMPTS_WITHOUT_FILE.prompt_linear_shadow_edges | llm.bind(response_format={"type": "json_object"})
+                    chain = PROMPTS_WITHOUT_FILE.prompt_linear_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
             else:
                 if repair_shadows_without_file != "1":
                     # chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
@@ -2022,10 +2034,10 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
             if model_type=="gemini":
                 if repair_shadows_without_file != "1":
                     # chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
-                    chain = PROMPTS.prompt_branched_shadow_edges | llm.bind(response_format={"type": "json_object"})
+                    chain = PROMPTS.prompt_branched_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
                 else:
                     # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                    chain = PROMPTS_WITHOUT_FILE.prompt_branched_shadow_edges | llm.bind(response_format={"type": "json_object"})
+                    chain = PROMPTS_WITHOUT_FILE.prompt_branched_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
             else:
                 if repair_shadows_without_file != "1":
                     # chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
@@ -2095,10 +2107,10 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
             if model_type=="gemini":
                 if repair_shadows_without_file != "1":
                     # chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
-                    chain = PROMPTS.prompt_simulation_shadow_edges | llm.bind(response_format={"type": "json_object"})
+                    chain = PROMPTS.prompt_simulation_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
                 else:
                     # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                    chain = PROMPTS_WITHOUT_FILE.prompt_simulation_shadow_edges | llm.bind(response_format={"type": "json_object"})
+                    chain = PROMPTS_WITHOUT_FILE.prompt_simulation_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
             else:
                 if repair_shadows_without_file != "1":
                     # chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
@@ -2168,10 +2180,10 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
             if model_type=="gemini":
                 if repair_shadows_without_file != "1":
                     # chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
-                    chain = PROMPTS.prompt_gamify_shadow_edges | llm.bind(response_format={"type": "json_object"})
+                    chain = PROMPTS.prompt_gamify_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
                 else:
                     # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamify_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                    chain = PROMPTS_WITHOUT_FILE.prompt_gamify_shadow_edges | llm.bind(response_format={"type": "json_object"})
+                    chain = PROMPTS_WITHOUT_FILE.prompt_gamify_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
             else:
                 if repair_shadows_without_file != "1":
                     # chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
@@ -2244,7 +2256,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
 
 
 
-async def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
+def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     # prompt_template_img =PromptTemplate( 
     # input_variables=["response_text","context"],
     # template="""
