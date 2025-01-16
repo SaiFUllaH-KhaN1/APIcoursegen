@@ -639,7 +639,9 @@ async def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, languag
         # chain = LLMChain(prompt=PROMPTS.prompt_LO_CA_GEMINI, llm=llm.bind(response_format={"type": "json_object"}))
     
     logger.info("response_LO_CA started")
-    response_LO_CA = await chain.ainvoke({"input_documents": docs_main,"human_input": query, "language":language})
+
+    response_LO_CA = chain.invoke({"input_documents": docs_main,"human_input": query, "language":language})
+
     logger.info(f"{response_LO_CA}")
     logger.info("response_LO_CA ended")
 
@@ -655,7 +657,7 @@ async def PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(query, llm, model_type, langu
         chain = PROMPTS_WITHOUT_FILE.prompt_LO_CA_GEMINI | llm.bind(response_format={"type": "json_object"})
         # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_LO_CA_GEMINI, llm=llm.bind(response_format={"type": "json_object"}))
 
-    response_LO_CA = await chain.ainvoke({"human_input": query, "language":language})
+    response_LO_CA = chain.invoke({"human_input": query, "language":language})
     
     return response_LO_CA
 
@@ -763,20 +765,20 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
             
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = await ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).ainvoke([prompt_gemini])
+                response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).invoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
             else:
                 logger.info("Openai summarizing images NOW")
-                response = await AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).ainvoke(prompt)
+                response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
+                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
             
             chain = PROMPTS.prompt_polish_summary | llm_img_summary
             # chain = LLMChain(prompt=PROMPTS.prompt_polish_summary,llm=llm_img_summary)
-            polish_summary = await chain.ainvoke({"basename": basename,"description": response.content,"language":language})
+            polish_summary = chain.invoke({"basename": basename,"description": response.content,"language":language})
             
             return polish_summary.content
             
@@ -810,20 +812,20 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
 
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = await ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).ainvoke([prompt_gemini])
+                response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=250).invoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
             else:
                 logger.info("Openai summarizing images NOW")
-                response = await AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).ainvoke(prompt)
+                response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=250,
+                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
             
             chain = PROMPTS.prompt_polish_summary | llm_img_summary
             # chain = LLMChain(prompt=PROMPTS.prompt_polish_summary,llm=llm_img_summary)
-            polish_summary = await chain.ainvoke({"basename": basename,"description": response.content,"language":language})
+            polish_summary = chain.invoke({"basename": basename,"description": response.content,"language":language})
             
             return polish_summary.content
 
@@ -855,14 +857,14 @@ async def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_n
             
             if model_type == 'gemini':
                 logger.info("Gemini summarizing images NOW")
-                response = await ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=2048).ainvoke([prompt_gemini])
+                response = ChatLiteLLM(model=f"gemini/{model_name}",temperature=0,max_output_tokens=2048).invoke([prompt_gemini])
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
                 
             else:
                 logger.info("Openai summarizing images NOW")
-                response = await AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=2048,
-                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).ainvoke(prompt)
+                response = AzureChatOpenAI(deployment_name=model_name, temperature=0, max_tokens=2048,
+                                            openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")).invoke(prompt)
                 img_desc = response.content
                 logger.info(f"Img Summary is: {type(img_desc)}/n{img_desc}")
             
@@ -971,7 +973,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             # llm_auto_chain = LLMChain(prompt=PROMPTS.promptSelector, llm=llm_auto.bind(response_format={"type": "json_object"}))
             llm_auto_chain = PROMPTS.promptSelector | llm_auto.bind(response_format={"type": "json_object"})
 
-        selected = await llm_auto_chain.ainvoke({"input_documents": docs_main, "human_input": query})
+        selected = llm_auto_chain.invoke({"input_documents": docs_main, "human_input": query})
 
         logger.info(f"Semantic Scenario Selected of NAME: {selected.content}",)
 
@@ -1011,7 +1013,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             chain = PROMPTS.prompt_linear | llm
             # chain = LLMChain(prompt=PROMPTS.prompt_linear,llm=llm)   
 
-        response = await chain.ainvoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = chain.invoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
@@ -1046,7 +1048,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                 chain_retry = PROMPTS.prompt_linear_retry | llm
                 # chain_retry = LLMChain(prompt=PROMPTS.prompt_linear_retry,llm=llm)
 
-            response_retry = await chain_retry.ainvoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+            response_retry = chain_retry.invoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
             logger.info(f"response contd... is:\n{response_retry.content}",)
 
             responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -1081,7 +1083,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                     chain_simplify = PROMPTS.prompt_linear_simplify | llm
                     # chain_simplify = LLMChain(prompt=PROMPTS.prompt_linear_simplify,llm=llm)
 
-                response_retry_simplify = await chain_simplify.ainvoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry_simplify = chain_simplify.invoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify.content)
                 if is_valid_retry_simplify == True:
                     response.content = response_retry_simplify.content
@@ -1117,7 +1119,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             chain1 = PROMPTS.prompt_branched_setup | llm_setup
             # chain1 = LLMChain(prompt=PROMPTS.prompt_branched_setup,llm=llm_setup)
 
-        response1 = await chain1.ainvoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+        response1 = chain1.invoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         if "[END_OF_RESPONSE]" not in response1.content:
             count_setup_retry = 0
             while "[END_OF_RESPONSE]" not in response1.content and count_setup_retry<=3:
@@ -1125,7 +1127,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                 contd_response1 = response1.content + "[CONTINUE_EXACTLY_FROM_HERE]"
                 chain_setup_retry = PROMPTS.prompt_branched_setup_continue | llm_setup_continue
                 # chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_branched_setup_continue,llm=llm_setup_continue)
-                response1 = await chain_setup_retry.ainvoke({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                response1 = chain_setup_retry.invoke({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                 logger.info(f"CONTINUED Response 1 IS::\n{response1.content}")
                 response1.content = contd_response1 + response1.content
                 response1.content = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1.content)
@@ -1136,7 +1138,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             logger.info(f"Response 1 is::\n{response1.content}",)
 
 
-        response = await chain.ainvoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = chain.invoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         # clean_json = response['text'].strip('`json ')
         # response = {'text':clean_json}
         is_valid, result = is_json_parseable(response.content)
@@ -1172,7 +1174,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                 chain_retry = PROMPTS.prompt_branched_retry | llm
                 # chain_retry = LLMChain(prompt=PROMPTS.prompt_branched_retry,llm=llm)
 
-            response_retry = await chain_retry.ainvoke({"incomplete_response": responses,"micro_subtopics":response1.content, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+            response_retry = chain_retry.invoke({"incomplete_response": responses,"micro_subtopics":response1.content, "language":language, "mpv":mpv, "mpv_string":mpv_string})
             logger.info(f"response contd... is:\n{response_retry.content}",)
 
             responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -1207,7 +1209,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                     chain_simplify = PROMPTS.prompt_branched_simplify | llm
                     # chain_simplify = LLMChain(prompt=PROMPTS.prompt_branched_simplify,llm=llm)
 
-                response_retry_simplify = await chain_simplify.ainvoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry_simplify = chain_simplify.invoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify.content)
                 if is_valid_retry_simplify == True:
                     response.content = response_retry_simplify.content
@@ -1243,7 +1245,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             chain1 = PROMPTS.prompt_simulation_pedagogy_setup | llm_setup
             # chain1 = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_setup,llm=llm_setup)
 
-        response1 = await chain1.ainvoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+        response1 = chain1.invoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         if "[END_OF_RESPONSE]" not in response1.content:
             count_setup_retry = 0
             while "[END_OF_RESPONSE]" not in response1.content and count_setup_retry<=3:
@@ -1251,7 +1253,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                 contd_response1 = response1.content + "[CONTINUE_EXACTLY_FROM_HERE]"
                 chain_setup_retry = PROMPTS.prompt_simulation_pedagogy_setup_continue | llm_setup_continue
                 # chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_setup_continue,llm=llm_setup_continue)
-                response1 = await chain_setup_retry.ainvoke({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                response1 = chain_setup_retry.invoke({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                 logger.info(f"CONTINUED Response 1 IS::\n{response1.content}")
                 response1.content = contd_response1 + response1.content
                 response1.content = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1.content)
@@ -1262,7 +1264,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             logger.info(f"Response 1 is::\n{response1.content}",)
 
 
-        response = await chain.ainvoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = chain.invoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
@@ -1297,7 +1299,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                 chain_retry = PROMPTS.prompt_simulation_pedagogy_retry_gemini | llm
                 # chain_retry = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_retry_gemini,llm=llm)
 
-            response_retry = await chain_retry.ainvoke({"incomplete_response": responses,"simulation_story":response1.content, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+            response_retry = chain_retry.invoke({"incomplete_response": responses,"simulation_story":response1.content, "language":language, "mpv":mpv, "mpv_string":mpv_string})
             logger.info(f"response contd... is:\n{response_retry.content}",)
 
             responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -1332,7 +1334,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                     chain_simplify = PROMPTS.prompt_simulation_pedagogy_gemini_simplify | llm
                     # chain_simplify = LLMChain(prompt=PROMPTS.prompt_simulation_pedagogy_gemini_simplify,llm=llm)
 
-                response_retry_simplify = await chain_simplify.ainvoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry_simplify = chain_simplify.invoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify.content)
                 if is_valid_retry_simplify == True:
                     response.content = response_retry_simplify.content
@@ -1367,7 +1369,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
             chain1 = PROMPTS.prompt_gamified_setup | llm_setup 
             # chain1 = LLMChain(prompt=PROMPTS.prompt_gamified_setup,llm=llm_setup)
 
-        response1 = await chain1.ainvoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+        response1 = chain1.invoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
         if "[END_OF_RESPONSE]" not in response1.content:
             count_setup_retry = 0
             while "[END_OF_RESPONSE]" not in response1.content and count_setup_retry<=3:
@@ -1375,7 +1377,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                 contd_response1 = response1.content + "[CONTINUE_EXACTLY_FROM_HERE]"
                 chain_setup_retry = PROMPTS.prompt_gamified_setup_continue | llm_setup_continue
                 # chain_setup_retry = LLMChain(prompt=PROMPTS.prompt_gamified_setup_continue,llm=llm_setup_continue)
-                response1 = await chain_setup_retry.ainvoke({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
+                response1 = chain_setup_retry.invoke({"past_response": contd_response1,"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language})
                 logger.info(f"CONTINUED Response 1 IS::\n{response1.content}")
                 response1.content = contd_response1 + response1.content
                 response1.content = re.sub(r'\[CONTINUE_EXACTLY_FROM_HERE\]', ' ', response1.content)
@@ -1385,7 +1387,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
         else:
             logger.info(f"Response 1 is::\n{response1.content}",)
 
-        response = await chain.ainvoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = chain.invoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
@@ -1420,7 +1422,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                 chain_retry = PROMPTS.prompt_gamified_pedagogy_retry_gemini | llm
                 # chain_retry = LLMChain(prompt=PROMPTS.prompt_gamified_pedagogy_retry_gemini,llm=llm)
 
-            response_retry = await chain_retry.ainvoke({"incomplete_response": responses,"exit_game_story":response1.content, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+            response_retry = chain_retry.invoke({"incomplete_response": responses,"exit_game_story":response1.content, "language":language, "mpv":mpv, "mpv_string":mpv_string})
             logger.info(f"response contd... is:\n{response_retry.content}",)
 
             responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -1455,7 +1457,7 @@ async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main,
                     chain_simplify = PROMPTS.prompt_gamify_pedagogy_gemini_simplify | llm
                     # chain_simplify = LLMChain(prompt=PROMPTS.prompt_gamify_pedagogy_gemini_simplify,llm=llm)
 
-                response_retry_simplify = await chain_simplify.ainvoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry_simplify = chain_simplify.invoke({"response_of_bot": response1.content,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify.content)
                 if is_valid_retry_simplify == True:
                     response.content = response_retry_simplify.content
@@ -1498,7 +1500,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
             # llm_auto_chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.promptSelector, llm=llm_auto.bind(response_format={"type": "json_object"}))
             llm_auto_chain = PROMPTS_WITHOUT_FILE.promptSelector | llm_auto.bind(response_format={"type": "json_object"})
 
-        selected = await llm_auto_chain.ainvoke({"human_input": query, "content_areas": content_areas, "learning_objectives": learning_obj})
+        selected = llm_auto_chain.invoke({"human_input": query, "content_areas": content_areas, "learning_objectives": learning_obj})
 
         logger.info(f"Semantic Scenario Selected of NAME: {selected.content}",)
 
@@ -1538,7 +1540,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear,llm=llm)   
             chain = PROMPTS_WITHOUT_FILE.prompt_linear | llm
 
-        response = await chain.ainvoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = chain.invoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
@@ -1573,7 +1575,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_retry,llm=llm)
                 chain_retry = PROMPTS_WITHOUT_FILE.prompt_linear_retry | llm
 
-            response_retry = await chain_retry.ainvoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+            response_retry = chain_retry.invoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
             logger.info(f"response contd... is:\n{response_retry.content}",)
 
             responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -1608,7 +1610,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_simplify,llm=llm)
                     chain_simplify = PROMPTS_WITHOUT_FILE.prompt_linear_simplify | llm
 
-                response_retry_simplify = await chain_simplify.ainvoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry_simplify = chain_simplify.invoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify.content)
                 if is_valid_retry_simplify == True:
                     response.content = response_retry_simplify.content
@@ -1629,7 +1631,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched,llm=llm)   
             chain = PROMPTS_WITHOUT_FILE.prompt_branched | llm
 
-        response = await chain.ainvoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = chain.invoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
@@ -1664,7 +1666,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_retry,llm=llm)
                 chain_retry = PROMPTS_WITHOUT_FILE.prompt_branched_retry | llm
 
-            response_retry = await chain_retry.ainvoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+            response_retry = chain_retry.invoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
             logger.info(f"response contd... is:\n{response_retry.content}",)
 
             responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -1699,7 +1701,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_simplify,llm=llm)
                     chain_simplify = PROMPTS_WITHOUT_FILE.prompt_branched_simplify | llm
 
-                response_retry_simplify = await chain_simplify.ainvoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry_simplify = chain_simplify.invoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify.content)
                 if is_valid_retry_simplify == True:
                     response.content = response_retry_simplify.content
@@ -1719,7 +1721,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini,llm=llm)   
             chain = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini | llm
 
-        response = await chain.ainvoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = chain.invoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
@@ -1754,7 +1756,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_retry_gemini,llm=llm)
                 chain_retry = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_retry_gemini | llm
 
-            response_retry = await chain_retry.ainvoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+            response_retry = chain_retry.invoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
             logger.info(f"response contd... is:\n{response_retry.content}",)
 
             responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -1789,7 +1791,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini_simplify,llm=llm)
                     chain_simplify = PROMPTS_WITHOUT_FILE.prompt_simulation_pedagogy_gemini_simplify | llm
                 
-                response_retry_simplify = await chain_simplify.ainvoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry_simplify = chain_simplify.invoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify.content)
                 if is_valid_retry_simplify == True:
                     response.content = response_retry_simplify.content
@@ -1809,7 +1811,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
             # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamified_json,llm=llm)   
             chain = PROMPTS_WITHOUT_FILE.prompt_gamified_json | llm
 
-        response = await chain.ainvoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = chain.invoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
@@ -1844,7 +1846,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
                 # chain_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamified_pedagogy_retry_gemini,llm=llm)
                 chain_retry = PROMPTS_WITHOUT_FILE.prompt_gamified_pedagogy_retry_gemini | llm
 
-            response_retry = await chain_retry.ainvoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+            response_retry = chain_retry.invoke({"incomplete_response": responses, "language":language, "mpv":mpv, "mpv_string":mpv_string})
             logger.info(f"response contd... is:\n{response_retry.content}",)
 
             responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -1879,7 +1881,7 @@ async def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, quer
                     # chain_simplify = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamify_pedagogy_gemini_simplify,llm=llm)
                     chain_simplify = PROMPTS_WITHOUT_FILE.prompt_gamify_pedagogy_gemini_simplify | llm
 
-                response_retry_simplify = await chain_simplify.ainvoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry_simplify = chain_simplify.invoke({"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 is_valid_retry_simplify, result = is_json_parseable(response_retry_simplify.content)
                 if is_valid_retry_simplify == True:
                     response.content = response_retry_simplify.content
@@ -1959,7 +1961,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
                     # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
                     chain = PROMPTS_WITHOUT_FILE.prompt_linear_shadow_edges | llm.bind(response_format={"type": "json_object"})
 
-            shadow_response = await chain.ainvoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
+            shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
             is_valid, result = is_json_parseable(shadow_response.content)
             countd=0
             while not is_valid and countd<=3:
@@ -1982,7 +1984,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
                     # chain_edges_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_linear_shadow_edges_retry, llm=llm)
                     chain_edges_retry = PROMPTS_WITHOUT_FILE.prompt_linear_shadow_edges_retry | llm
 
-                response_retry = await chain_edges_retry.ainvoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry = chain_edges_retry.invoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 logger.info(f"response contd... is:\n{response_retry.content}",)
 
                 responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -2032,7 +2034,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
                     # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
                     chain = PROMPTS_WITHOUT_FILE.prompt_branched_shadow_edges | llm.bind(response_format={"type": "json_object"})
 
-            shadow_response = await chain.ainvoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
+            shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
             is_valid, result = is_json_parseable(shadow_response.content)
             countd=0
             while not is_valid and countd<=3:
@@ -2055,7 +2057,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
                     # chain_edges_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_branched_shadow_edges_retry, llm=llm)
                     chain_edges_retry = PROMPTS_WITHOUT_FILE.prompt_branched_shadow_edges_retry | llm
                 
-                response_retry = await chain_edges_retry.ainvoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry = chain_edges_retry.invoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 logger.info(f"response contd... is:\n{response_retry.content}",)
 
                 responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -2105,7 +2107,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
                     # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
                     chain = PROMPTS_WITHOUT_FILE.prompt_simulation_shadow_edges | llm.bind(response_format={"type": "json_object"})
 
-            shadow_response = await chain.ainvoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
+            shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
             is_valid, result = is_json_parseable(shadow_response.content)
             countd=0
             while not is_valid and countd<=3:
@@ -2128,7 +2130,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
                     # chain_edges_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_simulation_shadow_edges_retry, llm=llm)
                     chain_edges_retry = PROMPTS_WITHOUT_FILE.prompt_simulation_shadow_edges_retry | llm
 
-                response_retry = await chain_edges_retry.ainvoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry = chain_edges_retry.invoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 logger.info(f"response contd... is:\n{response_retry.content}",)
 
                 responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -2178,7 +2180,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
                     # chain = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamify_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
                     chain = PROMPTS_WITHOUT_FILE.prompt_gamify_shadow_edges | llm.bind(response_format={"type": "json_object"})
 
-            shadow_response = await chain.ainvoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
+            shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
             is_valid, result = is_json_parseable(shadow_response.content)
             countd=0
             while not is_valid and countd<=3:
@@ -2201,7 +2203,7 @@ async def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, lan
                     # chain_edges_retry = LLMChain(prompt=PROMPTS_WITHOUT_FILE.prompt_gamify_shadow_edges_retry, llm=llm)
                     chain_edges_retry = PROMPTS_WITHOUT_FILE.prompt_gamify_shadow_edges_retry | llm
 
-                response_retry = await chain_edges_retry.ainvoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+                response_retry = chain_edges_retry.invoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
                 logger.info(f"response contd... is:\n{response_retry.content}",)
 
                 responses = modified_txt + response_retry.content #changed modified_text to responses
@@ -2331,7 +2333,7 @@ async def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     logger.info(f"format_instructions:\n{format_instructions}",)
 
     # invoking or running the img_response
-    img_response = await chain.ainvoke({"response_text": response_text, "context": relevant_doc, "language": language})
+    img_response = chain.invoke({"response_text": response_text, "context": relevant_doc, "language": language})
     logger.info(f"img_response is::{img_response}",)
 
     
