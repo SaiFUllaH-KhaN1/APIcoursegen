@@ -5994,8 +5994,8 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     template="""
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
-    a system of blocks. You give step-by-step instructions and provide detail information such that 
-    you are instructing and teaching a student.
+    a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
+    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
 
     !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
@@ -6003,8 +6003,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     To accomplish Simulation Scenarios creation, YOU will:
 
     1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Simulation Scenario.  
+    2. According to the "Learning Objectives" and "Content Areas", you will create the Simulation Scenario.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
     
@@ -6016,69 +6015,55 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     
     The Simulation Scenario are built using blocks, each having its own parameters.
     Block types include: 
-    'TextBlock' with timer, title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
-    'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
-    'GoalBlock' with title, Score
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'JumpBlock' with title, proceedToBlock
+    All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
-    the student is given choices based on which they face consequences. The simulation is based on the context in 
-    "Learning Objectives" and "Content Areas". 
+    the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
+    "Learning Objectives", "Content Areas" and "Human Input". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
-    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
-    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
-    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
-    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
-    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
-    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
-    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
-    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
-    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
+    Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
+    Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
+    Each choice has a consequence. A consequence can be good, bad, not so good. You are free to either allow for a student to retry using
+    JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
+    Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
+    have a chance to make things right after wrong choices, just like we do in real life.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
-    All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information. 
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    and give assignments in the SelfAssessmentTextBlock so the user uses critical thinking skills and is encouraged to
-    think about how much of the "Learning Objectives" has been achieved.
+    The Overlay tags in MediaBlocks are used to identify particular point/s of interest on an Image and their significance according to the subject scenario.
+    The use of Tracks. Tracks are defined as a way to label the blocks with colors so that each block related to a specific story route/ track
+    has a different number which will be translated by frontend code to a color. Give a Track number to each choice at a SimpleBranchingBlock and that 
+    choice's Track number should be the label for all the blocks related to that very choice. Use integer number in sequence from 1 to onwards however many
+    depending on the choice number.
+    Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
+    This will allow students to really ponder upon and critically think before selecting a choice.
+
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your response.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of Text and Media blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
-    You are creative in the manner of choosing the number of Text Blocks and Media Blocks to give best quality information to students. In each branch you are free to choose TextBlocks or MediaBlocks or both or multiple of them to convey best quality, elaborative information.
-    Make sure students learn from these TextBlocks and MediaBlocks.
+    The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
    
     \nOverview Sample structure of the Simulation Scenario\n
-    ScenarioType
-    LearningObjectives (PedagogicalBlock)
-    ContentAreas (PedagogicalBlock)
-    Briefing (PedagogicalBlock)
-    TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    Scenario's Context (PedagogicalBlock)
+    Pedagogical Context (PedagogicalBlock)
+    TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
+    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
-    Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
-    Learning_Objectives, and Content_Areas are all PedagogicalBlock.
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and represent content illustratively and also MediaBlock/s visually presents the Choices in the Branching Blocks!, 
-    2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
-        The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.   
-    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
+    2. All blocks, except edges and title, should be within the "nodes" array key. Subject blocks starts after StartBlock JSON object with id and type of "StartBlock".
 
     #####
     SECTION : MediaBlock Priotization Value (MPV)
@@ -6101,9 +6086,9 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
         
-    SAMPLE EXAMPLE:::
+    \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
     "title": "(Insert a fitting Title Here)",
     "nodes": [
@@ -6113,34 +6098,113 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "id": "B1",
+            "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Simulation Scenario.",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+            "title": "Scenario's Context",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
         }},
         {{
           "id": "B3",
-          "Purpose": "This MANDATORY block is where you !Give Briefing of this Simulation Scenario.",
-          "type": "PedagogicalBlock",
-          "title": "Briefing",
-          "description": "(Insert Text Here)"
-        }},
-        {{
-          "id": "B4",
-          "timer": "(Insert time in format hh:mm:ss)",
           "Purpose": "Content Carrier Block. You use these blocks to give detailed information on every aspect of various subject matters as asked. There frequencey of use is subject to the MPV.",
           "type": "TextBlock",
           "title": "(Insert Text Here)",
           "description": "(Insert Text Here)"
         }},
         {{
+            "id": "B4",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
+            ]
+        }},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{
+            "id": "SBB1",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",            
+            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "label":"Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 1",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{
+            "id": "SBB2",
+            "label":"Track 1",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 3": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 4": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "3",
+                    "Track 5": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B8",
+            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "label":"Track 3",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
+        }},
+        {{
+            "id": "B9",
+            "label":"Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B10",
+            "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -6148,68 +6212,46 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
-        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
+        }}, 
         {{
-            "id": "SBB1",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-            "type": "SimpleBranchingBlock",
-            "title": "(Insert Text Here)",
-            "branches": [
-                {{
-                    "port": "1",
-                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "2",
-                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
-                }}
-            ]
+            "id": "B11",
+            "label":"Track 4",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
-            "id": "B6",
+            "id": "B12",
+            "label":"Track 5",
             "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
-        {{
-            "id": "GB1",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B7",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
+            "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
-        {{
-            "id": "B9",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "B10",
-            "timer": "(Insert time in format hh:mm:ss)",
+            "id": "B13",
+            "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B11",
+            "id": "B14",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
+            "label":"Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B15",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B16",
+            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -6217,71 +6259,79 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},       
+        }},  
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
-            "id": "SBB2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "id": "SBB3",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
+                    "Track 6": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
-                }}
+                    "Track 7": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "1",
+                    "Track 8": "(Insert Text Here)"
+                }},
             ]
-        }},
-        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
-        {{
-            "id": "B12",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB2",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B13",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B15",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB3",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B16",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B17",
+            "label":"Track 6",
             "type": "PedagogicalBlock",
-            "title": "Reflection",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B18",
+            "label":"Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B19",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B20",
+            "label":"Track 7",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},   
+        {{
+            "id": "B21",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B22",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B23",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
             "description": "(Insert Text Here)"
         }}
     ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
@@ -6304,31 +6354,32 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "source": "B4",
-            "target": "B5"
-        }},
-        {{
-            "source": "B5",
             "target": "SBB1"
         }},
         {{
             "source": "SBB1",
-            "target": "B6",
+            "target": "B5",
             "sourceport": "1"
         }},
         {{
-            "source": "B6",
-            "target": "GB1"
+            "source": "B5",
+            "target": "B6"
         }},
         {{
-            "source": "GB1",
-            "target": "B7"
+            "source": "B6",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "1"
         }},
         {{
             "source": "B7",
             "target": "B8"
         }},
         {{
-            "source": "SBB1",
+            "source": "SBB2",
             "target": "B9",
             "sourceport": "2"
         }},
@@ -6341,20 +6392,12 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "target": "B11"
         }},
         {{
-            "source": "B11",
-            "target": "SBB2"
-        }},
-        {{
             "source": "SBB2",
             "target": "B12",
-            "sourceport":"1"
+            "sourceport": "3"
         }},
         {{
             "source": "B12",
-            "target": "GB2"
-        }},
-        {{
-            "source": "GB2",
             "target": "B13"
         }},
         {{
@@ -6368,25 +6411,33 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "source": "B15",
-            "target": "GB3"
-        }},
-        {{
-            "source": "GB3",
             "target": "B16"
         }},
         {{
-            "source": "B16",
-            "target": "B17"
+            "source": "SBB3",
+            "target": "B17",
+            "sourceport":"1"
+        }},
+        {{
+            "source": "B17",
+            "target": "B18"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B19",
+            "sourceport":"2"
+        }},
+        {{
+            "source": "B19",
+            "target": "B20"
+        }},
+        {{
+            "source": "B20",
+            "target": "B21"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
-
-    !!!WARNING!!! 
-    The naming convention of for example SBB_Bnh2 etc is just for your concept 
-    so you can deal with how the edges will connect certain nodes in the above 
-    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
-    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -6403,6 +6454,8 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly. 
 
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Simulation Scenario.
+
     Chatbot (Tone of a teacher instructing and teaching student in great detail):"""
 )
 
@@ -6411,8 +6464,8 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     template="""
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
-    a system of blocks. You give step-by-step instructions and provide detail information such that 
-    you are instructing and teaching a student.
+    a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
+    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
 
     !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
@@ -6420,8 +6473,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     To accomplish Simulation Scenarios creation, YOU will:
 
     1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Simulation Scenario.  
+    2. According to the "Learning Objectives" and "Content Areas", you will create the Simulation Scenario.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
     
@@ -6433,69 +6485,55 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     
     The Simulation Scenario are built using blocks, each having its own parameters.
     Block types include: 
-    'TextBlock' with timer, title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
-    'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
-    'GoalBlock' with title, Score
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'JumpBlock' with title, proceedToBlock
+    All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
-    the student is given choices based on which they face consequences. The simulation is based on the context in 
-    "Learning Objectives" and "Content Areas". 
+    the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
+    "Learning Objectives", "Content Areas" and "Human Input". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
-    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
-    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
-    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
-    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
-    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
-    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
-    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
-    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
-    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
+    Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
+    Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
+    Each choice has a consequence. A consequence can be good, bad, not so good. You are free to either allow for a student to retry using
+    JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
+    Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
+    have a chance to make things right after wrong choices, just like we do in real life.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
-    All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information. 
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    and give assignments in the SelfAssessmentTextBlock so the user uses critical thinking skills and is encouraged to
-    think about how much of the "Learning Objectives" has been achieved.
+    The Overlay tags in MediaBlocks are used to identify particular point/s of interest on an Image and their significance according to the subject scenario.
+    The use of Tracks. Tracks are defined as a way to label the blocks with colors so that each block related to a specific story route/ track
+    has a different number which will be translated by frontend code to a color. Give a Track number to each choice at a SimpleBranchingBlock and that 
+    choice's Track number should be the label for all the blocks related to that very choice. Use integer number in sequence from 1 to onwards however many
+    depending on the choice number.
+    Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
+    This will allow students to really ponder upon and critically think before selecting a choice.
+
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your response.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of Text and Media blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
-    You are creative in the manner of choosing the number of Text Blocks and Media Blocks to give best quality information to students. In each branch you are free to choose TextBlocks or MediaBlocks or both or multiple of them to convey best quality, elaborative information.
-    Make sure students learn from these TextBlocks and MediaBlocks.
+    The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
    
     \nOverview Sample structure of the Simulation Scenario\n
-    ScenarioType
-    LearningObjectives (PedagogicalBlock)
-    ContentAreas (PedagogicalBlock)
-    Briefing (PedagogicalBlock)
-    TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    Scenario's Context (PedagogicalBlock)
+    Pedagogical Context (PedagogicalBlock)
+    TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
+    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
-    Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
-    Learning_Objectives, and Content_Areas are all PedagogicalBlock.
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and represent content illustratively and also MediaBlock/s visually presents the Choices in the Branching Blocks!, 
-    2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
-        The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.   
-    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
+    2. All blocks, except edges and title, should be within the "nodes" array key. Subject blocks starts after StartBlock JSON object with id and type of "StartBlock".
 
     #####
     SECTION : MediaBlock Priotization Value (MPV)
@@ -6518,9 +6556,9 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
         
-    SAMPLE EXAMPLE:::
+    \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
     "title": "(Insert a fitting Title Here)",
     "nodes": [
@@ -6530,34 +6568,113 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "id": "B1",
+            "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Simulation Scenario.",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+            "title": "Scenario's Context",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
         }},
         {{
           "id": "B3",
-          "Purpose": "This MANDATORY block is where you !Give Briefing of this Simulation Scenario.",
-          "type": "PedagogicalBlock",
-          "title": "Briefing",
-          "description": "(Insert Text Here)"
-        }},
-        {{
-          "id": "B4",
-          "timer": "(Insert time in format hh:mm:ss)",
           "Purpose": "Content Carrier Block. You use these blocks to give detailed information on every aspect of various subject matters as asked. There frequencey of use is subject to the MPV.",
           "type": "TextBlock",
           "title": "(Insert Text Here)",
           "description": "(Insert Text Here)"
         }},
         {{
+            "id": "B4",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
+            ]
+        }},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{
+            "id": "SBB1",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",            
+            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "label":"Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 1",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{
+            "id": "SBB2",
+            "label":"Track 1",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 3": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 4": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "3",
+                    "Track 5": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B8",
+            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "label":"Track 3",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
+        }},
+        {{
+            "id": "B9",
+            "label":"Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B10",
+            "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -6565,68 +6682,46 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
-        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
+        }}, 
         {{
-            "id": "SBB1",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-            "type": "SimpleBranchingBlock",
-            "title": "(Insert Text Here)",
-            "branches": [
-                {{
-                    "port": "1",
-                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "2",
-                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
-                }}
-            ]
+            "id": "B11",
+            "label":"Track 4",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
-            "id": "B6",
+            "id": "B12",
+            "label":"Track 5",
             "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
-        {{
-            "id": "GB1",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B7",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
+            "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
-        {{
-            "id": "B9",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "B10",
-            "timer": "(Insert time in format hh:mm:ss)",
+            "id": "B13",
+            "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B11",
+            "id": "B14",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
+            "label":"Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B15",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B16",
+            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -6634,71 +6729,79 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},       
+        }},  
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
-            "id": "SBB2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "id": "SBB3",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
+                    "Track 6": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
-                }}
+                    "Track 7": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "1",
+                    "Track 8": "(Insert Text Here)"
+                }},
             ]
-        }},
-        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
-        {{
-            "id": "B12",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB2",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B13",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B15",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB3",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B16",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B17",
+            "label":"Track 6",
             "type": "PedagogicalBlock",
-            "title": "Reflection",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B18",
+            "label":"Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B19",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B20",
+            "label":"Track 7",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},   
+        {{
+            "id": "B21",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B22",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B23",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
             "description": "(Insert Text Here)"
         }}
     ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
@@ -6721,31 +6824,32 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "source": "B4",
-            "target": "B5"
-        }},
-        {{
-            "source": "B5",
             "target": "SBB1"
         }},
         {{
             "source": "SBB1",
-            "target": "B6",
+            "target": "B5",
             "sourceport": "1"
         }},
         {{
-            "source": "B6",
-            "target": "GB1"
+            "source": "B5",
+            "target": "B6"
         }},
         {{
-            "source": "GB1",
-            "target": "B7"
+            "source": "B6",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "1"
         }},
         {{
             "source": "B7",
             "target": "B8"
         }},
         {{
-            "source": "SBB1",
+            "source": "SBB2",
             "target": "B9",
             "sourceport": "2"
         }},
@@ -6758,20 +6862,12 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "target": "B11"
         }},
         {{
-            "source": "B11",
-            "target": "SBB2"
-        }},
-        {{
             "source": "SBB2",
             "target": "B12",
-            "sourceport":"1"
+            "sourceport": "3"
         }},
         {{
             "source": "B12",
-            "target": "GB2"
-        }},
-        {{
-            "source": "GB2",
             "target": "B13"
         }},
         {{
@@ -6785,25 +6881,33 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "source": "B15",
-            "target": "GB3"
-        }},
-        {{
-            "source": "GB3",
             "target": "B16"
         }},
         {{
-            "source": "B16",
-            "target": "B17"
+            "source": "SBB3",
+            "target": "B17",
+            "sourceport":"1"
+        }},
+        {{
+            "source": "B17",
+            "target": "B18"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B19",
+            "sourceport":"2"
+        }},
+        {{
+            "source": "B19",
+            "target": "B20"
+        }},
+        {{
+            "source": "B20",
+            "target": "B21"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
-
-    !!!WARNING!!! 
-    The naming convention of for example SBB_Bnh2 etc is just for your concept 
-    so you can deal with how the edges will connect certain nodes in the above 
-    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
-    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -6818,7 +6922,9 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     NEGATIVE PROMPT: Responding outside the JSON format.   
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.  
+    Just start the JSON response directly. 
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Simulation Scenario.
 
     Chatbot:"""
 )
@@ -6849,8 +6955,8 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     [
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
-    a system of blocks. You give step-by-step instructions and provide detail information such that 
-    you are instructing and teaching a student.
+    a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
+    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
 
     !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
@@ -6858,79 +6964,64 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     To accomplish Simulation Scenarios creation, YOU will:
 
     1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Simulation Scenario.  
+    2. According to the "Learning Objectives" and "Content Areas", you will create the Simulation Scenario.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
-
+    
     ***WHAT TO DO END***
 
     
     The Simulation Scenario are built using blocks, each having its own parameters.
     Block types include: 
-    'TextBlock' with timer, title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
-    'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
-    'GoalBlock' with title, Score
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'JumpBlock' with title, proceedToBlock
+    All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
-    the student is given choices based on which they face consequences. The simulation is based on the context in 
-    "Learning Objectives" and "Content Areas". 
+    the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
+    "Learning Objectives", "Content Areas" and "Human Input". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
-    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
-    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
-    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
-    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
-    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
-    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
-    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
-    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
-    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
+    Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
+    Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
+    Each choice has a consequence. A consequence can be good, bad, not so good. You are free to either allow for a student to retry using
+    JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
+    Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
+    have a chance to make things right after wrong choices, just like we do in real life.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
-    All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information. 
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    and give assignments in the SelfAssessmentTextBlock so the user uses critical thinking skills and is encouraged to
-    think about how much of the "Learning Objectives" has been achieved.
+    The Overlay tags in MediaBlocks are used to identify particular point/s of interest on an Image and their significance according to the subject scenario.
+    The use of Tracks. Tracks are defined as a way to label the blocks with colors so that each block related to a specific story route/ track
+    has a different number which will be translated by frontend code to a color. Give a Track number to each choice at a SimpleBranchingBlock and that 
+    choice's Track number should be the label for all the blocks related to that very choice. Use integer number in sequence from 1 to onwards however many
+    depending on the choice number.
+    Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
+    This will allow students to really ponder upon and critically think before selecting a choice.
+
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your response.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of Text and Media blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
-    You are creative in the manner of choosing the number of Text Blocks and Media Blocks to give best quality information to students. In each branch you are free to choose TextBlocks or MediaBlocks or both or multiple of them to convey best quality, elaborative information.
-    Make sure students learn from these TextBlocks and MediaBlocks.
+    The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
    
     \nOverview Sample structure of the Simulation Scenario\n
-    ScenarioType
-    LearningObjectives (PedagogicalBlock)
-    ContentAreas (PedagogicalBlock)
-    Briefing (PedagogicalBlock)
-    TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    Scenario's Context (PedagogicalBlock)
+    Pedagogical Context (PedagogicalBlock)
+    TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
+    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
-    Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
-    Learning_Objectives, and Content_Areas are all PedagogicalBlock.
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and represent content illustratively and also MediaBlock/s visually presents the Choices in the Branching Blocks!, 
-    2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
-        The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.   
-    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
+    2. All blocks, except edges and title, should be within the "nodes" array key. Subject blocks starts after StartBlock JSON object with id and type of "StartBlock".
 
     #####
     SECTION : MediaBlock Priotization Value (MPV)
@@ -6953,9 +7044,9 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
         
-    SAMPLE EXAMPLE:::
+    \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
     "title": "(Insert a fitting Title Here)",
     "nodes": [
@@ -6965,34 +7056,113 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "id": "B1",
+            "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Simulation Scenario.",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+            "title": "Scenario's Context",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
         }},
         {{
           "id": "B3",
-          "Purpose": "This MANDATORY block is where you !Give Briefing of this Simulation Scenario.",
-          "type": "PedagogicalBlock",
-          "title": "Briefing",
-          "description": "(Insert Text Here)"
-        }},
-        {{
-          "id": "B4",
-          "timer": "(Insert time in format hh:mm:ss)",
           "Purpose": "Content Carrier Block. You use these blocks to give detailed information on every aspect of various subject matters as asked. There frequencey of use is subject to the MPV.",
           "type": "TextBlock",
           "title": "(Insert Text Here)",
           "description": "(Insert Text Here)"
         }},
         {{
+            "id": "B4",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
+            ]
+        }},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{
+            "id": "SBB1",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",            
+            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "label":"Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 1",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{
+            "id": "SBB2",
+            "label":"Track 1",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 3": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 4": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "3",
+                    "Track 5": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B8",
+            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "label":"Track 3",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
+        }},
+        {{
+            "id": "B9",
+            "label":"Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B10",
+            "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -7000,68 +7170,46 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
-        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
+        }}, 
         {{
-            "id": "SBB1",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-            "type": "SimpleBranchingBlock",
-            "title": "(Insert Text Here)",
-            "branches": [
-                {{
-                    "port": "1",
-                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "2",
-                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
-                }}
-            ]
+            "id": "B11",
+            "label":"Track 4",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
-            "id": "B6",
+            "id": "B12",
+            "label":"Track 5",
             "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
-        {{
-            "id": "GB1",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B7",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
+            "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
-        {{
-            "id": "B9",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "B10",
-            "timer": "(Insert time in format hh:mm:ss)",
+            "id": "B13",
+            "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B11",
+            "id": "B14",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
+            "label":"Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B15",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B16",
+            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -7069,71 +7217,79 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},       
+        }},  
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
-            "id": "SBB2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "id": "SBB3",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
+                    "Track 6": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
-                }}
+                    "Track 7": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "1",
+                    "Track 8": "(Insert Text Here)"
+                }},
             ]
-        }},
-        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
-        {{
-            "id": "B12",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB2",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B13",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B15",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB3",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B16",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B17",
+            "label":"Track 6",
             "type": "PedagogicalBlock",
-            "title": "Reflection",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B18",
+            "label":"Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B19",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B20",
+            "label":"Track 7",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},   
+        {{
+            "id": "B21",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B22",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B23",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
             "description": "(Insert Text Here)"
         }}
     ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
@@ -7156,31 +7312,32 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "source": "B4",
-            "target": "B5"
-        }},
-        {{
-            "source": "B5",
             "target": "SBB1"
         }},
         {{
             "source": "SBB1",
-            "target": "B6",
+            "target": "B5",
             "sourceport": "1"
         }},
         {{
-            "source": "B6",
-            "target": "GB1"
+            "source": "B5",
+            "target": "B6"
         }},
         {{
-            "source": "GB1",
-            "target": "B7"
+            "source": "B6",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "1"
         }},
         {{
             "source": "B7",
             "target": "B8"
         }},
         {{
-            "source": "SBB1",
+            "source": "SBB2",
             "target": "B9",
             "sourceport": "2"
         }},
@@ -7193,20 +7350,12 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "target": "B11"
         }},
         {{
-            "source": "B11",
-            "target": "SBB2"
-        }},
-        {{
             "source": "SBB2",
             "target": "B12",
-            "sourceport":"1"
+            "sourceport": "3"
         }},
         {{
             "source": "B12",
-            "target": "GB2"
-        }},
-        {{
-            "source": "GB2",
             "target": "B13"
         }},
         {{
@@ -7220,25 +7369,33 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "source": "B15",
-            "target": "GB3"
-        }},
-        {{
-            "source": "GB3",
             "target": "B16"
         }},
         {{
-            "source": "B16",
-            "target": "B17"
+            "source": "SBB3",
+            "target": "B17",
+            "sourceport":"1"
+        }},
+        {{
+            "source": "B17",
+            "target": "B18"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B19",
+            "sourceport":"2"
+        }},
+        {{
+            "source": "B19",
+            "target": "B20"
+        }},
+        {{
+            "source": "B20",
+            "target": "B21"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
-
-    !!!WARNING!!! 
-    The naming convention of for example SBB_Bnh2 etc is just for your concept 
-    so you can deal with how the edges will connect certain nodes in the above 
-    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
-    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -7253,7 +7410,9 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     NEGATIVE PROMPT: Responding outside the JSON format.   
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.
+    Just start the JSON response directly. 
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Simulation Scenario.
     """
 )
 
@@ -7301,8 +7460,8 @@ prompt_simulation_shadow_edges = PromptTemplate(
     [[[
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
-    a system of blocks. You give step-by-step instructions and provide detail information such that 
-    you are instructing and teaching a student.
+    a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
+    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
 
     !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
@@ -7310,79 +7469,64 @@ prompt_simulation_shadow_edges = PromptTemplate(
     To accomplish Simulation Scenarios creation, YOU will:
 
     1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Simulation Scenario.  
+    2. According to the "Learning Objectives" and "Content Areas", you will create the Simulation Scenario.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
-
+    
     ***WHAT TO DO END***
 
     
     The Simulation Scenario are built using blocks, each having its own parameters.
     Block types include: 
-    'TextBlock' with timer, title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
-    'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
-    'GoalBlock' with title, Score
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'JumpBlock' with title, proceedToBlock
+    All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
-    the student is given choices based on which they face consequences. The simulation is based on the context in 
-    "Learning Objectives" and "Content Areas". 
+    the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
+    "Learning Objectives", "Content Areas" and "Human Input". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
-    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
-    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
-    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
-    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
-    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
-    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
-    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
-    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
-    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
+    Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
+    Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
+    Each choice has a consequence. A consequence can be good, bad, not so good. You are free to either allow for a student to retry using
+    JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
+    Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
+    have a chance to make things right after wrong choices, just like we do in real life.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
-    All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information. 
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    and give assignments in the SelfAssessmentTextBlock so the user uses critical thinking skills and is encouraged to
-    think about how much of the "Learning Objectives" has been achieved.
+    The Overlay tags in MediaBlocks are used to identify particular point/s of interest on an Image and their significance according to the subject scenario.
+    The use of Tracks. Tracks are defined as a way to label the blocks with colors so that each block related to a specific story route/ track
+    has a different number which will be translated by frontend code to a color. Give a Track number to each choice at a SimpleBranchingBlock and that 
+    choice's Track number should be the label for all the blocks related to that very choice. Use integer number in sequence from 1 to onwards however many
+    depending on the choice number.
+    Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
+    This will allow students to really ponder upon and critically think before selecting a choice.
+
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your response.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of Text and Media blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
-    You are creative in the manner of choosing the number of Text Blocks and Media Blocks to give best quality information to students. In each branch you are free to choose TextBlocks or MediaBlocks or both or multiple of them to convey best quality, elaborative information.
-    Make sure students learn from these TextBlocks and MediaBlocks.
+    The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
    
     \nOverview Sample structure of the Simulation Scenario\n
-    ScenarioType
-    LearningObjectives (PedagogicalBlock)
-    ContentAreas (PedagogicalBlock)
-    Briefing (PedagogicalBlock)
-    TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    Scenario's Context (PedagogicalBlock)
+    Pedagogical Context (PedagogicalBlock)
+    TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
+    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
-    Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
-    Learning_Objectives, and Content_Areas are all PedagogicalBlock.
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and represent content illustratively and also MediaBlock/s visually presents the Choices in the Branching Blocks!, 
-    2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
-        The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.   
-    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
+    2. All blocks, except edges and title, should be within the "nodes" array key. Subject blocks starts after StartBlock JSON object with id and type of "StartBlock".
 
     #####
     SECTION : MediaBlock Priotization Value (MPV)
@@ -7405,9 +7549,9 @@ prompt_simulation_shadow_edges = PromptTemplate(
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
         
-    SAMPLE EXAMPLE:::
+    \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
     "title": "(Insert a fitting Title Here)",
     "nodes": [
@@ -7417,34 +7561,113 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "id": "B1",
+            "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Simulation Scenario.",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+            "title": "Scenario's Context",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
         }},
         {{
           "id": "B3",
-          "Purpose": "This MANDATORY block is where you !Give Briefing of this Simulation Scenario.",
-          "type": "PedagogicalBlock",
-          "title": "Briefing",
-          "description": "(Insert Text Here)"
-        }},
-        {{
-          "id": "B4",
-          "timer": "(Insert time in format hh:mm:ss)",
           "Purpose": "Content Carrier Block. You use these blocks to give detailed information on every aspect of various subject matters as asked. There frequencey of use is subject to the MPV.",
           "type": "TextBlock",
           "title": "(Insert Text Here)",
           "description": "(Insert Text Here)"
         }},
         {{
+            "id": "B4",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
+            ]
+        }},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{
+            "id": "SBB1",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",            
+            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "label":"Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 1",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{
+            "id": "SBB2",
+            "label":"Track 1",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 3": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 4": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "3",
+                    "Track 5": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B8",
+            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "label":"Track 3",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
+        }},
+        {{
+            "id": "B9",
+            "label":"Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B10",
+            "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -7452,68 +7675,46 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
-        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
+        }}, 
         {{
-            "id": "SBB1",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-            "type": "SimpleBranchingBlock",
-            "title": "(Insert Text Here)",
-            "branches": [
-                {{
-                    "port": "1",
-                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "2",
-                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
-                }}
-            ]
+            "id": "B11",
+            "label":"Track 4",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
-            "id": "B6",
+            "id": "B12",
+            "label":"Track 5",
             "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
-        {{
-            "id": "GB1",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B7",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
+            "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
-        {{
-            "id": "B9",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "B10",
-            "timer": "(Insert time in format hh:mm:ss)",
+            "id": "B13",
+            "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B11",
+            "id": "B14",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
+            "label":"Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B15",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B16",
+            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -7521,71 +7722,79 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},       
+        }},  
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
-            "id": "SBB2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "id": "SBB3",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
+                    "Track 6": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
-                }}
+                    "Track 7": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "1",
+                    "Track 8": "(Insert Text Here)"
+                }},
             ]
-        }},
-        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
-        {{
-            "id": "B12",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB2",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B13",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B15",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB3",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B16",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B17",
+            "label":"Track 6",
             "type": "PedagogicalBlock",
-            "title": "Reflection",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B18",
+            "label":"Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B19",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B20",
+            "label":"Track 7",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},   
+        {{
+            "id": "B21",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B22",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B23",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
             "description": "(Insert Text Here)"
         }}
     ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
@@ -7608,31 +7817,32 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "source": "B4",
-            "target": "B5"
-        }},
-        {{
-            "source": "B5",
             "target": "SBB1"
         }},
         {{
             "source": "SBB1",
-            "target": "B6",
+            "target": "B5",
             "sourceport": "1"
         }},
         {{
-            "source": "B6",
-            "target": "GB1"
+            "source": "B5",
+            "target": "B6"
         }},
         {{
-            "source": "GB1",
-            "target": "B7"
+            "source": "B6",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "1"
         }},
         {{
             "source": "B7",
             "target": "B8"
         }},
         {{
-            "source": "SBB1",
+            "source": "SBB2",
             "target": "B9",
             "sourceport": "2"
         }},
@@ -7645,20 +7855,12 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "target": "B11"
         }},
         {{
-            "source": "B11",
-            "target": "SBB2"
-        }},
-        {{
             "source": "SBB2",
             "target": "B12",
-            "sourceport":"1"
+            "sourceport": "3"
         }},
         {{
             "source": "B12",
-            "target": "GB2"
-        }},
-        {{
-            "source": "GB2",
             "target": "B13"
         }},
         {{
@@ -7672,25 +7874,33 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "source": "B15",
-            "target": "GB3"
-        }},
-        {{
-            "source": "GB3",
             "target": "B16"
         }},
         {{
-            "source": "B16",
-            "target": "B17"
+            "source": "SBB3",
+            "target": "B17",
+            "sourceport":"1"
+        }},
+        {{
+            "source": "B17",
+            "target": "B18"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B19",
+            "sourceport":"2"
+        }},
+        {{
+            "source": "B19",
+            "target": "B20"
+        }},
+        {{
+            "source": "B20",
+            "target": "B21"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
-
-    !!!WARNING!!! 
-    The naming convention of for example SBB_Bnh2 etc is just for your concept 
-    so you can deal with how the edges will connect certain nodes in the above 
-    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
-    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -7706,6 +7916,8 @@ prompt_simulation_shadow_edges = PromptTemplate(
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly. 
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Simulation Scenario.
     ]]]
 
     Chatbot:"""
@@ -7780,8 +7992,8 @@ You will Continue like this in your generated response:
     [[[
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
-    a system of blocks. You give step-by-step instructions and provide detail information such that 
-    you are instructing and teaching a student.
+    a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
+    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
 
     !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
@@ -7789,8 +8001,7 @@ You will Continue like this in your generated response:
     To accomplish Simulation Scenarios creation, YOU will:
 
     1. Take the "Human Input" which represents the content topic or description for which the scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Simulation Scenario.  
+    2. According to the "Learning Objectives" and "Content Areas", you will create the Simulation Scenario.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
     
@@ -7799,69 +8010,55 @@ You will Continue like this in your generated response:
     
     The Simulation Scenario are built using blocks, each having its own parameters.
     Block types include: 
-    'TextBlock' with timer, title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'FeedbackAndFeedforwardBlock' with title, and description (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
-    “You are good at this…”. “You can't do this because...”. Then also give:
-    FEEDFORWARD: Describes the problem and its influences and leads towards solutions. Proactive guidance and suggestions for improvement, aiming to enhance future performance and foster continuous learning. Helps the student to create a well-defined plan on how to improve. “Would you practice this…” “Maybe you could add…” )
-    'Debriefing' with descritpion(Debrief the situation and results of the branch such that students can Reflect on their performance, Analyze the decisions, Identify and discuss discrepancies, Reinforce correct behavior, Learn from mistakes, Promote a deeper understanding) 
-    'Reflection' with descritpion(Use Reflection to allows students to be able to have Personal Understanding, Identifying Strengths and Weaknesses, Insight Generation of the choices and path or branch they took)
-    'Branching Block (Simple Branching)' with timer, title, ProceedToBranchList
-    'GoalBlock' with title, Score
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'JumpBlock' with title, proceedToBlock
+    All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
-    the student is given choices based on which they face consequences. The simulation is based on the context in 
-    "Learning Objectives" and "Content Areas". 
+    the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
+    "Learning Objectives", "Content Areas" and "Human Input". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
-    Simulation Scenario into various subsequent outcomes. Each outcome can further branch out into additional subdivisions, 
-    mapping out the entire narrative for scenario development. The scenario initiates with a Briefing and culminates at the end of each 
-    branch with a Goal Block, incorporating Debriefing, and Reflection blocks to finalize the simulation story 
-    and provide scoring. There are two primary types of branches: DIVISIBLE and NON-DIVISIBLE. The DIVISIBLE type can be further subdivided 
-    using another 'Branching Block (Simple Branching)' and lacks a Goal Block, Debriefing, or Reflection blocks. This branch type can give 
-    rise to further branches, which may be categorized as either more DIVISIBLE or NON-DIVISIBLE. Conversely, NON-DIVISIBLE branches signify 
-    the end of a simulation path where the narrative reaches its conclusion. These branches are equipped with a Goal Block, Debriefing, and 
-    Reflection blocks at their conclusion. Additionally, every Branching Block leading to a choice branch (DIVISIBLE or NON-DIVISIBLE) starts with a 
-    FeedbackAndFeedforwardBlock to inform the user about their previous actions.
+    Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
+    Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
+    Each choice has a consequence. A consequence can be good, bad, not so good. You are free to either allow for a student to retry using
+    JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
+    Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
+    have a chance to make things right after wrong choices, just like we do in real life.
     ***
 
     ***YOU WILL BE REWARD IF:
-    You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, eventually reaching the end of the scenario. 
-    All the TextBlocks in the branches, has valid step-by-step and detailed instructions of the subject matters such that you are instructing and teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
-    TextBlocks should provide extremely specific and detailed so user can get as much information as there is available.
     The MediaBlocks are there to illustrate the subject knowledge so user interest is kept. You can provide a certain
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information. 
-    The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
-    and give assignments in the SelfAssessmentTextBlock so the user uses critical thinking skills and is encouraged to
-    think about how much of the "Learning Objectives" has been achieved.
+    The Overlay tags in MediaBlocks are used to identify particular point/s of interest on an Image and their significance according to the subject scenario.
+    The use of Tracks. Tracks are defined as a way to label the blocks with colors so that each block related to a specific story route/ track
+    has a different number which will be translated by frontend code to a color. Give a Track number to each choice at a SimpleBranchingBlock and that 
+    choice's Track number should be the label for all the blocks related to that very choice. Use integer number in sequence from 1 to onwards however many
+    depending on the choice number.
+    Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
+    This will allow students to really ponder upon and critically think before selecting a choice.
+
     ***
-    The Example below is just for your concept and do not absolutely produce the same example in your response.
-    Ensure that TextBlocks and MediaBlocks provide comprehensive information directly related to the LearningObjectives and ContentAreas. Adjust the number and length of Text and Media blocks based on the necessary detail required for students to fully understand and accurately reproduce the information presented.    
-    You are creative in the manner of choosing the number of Text Blocks and Media Blocks to give best quality information to students. In each branch you are free to choose TextBlocks or MediaBlocks or both or multiple of them to convey best quality, elaborative information.
-    Make sure students learn from these TextBlocks and MediaBlocks.
+    The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
    
     \nOverview Sample structure of the Simulation Scenario\n
-    ScenarioType
-    LearningObjectives (PedagogicalBlock)
-    ContentAreas (PedagogicalBlock)
-    Briefing (PedagogicalBlock)
-    TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)    
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    Scenario's Context (PedagogicalBlock)
+    Pedagogical Context (PedagogicalBlock)
+    TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
+    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
     SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Branch 1,2,3... (DIVISIBLE type containing path to other Branches) => with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Branching Block (Simple Branching)
-    Branch 1,2,3... (NON-DIVISIBLE type that are end of scenario branches not divisible further) =>with its FeedbackAndFeedforwardBlock, TextBlock/s or None,MediaBlock/s or None, Goal Block,  Debriefing, Reflection
-    Note: The blocks of Briefing, Debriefing, Reflection, Feedback_And_Feedforward,
-    Learning_Objectives, and Content_Areas are all PedagogicalBlock.
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
     1. Produce a Media rich and diverse scenario by employing MediaBlock/s at various strategic places in the Scenario (specially Image type Media with overlayed hotspots), to add illustrativeness and represent content illustratively and also MediaBlock/s visually presents the Choices in the Branching Blocks!, 
-    2. 'timer' is only used for Text Blocks and Branching Blocks and the length of time is proportional to the content length in respective individual Text Blocks where timer is used.
-        The decision time required in the Branching Blocks can be challenging or easy randomly, so base the length of the time according to the pertinent individual Branching Blocks.   
-    3. All blocks except edges and title should be within the "nodes" key's and after StartBlock JSON object which starts the generation of blocks.
+    2. All blocks, except edges and title, should be within the "nodes" array key. Subject blocks starts after StartBlock JSON object with id and type of "StartBlock".
 
     #####
     SECTION : MediaBlock Priotization Value (MPV)
@@ -7884,9 +8081,9 @@ You will Continue like this in your generated response:
     In short, you are to generate a scenario having "{mpv_string}".
     #####
 
-    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 6 SimpleBranchingBlock or less.!!!
+    !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
         
-    SAMPLE EXAMPLE:::
+    \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
     "title": "(Insert a fitting Title Here)",
     "nodes": [
@@ -7896,34 +8093,113 @@ You will Continue like this in your generated response:
         }},
         {{
             "id": "B1",
+            "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Simulation Scenario.",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+            "title": "Scenario's Context",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
-            "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
         }},
         {{
           "id": "B3",
-          "Purpose": "This MANDATORY block is where you !Give Briefing of this Simulation Scenario.",
-          "type": "PedagogicalBlock",
-          "title": "Briefing",
-          "description": "(Insert Text Here)"
-        }},
-        {{
-          "id": "B4",
-          "timer": "(Insert time in format hh:mm:ss)",
           "Purpose": "Content Carrier Block. You use these blocks to give detailed information on every aspect of various subject matters as asked. There frequencey of use is subject to the MPV.",
           "type": "TextBlock",
           "title": "(Insert Text Here)",
           "description": "(Insert Text Here)"
         }},
         {{
+            "id": "B4",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
+            ]
+        }},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{
+            "id": "SBB1",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
             "id": "B5",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",            
+            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "label":"Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 1",
+            "type": "TextBlock",
+            "title": "(Insert Text Here)",
+            "description": "(Insert Text Here)"
+        }},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{
+            "id": "SBB2",
+            "label":"Track 1",
+            "type": "SimpleBranchingBlock",
+            "title": "(Insert Text Here)",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 3": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "2",
+                    "Track 4": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "3",
+                    "Track 5": "(Insert Text Here)"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B8",
+            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "label":"Track 3",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
+        }},
+        {{
+            "id": "B9",
+            "label":"Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B10",
+            "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -7931,68 +8207,46 @@ You will Continue like this in your generated response:
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. The SBB1_1 is always a NON-DIVISBLE categorized choice branch, while the SBB1_2 might be DIVISIBLE or NON-DIVISIBLE depending upon the logic and the length of the story."}},
-        {{"_comment":"Always name the branches as SBB1_1 and SBB1_2 with NON-DIVISIBLE or DIVISIBLE category mentioned in value."}},        
+        }}, 
         {{
-            "id": "SBB1",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
-            "type": "SimpleBranchingBlock",
-            "title": "(Insert Text Here)",
-            "branches": [
-                {{
-                    "port": "1",
-                    "SBB1_1NON-DIVISIBLE": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "2",
-                    "SBB1_2DIVISIBLE": "(Insert Text Here)"
-                }}
-            ]
+            "id": "B11",
+            "label":"Track 4",
+            "type": "JumpBlock",
+            "title": "Rethink your choice!",
+            "proceedToBlock": "SBB2"
         }},
-        {{"_comment": "Note that since SBB1_1 in this example is identified as NON-DIVISIBLE choice branch, than by definition of NON-DIVISIBLE, this choice branch will have atleast a Mandatory Feedback_And_Feedforward, a Mandatory GoalBlock, a Mandatory Debriefing, and a Mandatory Reflection block which are in this case B6, GB1, B7, and B8, respectively. NON-DIVISIBLE choice branches act as an ending out of multiple possible endings in the Simulation Story."}},
         {{
-            "id": "B6",
+            "id": "B12",
+            "label":"Track 5",
             "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{"_comment": "The GoalBlock are identified by id as GB1 here, which represents an ending in a story. A NON-DIVISIBLE branch choice always contain a Feedback_And_Feedforward, a GoalBlock, a Debriefing and a Reflection Block such as SBB1_1 in this example."}}
-        {{
-            "id": "GB1",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B7",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
+            "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{"_comment": "Note that since SBB1_2 in this example is identified as DIVISIBLE, than by definition of DIVISIBLE, this choice's branch will have atleast a Mandatory Feedback_And_Feedforward, TextBlock/s or MediaBlock/s, and a Mandatory SimpleBranchingBlock."}},
-        {{
-            "id": "B9",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "B10",
-            "timer": "(Insert time in format hh:mm:ss)",
+            "id": "B13",
+            "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B11",
+            "id": "B14",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
+            "label":"Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B15",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B16",
+            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -8000,71 +8254,79 @@ You will Continue like this in your generated response:
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},       
+        }},  
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
-            "id": "SBB2",
-            "timer": "(Insert time in format hh:mm:ss)",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected.",
+            "id": "SBB3",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
                 {{
                     "port": "1",
-                    "SBB2_1NON-DIVISIBLE": "(Insert Text Here)"
+                    "Track 6": "(Insert Text Here)"
                 }},
                 {{
                     "port": "2",
-                    "SBB2_2DIVISIBLE": "(Insert Text Here)"
-                }}
+                    "Track 7": "(Insert Text Here)"
+                }},
+                {{
+                    "port": "1",
+                    "Track 8": "(Insert Text Here)"
+                }},
             ]
-        }},
-        {{"_comment": "Notice that for the SBB2_1 branch choice of SBB2, since it is NON-DIVISBLE therefore it has B12, GB2, B13, and B14 blocks completing the mandatroy requirement of Feedback_And_Feedforward, GoalBlock, Debriefing, and Reflection, respectively. Same is true for the second NON-DIVISIBLE branch of SBB2_2."}},
-        {{
-            "id": "B12",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB2",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B13",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "type": "PedagogicalBlock",
-            "title": "Reflection",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B15",
-            "type": "PedagogicalBlock",
-            "title": "Feedback_And_Feedforward",
-            "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
-        }},
-        {{
-            "id": "GB3",
-            "type": "GoalBlock",
-            "title": "(Insert Text Here)",
-            "score": "Insert Integer Number Here"
-        }},
-        {{
-            "id": "B16",
-            "type": "PedagogicalBlock",
-            "title": "Debriefing",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B17",
+            "label":"Track 6",
             "type": "PedagogicalBlock",
-            "title": "Reflection",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B18",
+            "label":"Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B19",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B20",
+            "label":"Track 7",
+            "type": "MediaBlock",
+            "title": "(Insert Text Here)",
+            "mediaType": "Image",
+            "description": "(Insert Text Here)",
+            "overlayTags": [
+                "(Insert Text Here)"
+            ]
+        }},   
+        {{
+            "id": "B21",
+            "label":"Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B22",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B23",
+            "label":"Track 8",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
             "description": "(Insert Text Here)"
         }}
     ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
@@ -8087,31 +8349,32 @@ You will Continue like this in your generated response:
         }},
         {{
             "source": "B4",
-            "target": "B5"
-        }},
-        {{
-            "source": "B5",
             "target": "SBB1"
         }},
         {{
             "source": "SBB1",
-            "target": "B6",
+            "target": "B5",
             "sourceport": "1"
         }},
         {{
-            "source": "B6",
-            "target": "GB1"
+            "source": "B5",
+            "target": "B6"
         }},
         {{
-            "source": "GB1",
-            "target": "B7"
+            "source": "B6",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "1"
         }},
         {{
             "source": "B7",
             "target": "B8"
         }},
         {{
-            "source": "SBB1",
+            "source": "SBB2",
             "target": "B9",
             "sourceport": "2"
         }},
@@ -8124,20 +8387,12 @@ You will Continue like this in your generated response:
             "target": "B11"
         }},
         {{
-            "source": "B11",
-            "target": "SBB2"
-        }},
-        {{
             "source": "SBB2",
             "target": "B12",
-            "sourceport":"1"
+            "sourceport": "3"
         }},
         {{
             "source": "B12",
-            "target": "GB2"
-        }},
-        {{
-            "source": "GB2",
             "target": "B13"
         }},
         {{
@@ -8151,25 +8406,33 @@ You will Continue like this in your generated response:
         }},
         {{
             "source": "B15",
-            "target": "GB3"
-        }},
-        {{
-            "source": "GB3",
             "target": "B16"
         }},
         {{
-            "source": "B16",
-            "target": "B17"
+            "source": "SBB3",
+            "target": "B17",
+            "sourceport":"1"
+        }},
+        {{
+            "source": "B17",
+            "target": "B18"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B19",
+            "sourceport":"2"
+        }},
+        {{
+            "source": "B19",
+            "target": "B20"
+        }},
+        {{
+            "source": "B20",
+            "target": "B21"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
-
-    !!!WARNING!!! 
-    The naming convention of for example SBB_Bnh2 etc is just for your concept 
-    so you can deal with how the edges will connect certain nodes in the above 
-    example. You are to generate blocks with id names in format of B1, B2, ... with sequential numbers only.
-    !!!WARNING END!!!
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -8185,6 +8448,8 @@ You will Continue like this in your generated response:
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
     Just start the JSON response directly. 
+
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Simulation Scenario.
     ]]]
 
     Chatbot:"""
