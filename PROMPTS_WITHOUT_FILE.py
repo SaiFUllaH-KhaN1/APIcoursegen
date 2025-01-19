@@ -1333,12 +1333,12 @@ prompt_branched = PromptTemplate(
     Explain the material itself, Please provide detailed, informative explanations that align closely with the learning objectives and content areas provided. Each response should not just direct the learner but educate them by elaborating on the historical, technical, or practical details. Use simple and engaging language to enhance understanding and retention. Ensure that each explanation directly supports the learners' ability to meet the learning objectives by providing comprehensive insights into the topics discussed.
     !!!WARNING END!!!
 
+    
     ***WHAT TO DO***
     To accomplish Micro Learning Scenario creation, YOU will:
 
     1. Take the "Human Input" which represents the subject content topic or description for which the Micro Learning Scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Micro Learning Scenario.    
+    2. According to the "Learning Objectives" and "Content Areas" specified, you will create the Micro Learning Scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the Micro Learning Scenario content efficiently and logically.
     
     'Human Input': {human_input};
@@ -1350,21 +1350,23 @@ prompt_branched = PromptTemplate(
     The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
     Block types include:
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
-    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Pedagogical Context (Includes the list of Learning Objectives and Content Areas), 
+    Scenario's Context (An introduction about the topic and what suptopics user going to learn from and choose from in the later SimpleBranchingBlock), Feedback And Feedforward which is defined as
     (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
     To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
-    'JumpBlock' with title, ProceedToBlock
+    'SimpleBranchingBlock' with Title, branches (an array of choices/ branches representing a subtopic of the main topic. Each branch/ choice have their own port numbers. The port numbers are used to identify in the edges array, the interconnection of various blocks to the subject branch).  
+    'JumpBlock' with title, proceedToBlock
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Micro Learning Scenario: A type of educational, information providing and testing structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
-    used to give detailed explanations to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic having its own multiple or single TextBlocks, MediaBlocks and QuestionBlocks to train user. At the end of each branch, there will be a TestBlocks Array that encompasses a single or series of QuestionBlock/s to test user knowledge of the Branch, followed by the FeedbackAndFeedforwardBlock and after it a JumpBlock at the very end to move the user to the SimpleBranchingBlock for being able to begin and access another branch to learn.
+    Micro Learning Scenario: A type of educational, detailed explanations providing and testing structure in which specific instructs are given to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic focuses on one Learning Objective and each subtopic uses Content Carrier Blocks to train and dessiminate information to user. 
+    At the end of each branch, there will be a series of QuestionBlocks to test user knowledge of the subtopic, followed by the Feedback And Feedforward (PedagogicalBlock) and after it a mandatory JumpBlock at the very end 
+    will be used to allow the user to move to the SimpleBranchingBlock for being able to begin and access another branch to learn its contents.
     ***
     ***YOU WILL BE REWARD IF:
     All the TextBlocks in the branches, has valid step-by-step and detailed information of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
@@ -1373,8 +1375,12 @@ prompt_branched = PromptTemplate(
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.
     The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
+    Thoughtfull Feedbacks and Feedforwards in the Feedback And Feedforward (PedagogicalBlock) should be made,
     so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    ***
+    ***YOU WILL BE PENALISED IF:
+    The TextBlocks has general information that you do NOT elaborate in detail.
+    The MediaBlocks has general information that you do NOT elaborate in detail.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -1385,13 +1391,12 @@ prompt_branched = PromptTemplate(
     
     \nOverview structure of the Micro Learning Scenario\n
     ScenarioType
-    Learning_Objectives (PedagogicalBlock)
-    Content_Areas (PedagogicalBlock)
-    Welcome PedagogicalBlock (Welcome message to the Micro Learning scenario and proceedings.)
+    Pedagogical Context (PedagogicalBlock)
+    Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
+    MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -1427,20 +1432,38 @@ prompt_branched = PromptTemplate(
             {{
                 "id": "B1",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+                "title": "Pedagogical Context",
+                "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
             }},
             {{
                 "id": "B2",
+                "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Micro Learning Scenario. You !Begin by giving welcome message to the scenario and introduce readers to the main topic, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
                 "type": "PedagogicalBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+                "title": "Scenario's Context",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "Purpose": "This MANDATORY block is where you !Begin by giving welcome message to the scenario and introduce readers to the scenario, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
-                "type": "PedagogicalBlock",
+                "id": "SBB",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "Branch 1": "(Insert Text Here)"
+                    }},
+                    {{
+                        "port": "2",
+                        "Branch 2": "(Insert Text Here)"
+                    }}
+                ]
+            }},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{
+                "id": "B3",
+                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
+                "type": "PedagogicalBlock",
+                "title": "Learning Objective",
                 "description": "(Insert Text Here)"
             }},
             {{
@@ -1458,40 +1481,11 @@ prompt_branched = PromptTemplate(
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! ATLEAST 2 branches are NECESSARY. However, the upperlimit is related to subtopics in 'Human Input' and the number of 'Learning Objectives' given.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh1_B1",
-                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
-                "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "1. (Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_B2",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand. It is MANDATORY to include a number of multiple choices as probable answers, then also include what the correctAnswerIndex is, and give a message aka wrongAnswerMessage,in-case of incorrect answer a student chooses.",
                 "questionText": "(Insert Text Here)",
@@ -1503,7 +1497,7 @@ prompt_branched = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_QB2",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -1514,42 +1508,48 @@ prompt_branched = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_B3",
+                "id": "FBFF1",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
+                "id": "JB1",
                 "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
             }},
             {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B7",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "2. (Insert Text Here)"
+                "title": "Learning Objective",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B8",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B3",
+                "id": "B9",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB3",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -1560,13 +1560,14 @@ prompt_branched = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B4",
+                "id": "FBFF2",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_JB",
+                "id": "JB2",
+                "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -1583,7 +1584,12 @@ prompt_branched = PromptTemplate(
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "SBB"
+            }},
+            {{
+                "source": "SBB",
+                "target": "B3",
+                "sourceport": "1"
             }},
             {{
                 "source": "B3",
@@ -1595,64 +1601,55 @@ prompt_branched = PromptTemplate(
             }},
             {{
                 "source": "B5",
+                "target": "QB1"
+            }},
+            {{
+                "source": "QB1",
+                "target": "QB2"
+            }},
+            {{
+                "source": "QB2",
+                "target": "FBFF1"
+            }},
+            {{
+                "source": "FBFF1",
+                "target": "JB1"
+            }},
+            {{
+                "source": "JB1",
                 "target": "SBB"
             }},
             {{
                 "source": "SBB",
-                "target": "SBB_Bnh1_B1",
-                "sourceport": "1"
-            }},
-            {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_B2"
-            }},
-            {{
-                "source": "SBB_Bnh1_B2",
-                "target": "SBB_Bnh1_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB1",
-                "target": "SBB_Bnh1_QB2"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB2",
-                "target": "SBB_Bnh1_B3"
-            }},
-            {{
-                "source": "SBB_Bnh1_B3",
-                "target": "SBB_Bnh1_JB"
-            }},
-            {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "target": "B7",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B7",
+                "target": "B8"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_B4"
+                "source": "B10",
+                "target": "QB3"
             }},
             {{
-                "source": "SBB_Bnh2_B4",
-                "target": "SBB_Bnh2_JB"
+                "source": "QB3",
+                "target": "FBFF2"
             }},
             {{
-                "source": "SBB_Bnh2_JB",
+                "source": "FBFF2",
+                "target": "JB2"
+            }},
+            {{
+                "source": "JB2",
                 "target": "SBB"
             }}
         ]
@@ -1675,9 +1672,9 @@ prompt_branched = PromptTemplate(
     !!!WARNING END!!!
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.
+    Just start the JSON response directly.    
 
-    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Micro Learning Scenario.
 
     Chatbot (Tone of a teacher teaching student in great detail):"""
 )
@@ -1713,12 +1710,12 @@ prompt_branched_retry = PromptTemplate(
     Explain the material itself, Please provide detailed, informative explanations that align closely with the learning objectives and content areas provided. Each response should not just direct the learner but educate them by elaborating on the historical, technical, or practical details. Use simple and engaging language to enhance understanding and retention. Ensure that each explanation directly supports the learners' ability to meet the learning objectives by providing comprehensive insights into the topics discussed.
     !!!WARNING END!!!
 
+    
     ***WHAT TO DO***
     To accomplish Micro Learning Scenario creation, YOU will:
 
     1. Take the "Human Input" which represents the subject content topic or description for which the Micro Learning Scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Micro Learning Scenario.    
+    2. According to the "Learning Objectives" and "Content Areas" specified, you will create the Micro Learning Scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the Micro Learning Scenario content efficiently and logically.
     
     ***WHAT TO DO END***
@@ -1727,21 +1724,23 @@ prompt_branched_retry = PromptTemplate(
     The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
     Block types include:
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
-    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Pedagogical Context (Includes the list of Learning Objectives and Content Areas), 
+    Scenario's Context (An introduction about the topic and what suptopics user going to learn from and choose from in the later SimpleBranchingBlock), Feedback And Feedforward which is defined as
     (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
     To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
-    'JumpBlock' with title, ProceedToBlock
+    'SimpleBranchingBlock' with Title, branches (an array of choices/ branches representing a subtopic of the main topic. Each branch/ choice have their own port numbers. The port numbers are used to identify in the edges array, the interconnection of various blocks to the subject branch).  
+    'JumpBlock' with title, proceedToBlock
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Micro Learning Scenario: A type of educational, information providing and testing structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
-    used to give detailed explanations to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic having its own multiple or single TextBlocks, MediaBlocks and QuestionBlocks to train user. At the end of each branch, there will be a TestBlocks Array that encompasses a single or series of QuestionBlock/s to test user knowledge of the Branch, followed by the FeedbackAndFeedforwardBlock and after it a JumpBlock at the very end to move the user to the SimpleBranchingBlock for being able to begin and access another branch to learn.
+    Micro Learning Scenario: A type of educational, detailed explanations providing and testing structure in which specific instructs are given to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic focuses on one Learning Objective and each subtopic uses Content Carrier Blocks to train and dessiminate information to user. 
+    At the end of each branch, there will be a series of QuestionBlocks to test user knowledge of the subtopic, followed by the Feedback And Feedforward (PedagogicalBlock) and after it a mandatory JumpBlock at the very end 
+    will be used to allow the user to move to the SimpleBranchingBlock for being able to begin and access another branch to learn its contents.
     ***
     ***YOU WILL BE REWARD IF:
     All the TextBlocks in the branches, has valid step-by-step and detailed information of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
@@ -1750,8 +1749,12 @@ prompt_branched_retry = PromptTemplate(
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.
     The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
+    Thoughtfull Feedbacks and Feedforwards in the Feedback And Feedforward (PedagogicalBlock) should be made,
     so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    ***
+    ***YOU WILL BE PENALISED IF:
+    The TextBlocks has general information that you do NOT elaborate in detail.
+    The MediaBlocks has general information that you do NOT elaborate in detail.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -1762,13 +1765,12 @@ prompt_branched_retry = PromptTemplate(
     
     \nOverview structure of the Micro Learning Scenario\n
     ScenarioType
-    Learning_Objectives (PedagogicalBlock)
-    Content_Areas (PedagogicalBlock)
-    Welcome PedagogicalBlock (Welcome message to the Micro Learning scenario and proceedings.)
+    Pedagogical Context (PedagogicalBlock)
+    Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
+    MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -1804,20 +1806,38 @@ prompt_branched_retry = PromptTemplate(
             {{
                 "id": "B1",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+                "title": "Pedagogical Context",
+                "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
             }},
             {{
                 "id": "B2",
+                "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Micro Learning Scenario. You !Begin by giving welcome message to the scenario and introduce readers to the main topic, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
                 "type": "PedagogicalBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+                "title": "Scenario's Context",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "Purpose": "This MANDATORY block is where you !Begin by giving welcome message to the scenario and introduce readers to the scenario, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
-                "type": "PedagogicalBlock",
+                "id": "SBB",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "Branch 1": "(Insert Text Here)"
+                    }},
+                    {{
+                        "port": "2",
+                        "Branch 2": "(Insert Text Here)"
+                    }}
+                ]
+            }},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{
+                "id": "B3",
+                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
+                "type": "PedagogicalBlock",
+                "title": "Learning Objective",
                 "description": "(Insert Text Here)"
             }},
             {{
@@ -1835,40 +1855,11 @@ prompt_branched_retry = PromptTemplate(
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! ATLEAST 2 branches are NECESSARY. However, the upperlimit is related to subtopics in 'Human Input' and the number of 'Learning Objectives' given.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh1_B1",
-                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
-                "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "1. (Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_B2",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand. It is MANDATORY to include a number of multiple choices as probable answers, then also include what the correctAnswerIndex is, and give a message aka wrongAnswerMessage,in-case of incorrect answer a student chooses.",
                 "questionText": "(Insert Text Here)",
@@ -1880,7 +1871,7 @@ prompt_branched_retry = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_QB2",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -1891,42 +1882,48 @@ prompt_branched_retry = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_B3",
+                "id": "FBFF1",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
+                "id": "JB1",
                 "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
             }},
             {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B7",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "2. (Insert Text Here)"
+                "title": "Learning Objective",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B8",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B3",
+                "id": "B9",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB3",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -1937,13 +1934,14 @@ prompt_branched_retry = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B4",
+                "id": "FBFF2",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_JB",
+                "id": "JB2",
+                "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -1960,7 +1958,12 @@ prompt_branched_retry = PromptTemplate(
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "SBB"
+            }},
+            {{
+                "source": "SBB",
+                "target": "B3",
+                "sourceport": "1"
             }},
             {{
                 "source": "B3",
@@ -1972,64 +1975,55 @@ prompt_branched_retry = PromptTemplate(
             }},
             {{
                 "source": "B5",
+                "target": "QB1"
+            }},
+            {{
+                "source": "QB1",
+                "target": "QB2"
+            }},
+            {{
+                "source": "QB2",
+                "target": "FBFF1"
+            }},
+            {{
+                "source": "FBFF1",
+                "target": "JB1"
+            }},
+            {{
+                "source": "JB1",
                 "target": "SBB"
             }},
             {{
                 "source": "SBB",
-                "target": "SBB_Bnh1_B1",
-                "sourceport": "1"
-            }},
-            {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_B2"
-            }},
-            {{
-                "source": "SBB_Bnh1_B2",
-                "target": "SBB_Bnh1_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB1",
-                "target": "SBB_Bnh1_QB2"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB2",
-                "target": "SBB_Bnh1_B3"
-            }},
-            {{
-                "source": "SBB_Bnh1_B3",
-                "target": "SBB_Bnh1_JB"
-            }},
-            {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "target": "B7",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B7",
+                "target": "B8"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_B4"
+                "source": "B10",
+                "target": "QB3"
             }},
             {{
-                "source": "SBB_Bnh2_B4",
-                "target": "SBB_Bnh2_JB"
+                "source": "QB3",
+                "target": "FBFF2"
             }},
             {{
-                "source": "SBB_Bnh2_JB",
+                "source": "FBFF2",
+                "target": "JB2"
+            }},
+            {{
+                "source": "JB2",
                 "target": "SBB"
             }}
         ]
@@ -2052,9 +2046,9 @@ prompt_branched_retry = PromptTemplate(
     !!!WARNING END!!!
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.
+    Just start the JSON response directly.    
 
-    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Micro Learning Scenario.
     ]
 
     !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
@@ -2073,13 +2067,12 @@ prompt_branched_simplify = PromptTemplate(
     !!!WARNING END!!!
 
     !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
-
+    
     ***WHAT TO DO***
     To accomplish Micro Learning Scenario creation, YOU will:
 
     1. Take the "Human Input" which represents the subject content topic or description for which the Micro Learning Scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Micro Learning Scenario.    
+    2. According to the "Learning Objectives" and "Content Areas" specified, you will create the Micro Learning Scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the Micro Learning Scenario content efficiently and logically.
     
     'Human Input': {human_input};
@@ -2091,21 +2084,23 @@ prompt_branched_simplify = PromptTemplate(
     The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
     Block types include:
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
-    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Pedagogical Context (Includes the list of Learning Objectives and Content Areas), 
+    Scenario's Context (An introduction about the topic and what suptopics user going to learn from and choose from in the later SimpleBranchingBlock), Feedback And Feedforward which is defined as
     (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
     To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
-    'JumpBlock' with title, ProceedToBlock
+    'SimpleBranchingBlock' with Title, branches (an array of choices/ branches representing a subtopic of the main topic. Each branch/ choice have their own port numbers. The port numbers are used to identify in the edges array, the interconnection of various blocks to the subject branch).  
+    'JumpBlock' with title, proceedToBlock
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Micro Learning Scenario: A type of educational, information providing and testing structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
-    used to give detailed explanations to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic having its own multiple or single TextBlocks, MediaBlocks and QuestionBlocks to train user. At the end of each branch, there will be a TestBlocks Array that encompasses a single or series of QuestionBlock/s to test user knowledge of the Branch, followed by the FeedbackAndFeedforwardBlock and after it a JumpBlock at the very end to move the user to the SimpleBranchingBlock for being able to begin and access another branch to learn.
+    Micro Learning Scenario: A type of educational, detailed explanations providing and testing structure in which specific instructs are given to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic focuses on one Learning Objective and each subtopic uses Content Carrier Blocks to train and dessiminate information to user. 
+    At the end of each branch, there will be a series of QuestionBlocks to test user knowledge of the subtopic, followed by the Feedback And Feedforward (PedagogicalBlock) and after it a mandatory JumpBlock at the very end 
+    will be used to allow the user to move to the SimpleBranchingBlock for being able to begin and access another branch to learn its contents.
     ***
     ***YOU WILL BE REWARD IF:
     All the TextBlocks in the branches, has valid step-by-step and detailed information of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
@@ -2114,8 +2109,12 @@ prompt_branched_simplify = PromptTemplate(
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.
     The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
+    Thoughtfull Feedbacks and Feedforwards in the Feedback And Feedforward (PedagogicalBlock) should be made,
     so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    ***
+    ***YOU WILL BE PENALISED IF:
+    The TextBlocks has general information that you do NOT elaborate in detail.
+    The MediaBlocks has general information that you do NOT elaborate in detail.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -2126,13 +2125,12 @@ prompt_branched_simplify = PromptTemplate(
     
     \nOverview structure of the Micro Learning Scenario\n
     ScenarioType
-    Learning_Objectives (PedagogicalBlock)
-    Content_Areas (PedagogicalBlock)
-    Welcome PedagogicalBlock (Welcome message to the Micro Learning scenario and proceedings.)
+    Pedagogical Context (PedagogicalBlock)
+    Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
+    MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -2168,20 +2166,38 @@ prompt_branched_simplify = PromptTemplate(
             {{
                 "id": "B1",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+                "title": "Pedagogical Context",
+                "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
             }},
             {{
                 "id": "B2",
+                "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Micro Learning Scenario. You !Begin by giving welcome message to the scenario and introduce readers to the main topic, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
                 "type": "PedagogicalBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+                "title": "Scenario's Context",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "Purpose": "This MANDATORY block is where you !Begin by giving welcome message to the scenario and introduce readers to the scenario, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
-                "type": "PedagogicalBlock",
+                "id": "SBB",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "Branch 1": "(Insert Text Here)"
+                    }},
+                    {{
+                        "port": "2",
+                        "Branch 2": "(Insert Text Here)"
+                    }}
+                ]
+            }},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{
+                "id": "B3",
+                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
+                "type": "PedagogicalBlock",
+                "title": "Learning Objective",
                 "description": "(Insert Text Here)"
             }},
             {{
@@ -2199,40 +2215,11 @@ prompt_branched_simplify = PromptTemplate(
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! ATLEAST 2 branches are NECESSARY. However, the upperlimit is related to subtopics in 'Human Input' and the number of 'Learning Objectives' given.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh1_B1",
-                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
-                "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "1. (Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_B2",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand. It is MANDATORY to include a number of multiple choices as probable answers, then also include what the correctAnswerIndex is, and give a message aka wrongAnswerMessage,in-case of incorrect answer a student chooses.",
                 "questionText": "(Insert Text Here)",
@@ -2244,7 +2231,7 @@ prompt_branched_simplify = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_QB2",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -2255,42 +2242,48 @@ prompt_branched_simplify = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_B3",
+                "id": "FBFF1",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
+                "id": "JB1",
                 "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
             }},
             {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B7",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "2. (Insert Text Here)"
+                "title": "Learning Objective",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B8",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B3",
+                "id": "B9",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB3",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -2301,13 +2294,14 @@ prompt_branched_simplify = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B4",
+                "id": "FBFF2",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_JB",
+                "id": "JB2",
+                "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -2324,7 +2318,12 @@ prompt_branched_simplify = PromptTemplate(
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "SBB"
+            }},
+            {{
+                "source": "SBB",
+                "target": "B3",
+                "sourceport": "1"
             }},
             {{
                 "source": "B3",
@@ -2336,64 +2335,55 @@ prompt_branched_simplify = PromptTemplate(
             }},
             {{
                 "source": "B5",
+                "target": "QB1"
+            }},
+            {{
+                "source": "QB1",
+                "target": "QB2"
+            }},
+            {{
+                "source": "QB2",
+                "target": "FBFF1"
+            }},
+            {{
+                "source": "FBFF1",
+                "target": "JB1"
+            }},
+            {{
+                "source": "JB1",
                 "target": "SBB"
             }},
             {{
                 "source": "SBB",
-                "target": "SBB_Bnh1_B1",
-                "sourceport": "1"
-            }},
-            {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_B2"
-            }},
-            {{
-                "source": "SBB_Bnh1_B2",
-                "target": "SBB_Bnh1_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB1",
-                "target": "SBB_Bnh1_QB2"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB2",
-                "target": "SBB_Bnh1_B3"
-            }},
-            {{
-                "source": "SBB_Bnh1_B3",
-                "target": "SBB_Bnh1_JB"
-            }},
-            {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "target": "B7",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B7",
+                "target": "B8"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_B4"
+                "source": "B10",
+                "target": "QB3"
             }},
             {{
-                "source": "SBB_Bnh2_B4",
-                "target": "SBB_Bnh2_JB"
+                "source": "QB3",
+                "target": "FBFF2"
             }},
             {{
-                "source": "SBB_Bnh2_JB",
+                "source": "FBFF2",
+                "target": "JB2"
+            }},
+            {{
+                "source": "JB2",
                 "target": "SBB"
             }}
         ]
@@ -2416,9 +2406,9 @@ prompt_branched_simplify = PromptTemplate(
     !!!WARNING END!!!
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.
+    Just start the JSON response directly.    
 
-    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Micro Learning Scenario.
 
     Chatbot:"""
 )
@@ -2472,12 +2462,12 @@ prompt_branched_shadow_edges = PromptTemplate(
     Explain the material itself, Please provide detailed, informative explanations that align closely with the learning objectives and content areas provided. Each response should not just direct the learner but educate them by elaborating on the historical, technical, or practical details. Use simple and engaging language to enhance understanding and retention. Ensure that each explanation directly supports the learners' ability to meet the learning objectives by providing comprehensive insights into the topics discussed.
     !!!WARNING END!!!
 
+    
     ***WHAT TO DO***
     To accomplish Micro Learning Scenario creation, YOU will:
 
     1. Take the "Human Input" which represents the subject content topic or description for which the Micro Learning Scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Micro Learning Scenario.    
+    2. According to the "Learning Objectives" and "Content Areas" specified, you will create the Micro Learning Scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the Micro Learning Scenario content efficiently and logically.
     
     ***WHAT TO DO END***
@@ -2486,21 +2476,23 @@ prompt_branched_shadow_edges = PromptTemplate(
     The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
     Block types include:
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
-    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Pedagogical Context (Includes the list of Learning Objectives and Content Areas), 
+    Scenario's Context (An introduction about the topic and what suptopics user going to learn from and choose from in the later SimpleBranchingBlock), Feedback And Feedforward which is defined as
     (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
     To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
-    'JumpBlock' with title, ProceedToBlock
+    'SimpleBranchingBlock' with Title, branches (an array of choices/ branches representing a subtopic of the main topic. Each branch/ choice have their own port numbers. The port numbers are used to identify in the edges array, the interconnection of various blocks to the subject branch).  
+    'JumpBlock' with title, proceedToBlock
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Micro Learning Scenario: A type of educational, information providing and testing structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
-    used to give detailed explanations to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic having its own multiple or single TextBlocks, MediaBlocks and QuestionBlocks to train user. At the end of each branch, there will be a TestBlocks Array that encompasses a single or series of QuestionBlock/s to test user knowledge of the Branch, followed by the FeedbackAndFeedforwardBlock and after it a JumpBlock at the very end to move the user to the SimpleBranchingBlock for being able to begin and access another branch to learn.
+    Micro Learning Scenario: A type of educational, detailed explanations providing and testing structure in which specific instructs are given to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic focuses on one Learning Objective and each subtopic uses Content Carrier Blocks to train and dessiminate information to user. 
+    At the end of each branch, there will be a series of QuestionBlocks to test user knowledge of the subtopic, followed by the Feedback And Feedforward (PedagogicalBlock) and after it a mandatory JumpBlock at the very end 
+    will be used to allow the user to move to the SimpleBranchingBlock for being able to begin and access another branch to learn its contents.
     ***
     ***YOU WILL BE REWARD IF:
     All the TextBlocks in the branches, has valid step-by-step and detailed information of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
@@ -2509,8 +2501,12 @@ prompt_branched_shadow_edges = PromptTemplate(
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.
     The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
+    Thoughtfull Feedbacks and Feedforwards in the Feedback And Feedforward (PedagogicalBlock) should be made,
     so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    ***
+    ***YOU WILL BE PENALISED IF:
+    The TextBlocks has general information that you do NOT elaborate in detail.
+    The MediaBlocks has general information that you do NOT elaborate in detail.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -2521,13 +2517,12 @@ prompt_branched_shadow_edges = PromptTemplate(
     
     \nOverview structure of the Micro Learning Scenario\n
     ScenarioType
-    Learning_Objectives (PedagogicalBlock)
-    Content_Areas (PedagogicalBlock)
-    Welcome PedagogicalBlock (Welcome message to the Micro Learning scenario and proceedings.)
+    Pedagogical Context (PedagogicalBlock)
+    Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
+    MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -2563,20 +2558,38 @@ prompt_branched_shadow_edges = PromptTemplate(
             {{
                 "id": "B1",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+                "title": "Pedagogical Context",
+                "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
             }},
             {{
                 "id": "B2",
+                "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Micro Learning Scenario. You !Begin by giving welcome message to the scenario and introduce readers to the main topic, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
                 "type": "PedagogicalBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+                "title": "Scenario's Context",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "Purpose": "This MANDATORY block is where you !Begin by giving welcome message to the scenario and introduce readers to the scenario, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
-                "type": "PedagogicalBlock",
+                "id": "SBB",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "Branch 1": "(Insert Text Here)"
+                    }},
+                    {{
+                        "port": "2",
+                        "Branch 2": "(Insert Text Here)"
+                    }}
+                ]
+            }},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{
+                "id": "B3",
+                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
+                "type": "PedagogicalBlock",
+                "title": "Learning Objective",
                 "description": "(Insert Text Here)"
             }},
             {{
@@ -2594,40 +2607,11 @@ prompt_branched_shadow_edges = PromptTemplate(
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! ATLEAST 2 branches are NECESSARY. However, the upperlimit is related to subtopics in 'Human Input' and the number of 'Learning Objectives' given.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh1_B1",
-                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
-                "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "1. (Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_B2",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand. It is MANDATORY to include a number of multiple choices as probable answers, then also include what the correctAnswerIndex is, and give a message aka wrongAnswerMessage,in-case of incorrect answer a student chooses.",
                 "questionText": "(Insert Text Here)",
@@ -2639,7 +2623,7 @@ prompt_branched_shadow_edges = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_QB2",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -2650,42 +2634,48 @@ prompt_branched_shadow_edges = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_B3",
+                "id": "FBFF1",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
+                "id": "JB1",
                 "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
             }},
             {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B7",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "2. (Insert Text Here)"
+                "title": "Learning Objective",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B8",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B3",
+                "id": "B9",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB3",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -2696,13 +2686,14 @@ prompt_branched_shadow_edges = PromptTemplate(
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B4",
+                "id": "FBFF2",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_JB",
+                "id": "JB2",
+                "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -2719,7 +2710,12 @@ prompt_branched_shadow_edges = PromptTemplate(
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "SBB"
+            }},
+            {{
+                "source": "SBB",
+                "target": "B3",
+                "sourceport": "1"
             }},
             {{
                 "source": "B3",
@@ -2731,64 +2727,55 @@ prompt_branched_shadow_edges = PromptTemplate(
             }},
             {{
                 "source": "B5",
+                "target": "QB1"
+            }},
+            {{
+                "source": "QB1",
+                "target": "QB2"
+            }},
+            {{
+                "source": "QB2",
+                "target": "FBFF1"
+            }},
+            {{
+                "source": "FBFF1",
+                "target": "JB1"
+            }},
+            {{
+                "source": "JB1",
                 "target": "SBB"
             }},
             {{
                 "source": "SBB",
-                "target": "SBB_Bnh1_B1",
-                "sourceport": "1"
-            }},
-            {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_B2"
-            }},
-            {{
-                "source": "SBB_Bnh1_B2",
-                "target": "SBB_Bnh1_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB1",
-                "target": "SBB_Bnh1_QB2"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB2",
-                "target": "SBB_Bnh1_B3"
-            }},
-            {{
-                "source": "SBB_Bnh1_B3",
-                "target": "SBB_Bnh1_JB"
-            }},
-            {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "target": "B7",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B7",
+                "target": "B8"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_B4"
+                "source": "B10",
+                "target": "QB3"
             }},
             {{
-                "source": "SBB_Bnh2_B4",
-                "target": "SBB_Bnh2_JB"
+                "source": "QB3",
+                "target": "FBFF2"
             }},
             {{
-                "source": "SBB_Bnh2_JB",
+                "source": "FBFF2",
+                "target": "JB2"
+            }},
+            {{
+                "source": "JB2",
                 "target": "SBB"
             }}
         ]
@@ -2811,9 +2798,9 @@ prompt_branched_shadow_edges = PromptTemplate(
     !!!WARNING END!!!
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.
+    Just start the JSON response directly.    
 
-    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Micro Learning Scenario.
     ]]]
 
     Chatbot:"""
@@ -2893,12 +2880,12 @@ You will Continue like this in your generated response:
     Explain the material itself, Please provide detailed, informative explanations that align closely with the learning objectives and content areas provided. Each response should not just direct the learner but educate them by elaborating on the historical, technical, or practical details. Use simple and engaging language to enhance understanding and retention. Ensure that each explanation directly supports the learners' ability to meet the learning objectives by providing comprehensive insights into the topics discussed.
     !!!WARNING END!!!
 
+    
     ***WHAT TO DO***
     To accomplish Micro Learning Scenario creation, YOU will:
 
     1. Take the "Human Input" which represents the subject content topic or description for which the Micro Learning Scenario is to be formulated.
-    2. According to the "Learning Objectives" and "Content Areas" specified, you will 
-    create the Micro Learning Scenario.    
+    2. According to the "Learning Objectives" and "Content Areas" specified, you will create the Micro Learning Scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the Micro Learning Scenario content efficiently and logically.
     
     ***WHAT TO DO END***
@@ -2907,21 +2894,23 @@ You will Continue like this in your generated response:
     The Micro Learning Scenario are built using blocks, each having its own Mandatory parameters.
     Block types include:
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
-    dessiminate information regarding titles of Learning_Objectives, Learning_Objective, Content_Areas, Welcome, Feedback_And_Feedforward which is defined as
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay text tags used as hotspots on the Image Media for describing various places on the image
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
+    dessiminate information regarding titles of Pedagogical Context (Includes the list of Learning Objectives and Content Areas), 
+    Scenario's Context (An introduction about the topic and what suptopics user going to learn from and choose from in the later SimpleBranchingBlock), Feedback And Feedforward which is defined as
     (FEEDBACK: Is Evaluative or corrective information about a person's performance of a task, action, event, or process,  etc. which is used as a basis for improvement. 
     “You are good at this…”. “You can't do this because...”. Then also give:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and why. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Micro Learning Scenario.)
     To test, use QuestionBlock/s
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'SimpleBranchingBlock' with timer(optional), Title, ProceedToBranchList  
-    'JumpBlock' with title, ProceedToBlock
+    'SimpleBranchingBlock' with Title, branches (an array of choices/ branches representing a subtopic of the main topic. Each branch/ choice have their own port numbers. The port numbers are used to identify in the edges array, the interconnection of various blocks to the subject branch).  
+    'JumpBlock' with title, proceedToBlock
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
-    Micro Learning Scenario: A type of educational, information providing and testing structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
-    used to give detailed explanations to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic having its own multiple or single TextBlocks, MediaBlocks and QuestionBlocks to train user. At the end of each branch, there will be a TestBlocks Array that encompasses a single or series of QuestionBlock/s to test user knowledge of the Branch, followed by the FeedbackAndFeedforwardBlock and after it a JumpBlock at the very end to move the user to the SimpleBranchingBlock for being able to begin and access another branch to learn.
+    Micro Learning Scenario: A type of educational, detailed explanations providing and testing structure in which specific instructs are given to users based on "Learning Objectives", and "Content Areas". The SimpleBranchingBlock is used to divide the Micro Learning Scenario into subtopics. Each subtopic focuses on one Learning Objective and each subtopic uses Content Carrier Blocks to train and dessiminate information to user. 
+    At the end of each branch, there will be a series of QuestionBlocks to test user knowledge of the subtopic, followed by the Feedback And Feedforward (PedagogicalBlock) and after it a mandatory JumpBlock at the very end 
+    will be used to allow the user to move to the SimpleBranchingBlock for being able to begin and access another branch to learn its contents.
     ***
     ***YOU WILL BE REWARD IF:
     All the TextBlocks in the branches, has valid step-by-step and detailed information of the subject matters such that you are teaching a student. The TextBlocks are used to give complete information of a subject matter available to you and is there so that the user actually learns from. 
@@ -2930,8 +2919,12 @@ You will Continue like this in your generated response:
     information to user either using MediaBlocks or TextBlocks since both are classified as content carriers. However, the MediaBlock Priotization Value
     described in section 'MediaBlock Priotization Value' below, decides the number of TextBlocks or MediaBlocks used for conveying information.
     The Overlay tags in MediaBlocks should be extremely specific and detailed so user can get as much information as there is available, and learns like a student from you.
-    Thoughtfull Feedbacks and Feedforwards in the FeedbackAndFeedforwardBlock should be made,
+    Thoughtfull Feedbacks and Feedforwards in the Feedback And Feedforward (PedagogicalBlock) should be made,
     so the user uses critical thinking skills and is encouraged to think about how much of the Learning Objectives has been achieved.
+    ***
+    ***YOU WILL BE PENALISED IF:
+    The TextBlocks has general information that you do NOT elaborate in detail.
+    The MediaBlocks has general information that you do NOT elaborate in detail.
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -2942,13 +2935,12 @@ You will Continue like this in your generated response:
     
     \nOverview structure of the Micro Learning Scenario\n
     ScenarioType
-    Learning_Objectives (PedagogicalBlock)
-    Content_Areas (PedagogicalBlock)
-    Welcome PedagogicalBlock (Welcome message to the Micro Learning scenario and proceedings.)
+    Pedagogical Context (PedagogicalBlock)
+    Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
-    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective. However, atleast 2 branches are mandatory while the upper limit is entirely dependant on the 'Human Input', and 'Learning Objectives'.)
-    Branch 1,2,3... => each branch having with its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively elaborate the TextBlock's content), Intermediate QuestionBlock/s after most important Media or Text Blocks, a single or series of QuestionBlock/s, FeedbackAndFeedforwardBlock (PedagogicalBlock), JumpBlock
+    MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
     #####
@@ -2984,20 +2976,38 @@ You will Continue like this in your generated response:
             {{
                 "id": "B1",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objectives",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
+                "title": "Pedagogical Context",
+                "description": "Learning Objectives: 1. (Insert Text Here); 2. (Insert Text Here) and so on. Content Areas: 1. (Insert Text Here); 2. (Insert Text Here) and so on."
             }},
             {{
                 "id": "B2",
+                "Purpose": "This MANDATORY block is where you !Give Context, and Setting of the Micro Learning Scenario. You !Begin by giving welcome message to the scenario and introduce readers to the main topic, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
                 "type": "PedagogicalBlock",
-                "title": "Content_Areas",
-                "description": "1. (Insert Text Here); 2. (Insert Text Here); 3. (Insert Text Here) and so on"
+                "title": "Scenario's Context",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "Purpose": "This MANDATORY block is where you !Begin by giving welcome message to the scenario and introduce readers to the scenario, especially, in regards to the subtopics in this Micro Learning devision of the main topic segregated according to each Learning Objective",
-                "type": "PedagogicalBlock",
+                "id": "SBB",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
+                "branches": [
+                    {{
+                        "port": "1",
+                        "Branch 1": "(Insert Text Here)"
+                    }},
+                    {{
+                        "port": "2",
+                        "Branch 2": "(Insert Text Here)"
+                    }}
+                ]
+            }},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{
+                "id": "B3",
+                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
+                "type": "PedagogicalBlock",
+                "title": "Learning Objective",
                 "description": "(Insert Text Here)"
             }},
             {{
@@ -3015,40 +3025,11 @@ You will Continue like this in your generated response:
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! ATLEAST 2 branches are NECESSARY. However, the upperlimit is related to subtopics in 'Human Input' and the number of 'Learning Objectives' given.",
-                "type": "SimpleBranchingBlock",
-                "title": "(Insert Text Here)",
-                "branches": [
-                    {{
-                        "port": "1",
-                        "SBB_Bnh1": "(Insert Text Here)"
-                    }},
-                    {{
-                        "port": "2",
-                        "SBB_Bnh2": "(Insert Text Here)"
-                    }}
-                ]
-            }},
-            {{
-                "id": "SBB_Bnh1_B1",
-                "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
-                "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "1. (Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_B2",
-                "type": "TextBlock",
-                "title": "(Insert Text Here)",
-                "description": "(Insert Text Here)"
-            }},
-            {{
-                "id": "SBB_Bnh1_QB1",
+                "id": "QB1",
                 "type": "QuestionBlock",
                 "Purpose": "This OPTIONAL block is where you !Test the student's knowledge of the specific Text or Media Blocks information it comes after, in regards to their information content. The QuestionBlocks can be single or multiple depending on the subject content and importance at hand. It is MANDATORY to include a number of multiple choices as probable answers, then also include what the correctAnswerIndex is, and give a message aka wrongAnswerMessage,in-case of incorrect answer a student chooses.",
                 "questionText": "(Insert Text Here)",
@@ -3060,7 +3041,7 @@ You will Continue like this in your generated response:
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_QB2",
+                "id": "QB2",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -3071,42 +3052,48 @@ You will Continue like this in your generated response:
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_B3",
+                "id": "FBFF1",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh1_JB",
+                "id": "JB1",
                 "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
             }},
             {{
-                "id": "SBB_Bnh2_B1",
+                "id": "B7",
                 "type": "PedagogicalBlock",
-                "title": "Learning_Objective",
-                "description": "2. (Insert Text Here)"
+                "title": "Learning Objective",
+                "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B2",
+                "id": "B8",
                 "type": "TextBlock",
                 "title": "(Insert Text Here)",
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B3",
+                "id": "B9",
+                "type": "TextBlock",
+                "title": "(Insert Text Here)",
+                "description": "(Insert Text Here)"
+            }},
+            {{
+                "id": "B10",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here)"
+                    "(Insert Text Here, Multiple Overlay Tags are preffered in all MediaBlocks)"
                 ]
             }},
             {{
-                "id": "SBB_Bnh2_QB1",
+                "id": "QB3",
                 "type": "QuestionBlock",
                 "questionText": "(Insert Text Here)",
                 "multipleChoiceAnswers": [
@@ -3117,13 +3104,14 @@ You will Continue like this in your generated response:
                 "wrongAnswerMessage": "(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_B4",
+                "id": "FBFF2",
                 "type": "PedagogicalBlock",
-                "title": "Feedback_And_Feedforward",
+                "title": "Feedback And Feedforward",
                 "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
             }},
             {{
-                "id": "SBB_Bnh2_JB",
+                "id": "JB2",
+                "Purpose": "Mandatory at the end of each Branch",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -3140,7 +3128,12 @@ You will Continue like this in your generated response:
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "SBB"
+            }},
+            {{
+                "source": "SBB",
+                "target": "B3",
+                "sourceport": "1"
             }},
             {{
                 "source": "B3",
@@ -3152,64 +3145,55 @@ You will Continue like this in your generated response:
             }},
             {{
                 "source": "B5",
+                "target": "QB1"
+            }},
+            {{
+                "source": "QB1",
+                "target": "QB2"
+            }},
+            {{
+                "source": "QB2",
+                "target": "FBFF1"
+            }},
+            {{
+                "source": "FBFF1",
+                "target": "JB1"
+            }},
+            {{
+                "source": "JB1",
                 "target": "SBB"
             }},
             {{
                 "source": "SBB",
-                "target": "SBB_Bnh1_B1",
-                "sourceport": "1"
-            }},
-            {{
-                "source": "SBB_Bnh1_B1",
-                "target": "SBB_Bnh1_B2"
-            }},
-            {{
-                "source": "SBB_Bnh1_B2",
-                "target": "SBB_Bnh1_QB1"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB1",
-                "target": "SBB_Bnh1_QB2"
-            }},
-            {{
-                "source": "SBB_Bnh1_QB2",
-                "target": "SBB_Bnh1_B3"
-            }},
-            {{
-                "source": "SBB_Bnh1_B3",
-                "target": "SBB_Bnh1_JB"
-            }},
-            {{
-                "source": "SBB_Bnh1_JB",
-                "target": "SBB"
-            }},
-            {{
-                "source": "SBB",
-                "target": "SBB_Bnh2_B1",
+                "target": "B7",
                 "sourceport": "2"
             }},
             {{
-                "source": "SBB_Bnh2_B1",
-                "target": "SBB_Bnh2_B2"
+                "source": "B7",
+                "target": "B8"
             }},
             {{
-                "source": "SBB_Bnh2_B2",
-                "target": "SBB_Bnh2_B3"
+                "source": "B8",
+                "target": "B9"
             }},
             {{
-                "source": "SBB_Bnh2_B3",
-                "target": "SBB_Bnh2_QB1"
+                "source": "B9",
+                "target": "B10"
             }},
             {{
-                "source": "SBB_Bnh2_QB1",
-                "target": "SBB_Bnh2_B4"
+                "source": "B10",
+                "target": "QB3"
             }},
             {{
-                "source": "SBB_Bnh2_B4",
-                "target": "SBB_Bnh2_JB"
+                "source": "QB3",
+                "target": "FBFF2"
             }},
             {{
-                "source": "SBB_Bnh2_JB",
+                "source": "FBFF2",
+                "target": "JB2"
+            }},
+            {{
+                "source": "JB2",
                 "target": "SBB"
             }}
         ]
@@ -3232,9 +3216,9 @@ You will Continue like this in your generated response:
     !!!WARNING END!!!
 
     DO NOT START YOUR RESPONSE WITH ```json and END WITH ``` 
-    Just start the JSON response directly.
+    Just start the JSON response directly.    
 
-    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
+    The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Micro Learning Scenario.
     ]]]
 
     Chatbot:"""
