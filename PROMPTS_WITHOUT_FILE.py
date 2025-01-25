@@ -70,9 +70,9 @@ prompt_linear = PromptTemplate(
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
     (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. 
     Encouraging Remarks in reflective detailed tone with emphasis on detailed repurcussions of the topic learnt and its significance. Then also give:
@@ -316,9 +316,9 @@ prompt_linear_retry = PromptTemplate(
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
     (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. 
     Encouraging Remarks in reflective detailed tone with emphasis on detailed repurcussions of the topic learnt and its significance. Then also give:
@@ -551,9 +551,9 @@ prompt_linear_simplify = PromptTemplate(
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
     (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. 
     Encouraging Remarks in reflective detailed tone with emphasis on detailed repurcussions of the topic learnt and its significance. Then also give:
@@ -817,9 +817,9 @@ prompt_linear_shadow_edges = PromptTemplate(
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
     (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. 
     Encouraging Remarks in reflective detailed tone with emphasis on detailed repurcussions of the topic learnt and its significance. Then also give:
@@ -1109,9 +1109,9 @@ You will Continue like this in your generated response:
     The Linear Scenarios are built using blocks, each having its own parameters.
     Block types include: 
     'StartBlock' initiates the scenario. 
-    'TextBlock' with timer(optional), title, and description
-    'MediaBlock' with timer(optional), title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'PedagogicalBlock' with timer(optional), title, and description. The PedagogicalBlock is used to
+    'TextBlock' with title, and description
+    'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning_Objectives, Content_Areas, Welcome, Self_Assessment, Feedback_And_Feedforward which is defined as
     (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. 
     Encouraging Remarks in reflective detailed tone with emphasis on detailed repurcussions of the topic learnt and its significance. Then also give:
