@@ -46,7 +46,7 @@ log_format = '%(asctime)s - %(levelname)s - %(message)s'
 logger = logging
 logger.basicConfig(level= logging.DEBUG, format= log_format)
 
-def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file):
+async def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file):
     logger.info(f"file is: {file}",)
     
     filename_without_extension = filename.rsplit('.', 1)[0].lower()
@@ -199,7 +199,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         try:
-            file.save(temp_path)
+            await file.save(temp_path)
             loader = CSVLoader(file_path=temp_path)
             data = loader.load()
             raw_text = raw_text.join(document.page_content + '\n\n' for document in data)
@@ -213,7 +213,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         try:
-            file.save(temp_path)
+            await file.save(temp_path)
             loader = UnstructuredExcelLoader(temp_path)
             data = loader.load()
             raw_text = raw_text.join(document.page_content + '\n\n' for document in data)
@@ -343,7 +343,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
             # langchain unstructuredworddoc method
             temp_path = os.path.join(f"{filename}{session_var}")
             file.seek(0)
-            file.save(temp_path)
+            await file.save(temp_path)
             loader = UnstructuredPowerPointLoader(temp_path,mode='elements')
             data = loader.load()
             logger.info(f"data:\n{data}",)
@@ -481,7 +481,7 @@ def RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, exte
         temp_path = os.path.join(f"{filename}{session_var}")
         file.seek(0)
         try:
-            file.save(temp_path)
+            await file.save(temp_path)
             loader = TextLoader(temp_path)
             data = loader.load()
             raw_text = raw_text.join(document.page_content for document in data)
@@ -625,7 +625,7 @@ def REMOVE_DUP_IMG(image_dir):
 
     logger.info(f"Duplicate removal complete. Removed files: {duplicates}",)
 
-def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, language):
+async def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, language):
     logger.info("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
     docs = docsearch.similarity_search(query, k=2)
     docs_main = " ".join([d.page_content for d in docs])
@@ -640,7 +640,7 @@ def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, language):
     
     logger.info("response_LO_CA started")
 
-    response_LO_CA = chain.invoke({"input_documents": docs_main,"human_input": query, "language":language})
+    response_LO_CA = await chain.ainvoke({"input_documents": docs_main,"human_input": query, "language":language})
 
     logger.info(f"{response_LO_CA}")
     logger.info("response_LO_CA ended")
@@ -948,7 +948,7 @@ def is_json_parseable(json_string):
         return False, str(e)
     return True, json_object
 
-def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings, language, mpv):
+async def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, model_type, model_name,embeddings, language, mpv):
     logger.info("TALK_WITH_RAG Initiated!")
     # if we are getting docs_main already from the process_data flask route then comment, else
     # UNcomment if you want more similarity_searching based on Learning obj and content areas!
@@ -1019,7 +1019,7 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
             chain = PROMPTS.prompt_linear | llm
             # chain = LLMChain(prompt=PROMPTS.prompt_linear,llm=llm)   
 
-        response = chain.invoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
+        response = await chain.ainvoke({"input_documents": docs_main,"human_input": query,"content_areas": content_areas,"learning_obj": learning_obj, "language":language, "mpv":mpv, "mpv_string":mpv_string})
         
         is_valid, result = is_json_parseable(response.content)
         countd=1
