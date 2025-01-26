@@ -31,9 +31,7 @@ faiss-cpu==1.9.0.post1
 filelock==3.16.1
 filetype==1.2.0
 flask==3.1.0
-Flask-BasicAuth==0.2.0
 Flask-Caching==2.3.0
-Flask-Cors==5.0.0
 frozenlist==1.5.0
 fsspec==2024.10.0
 gevent==24.11.1
@@ -49,12 +47,16 @@ grpcio==1.68.1
 grpcio-status==1.68.1
 gunicorn==23.0.0
 h11==0.14.0
+h2==4.1.0
+hpack==4.1.0
 html5lib==1.1
 httpcore==1.0.7
 httplib2==0.22.0
 httpx==0.27.2
 httpx-sse==0.4.0
 huggingface-hub==0.26.5
+hypercorn==0.17.3
+hyperframe==6.1.0
 idna==3.10
 ImageHash==4.3.1
 importlib-metadata==8.5.0
@@ -93,6 +95,7 @@ packaging==24.2
 pandas==2.2.2
 paragraphs==1.0.1
 pillow==11.0.0
+priority==2.0.0
 propcache==0.2.1
 proto-plus==1.25.0
 protobuf==5.29.1
@@ -116,6 +119,8 @@ python-pptx==1.0.2
 pytz==2024.2
 pywavelets==1.6.0
 PyYAML==6.0.2
+quart==0.20.0
+quart-cors==0.8.0
 rapidfuzz==3.10.1
 referencing==0.35.1
 regex==2024.11.6
@@ -129,9 +134,11 @@ six==1.17.0
 sniffio==1.3.1
 soupsieve==2.6
 SQLAlchemy==2.0.36
+taskgroup==0.2.2
 tenacity==9.0.0
 tiktoken==0.8.0
 tokenizers==0.21.0
+tomli==2.2.1
 tqdm==4.67.1
 typing-extensions==4.12.2
 typing-inspect==0.9.0
@@ -145,6 +152,7 @@ validators==0.34.0
 webencodings==0.5.1
 werkzeug==3.1.3
 wrapt==1.17.0
+wsproto==1.2.0
 XlsxWriter==3.2.0
 yarl==1.18.3
 zipp==3.21.0
