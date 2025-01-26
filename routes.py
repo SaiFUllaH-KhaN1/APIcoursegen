@@ -1,6 +1,7 @@
 # from gevent import monkey
 # monkey.patch_all()
-from flask import g, Flask, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
+from quart import abort, current_app, g, Quart, render_template, request, Response, jsonify, session, send_from_directory, flash, redirect, url_for
+from secrets import compare_digest
 from prompt_logics import logger
 import jwt
 from langchain_community.vectorstores import FAISS
@@ -17,7 +18,6 @@ from werkzeug.datastructures import FileStorage
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from langchain_community.document_loaders import YoutubeLoader
-from flask_basicauth import BasicAuth
 import base64
 import time
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
@@ -25,7 +25,7 @@ import google.generativeai as genai
 from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask_cors import CORS
+from quart_cors import cors
 from functools import wraps
 import io
 import openai
@@ -40,7 +40,7 @@ import asyncio
 # from gevent.pywsgi import WSGIServer # in local development use, for gevent in local served
 # from langchain_community.chat_models import ChatLiteLLM
 
-load_dotenv(dotenv_path="HUGGINGFACEHUB_API_TOKEN.env")
+load_dotenv(dotenv_path="E:\downloads\THINGLINK\dante\HUGGINGFACEHUB_API_TOKEN.env")
 
 openai.api_type = os.getenv("OPENAI_API_TYPE")
 openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
@@ -51,7 +51,7 @@ os.environ["GEMINI_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 # genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
 
-app = Flask(__name__)
+app = Quart(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
 
 
@@ -68,7 +68,22 @@ else:
 app.config['BASIC_AUTH_REALM'] = 'realm'
 app.config['BASIC_AUTH_USERNAME'] = os.getenv('BASIC_AUTH_USERNAME')
 app.config['BASIC_AUTH_PASSWORD'] = os.getenv('BASIC_AUTH_PASSWORD')
-basic_auth = BasicAuth(app)
+
+def auth_required(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        auth = request.authorization
+        if (
+            auth is not None and 
+            auth.type == "basic" and
+            auth.username == current_app.config["BASIC_AUTH_USERNAME"] and
+            compare_digest(auth.password, current_app.config["BASIC_AUTH_PASSWORD"])
+        ):
+            return await func(*args, **kwargs)
+        else:
+            abort(401)
+
+    return wrapper
 
 app.config['CACHE_TYPE'] = 'FileSystemCache' 
 app.config['CACHE_DIR'] = 'cache' # path to server cache folder
@@ -87,20 +102,23 @@ allowed_origins = [
 ]
 
 # Configure CORS for multiple routes with specific settings
-cors = CORS(app, supports_credentials=True, resources={
-    r"/process_data": {"origins": allowed_origins},
-    r"/process_data_without_file": {"origins": allowed_origins},
-    r"/decide": {"origins": allowed_origins},
-    r"/decide_without_file": {"origins": allowed_origins},
-    r"/generate_course": {"origins": allowed_origins},
-    r"/generate_course_without_file": {"origins": allowed_origins},
-    r"/find_images": {"origins": allowed_origins}
-})
+cors = cors(app, allow_credentials=True, allow_origin=allowed_origins)
+
+# for Flask-Cors
+# cors = CORS(app, supports_credentials=True, resources={
+#     r"/process_data": {"origins": allowed_origins},
+#     r"/process_data_without_file": {"origins": allowed_origins},
+#     r"/decide": {"origins": allowed_origins},
+#     r"/decide_without_file": {"origins": allowed_origins},
+#     r"/generate_course": {"origins": allowed_origins},
+#     r"/generate_course_without_file": {"origins": allowed_origins},
+#     r"/find_images": {"origins": allowed_origins}
+# })
 
 ### TOKEN DECORATORS ###
 def token_required(f):
     @wraps(f)
-    def decorated(*args, **kwargs):
+    async def decorated(*args, **kwargs):
         auth_header = request.headers.get('Authorization')
         if not auth_header or 'Bearer ' not in auth_header:
             logger.critical("message: Missing or malformed token")
@@ -121,7 +139,10 @@ def token_required(f):
             logger.critical(f"message: Invalid token: {str(e)}")
             return jsonify({"message": "Error for Token : " + str(e)}), 401
         
-        return f(*args, **kwargs)
+        if asyncio.iscoroutinefunction(f):
+            return await f(*args, **kwargs)
+        else:
+            return f(*args, **kwargs)
     return decorated
 
 
@@ -146,8 +167,8 @@ def delete_indexes():
             logger.info(f"Deleting pdf directory: {dir_path}")
             shutil.rmtree(dir_path)
 
+@auth_required
 @app.route("/cron", methods=['POST'])
-@basic_auth.required
 def cron():
     delete_indexes()
     logger.info("Deleted FAISS index")
@@ -191,7 +212,7 @@ else:
 
 
 @app.route("/process_data", methods=["GET", "POST"])
-def process_data():
+async def process_data():
 
     if request.method == 'POST':
         start_time = time.time() # Timer starts at the Post
@@ -200,12 +221,15 @@ def process_data():
         session_var = str(uuid.uuid4())
         
         # getting requests from frontend
+        args = request.args
+
+        model_type = args.get('model', 'azure') # to set default model
+        model_name = args.get('modelName', 'gpt') # to set default model name
+        model_local_embed = args.get('localEmbed', 'no') # to set default model state
         
-        model_type = request.args.get('model', 'azure') # to set default model
-        model_name = request.args.get('modelName', 'gpt') # to set default model name
-        model_local_embed = request.args.get('localEmbed', 'no') # to set default model state
-        
-        user_agents = request.headers.get('User-Agent') # a user agent of user from frontend if frontend allows
+        headers = request.headers
+
+        user_agents = headers['User-Agent'] # a user agent of user from frontend if frontend allows
         if not user_agents:
             user_agents = [
                         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
@@ -218,12 +242,15 @@ def process_data():
         else:
             logger.info(f"user_agent from client: {user_agents}")
         
-        prompt = request.form.get("prompt")
-        url_doc = request.form.get('url_doc')
-        f = request.files.getlist('file')
+        form = await request.form
+        prompt = form.get("prompt")
+        url_doc = form.get("url_doc")
+
+        files = await request.files
+        f = files.getlist('file')
         logger.info("There is a File")
 
-        language = request.form.get("language","english").lower()
+        language = form.get('language', 'english').lower()
         allowed_languages = ["english","finnish","spanish","german","italian","french"]
 
         if language not in allowed_languages:
@@ -331,9 +358,9 @@ def process_data():
             temp_pdf_file = os.path.join(f"pdf_dir{session_var}", f"{session_var}{filename}")
             if extension =="mp3":
                 logger.info("temp_path_audio",temp_path_audio)
-                file.save(temp_path_audio)
+                await file.save(temp_path_audio)
             elif extension =="pdf" and f'extracted_content{session_var}.pdf' not in filename:
-                file.save(temp_pdf_file)
+                await file.save(temp_pdf_file)
             ## AUDIO CHECK END    
 
             file_content = io.BytesIO(file.read())
@@ -346,7 +373,7 @@ def process_data():
                     embeddings = AzureOpenAIEmbeddings(azure_deployment="text-embedding-ada-002")
 
                 logger.info(f"Using embeddings of {embeddings}")
-                docsearch = LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file)
+                docsearch = await LCD.RAG(file_content,embeddings,file,session_var, temp_path_audio,filename, extension, language, temp_pdf_file)
                 if os.path.exists(f"pdf_dir{session_var}"):
                     shutil.rmtree(f"pdf_dir{session_var}")
             except Exception as e:
@@ -433,17 +460,18 @@ def process_data_without_file():
 
 @app.route("/decide", methods=["GET", "POST"])
 @token_required
-def decide():
+async def decide():
 
     user_id = g.user_uuid
-    
     if request.method == 'POST':
-        scenario = request.form.get('scenario')
+        form = await request.form
+        scenario = form.get('scenario')
         logger.info(f"Scenario type:{scenario}")
 
-        model_type = request.args.get('model', 'azure') # to set default model
-        model_name = request.args.get('modelName', 'gpt') # to set default model name
-        model_local_embed = request.args.get('localEmbed', 'no') # to set default model state
+        args = request.args
+        model_type = args.get('model', 'azure') # to set default model
+        model_name = args.get('modelName', 'gpt') # to set default model name
+        model_local_embed = args.get('localEmbed', 'no') # to set default model state
 
         start_time = time.time() # Timer starts at the Post
 
@@ -476,7 +504,7 @@ def decide():
 
                 load_docsearch = FAISS.load_local(f"faiss_index_{user_id}",embeddings, allow_dangerous_deserialization=True)
 
-                response_LO_CA = LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type, language)
+                response_LO_CA = await LCD.PRODUCE_LEARNING_OBJ_COURSE(prompt, load_docsearch, llm, model_type, language)
 
 
                 cache.set(f"scenario_{user_id}", scenario,timeout=0)
@@ -560,29 +588,31 @@ def is_json_parseable(json_string):
 
 @app.route("/generate_course", methods=["GET", "POST"])
 @token_required
-def generate_course():
+async def generate_course():
 
     user_id = g.user_uuid
     if request.method == 'POST':
-        learning_obj = request.form.get("learning_obj")
+        form = await request.form
+        learning_obj = form.get("learning_obj")
         cache.set(f"learning_obj_{user_id}", learning_obj, timeout=0)
-        content_areas = request.form.get("content_areas")
+        content_areas = form.get("content_areas")
         cache.set(f"content_areas_{user_id}", content_areas, timeout=0)
 
-        model_type = request.args.get('model', 'azure') # to set default model
-        model_name = request.args.get('modelName', 'gpt') # to set default model name
-        model_local_embed = request.args.get('localEmbed', 'no') # to set default model state
-        summarize_images = request.args.get('summarizeImages', 'on') # to set default value name
-        temp = request.args.get('temp','0.1')
+        args = request.args
+        model_type = args.get('model', 'azure') # to set default model
+        model_name = args.get('modelName', 'gpt') # to set default model name
+        model_local_embed = args.get('localEmbed', 'no') # to set default model state
+        summarize_images = args.get('summarizeImages', 'on') # to set default value name
+        temp = args.get('temp','0.1')
         logger.info(f"temp selected!: {temp}")
 
         # the mpv is declared two times in "argument" and then "form" getting sequence. So, if user using form
         # sets a value, the mpv of the form variable will priortize over the argument value
         mpv = None
-        if request.form.get("mpv") is not None:
-            mpv = request.form.get("mpv")
+        if form.get("mpv") is not None:
+            mpv = form.get("mpv")
         else:
-            mpv = request.args.get('mpv', '2') # to set default value to balanced mpv
+            mpv = args.get('mpv', '2') # to set default value to balanced mpv
         logger.info(f"mpv is: {mpv}")
         if mpv is not None:
             mpv = int(mpv)  # Convert mpv to an integer
@@ -644,7 +674,7 @@ def generate_course():
                 start_TALK_WITH_RAG_time = time.time()
 
 
-                response, scenario = LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language, mpv)
+                response, scenario = await LCD.TALK_WITH_RAG(scenario, content_areas, learning_obj, prompt, docs_main, llm, model_type, model_name,embeddings, language, mpv)
                 
                 end_TALK_WITH_RAG_time = time.time()
                 execution_TALK_WITH_RAG_time = end_TALK_WITH_RAG_time - start_TALK_WITH_RAG_time
