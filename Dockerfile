@@ -12,6 +12,6 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["hypercorn", "--workers=5", "--timeout", "550", "routes:app", "--bind", "0.0.0.0:5000"]
+CMD ["gunicorn", "--worker-class=uvicorn.workers.UvicornWorker","--workers=5", "--timeout", "550", "routes:app", "--bind", "0.0.0.0:5000"]
 # Old command 18 Nov:
 #CMD ["gunicorn", "--workers=4", "--timeout", "600", "routes:app", "--bind", "0.0.0.0:5000"]
