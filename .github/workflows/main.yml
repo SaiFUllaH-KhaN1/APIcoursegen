@@ -5,10 +5,12 @@ on:
     branches:
       - main  
       - MPV
+      - main_quart
   pull_request:
     branches:
       - main  
       - MPV
+      - main_quart
 
 jobs:
   build-and-push:
