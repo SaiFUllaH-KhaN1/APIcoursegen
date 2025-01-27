@@ -79,7 +79,6 @@ prompt_linear = PromptTemplate(
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and explain why? in the context of feedback. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Linear Scenario.)
     Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Linear Scenario: A type of educational structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
@@ -111,7 +110,6 @@ prompt_linear = PromptTemplate(
     QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to. Give atleast 5 QuestionBlocks or mORE. The previous TextBlocks should have enough content to be covered in these 5 QuestionBlocks named as QB1,QB2 till QB5. Number of Question Blocks can be even higher depending on the course content.)
     Feedback_And_Feedforward Block (PedagogicalBlock)
     Self_Assessment Block (PedagogicalBlock)
-    GoalBlock
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -151,13 +149,13 @@ prompt_linear = PromptTemplate(
         {{
             "id": "B1",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
+            "title": "Learning Objectives",
             "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
+            "title": "Content Areas",
             "description": "1. (Insert Text Here) and so on"
         }},
         {{
@@ -200,20 +198,14 @@ prompt_linear = PromptTemplate(
         {{
           "id": "FB",
           "type": "PedagogicalBlock",
-          "title": "Feedback_And_Feedforward",
+          "title": "Feedback And Feedforward",
           "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
           "id": "SA",
           "type": "PedagogicalBlock",
-          "title": "Self_Assessment",
+          "title": "Self Assessment",
           "description": "Self Assessment=(Insert Text Here)"
-        }},
-        {{
-          "id": "GB",
-          "type": "GoalBlock",
-          "title": "Congratulations!",
-          "score": 3
         }}
         ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
         "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
@@ -248,10 +240,6 @@ prompt_linear = PromptTemplate(
         {{
           "source": "FB",
           "target": "SA"
-        }},
-        {{
-          "source": "SA",
-          "target": "GB"
         }}
     ]
 }}
@@ -325,7 +313,6 @@ prompt_linear_retry = PromptTemplate(
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and explain why? in the context of feedback. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Linear Scenario.)
     Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Linear Scenario: A type of educational structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
@@ -357,7 +344,6 @@ prompt_linear_retry = PromptTemplate(
     QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to. Give atleast 5 QuestionBlocks or mORE. The previous TextBlocks should have enough content to be covered in these 5 QuestionBlocks named as QB1,QB2 till QB5. Number of Question Blocks can be even higher depending on the course content.)
     Feedback_And_Feedforward Block (PedagogicalBlock)
     Self_Assessment Block (PedagogicalBlock)
-    GoalBlock
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -397,13 +383,13 @@ prompt_linear_retry = PromptTemplate(
         {{
             "id": "B1",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
+            "title": "Learning Objectives",
             "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
+            "title": "Content Areas",
             "description": "1. (Insert Text Here) and so on"
         }},
         {{
@@ -428,7 +414,7 @@ prompt_linear_retry = PromptTemplate(
           "mediaType": "Image",
           "description": "(Insert Text Here)",
           "overlayTags": [
-           "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+            "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
           ]
         }},
         {{
@@ -446,20 +432,14 @@ prompt_linear_retry = PromptTemplate(
         {{
           "id": "FB",
           "type": "PedagogicalBlock",
-          "title": "Feedback_And_Feedforward",
+          "title": "Feedback And Feedforward",
           "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
           "id": "SA",
           "type": "PedagogicalBlock",
-          "title": "Self_Assessment",
+          "title": "Self Assessment",
           "description": "Self Assessment=(Insert Text Here)"
-        }},
-        {{
-          "id": "GB",
-          "type": "GoalBlock",
-          "title": "Congratulations!",
-          "score": 3
         }}
         ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
         "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
@@ -494,10 +474,6 @@ prompt_linear_retry = PromptTemplate(
         {{
           "source": "FB",
           "target": "SA"
-        }},
-        {{
-          "source": "SA",
-          "target": "GB"
         }}
     ]
 }}
@@ -560,7 +536,6 @@ prompt_linear_simplify = PromptTemplate(
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and explain why? in the context of feedback. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Linear Scenario.)
     Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Linear Scenario: A type of educational structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
@@ -592,7 +567,6 @@ prompt_linear_simplify = PromptTemplate(
     QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to. Give atleast 5 QuestionBlocks or mORE. The previous TextBlocks should have enough content to be covered in these 5 QuestionBlocks named as QB1,QB2 till QB5. Number of Question Blocks can be even higher depending on the course content.)
     Feedback_And_Feedforward Block (PedagogicalBlock)
     Self_Assessment Block (PedagogicalBlock)
-    GoalBlock
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -632,13 +606,13 @@ prompt_linear_simplify = PromptTemplate(
         {{
             "id": "B1",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
+            "title": "Learning Objectives",
             "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
+            "title": "Content Areas",
             "description": "1. (Insert Text Here) and so on"
         }},
         {{
@@ -681,20 +655,14 @@ prompt_linear_simplify = PromptTemplate(
         {{
           "id": "FB",
           "type": "PedagogicalBlock",
-          "title": "Feedback_And_Feedforward",
+          "title": "Feedback And Feedforward",
           "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
           "id": "SA",
           "type": "PedagogicalBlock",
-          "title": "Self_Assessment",
+          "title": "Self Assessment",
           "description": "Self Assessment=(Insert Text Here)"
-        }},
-        {{
-          "id": "GB",
-          "type": "GoalBlock",
-          "title": "Congratulations!",
-          "score": 3
         }}
         ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
         "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
@@ -729,10 +697,6 @@ prompt_linear_simplify = PromptTemplate(
         {{
           "source": "FB",
           "target": "SA"
-        }},
-        {{
-          "source": "SA",
-          "target": "GB"
         }}
     ]
 }}
@@ -826,7 +790,6 @@ prompt_linear_shadow_edges = PromptTemplate(
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and explain why? in the context of feedback. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Linear Scenario.)
     Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Linear Scenario: A type of educational structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
@@ -858,7 +821,6 @@ prompt_linear_shadow_edges = PromptTemplate(
     QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to. Give atleast 5 QuestionBlocks or mORE. The previous TextBlocks should have enough content to be covered in these 5 QuestionBlocks named as QB1,QB2 till QB5. Number of Question Blocks can be even higher depending on the course content.)
     Feedback_And_Feedforward Block (PedagogicalBlock)
     Self_Assessment Block (PedagogicalBlock)
-    GoalBlock
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -898,13 +860,13 @@ prompt_linear_shadow_edges = PromptTemplate(
         {{
             "id": "B1",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
+            "title": "Learning Objectives",
             "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
+            "title": "Content Areas",
             "description": "1. (Insert Text Here) and so on"
         }},
         {{
@@ -947,20 +909,14 @@ prompt_linear_shadow_edges = PromptTemplate(
         {{
           "id": "FB",
           "type": "PedagogicalBlock",
-          "title": "Feedback_And_Feedforward",
+          "title": "Feedback And Feedforward",
           "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
           "id": "SA",
           "type": "PedagogicalBlock",
-          "title": "Self_Assessment",
+          "title": "Self Assessment",
           "description": "Self Assessment=(Insert Text Here)"
-        }},
-        {{
-          "id": "GB",
-          "type": "GoalBlock",
-          "title": "Congratulations!",
-          "score": 3
         }}
         ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
         "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
@@ -995,10 +951,6 @@ prompt_linear_shadow_edges = PromptTemplate(
         {{
           "source": "FB",
           "target": "SA"
-        }},
-        {{
-          "source": "SA",
-          "target": "GB"
         }}
     ]
 }}
@@ -1118,7 +1070,6 @@ You will Continue like this in your generated response:
     FEEDFORWARD: It gives suggestion on what to study next (which branch to study next) and explain why? in the context of feedback. How it all relates to what you have study so far. Feedforward is given in relation to the branch and learning objectives of the Linear Scenario.)
     Self_Assessment is defined as part of formative assessment. It is assessment of oneself or one's actions, attitudes, or performance in relation to learning objectives.) 
     'QuestionBlock' with questionText, multipleChoiceAnswers, correctAnswerIndex, wrongAnswerMessage
-    'GoalBlock' with Title, Score
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Linear Scenario: A type of educational structure in which multiple or single TextBlocks, MediaBlocks and QuestionBlocks will be 
@@ -1150,7 +1101,6 @@ You will Continue like this in your generated response:
     QuestionBlock/s (Students after a certain important TextBlock/s or MediaBlock/s are tested via QuestionBlock/s if they learned from the content of the specific block to which this Question Block belongs to. Give atleast 5 QuestionBlocks or mORE. The previous TextBlocks should have enough content to be covered in these 5 QuestionBlocks named as QB1,QB2 till QB5. Number of Question Blocks can be even higher depending on the course content.)
     Feedback_And_Feedforward Block (PedagogicalBlock)
     Self_Assessment Block (PedagogicalBlock)
-    GoalBlock
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -1190,13 +1140,13 @@ You will Continue like this in your generated response:
         {{
             "id": "B1",
             "type": "PedagogicalBlock",
-            "title": "Learning_Objectives",
+            "title": "Learning Objectives",
             "description": "1. (Insert Text Here); 2. (Insert Text Here) and so on"
         }},
         {{
             "id": "B2",
             "type": "PedagogicalBlock",
-            "title": "Content_Areas",
+            "title": "Content Areas",
             "description": "1. (Insert Text Here) and so on"
         }},
         {{
@@ -1239,20 +1189,14 @@ You will Continue like this in your generated response:
         {{
           "id": "FB",
           "type": "PedagogicalBlock",
-          "title": "Feedback_And_Feedforward",
+          "title": "Feedback And Feedforward",
           "description": "Feedback=(Insert Text Here); Feedforward=(Insert Text Here)"
         }},
         {{
           "id": "SA",
           "type": "PedagogicalBlock",
-          "title": "Self_Assessment",
+          "title": "Self Assessment",
           "description": "Self Assessment=(Insert Text Here)"
-        }},
-        {{
-          "id": "GB",
-          "type": "GoalBlock",
-          "title": "Congratulations!",
-          "score": 3
         }}
         ], # when the nodes are generated then the nodes array is enclosed by this square bracket and comma before edges array is begun!
         "edges": [ # include the square bracked after '"edges":' since you are beginning an array!
@@ -1287,10 +1231,6 @@ You will Continue like this in your generated response:
         {{
           "source": "FB",
           "target": "SA"
-        }},
-        {{
-          "source": "SA",
-          "target": "GB"
         }}
     ]
 }}
