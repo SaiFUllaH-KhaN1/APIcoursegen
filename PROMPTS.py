@@ -1528,6 +1528,7 @@ prompt_branched = PromptTemplate(
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "(Insert Text Here)"
@@ -1909,6 +1910,7 @@ prompt_branched_retry = PromptTemplate(
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "(Insert Text Here)"
@@ -2273,6 +2275,7 @@ prompt_branched_simplify = PromptTemplate(
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "(Insert Text Here)"
@@ -2668,6 +2671,7 @@ prompt_branched_shadow_edges = PromptTemplate(
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "(Insert Text Here)"
@@ -3089,6 +3093,7 @@ You will Continue like this in your generated response:
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "(Insert Text Here)"
@@ -3551,6 +3556,7 @@ prompt_gamified_json = PromptTemplate(
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{"_comment":"the SimpleBranchingBlock basically asks question from the player and gives them mcq options or choices (as in the branch keys below which gives choices) and player would select a choice that will be either correct or incorrect. Only one option/ branch will be correct. However number of option/ branches given to player may be 4 (as in below example), or 3 or 2 or even more than 4."}},
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "[Incorrect Choice]"
@@ -3899,6 +3905,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{"_comment":"the SimpleBranchingBlock basically asks question from the player and gives them mcq options or choices (as in the branch keys below which gives choices) and player would select a choice that will be either correct or incorrect. Only one option/ branch will be correct. However number of option/ branches given to player may be 4 (as in below example), or 3 or 2 or even more than 4."}},
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "[Incorrect Choice]"
@@ -4233,6 +4240,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{"_comment":"the SimpleBranchingBlock basically asks question from the player and gives them mcq options or choices (as in the branch keys below which gives choices) and player would select a choice that will be either correct or incorrect. Only one option/ branch will be correct. However number of option/ branches given to player may be 4 (as in below example), or 3 or 2 or even more than 4."}},
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "[Incorrect Choice]"
@@ -4597,6 +4605,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{"_comment":"the SimpleBranchingBlock basically asks question from the player and gives them mcq options or choices (as in the branch keys below which gives choices) and player would select a choice that will be either correct or incorrect. Only one option/ branch will be correct. However number of option/ branches given to player may be 4 (as in below example), or 3 or 2 or even more than 4."}},
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "[Incorrect Choice]"
@@ -4987,6 +4996,7 @@ You will Continue like this in your generated response:
                 "title": "(Insert Text Here)",
                 "branches": [
                     {{"_comment":"the SimpleBranchingBlock basically asks question from the player and gives them mcq options or choices (as in the branch keys below which gives choices) and player would select a choice that will be either correct or incorrect. Only one option/ branch will be correct. However number of option/ branches given to player may be 4 (as in below example), or 3 or 2 or even more than 4."}},
+                    {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Branch X") only per object. Mind the spacing for "Branch X" key."}},
                     {{
                         "port": "1",
                         "Branch 1": "[Incorrect Choice]"
@@ -5511,6 +5521,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
+                {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Track X") only per object. Mind the spacing for "Track X" key."}},
                 {{
                     "port": "1",
                     "Track 1": "(Insert Text Here)"
@@ -6002,6 +6013,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
+                {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Track X") only per object. Mind the spacing for "Track X" key."}},
                 {{
                     "port": "1",
                     "Track 1": "(Insert Text Here)"
@@ -6512,6 +6524,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
+                {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Track X") only per object. Mind the spacing for "Track X" key."}},
                 {{
                     "port": "1",
                     "Track 1": "(Insert Text Here)"
@@ -7040,6 +7053,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
+                {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Track X") only per object. Mind the spacing for "Track X" key."}},
                 {{
                     "port": "1",
                     "Track 1": "(Insert Text Here)"
@@ -7592,6 +7606,7 @@ You will Continue like this in your generated response:
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
+                {{"_comment":"NOTICE that inside the branches array I have used only 2 keys ("port" and "Track X") only per object. Mind the spacing for "Track X" key."}},
                 {{
                     "port": "1",
                     "Track 1": "(Insert Text Here)"
