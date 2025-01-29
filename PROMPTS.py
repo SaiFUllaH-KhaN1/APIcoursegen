@@ -5565,7 +5565,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
+            "id": "JB1",
             "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
             "label":"Track 3",
             "type": "JumpBlock",
@@ -5573,14 +5573,14 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B9",
+            "id": "B8",
             "label":"Track 4",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B10",
+            "id": "B9",
             "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -5591,28 +5591,28 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             ]
         }}, 
         {{
-            "id": "B11",
+            "id": "JB2",
             "label":"Track 4",
             "type": "JumpBlock",
             "title": "Rethink your choice!",
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B12",
+            "id": "B10",
             "label":"Track 5",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B13",
+            "id": "B11",
             "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B14",
+            "id": "B12",
             "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
             "label":"Track 5",
             "type": "PedagogicalBlock",
@@ -5620,14 +5620,14 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B15",
+            "id": "B13",
             "label":"Track 2",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "B14",
             "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -5653,34 +5653,34 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                     "Track 7": "(Insert Text Here)"
                 }},
                 {{
-                    "port": "1",
+                    "port": "3",
                     "Track 8": "(Insert Text Here)"
                 }},
             ]
         }},
         {{
-            "id": "B17",
+            "id": "B15",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B18",
+            "id": "B16",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B19",
+            "id": "B17",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B20",
+            "id": "B18",
             "label":"Track 7",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -5691,21 +5691,21 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             ]
         }},   
         {{
-            "id": "B21",
+            "id": "B19",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B22",
+            "id": "B20",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B23",
+            "id": "B21",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
@@ -5753,38 +5753,55 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "source": "B7",
-            "target": "B8"
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB2"
         }},
         {{
             "source": "SBB2",
-            "target": "B9",
+            "target": "B8",
             "sourceport": "2"
         }},
         {{
+            "source": "B8",
+            "target": "B9"
+        }},
+        {{
             "source": "B9",
-            "target": "B10"
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B10",
+            "sourceport": "3"
         }},
         {{
             "source": "B10",
             "target": "B11"
         }},
         {{
-            "source": "SBB2",
-            "target": "B12",
-            "sourceport": "3"
+            "source": "B11",
+            "target": "B12"
         }},
         {{
-            "source": "B12",
-            "target": "B13"
+            "source": "SBB2",
+            "target": "B13",
+            "sourceport":"2"
         }},
         {{
             "source": "B13",
             "target": "B14"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
             "target": "B15",
-            "sourceport":"2"
+            "sourceport":"1"
         }},
         {{
             "source": "B15",
@@ -5793,20 +5810,20 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         {{
             "source": "SBB3",
             "target": "B17",
-            "sourceport":"1"
+            "sourceport":"2"
         }},
         {{
             "source": "B17",
             "target": "B18"
         }},
         {{
-            "source": "SBB3",
-            "target": "B19",
-            "sourceport":"2"
+            "source": "B18",
+            "target": "B19"
         }},
         {{
-            "source": "B19",
-            "target": "B20"
+            "source": "SBB3",
+            "target": "B20",
+            "sourceport":"3"
         }},
         {{
             "source": "B20",
@@ -6039,7 +6056,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
+            "id": "JB1",
             "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
             "label":"Track 3",
             "type": "JumpBlock",
@@ -6047,14 +6064,14 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B9",
+            "id": "B8",
             "label":"Track 4",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B10",
+            "id": "B9",
             "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -6065,28 +6082,28 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             ]
         }}, 
         {{
-            "id": "B11",
+            "id": "JB2",
             "label":"Track 4",
             "type": "JumpBlock",
             "title": "Rethink your choice!",
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B12",
+            "id": "B10",
             "label":"Track 5",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B13",
+            "id": "B11",
             "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B14",
+            "id": "B12",
             "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
             "label":"Track 5",
             "type": "PedagogicalBlock",
@@ -6094,14 +6111,14 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B15",
+            "id": "B13",
             "label":"Track 2",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "B14",
             "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -6127,34 +6144,34 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                     "Track 7": "(Insert Text Here)"
                 }},
                 {{
-                    "port": "1",
+                    "port": "3",
                     "Track 8": "(Insert Text Here)"
                 }},
             ]
         }},
         {{
-            "id": "B17",
+            "id": "B15",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B18",
+            "id": "B16",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B19",
+            "id": "B17",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B20",
+            "id": "B18",
             "label":"Track 7",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -6165,21 +6182,21 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             ]
         }},   
         {{
-            "id": "B21",
+            "id": "B19",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B22",
+            "id": "B20",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B23",
+            "id": "B21",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
@@ -6227,38 +6244,55 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "source": "B7",
-            "target": "B8"
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB2"
         }},
         {{
             "source": "SBB2",
-            "target": "B9",
+            "target": "B8",
             "sourceport": "2"
         }},
         {{
+            "source": "B8",
+            "target": "B9"
+        }},
+        {{
             "source": "B9",
-            "target": "B10"
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B10",
+            "sourceport": "3"
         }},
         {{
             "source": "B10",
             "target": "B11"
         }},
         {{
-            "source": "SBB2",
-            "target": "B12",
-            "sourceport": "3"
+            "source": "B11",
+            "target": "B12"
         }},
         {{
-            "source": "B12",
-            "target": "B13"
+            "source": "SBB2",
+            "target": "B13",
+            "sourceport":"2"
         }},
         {{
             "source": "B13",
             "target": "B14"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
             "target": "B15",
-            "sourceport":"2"
+            "sourceport":"1"
         }},
         {{
             "source": "B15",
@@ -6267,20 +6301,20 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         {{
             "source": "SBB3",
             "target": "B17",
-            "sourceport":"1"
+            "sourceport":"2"
         }},
         {{
             "source": "B17",
             "target": "B18"
         }},
         {{
-            "source": "SBB3",
-            "target": "B19",
-            "sourceport":"2"
+            "source": "B18",
+            "target": "B19"
         }},
         {{
-            "source": "B19",
-            "target": "B20"
+            "source": "SBB3",
+            "target": "B20",
+            "sourceport":"3"
         }},
         {{
             "source": "B20",
@@ -6532,7 +6566,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
+            "id": "JB1",
             "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
             "label":"Track 3",
             "type": "JumpBlock",
@@ -6540,14 +6574,14 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B9",
+            "id": "B8",
             "label":"Track 4",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B10",
+            "id": "B9",
             "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -6558,28 +6592,28 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             ]
         }}, 
         {{
-            "id": "B11",
+            "id": "JB2",
             "label":"Track 4",
             "type": "JumpBlock",
             "title": "Rethink your choice!",
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B12",
+            "id": "B10",
             "label":"Track 5",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B13",
+            "id": "B11",
             "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B14",
+            "id": "B12",
             "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
             "label":"Track 5",
             "type": "PedagogicalBlock",
@@ -6587,14 +6621,14 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B15",
+            "id": "B13",
             "label":"Track 2",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "B14",
             "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -6620,34 +6654,34 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                     "Track 7": "(Insert Text Here)"
                 }},
                 {{
-                    "port": "1",
+                    "port": "3",
                     "Track 8": "(Insert Text Here)"
                 }},
             ]
         }},
         {{
-            "id": "B17",
+            "id": "B15",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B18",
+            "id": "B16",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B19",
+            "id": "B17",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B20",
+            "id": "B18",
             "label":"Track 7",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -6658,21 +6692,21 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             ]
         }},   
         {{
-            "id": "B21",
+            "id": "B19",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B22",
+            "id": "B20",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B23",
+            "id": "B21",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
@@ -6720,38 +6754,55 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "source": "B7",
-            "target": "B8"
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB2"
         }},
         {{
             "source": "SBB2",
-            "target": "B9",
+            "target": "B8",
             "sourceport": "2"
         }},
         {{
+            "source": "B8",
+            "target": "B9"
+        }},
+        {{
             "source": "B9",
-            "target": "B10"
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B10",
+            "sourceport": "3"
         }},
         {{
             "source": "B10",
             "target": "B11"
         }},
         {{
-            "source": "SBB2",
-            "target": "B12",
-            "sourceport": "3"
+            "source": "B11",
+            "target": "B12"
         }},
         {{
-            "source": "B12",
-            "target": "B13"
+            "source": "SBB2",
+            "target": "B13",
+            "sourceport":"2"
         }},
         {{
             "source": "B13",
             "target": "B14"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
             "target": "B15",
-            "sourceport":"2"
+            "sourceport":"1"
         }},
         {{
             "source": "B15",
@@ -6760,20 +6811,20 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         {{
             "source": "SBB3",
             "target": "B17",
-            "sourceport":"1"
+            "sourceport":"2"
         }},
         {{
             "source": "B17",
             "target": "B18"
         }},
         {{
-            "source": "SBB3",
-            "target": "B19",
-            "sourceport":"2"
+            "source": "B18",
+            "target": "B19"
         }},
         {{
-            "source": "B19",
-            "target": "B20"
+            "source": "SBB3",
+            "target": "B20",
+            "sourceport":"3"
         }},
         {{
             "source": "B20",
@@ -7043,7 +7094,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
+            "id": "JB1",
             "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
             "label":"Track 3",
             "type": "JumpBlock",
@@ -7051,14 +7102,14 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B9",
+            "id": "B8",
             "label":"Track 4",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B10",
+            "id": "B9",
             "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -7069,28 +7120,28 @@ prompt_simulation_shadow_edges = PromptTemplate(
             ]
         }}, 
         {{
-            "id": "B11",
+            "id": "JB2",
             "label":"Track 4",
             "type": "JumpBlock",
             "title": "Rethink your choice!",
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B12",
+            "id": "B10",
             "label":"Track 5",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B13",
+            "id": "B11",
             "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B14",
+            "id": "B12",
             "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
             "label":"Track 5",
             "type": "PedagogicalBlock",
@@ -7098,14 +7149,14 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B15",
+            "id": "B13",
             "label":"Track 2",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "B14",
             "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -7131,34 +7182,34 @@ prompt_simulation_shadow_edges = PromptTemplate(
                     "Track 7": "(Insert Text Here)"
                 }},
                 {{
-                    "port": "1",
+                    "port": "3",
                     "Track 8": "(Insert Text Here)"
                 }},
             ]
         }},
         {{
-            "id": "B17",
+            "id": "B15",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B18",
+            "id": "B16",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B19",
+            "id": "B17",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B20",
+            "id": "B18",
             "label":"Track 7",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -7169,21 +7220,21 @@ prompt_simulation_shadow_edges = PromptTemplate(
             ]
         }},   
         {{
-            "id": "B21",
+            "id": "B19",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B22",
+            "id": "B20",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B23",
+            "id": "B21",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
@@ -7231,38 +7282,55 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "source": "B7",
-            "target": "B8"
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB2"
         }},
         {{
             "source": "SBB2",
-            "target": "B9",
+            "target": "B8",
             "sourceport": "2"
         }},
         {{
+            "source": "B8",
+            "target": "B9"
+        }},
+        {{
             "source": "B9",
-            "target": "B10"
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B10",
+            "sourceport": "3"
         }},
         {{
             "source": "B10",
             "target": "B11"
         }},
         {{
-            "source": "SBB2",
-            "target": "B12",
-            "sourceport": "3"
+            "source": "B11",
+            "target": "B12"
         }},
         {{
-            "source": "B12",
-            "target": "B13"
+            "source": "SBB2",
+            "target": "B13",
+            "sourceport":"2"
         }},
         {{
             "source": "B13",
             "target": "B14"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
             "target": "B15",
-            "sourceport":"2"
+            "sourceport":"1"
         }},
         {{
             "source": "B15",
@@ -7271,20 +7339,20 @@ prompt_simulation_shadow_edges = PromptTemplate(
         {{
             "source": "SBB3",
             "target": "B17",
-            "sourceport":"1"
+            "sourceport":"2"
         }},
         {{
             "source": "B17",
             "target": "B18"
         }},
         {{
-            "source": "SBB3",
-            "target": "B19",
-            "sourceport":"2"
+            "source": "B18",
+            "target": "B19"
         }},
         {{
-            "source": "B19",
-            "target": "B20"
+            "source": "SBB3",
+            "target": "B20",
+            "sourceport":"3"
         }},
         {{
             "source": "B20",
@@ -7578,7 +7646,7 @@ You will Continue like this in your generated response:
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B8",
+            "id": "JB1",
             "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
             "label":"Track 3",
             "type": "JumpBlock",
@@ -7586,14 +7654,14 @@ You will Continue like this in your generated response:
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B9",
+            "id": "B8",
             "label":"Track 4",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B10",
+            "id": "B9",
             "label":"Track 4",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -7604,28 +7672,28 @@ You will Continue like this in your generated response:
             ]
         }}, 
         {{
-            "id": "B11",
+            "id": "JB2",
             "label":"Track 4",
             "type": "JumpBlock",
             "title": "Rethink your choice!",
             "proceedToBlock": "SBB2"
         }},
         {{
-            "id": "B12",
+            "id": "B10",
             "label":"Track 5",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B13",
+            "id": "B11",
             "label":"Track 5",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B14",
+            "id": "B12",
             "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
             "label":"Track 5",
             "type": "PedagogicalBlock",
@@ -7633,14 +7701,14 @@ You will Continue like this in your generated response:
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B15",
+            "id": "B13",
             "label":"Track 2",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "B14",
             "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -7666,34 +7734,34 @@ You will Continue like this in your generated response:
                     "Track 7": "(Insert Text Here)"
                 }},
                 {{
-                    "port": "1",
+                    "port": "3",
                     "Track 8": "(Insert Text Here)"
                 }},
             ]
         }},
         {{
-            "id": "B17",
+            "id": "B15",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B18",
+            "id": "B16",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B19",
+            "id": "B17",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B20",
+            "id": "B18",
             "label":"Track 7",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
@@ -7704,21 +7772,21 @@ You will Continue like this in your generated response:
             ]
         }},   
         {{
-            "id": "B21",
+            "id": "B19",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B22",
+            "id": "B20",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B23",
+            "id": "B21",
             "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
@@ -7766,38 +7834,55 @@ You will Continue like this in your generated response:
         }},
         {{
             "source": "B7",
-            "target": "B8"
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB2"
         }},
         {{
             "source": "SBB2",
-            "target": "B9",
+            "target": "B8",
             "sourceport": "2"
         }},
         {{
+            "source": "B8",
+            "target": "B9"
+        }},
+        {{
             "source": "B9",
-            "target": "B10"
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B10",
+            "sourceport": "3"
         }},
         {{
             "source": "B10",
             "target": "B11"
         }},
         {{
-            "source": "SBB2",
-            "target": "B12",
-            "sourceport": "3"
+            "source": "B11",
+            "target": "B12"
         }},
         {{
-            "source": "B12",
-            "target": "B13"
+            "source": "SBB2",
+            "target": "B13",
+            "sourceport":"2"
         }},
         {{
             "source": "B13",
             "target": "B14"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
             "target": "B15",
-            "sourceport":"2"
+            "sourceport":"1"
         }},
         {{
             "source": "B15",
@@ -7806,20 +7891,20 @@ You will Continue like this in your generated response:
         {{
             "source": "SBB3",
             "target": "B17",
-            "sourceport":"1"
+            "sourceport":"2"
         }},
         {{
             "source": "B17",
             "target": "B18"
         }},
         {{
-            "source": "SBB3",
-            "target": "B19",
-            "sourceport":"2"
+            "source": "B18",
+            "target": "B19"
         }},
         {{
-            "source": "B19",
-            "target": "B20"
+            "source": "SBB3",
+            "target": "B20",
+            "sourceport":"3"
         }},
         {{
             "source": "B20",
