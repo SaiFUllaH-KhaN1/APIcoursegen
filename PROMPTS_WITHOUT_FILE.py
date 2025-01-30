@@ -1316,6 +1316,7 @@ prompt_branched = PromptTemplate(
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has general information that you do NOT elaborate in detail.
     The MediaBlocks has general information that you do NOT elaborate in detail.
+    ALWAYS end a branch of Blocks propagating from the SimpleBranchingBlock with a JumpBlock that returns user to topic selection (SimpleBranchingBlock acts as topic selector).
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -1330,7 +1331,7 @@ prompt_branched = PromptTemplate(
     Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    SimpleBranchingBlock (Acts as topic selector. To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
     Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
@@ -1379,7 +1380,7 @@ prompt_branched = PromptTemplate(
             }},
             {{
                 "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 branches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -1394,7 +1395,7 @@ prompt_branched = PromptTemplate(
                     }}
                 ]
             }},
-            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students. The use of JumpBlock is mandatory at the end of each Branch that returns user to the SimpleBranchingBlock which acts as topic selector."}},
             {{
                 "id": "B3",
                 "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
@@ -1451,7 +1452,7 @@ prompt_branched = PromptTemplate(
             }},
             {{
                 "id": "JB1",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -1503,7 +1504,7 @@ prompt_branched = PromptTemplate(
             }},
             {{
                 "id": "JB2",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -1587,6 +1588,7 @@ prompt_branched = PromptTemplate(
             {{
                 "source": "JB2",
                 "target": "SBB"
+                {{"_comment":"!!!ALL JUMPBLOCKS LEADS TO SBB and HAVE THE TITLE "Return to Topic Selection"!!!"}}
             }}
         ]
 }}
@@ -1691,6 +1693,7 @@ prompt_branched_retry = PromptTemplate(
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has general information that you do NOT elaborate in detail.
     The MediaBlocks has general information that you do NOT elaborate in detail.
+    ALWAYS end a branch of Blocks propagating from the SimpleBranchingBlock with a JumpBlock that returns user to topic selection (SimpleBranchingBlock acts as topic selector).
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -1705,7 +1708,7 @@ prompt_branched_retry = PromptTemplate(
     Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    SimpleBranchingBlock (Acts as topic selector. To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
     Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
@@ -1754,7 +1757,7 @@ prompt_branched_retry = PromptTemplate(
             }},
             {{
                 "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 branches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -1769,7 +1772,7 @@ prompt_branched_retry = PromptTemplate(
                     }}
                 ]
             }},
-            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students. The use of JumpBlock is mandatory at the end of each Branch that returns user to the SimpleBranchingBlock which acts as topic selector."}},
             {{
                 "id": "B3",
                 "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
@@ -1826,7 +1829,7 @@ prompt_branched_retry = PromptTemplate(
             }},
             {{
                 "id": "JB1",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -1878,7 +1881,7 @@ prompt_branched_retry = PromptTemplate(
             }},
             {{
                 "id": "JB2",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -1962,6 +1965,7 @@ prompt_branched_retry = PromptTemplate(
             {{
                 "source": "JB2",
                 "target": "SBB"
+                {{"_comment":"!!!ALL JUMPBLOCKS LEADS TO SBB and HAVE THE TITLE "Return to Topic Selection"!!!"}}
             }}
         ]
 }}
@@ -2052,6 +2056,7 @@ prompt_branched_simplify = PromptTemplate(
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has general information that you do NOT elaborate in detail.
     The MediaBlocks has general information that you do NOT elaborate in detail.
+    ALWAYS end a branch of Blocks propagating from the SimpleBranchingBlock with a JumpBlock that returns user to topic selection (SimpleBranchingBlock acts as topic selector).
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -2066,7 +2071,7 @@ prompt_branched_simplify = PromptTemplate(
     Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    SimpleBranchingBlock (Acts as topic selector. To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
     Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
@@ -2115,7 +2120,7 @@ prompt_branched_simplify = PromptTemplate(
             }},
             {{
                 "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 branches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -2130,7 +2135,7 @@ prompt_branched_simplify = PromptTemplate(
                     }}
                 ]
             }},
-            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students. The use of JumpBlock is mandatory at the end of each Branch that returns user to the SimpleBranchingBlock which acts as topic selector."}},
             {{
                 "id": "B3",
                 "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
@@ -2187,7 +2192,7 @@ prompt_branched_simplify = PromptTemplate(
             }},
             {{
                 "id": "JB1",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -2239,7 +2244,7 @@ prompt_branched_simplify = PromptTemplate(
             }},
             {{
                 "id": "JB2",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -2323,6 +2328,7 @@ prompt_branched_simplify = PromptTemplate(
             {{
                 "source": "JB2",
                 "target": "SBB"
+                {{"_comment":"!!!ALL JUMPBLOCKS LEADS TO SBB and HAVE THE TITLE "Return to Topic Selection"!!!"}}
             }}
         ]
 }}
@@ -2445,6 +2451,7 @@ prompt_branched_shadow_edges = PromptTemplate(
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has general information that you do NOT elaborate in detail.
     The MediaBlocks has general information that you do NOT elaborate in detail.
+    ALWAYS end a branch of Blocks propagating from the SimpleBranchingBlock with a JumpBlock that returns user to topic selection (SimpleBranchingBlock acts as topic selector).
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -2459,7 +2466,7 @@ prompt_branched_shadow_edges = PromptTemplate(
     Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    SimpleBranchingBlock (Acts as topic selector. To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
     Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
@@ -2508,7 +2515,7 @@ prompt_branched_shadow_edges = PromptTemplate(
             }},
             {{
                 "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 branches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -2523,7 +2530,7 @@ prompt_branched_shadow_edges = PromptTemplate(
                     }}
                 ]
             }},
-            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students. The use of JumpBlock is mandatory at the end of each Branch that returns user to the SimpleBranchingBlock which acts as topic selector."}},
             {{
                 "id": "B3",
                 "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
@@ -2580,7 +2587,7 @@ prompt_branched_shadow_edges = PromptTemplate(
             }},
             {{
                 "id": "JB1",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -2632,7 +2639,7 @@ prompt_branched_shadow_edges = PromptTemplate(
             }},
             {{
                 "id": "JB2",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -2716,6 +2723,7 @@ prompt_branched_shadow_edges = PromptTemplate(
             {{
                 "source": "JB2",
                 "target": "SBB"
+                {{"_comment":"!!!ALL JUMPBLOCKS LEADS TO SBB and HAVE THE TITLE "Return to Topic Selection"!!!"}}
             }}
         ]
 }}
@@ -2864,6 +2872,7 @@ You will Continue like this in your generated response:
     ***YOU WILL BE PENALISED IF:
     The TextBlocks has general information that you do NOT elaborate in detail.
     The MediaBlocks has general information that you do NOT elaborate in detail.
+    ALWAYS end a branch of Blocks propagating from the SimpleBranchingBlock with a JumpBlock that returns user to topic selection (SimpleBranchingBlock acts as topic selector).
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response.
     The Example below is just for your concept and the number of TextBlocks, MediaBlocks, QuestionBlocks, Branches etc Differ with the amount of subject content needed to be covered.
@@ -2878,7 +2887,7 @@ You will Continue like this in your generated response:
     Scenario's Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Information elaborated/ subject matter described in detail)
     MediaBlock/s (Content Carrier Block. Is used to give visualized option to select the choices given by Branching Blocks with pertinent overlayTags, if any. MediaBlock/s used also to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and Mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
+    SimpleBranchingBlock (Acts as topic selector. To allow students to select from a learning subtopic (Branches). The number of Branches equal to the number of Learning Objectives, each branch covering a Learning Objective.)
     Branch 1,2,3... => each branch having its own LearningObjective (PedagogicalBlock),TextBlock/s(Explains the content) or None,MediaBlock/s or None (Illustratively Explains the content), a series of QuestionBlocks (3 QuestionBlocks prefered per branch, however more are even better to use), Feedback And Feedforward (PedagogicalBlock), JumpBlock
     \nEnd of Overview structure\n
 
@@ -2927,7 +2936,7 @@ You will Continue like this in your generated response:
             }},
             {{
                 "id": "SBB",
-                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 brnaches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
+                "Purpose": "This mandatory block is where you !Divide the Micro learning scenario content into subtopics that users can select and access the whole information of those subtopics in the corresponding divided branches! The number of branches/ subtopics are equal to the number of 'Learning Objectives' given. One subtopic for each Learning Objective. For example, If three learning objectives then 3 branches there in the SimpleBranchingBlock, each being dedicated to each learning objective.",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -2942,7 +2951,7 @@ You will Continue like this in your generated response:
                     }}
                 ]
             }},
-            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students."}},
+            {{"_comment":"Each branch can include multiple TextBlock and MediaBlock in order to cover the course information of each subtopic in detail and all the aspects of course information is given to students and taught to students. The use of JumpBlock is mandatory at the end of each Branch that returns user to the SimpleBranchingBlock which acts as topic selector."}},
             {{
                 "id": "B3",
                 "Purpose": "This mandatory block is where you !Write the Learning objective for this specific branch!",
@@ -2999,7 +3008,7 @@ You will Continue like this in your generated response:
             }},
             {{
                 "id": "JB1",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -3051,7 +3060,7 @@ You will Continue like this in your generated response:
             }},
             {{
                 "id": "JB2",
-                "Purpose": "Mandatory at the end of each Branch",
+                "Purpose": "Mandatory at the end of each Branch. The title string remains as constant for JumpBlock",
                 "type": "JumpBlock",
                 "title": "Return to Topic Selection",
                 "proceedToBlock": "SBB"
@@ -3135,6 +3144,7 @@ You will Continue like this in your generated response:
             {{
                 "source": "JB2",
                 "target": "SBB"
+                {{"_comment":"!!!ALL JUMPBLOCKS LEADS TO SBB and HAVE THE TITLE "Return to Topic Selection"!!!"}}
             }}
         ]
 }}
