@@ -627,7 +627,7 @@ def REMOVE_DUP_IMG(image_dir):
 
 def PRODUCE_LEARNING_OBJ_COURSE(query, docsearch, llm, model_type, language):
     logger.info("PRODUCE_LEARNING_OBJ_COURSE Initiated!")
-    docs = docsearch.similarity_search(query, k=2)
+    docs = docsearch.similarity_search(query, k=3)
     docs_main = " ".join([d.page_content for d in docs])
     logger.info(f"1st Docs_main of /Decide route:{docs_main}")
 
@@ -663,7 +663,7 @@ def PRODUCE_LEARNING_OBJ_COURSE_WITHOUT_FILE(query, llm, model_type, language):
 
 def RE_SIMILARITY_SEARCH(query, docsearch, output_path, model_type,model_name, summarize_images, language, llm_img_summary):
     logger.info("RE_SIMILARITY_SEARCH Initiated!")
-    docs = docsearch.similarity_search(query, k=2)
+    docs = docsearch.similarity_search(query, k=3)
     logger.info(f"docs from RE_SIMILARITY_SEARCH:\n{docs}",)
     if summarize_images == "on":
         logger.info(f"Tells me to summarize images, {summarize_images}")
