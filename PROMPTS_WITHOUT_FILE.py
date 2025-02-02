@@ -285,7 +285,8 @@ prompt_linear_retry = PromptTemplate(
 
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
-    [
+    [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
@@ -494,7 +495,8 @@ prompt_linear_retry = PromptTemplate(
     Just start the JSON response directly.
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
-    ]
+    
+    ]]]
 
     !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
 
@@ -508,7 +510,7 @@ prompt_linear_simplify = PromptTemplate(
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE. INCLUDING THE EDGES ARRAY IS MANDATORY BECAUSE WITHOUT IT, INTERCONNECTIONS BETWEEN NODE IDS IS NOT POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish educational Linear Scenario creation, YOU will:
@@ -763,6 +765,7 @@ prompt_linear_shadow_edges = PromptTemplate(
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     Instruction Set:
     [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
@@ -971,6 +974,7 @@ prompt_linear_shadow_edges = PromptTemplate(
     Just start the JSON response directly.
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
+    
     ]]]
 
     Chatbot:"""
@@ -1043,6 +1047,7 @@ You will Continue like this in your generated response:
     BELOW IS THE HISTORY BASED ON WHICH THE 'OUTPUT' WAS CREATED ORIGINALLY:
     HISTORY:
     [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
@@ -1251,6 +1256,7 @@ You will Continue like this in your generated response:
     Just start the JSON response directly.
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Linear Scenario.
+    
     ]]]
 
     Chatbot:"""
@@ -1640,7 +1646,8 @@ prompt_branched_retry = PromptTemplate(
 
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
-    [
+    [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You give explanations and provide detailed information such that you are teaching a student.
@@ -1990,7 +1997,8 @@ prompt_branched_retry = PromptTemplate(
     Just start the JSON response directly.    
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Micro Learning Scenario.
-    ]
+    
+    ]]]
 
     !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
     
@@ -2007,7 +2015,7 @@ prompt_branched_simplify = PromptTemplate(
     Explain the material itself, Please provide detailed, informative explanations that align closely with the learning objectives and content areas provided. Each response should not just direct the learner but educate them by elaborating on the historical, technical, or practical details. Use simple and engaging language to enhance understanding and retention. Ensure that each explanation directly supports the learners' ability to meet the learning objectives by providing comprehensive insights into the topics discussed.
     !!!WARNING END!!!
 
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE. INCLUDING THE EDGES ARRAY IS MANDATORY BECAUSE WITHOUT IT, INTERCONNECTIONS BETWEEN NODE IDS IS NOT POSSIBLE!!!
     
     ***WHAT TO DO***
     To accomplish Micro Learning Scenario creation, YOU will:
@@ -2399,6 +2407,7 @@ prompt_branched_shadow_edges = PromptTemplate(
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     Instruction Set:
     [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You give explanations and provide detailed information such that you are teaching a student.
@@ -2748,6 +2757,7 @@ prompt_branched_shadow_edges = PromptTemplate(
     Just start the JSON response directly.    
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Micro Learning Scenario.
+    
     ]]]
 
     Chatbot:"""
@@ -2820,6 +2830,7 @@ You will Continue like this in your generated response:
     BELOW IS THE HISTORY BASED ON WHICH THE 'OUTPUT' WAS CREATED ORIGINALLY:
     HISTORY:
     [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You give explanations and provide detailed information such that you are teaching a student.
@@ -3169,6 +3180,7 @@ You will Continue like this in your generated response:
     Just start the JSON response directly.    
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Micro Learning Scenario.
+    
     ]]]
 
     Chatbot:"""
@@ -3199,6 +3211,20 @@ prompt_gamified_json = PromptTemplate(
     'Human Input': {human_input};
     'Learning Objectives': {learning_obj};
     'Content Areas': {content_areas};
+    Additional Context:
+    Human would love to have atleast 2 fully detailed rooms and at most 5 fully detailed rooms.        
+    Human requires that you explain the clues in as much detail as possible. The Human
+    finds it easy that you explain room and clues to the fullest to him in your output.
+    Human also finds the concept of Room to be metaphorical, meaning any situation that the human faces or trapped in can be considered
+    Room. For example a person can be outside and face a situation which requires his attention to make the situation better eg.
+    A CPR to a needy in park.
+    The Escape Room scenario can also be used as information giving medium. For example, to train to allow a new employee to navigate,
+    one can give Escape Room for the employee to understand the ins and outs of the building, the offices and rooms and their intro
+    regarding their function and tasks. The Clues would act as office description of each office in the building map for example.
+    Another use case example is that I want to train users to introduce to them a certain area. I can show them the whole overview
+    map for example as a Room, where user can click on each clue which will reveal the descriptions of the area of the map and would 
+    allow the user to get good navigation and introduction of the area. 
+
     ***WHAT TO DO END***
     
     The Exit Game are built using blocks, each having its own parameters.
@@ -3278,8 +3304,7 @@ prompt_gamified_json = PromptTemplate(
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "label": "Room 1",
+                "id": "Room1",
                 "Purpose": "Content Carrier Block. This block is used to represent a full fledge room. Suggest mediaType as "Image" or "360" for player to view the room as Image or for more immersiveness as 360 image. This block (In terms of either one Media Block or multiple per scenario, subject to the number of room requirements set forth by the 'Human Input') is where you !Give students an illustrative experience that visulizes the information. The media blocks describes in detail the room and its complete environment, setting etc. so a complete picture is visualized to the player. Then, player is given interactive hotspots or points of interest (overlayTags) which when the player clicks on screen, then detailed description is given of that hotspot which can be a place of interest, thing, entity etc. Clues are given using overlayTags so player can collect enough information about the upcoming question that asks for this sequence to escape the room. Be as much detailed and descriptive as possible",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
@@ -3291,7 +3316,7 @@ prompt_gamified_json = PromptTemplate(
             }},
             {{
                 "id": "SBB1",
-                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. A Correct Choice leads to Correct Choice Branch and the other incorrect choices leads to subsequent Feedback Branch that returns player to the MediaBlock to which the concerned SimpleBranchingBlock is placed for!",
+                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a feedback and JumpBlock for retrying (In case of incorrect choice) and to a consequence of the choice selected (In case of correct choice). The incorrect choices leads to subsequent Feedback that returns player to the MediaBlock via the JumpBlock to which the concerned SimpleBranchingBlock is placed for!",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -3329,7 +3354,7 @@ prompt_gamified_json = PromptTemplate(
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B3"
+                "proceedToBlock": "Room1"
             }},
             {{
                 "id": "B5",
@@ -3339,8 +3364,7 @@ prompt_gamified_json = PromptTemplate(
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B6",
-                "label": "Room 2",
+                "id": "Room2",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image/360",
@@ -3380,7 +3404,7 @@ prompt_gamified_json = PromptTemplate(
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B6"
+                "proceedToBlock": "Room2"
             }},     
             {{
                 "id": "B8",
@@ -3391,7 +3415,7 @@ prompt_gamified_json = PromptTemplate(
             }},    
             {{
                 "id": "B9",
-                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block.",
+                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block. This block ends and concludes the gamified escape room scenario",
                 "type": "PedagogicalBlock",
                 "title": "Reflective Learning Block",
                 "description": "(Insert Text about feedback, feedforward, and learning experience in context of learning objectives for this scenario here)"
@@ -3408,10 +3432,10 @@ prompt_gamified_json = PromptTemplate(
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
-                "source": "B3",
+                "source": "Room1",
                 "target": "SBB1"
             }},
             {{
@@ -3435,7 +3459,7 @@ prompt_gamified_json = PromptTemplate(
             }},    
             {{
                 "source": "JB1",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
                 "source": "SBB1",
@@ -3444,10 +3468,10 @@ prompt_gamified_json = PromptTemplate(
             }},
             {{
                 "source": "B5",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
-                "source": "B6",
+                "source": "Room2",
                 "target": "SBB2"
             }},
             {{
@@ -3466,7 +3490,7 @@ prompt_gamified_json = PromptTemplate(
             }},    
             {{
                 "source": "JB2",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
                 "source": "SBB2",
@@ -3483,6 +3507,245 @@ prompt_gamified_json = PromptTemplate(
 
     The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Media Blocks, Branching Blocks, and Pedagogy Blocks, as well as their content and usage.
 
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+take the student through fire escape room situation. Evaluate the student's knowledge on what action should you take on discovering a electric fire.
+    "Learning Objectives":
+Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step.
+Describe the conditions under which a fire extinguisher should be used.
+Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep).
+    "Content Areas":
+The 3 A's of fire safety: Activate, Assist, Attempt,
+P.A.S.S. method for fire extinguisher use.
+
+JSON OUTPUT:
+{{
+    "title": "Fire Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step. Describe the conditions under which a fire extinguisher should be used. Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep). Content Areas: The 3 A's of fire safety: Activate, Assist, Attempt, Conditions for using a fire extinguisher, P.A.S.S. method for fire extinguisher use, Classes of fire"
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Scenario's Context",
+            "description": "You are trapped in a simulated office building experiencing a small fire. Your objective is to escape safely, demonstrating your understanding of fire safety procedures. This involves successfully navigating two \"rooms\" representing different stages of the emergency."
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Burning Office",
+            "mediaType": "Image",
+            "description": "A simulated office with a small fire in a wastebasket, a fire alarm, an overturned desk with a partially visible person, and a fire extinguisher.",
+            "overlayTags": [
+                "Fire Alarm: Activate the building's fire alarm system or call 911.",
+                "Overturned Desk: Assist those in immediate danger, prioritizing your own safety.",
+                "Small Fire: Attempt to extinguish only if the fire is small, contained, and you have a clear escape route. Never attempt to fight a fire if there is a heavy smoke condition.",
+                "Fire Extinguisher: Use only when the fire is contained, the extinguisher is available, you know how to use it, personal safety is not compromised, and there is a clear escape path."
+            ]
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 1",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Activate, then Assist, then Attempt"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Attempt, then Activate, then Assist"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Assist, then Activate, then Attempt"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Assist, then Attempt, then Activate"
+                }}
+            ]
+        }},
+        {{
+            "id": "B4",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember the 3 A's: Activate (alarm or 911), Assist (help others safely), then Attempt (extinguish if conditions are safe). The order is crucial for safety. Review the clues carefully. Try again."
+        }},
+        {{
+            "id": "JB1",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room1"
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Room 1 Consequence",
+            "description": "You successfully activated the alarm and assisted others before attempting to extinguish the fire. You are now ready to proceed to the escape route."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "The Escape Route",
+            "mediaType": "Image",
+            "description": "A hallway with a fire extinguisher and diagrams illustrating the P.A.S.S. method.",
+            "overlayTags": [
+                "Pull the pin.",
+                "Aim at the base of the fire.",
+                "Squeeze the handle.",
+                "Sweep back and forth at the base of the fire until it's out or the extinguisher is empty."
+            ]
+        }},
+        {{
+            "id": "SBB2",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 2",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Pull, Aim, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Aim, Pull, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Aim, Squeeze, Pull, Sweep"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Squeeze, Aim, Pull, Sweep"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember P.A.S.S.: Pull the pin, Aim at the base of the fire, Squeeze the handle, Sweep from side to side. Review the diagrams and text carefully. The order is critical for effective fire suppression. Try again."
+        }},
+        {{
+            "id": "JB2",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room2"
+        }},
+        {{
+            "id": "B8",
+            "type": "PedagogicalBlock",
+            "title": "Room 2 Consequence",
+            "description": "You have successfully used the fire extinguisher following the P.A.S.S. method. You are now ready to escape."
+        }},
+        {{
+            "id": "B9",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "Congratulations! You successfully escaped the simulated fire situation, demonstrating a thorough understanding of fire safety procedures. You learned about the 3 A's of fire safety and the P.A.S.S. method for using a fire extinguisher.  Think about how these procedures can help you stay safe in real-life fire situations.  What other fire safety measures do you know?"
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B4",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "Room1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B5",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B7",
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "B9"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]
+    
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
     human will be using the generated code directly into the server side to run the JSON code.
@@ -3528,7 +3791,8 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
 
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
-    [
+    [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
@@ -3543,7 +3807,21 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     1. Take the "Human Input" which represents the Exit Game content topic or description for which the Exit Game is to be formulated.
     2. According to the "Learning Objectives" and "Content Areas", you will create the Exit Game scenario.  
     3. Generate a JSON-formatted Exit Game structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
-    
+
+    Additional Context:
+    Human would love to have atleast 2 fully detailed rooms and at most 5 fully detailed rooms.        
+    Human requires that you explain the clues in as much detail as possible. The Human
+    finds it easy that you explain room and clues to the fullest to him in your output.
+    Human also finds the concept of Room to be metaphorical, meaning any situation that the human faces or trapped in can be considered
+    Room. For example a person can be outside and face a situation which requires his attention to make the situation better eg.
+    A CPR to a needy in park.
+    The Escape Room scenario can also be used as information giving medium. For example, to train to allow a new employee to navigate,
+    one can give Escape Room for the employee to understand the ins and outs of the building, the offices and rooms and their intro
+    regarding their function and tasks. The Clues would act as office description of each office in the building map for example.
+    Another use case example is that I want to train users to introduce to them a certain area. I can show them the whole overview
+    map for example as a Room, where user can click on each clue which will reveal the descriptions of the area of the map and would 
+    allow the user to get good navigation and introduction of the area. 
+
     ***WHAT TO DO END***
     
     The Exit Game are built using blocks, each having its own parameters.
@@ -3623,8 +3901,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "label": "Room 1",
+                "id": "Room1",
                 "Purpose": "Content Carrier Block. This block is used to represent a full fledge room. Suggest mediaType as "Image" or "360" for player to view the room as Image or for more immersiveness as 360 image. This block (In terms of either one Media Block or multiple per scenario, subject to the number of room requirements set forth by the 'Human Input') is where you !Give students an illustrative experience that visulizes the information. The media blocks describes in detail the room and its complete environment, setting etc. so a complete picture is visualized to the player. Then, player is given interactive hotspots or points of interest (overlayTags) which when the player clicks on screen, then detailed description is given of that hotspot which can be a place of interest, thing, entity etc. Clues are given using overlayTags so player can collect enough information about the upcoming question that asks for this sequence to escape the room. Be as much detailed and descriptive as possible",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
@@ -3636,7 +3913,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
             }},
             {{
                 "id": "SBB1",
-                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. A Correct Choice leads to Correct Choice Branch and the other incorrect choices leads to subsequent Feedback Branch that returns player to the MediaBlock to which the concerned SimpleBranchingBlock is placed for!",
+                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a feedback and JumpBlock for retrying (In case of incorrect choice) and to a consequence of the choice selected (In case of correct choice). The incorrect choices leads to subsequent Feedback that returns player to the MediaBlock via the JumpBlock to which the concerned SimpleBranchingBlock is placed for!",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -3674,7 +3951,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B3"
+                "proceedToBlock": "Room1"
             }},
             {{
                 "id": "B5",
@@ -3684,8 +3961,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B6",
-                "label": "Room 2",
+                "id": "Room2",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image/360",
@@ -3725,7 +4001,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B6"
+                "proceedToBlock": "Room2"
             }},     
             {{
                 "id": "B8",
@@ -3736,7 +4012,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
             }},    
             {{
                 "id": "B9",
-                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block.",
+                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block. This block ends and concludes the gamified escape room scenario",
                 "type": "PedagogicalBlock",
                 "title": "Reflective Learning Block",
                 "description": "(Insert Text about feedback, feedforward, and learning experience in context of learning objectives for this scenario here)"
@@ -3753,10 +4029,10 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
-                "source": "B3",
+                "source": "Room1",
                 "target": "SBB1"
             }},
             {{
@@ -3780,7 +4056,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
             }},    
             {{
                 "source": "JB1",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
                 "source": "SBB1",
@@ -3789,10 +4065,10 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
             }},
             {{
                 "source": "B5",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
-                "source": "B6",
+                "source": "Room2",
                 "target": "SBB2"
             }},
             {{
@@ -3811,7 +4087,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
             }},    
             {{
                 "source": "JB2",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
                 "source": "SBB2",
@@ -3828,6 +4104,245 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
 
     The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Media Blocks, Branching Blocks, and Pedagogy Blocks, as well as their content and usage.
 
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+take the student through fire escape room situation. Evaluate the student's knowledge on what action should you take on discovering a electric fire.
+    "Learning Objectives":
+Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step.
+Describe the conditions under which a fire extinguisher should be used.
+Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep).
+    "Content Areas":
+The 3 A's of fire safety: Activate, Assist, Attempt,
+P.A.S.S. method for fire extinguisher use.
+
+JSON OUTPUT:
+{{
+    "title": "Fire Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step. Describe the conditions under which a fire extinguisher should be used. Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep). Content Areas: The 3 A's of fire safety: Activate, Assist, Attempt, Conditions for using a fire extinguisher, P.A.S.S. method for fire extinguisher use, Classes of fire"
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Scenario's Context",
+            "description": "You are trapped in a simulated office building experiencing a small fire. Your objective is to escape safely, demonstrating your understanding of fire safety procedures. This involves successfully navigating two \"rooms\" representing different stages of the emergency."
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Burning Office",
+            "mediaType": "Image",
+            "description": "A simulated office with a small fire in a wastebasket, a fire alarm, an overturned desk with a partially visible person, and a fire extinguisher.",
+            "overlayTags": [
+                "Fire Alarm: Activate the building's fire alarm system or call 911.",
+                "Overturned Desk: Assist those in immediate danger, prioritizing your own safety.",
+                "Small Fire: Attempt to extinguish only if the fire is small, contained, and you have a clear escape route. Never attempt to fight a fire if there is a heavy smoke condition.",
+                "Fire Extinguisher: Use only when the fire is contained, the extinguisher is available, you know how to use it, personal safety is not compromised, and there is a clear escape path."
+            ]
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 1",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Activate, then Assist, then Attempt"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Attempt, then Activate, then Assist"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Assist, then Activate, then Attempt"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Assist, then Attempt, then Activate"
+                }}
+            ]
+        }},
+        {{
+            "id": "B4",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember the 3 A's: Activate (alarm or 911), Assist (help others safely), then Attempt (extinguish if conditions are safe). The order is crucial for safety. Review the clues carefully. Try again."
+        }},
+        {{
+            "id": "JB1",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room1"
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Room 1 Consequence",
+            "description": "You successfully activated the alarm and assisted others before attempting to extinguish the fire. You are now ready to proceed to the escape route."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "The Escape Route",
+            "mediaType": "Image",
+            "description": "A hallway with a fire extinguisher and diagrams illustrating the P.A.S.S. method.",
+            "overlayTags": [
+                "Pull the pin.",
+                "Aim at the base of the fire.",
+                "Squeeze the handle.",
+                "Sweep back and forth at the base of the fire until it's out or the extinguisher is empty."
+            ]
+        }},
+        {{
+            "id": "SBB2",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 2",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Pull, Aim, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Aim, Pull, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Aim, Squeeze, Pull, Sweep"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Squeeze, Aim, Pull, Sweep"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember P.A.S.S.: Pull the pin, Aim at the base of the fire, Squeeze the handle, Sweep from side to side. Review the diagrams and text carefully. The order is critical for effective fire suppression. Try again."
+        }},
+        {{
+            "id": "JB2",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room2"
+        }},
+        {{
+            "id": "B8",
+            "type": "PedagogicalBlock",
+            "title": "Room 2 Consequence",
+            "description": "You have successfully used the fire extinguisher following the P.A.S.S. method. You are now ready to escape."
+        }},
+        {{
+            "id": "B9",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "Congratulations! You successfully escaped the simulated fire situation, demonstrating a thorough understanding of fire safety procedures. You learned about the 3 A's of fire safety and the P.A.S.S. method for using a fire extinguisher.  Think about how these procedures can help you stay safe in real-life fire situations.  What other fire safety measures do you know?"
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B4",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "Room1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B5",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B7",
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "B9"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]
+
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
     human will be using the generated code directly into the server side to run the JSON code.
@@ -3843,7 +4358,8 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     Just start the JSON response directly. 
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in SAMPLE EXAMPLE of Escape Room Scenario aka Gamified Scenario or Exit Game Scenario.
-    ]
+    
+    ]]]
 
     !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
 
@@ -3861,7 +4377,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     student will be able to escape the situations by making correct choices. This type of game is
     also known as Exit Game and you are tasked with making Exit Game Scenarios.  
     
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE. INCLUDING THE EDGES ARRAY IS MANDATORY BECAUSE WITHOUT IT, INTERCONNECTIONS BETWEEN NODE IDS IS NOT POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Exit Game creation, YOU will:
@@ -3873,6 +4389,20 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     'Human Input': {human_input};
     'Learning Objectives': {learning_obj};
     'Content Areas': {content_areas};
+    Additional Context:
+    Human would love to have atleast 2 fully detailed rooms and at most 5 fully detailed rooms.        
+    Human requires that you explain the clues in as much detail as possible. The Human
+    finds it easy that you explain room and clues to the fullest to him in your output.
+    Human also finds the concept of Room to be metaphorical, meaning any situation that the human faces or trapped in can be considered
+    Room. For example a person can be outside and face a situation which requires his attention to make the situation better eg.
+    A CPR to a needy in park.
+    The Escape Room scenario can also be used as information giving medium. For example, to train to allow a new employee to navigate,
+    one can give Escape Room for the employee to understand the ins and outs of the building, the offices and rooms and their intro
+    regarding their function and tasks. The Clues would act as office description of each office in the building map for example.
+    Another use case example is that I want to train users to introduce to them a certain area. I can show them the whole overview
+    map for example as a Room, where user can click on each clue which will reveal the descriptions of the area of the map and would 
+    allow the user to get good navigation and introduction of the area. 
+
     ***WHAT TO DO END***
     
     The Exit Game are built using blocks, each having its own parameters.
@@ -3952,8 +4482,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "label": "Room 1",
+                "id": "Room1",
                 "Purpose": "Content Carrier Block. This block is used to represent a full fledge room. Suggest mediaType as "Image" or "360" for player to view the room as Image or for more immersiveness as 360 image. This block (In terms of either one Media Block or multiple per scenario, subject to the number of room requirements set forth by the 'Human Input') is where you !Give students an illustrative experience that visulizes the information. The media blocks describes in detail the room and its complete environment, setting etc. so a complete picture is visualized to the player. Then, player is given interactive hotspots or points of interest (overlayTags) which when the player clicks on screen, then detailed description is given of that hotspot which can be a place of interest, thing, entity etc. Clues are given using overlayTags so player can collect enough information about the upcoming question that asks for this sequence to escape the room. Be as much detailed and descriptive as possible",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
@@ -3965,7 +4494,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
             }},
             {{
                 "id": "SBB1",
-                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. A Correct Choice leads to Correct Choice Branch and the other incorrect choices leads to subsequent Feedback Branch that returns player to the MediaBlock to which the concerned SimpleBranchingBlock is placed for!",
+                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a feedback and JumpBlock for retrying (In case of incorrect choice) and to a consequence of the choice selected (In case of correct choice). The incorrect choices leads to subsequent Feedback that returns player to the MediaBlock via the JumpBlock to which the concerned SimpleBranchingBlock is placed for!",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -4003,7 +4532,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B3"
+                "proceedToBlock": "Room1"
             }},
             {{
                 "id": "B5",
@@ -4013,8 +4542,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B6",
-                "label": "Room 2",
+                "id": "Room2",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image/360",
@@ -4054,7 +4582,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B6"
+                "proceedToBlock": "Room2"
             }},     
             {{
                 "id": "B8",
@@ -4065,7 +4593,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
             }},    
             {{
                 "id": "B9",
-                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block.",
+                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block. This block ends and concludes the gamified escape room scenario",
                 "type": "PedagogicalBlock",
                 "title": "Reflective Learning Block",
                 "description": "(Insert Text about feedback, feedforward, and learning experience in context of learning objectives for this scenario here)"
@@ -4082,10 +4610,10 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
-                "source": "B3",
+                "source": "Room1",
                 "target": "SBB1"
             }},
             {{
@@ -4109,7 +4637,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
             }},    
             {{
                 "source": "JB1",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
                 "source": "SBB1",
@@ -4118,10 +4646,10 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
             }},
             {{
                 "source": "B5",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
-                "source": "B6",
+                "source": "Room2",
                 "target": "SBB2"
             }},
             {{
@@ -4140,7 +4668,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
             }},    
             {{
                 "source": "JB2",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
                 "source": "SBB2",
@@ -4156,6 +4684,245 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     \n\nEND OF SAMPLE EXAMPLE\n\n   
 
     The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Media Blocks, Branching Blocks, and Pedagogy Blocks, as well as their content and usage.
+
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+take the student through fire escape room situation. Evaluate the student's knowledge on what action should you take on discovering a electric fire.
+    "Learning Objectives":
+Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step.
+Describe the conditions under which a fire extinguisher should be used.
+Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep).
+    "Content Areas":
+The 3 A's of fire safety: Activate, Assist, Attempt,
+P.A.S.S. method for fire extinguisher use.
+
+JSON OUTPUT:
+{{
+    "title": "Fire Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step. Describe the conditions under which a fire extinguisher should be used. Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep). Content Areas: The 3 A's of fire safety: Activate, Assist, Attempt, Conditions for using a fire extinguisher, P.A.S.S. method for fire extinguisher use, Classes of fire"
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Scenario's Context",
+            "description": "You are trapped in a simulated office building experiencing a small fire. Your objective is to escape safely, demonstrating your understanding of fire safety procedures. This involves successfully navigating two \"rooms\" representing different stages of the emergency."
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Burning Office",
+            "mediaType": "Image",
+            "description": "A simulated office with a small fire in a wastebasket, a fire alarm, an overturned desk with a partially visible person, and a fire extinguisher.",
+            "overlayTags": [
+                "Fire Alarm: Activate the building's fire alarm system or call 911.",
+                "Overturned Desk: Assist those in immediate danger, prioritizing your own safety.",
+                "Small Fire: Attempt to extinguish only if the fire is small, contained, and you have a clear escape route. Never attempt to fight a fire if there is a heavy smoke condition.",
+                "Fire Extinguisher: Use only when the fire is contained, the extinguisher is available, you know how to use it, personal safety is not compromised, and there is a clear escape path."
+            ]
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 1",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Activate, then Assist, then Attempt"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Attempt, then Activate, then Assist"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Assist, then Activate, then Attempt"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Assist, then Attempt, then Activate"
+                }}
+            ]
+        }},
+        {{
+            "id": "B4",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember the 3 A's: Activate (alarm or 911), Assist (help others safely), then Attempt (extinguish if conditions are safe). The order is crucial for safety. Review the clues carefully. Try again."
+        }},
+        {{
+            "id": "JB1",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room1"
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Room 1 Consequence",
+            "description": "You successfully activated the alarm and assisted others before attempting to extinguish the fire. You are now ready to proceed to the escape route."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "The Escape Route",
+            "mediaType": "Image",
+            "description": "A hallway with a fire extinguisher and diagrams illustrating the P.A.S.S. method.",
+            "overlayTags": [
+                "Pull the pin.",
+                "Aim at the base of the fire.",
+                "Squeeze the handle.",
+                "Sweep back and forth at the base of the fire until it's out or the extinguisher is empty."
+            ]
+        }},
+        {{
+            "id": "SBB2",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 2",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Pull, Aim, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Aim, Pull, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Aim, Squeeze, Pull, Sweep"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Squeeze, Aim, Pull, Sweep"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember P.A.S.S.: Pull the pin, Aim at the base of the fire, Squeeze the handle, Sweep from side to side. Review the diagrams and text carefully. The order is critical for effective fire suppression. Try again."
+        }},
+        {{
+            "id": "JB2",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room2"
+        }},
+        {{
+            "id": "B8",
+            "type": "PedagogicalBlock",
+            "title": "Room 2 Consequence",
+            "description": "You have successfully used the fire extinguisher following the P.A.S.S. method. You are now ready to escape."
+        }},
+        {{
+            "id": "B9",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "Congratulations! You successfully escaped the simulated fire situation, demonstrating a thorough understanding of fire safety procedures. You learned about the 3 A's of fire safety and the P.A.S.S. method for using a fire extinguisher.  Think about how these procedures can help you stay safe in real-life fire situations.  What other fire safety measures do you know?"
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B4",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "Room1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B5",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B7",
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "B9"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -4218,6 +4985,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     Instruction Set:
     [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
@@ -4232,7 +5000,21 @@ prompt_gamify_shadow_edges = PromptTemplate(
     1. Take the "Human Input" which represents the Exit Game content topic or description for which the Exit Game is to be formulated.
     2. According to the "Learning Objectives" and "Content Areas", you will create the Exit Game scenario.  
     3. Generate a JSON-formatted Exit Game structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
-    
+
+    Additional Context:
+    Human would love to have atleast 2 fully detailed rooms and at most 5 fully detailed rooms.        
+    Human requires that you explain the clues in as much detail as possible. The Human
+    finds it easy that you explain room and clues to the fullest to him in your output.
+    Human also finds the concept of Room to be metaphorical, meaning any situation that the human faces or trapped in can be considered
+    Room. For example a person can be outside and face a situation which requires his attention to make the situation better eg.
+    A CPR to a needy in park.
+    The Escape Room scenario can also be used as information giving medium. For example, to train to allow a new employee to navigate,
+    one can give Escape Room for the employee to understand the ins and outs of the building, the offices and rooms and their intro
+    regarding their function and tasks. The Clues would act as office description of each office in the building map for example.
+    Another use case example is that I want to train users to introduce to them a certain area. I can show them the whole overview
+    map for example as a Room, where user can click on each clue which will reveal the descriptions of the area of the map and would 
+    allow the user to get good navigation and introduction of the area. 
+
     ***WHAT TO DO END***
     
     The Exit Game are built using blocks, each having its own parameters.
@@ -4312,8 +5094,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "label": "Room 1",
+                "id": "Room1",
                 "Purpose": "Content Carrier Block. This block is used to represent a full fledge room. Suggest mediaType as "Image" or "360" for player to view the room as Image or for more immersiveness as 360 image. This block (In terms of either one Media Block or multiple per scenario, subject to the number of room requirements set forth by the 'Human Input') is where you !Give students an illustrative experience that visulizes the information. The media blocks describes in detail the room and its complete environment, setting etc. so a complete picture is visualized to the player. Then, player is given interactive hotspots or points of interest (overlayTags) which when the player clicks on screen, then detailed description is given of that hotspot which can be a place of interest, thing, entity etc. Clues are given using overlayTags so player can collect enough information about the upcoming question that asks for this sequence to escape the room. Be as much detailed and descriptive as possible",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
@@ -4325,7 +5106,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
             }},
             {{
                 "id": "SBB1",
-                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. A Correct Choice leads to Correct Choice Branch and the other incorrect choices leads to subsequent Feedback Branch that returns player to the MediaBlock to which the concerned SimpleBranchingBlock is placed for!",
+                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a feedback and JumpBlock for retrying (In case of incorrect choice) and to a consequence of the choice selected (In case of correct choice). The incorrect choices leads to subsequent Feedback that returns player to the MediaBlock via the JumpBlock to which the concerned SimpleBranchingBlock is placed for!",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -4363,7 +5144,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B3"
+                "proceedToBlock": "Room1"
             }},
             {{
                 "id": "B5",
@@ -4373,8 +5154,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B6",
-                "label": "Room 2",
+                "id": "Room2",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image/360",
@@ -4414,7 +5194,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B6"
+                "proceedToBlock": "Room2"
             }},     
             {{
                 "id": "B8",
@@ -4425,7 +5205,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
             }},    
             {{
                 "id": "B9",
-                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block.",
+                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block. This block ends and concludes the gamified escape room scenario",
                 "type": "PedagogicalBlock",
                 "title": "Reflective Learning Block",
                 "description": "(Insert Text about feedback, feedforward, and learning experience in context of learning objectives for this scenario here)"
@@ -4442,10 +5222,10 @@ prompt_gamify_shadow_edges = PromptTemplate(
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
-                "source": "B3",
+                "source": "Room1",
                 "target": "SBB1"
             }},
             {{
@@ -4469,7 +5249,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
             }},    
             {{
                 "source": "JB1",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
                 "source": "SBB1",
@@ -4478,10 +5258,10 @@ prompt_gamify_shadow_edges = PromptTemplate(
             }},
             {{
                 "source": "B5",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
-                "source": "B6",
+                "source": "Room2",
                 "target": "SBB2"
             }},
             {{
@@ -4500,7 +5280,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
             }},    
             {{
                 "source": "JB2",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
                 "source": "SBB2",
@@ -4517,6 +5297,245 @@ prompt_gamify_shadow_edges = PromptTemplate(
 
     The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Media Blocks, Branching Blocks, and Pedagogy Blocks, as well as their content and usage.
 
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+take the student through fire escape room situation. Evaluate the student's knowledge on what action should you take on discovering a electric fire.
+    "Learning Objectives":
+Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step.
+Describe the conditions under which a fire extinguisher should be used.
+Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep).
+    "Content Areas":
+The 3 A's of fire safety: Activate, Assist, Attempt,
+P.A.S.S. method for fire extinguisher use.
+
+JSON OUTPUT:
+{{
+    "title": "Fire Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step. Describe the conditions under which a fire extinguisher should be used. Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep). Content Areas: The 3 A's of fire safety: Activate, Assist, Attempt, Conditions for using a fire extinguisher, P.A.S.S. method for fire extinguisher use, Classes of fire"
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Scenario's Context",
+            "description": "You are trapped in a simulated office building experiencing a small fire. Your objective is to escape safely, demonstrating your understanding of fire safety procedures. This involves successfully navigating two \"rooms\" representing different stages of the emergency."
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Burning Office",
+            "mediaType": "Image",
+            "description": "A simulated office with a small fire in a wastebasket, a fire alarm, an overturned desk with a partially visible person, and a fire extinguisher.",
+            "overlayTags": [
+                "Fire Alarm: Activate the building's fire alarm system or call 911.",
+                "Overturned Desk: Assist those in immediate danger, prioritizing your own safety.",
+                "Small Fire: Attempt to extinguish only if the fire is small, contained, and you have a clear escape route. Never attempt to fight a fire if there is a heavy smoke condition.",
+                "Fire Extinguisher: Use only when the fire is contained, the extinguisher is available, you know how to use it, personal safety is not compromised, and there is a clear escape path."
+            ]
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 1",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Activate, then Assist, then Attempt"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Attempt, then Activate, then Assist"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Assist, then Activate, then Attempt"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Assist, then Attempt, then Activate"
+                }}
+            ]
+        }},
+        {{
+            "id": "B4",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember the 3 A's: Activate (alarm or 911), Assist (help others safely), then Attempt (extinguish if conditions are safe). The order is crucial for safety. Review the clues carefully. Try again."
+        }},
+        {{
+            "id": "JB1",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room1"
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Room 1 Consequence",
+            "description": "You successfully activated the alarm and assisted others before attempting to extinguish the fire. You are now ready to proceed to the escape route."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "The Escape Route",
+            "mediaType": "Image",
+            "description": "A hallway with a fire extinguisher and diagrams illustrating the P.A.S.S. method.",
+            "overlayTags": [
+                "Pull the pin.",
+                "Aim at the base of the fire.",
+                "Squeeze the handle.",
+                "Sweep back and forth at the base of the fire until it's out or the extinguisher is empty."
+            ]
+        }},
+        {{
+            "id": "SBB2",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 2",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Pull, Aim, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Aim, Pull, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Aim, Squeeze, Pull, Sweep"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Squeeze, Aim, Pull, Sweep"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember P.A.S.S.: Pull the pin, Aim at the base of the fire, Squeeze the handle, Sweep from side to side. Review the diagrams and text carefully. The order is critical for effective fire suppression. Try again."
+        }},
+        {{
+            "id": "JB2",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room2"
+        }},
+        {{
+            "id": "B8",
+            "type": "PedagogicalBlock",
+            "title": "Room 2 Consequence",
+            "description": "You have successfully used the fire extinguisher following the P.A.S.S. method. You are now ready to escape."
+        }},
+        {{
+            "id": "B9",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "Congratulations! You successfully escaped the simulated fire situation, demonstrating a thorough understanding of fire safety procedures. You learned about the 3 A's of fire safety and the P.A.S.S. method for using a fire extinguisher.  Think about how these procedures can help you stay safe in real-life fire situations.  What other fire safety measures do you know?"
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B4",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "Room1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B5",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B7",
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "B9"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]
+
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
     human will be using the generated code directly into the server side to run the JSON code.
@@ -4532,6 +5551,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
     Just start the JSON response directly. 
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in SAMPLE EXAMPLE of Escape Room Scenario aka Gamified Scenario or Exit Game Scenario.
+    
     ]]]
 
     Chatbot:"""
@@ -4604,6 +5624,7 @@ You will Continue like this in your generated response:
     BELOW IS THE HISTORY BASED ON WHICH THE 'OUTPUT' WAS CREATED ORIGINALLY:
     HISTORY:
     [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
@@ -4618,7 +5639,21 @@ You will Continue like this in your generated response:
     1. Take the "Human Input" which represents the Exit Game content topic or description for which the Exit Game is to be formulated.
     2. According to the "Learning Objectives" and "Content Areas", you will create the Exit Game scenario.  
     3. Generate a JSON-formatted Exit Game structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
-    
+
+    Additional Context:
+    Human would love to have atleast 2 fully detailed rooms and at most 5 fully detailed rooms.        
+    Human requires that you explain the clues in as much detail as possible. The Human
+    finds it easy that you explain room and clues to the fullest to him in your output.
+    Human also finds the concept of Room to be metaphorical, meaning any situation that the human faces or trapped in can be considered
+    Room. For example a person can be outside and face a situation which requires his attention to make the situation better eg.
+    A CPR to a needy in park.
+    The Escape Room scenario can also be used as information giving medium. For example, to train to allow a new employee to navigate,
+    one can give Escape Room for the employee to understand the ins and outs of the building, the offices and rooms and their intro
+    regarding their function and tasks. The Clues would act as office description of each office in the building map for example.
+    Another use case example is that I want to train users to introduce to them a certain area. I can show them the whole overview
+    map for example as a Room, where user can click on each clue which will reveal the descriptions of the area of the map and would 
+    allow the user to get good navigation and introduction of the area. 
+
     ***WHAT TO DO END***
     
     The Exit Game are built using blocks, each having its own parameters.
@@ -4698,8 +5733,7 @@ You will Continue like this in your generated response:
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B3",
-                "label": "Room 1",
+                "id": "Room1",
                 "Purpose": "Content Carrier Block. This block is used to represent a full fledge room. Suggest mediaType as "Image" or "360" for player to view the room as Image or for more immersiveness as 360 image. This block (In terms of either one Media Block or multiple per scenario, subject to the number of room requirements set forth by the 'Human Input') is where you !Give students an illustrative experience that visulizes the information. The media blocks describes in detail the room and its complete environment, setting etc. so a complete picture is visualized to the player. Then, player is given interactive hotspots or points of interest (overlayTags) which when the player clicks on screen, then detailed description is given of that hotspot which can be a place of interest, thing, entity etc. Clues are given using overlayTags so player can collect enough information about the upcoming question that asks for this sequence to escape the room. Be as much detailed and descriptive as possible",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
@@ -4711,7 +5745,7 @@ You will Continue like this in your generated response:
             }},
             {{
                 "id": "SBB1",
-                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. A Correct Choice leads to Correct Choice Branch and the other incorrect choices leads to subsequent Feedback Branch that returns player to the MediaBlock to which the concerned SimpleBranchingBlock is placed for!",
+                "Purpose": "This block is where you !Divide the Exit Game content into a number of choices, that users can select and the corresponding divided branches leads to a feedback and JumpBlock for retrying (In case of incorrect choice) and to a consequence of the choice selected (In case of correct choice). The incorrect choices leads to subsequent Feedback that returns player to the MediaBlock via the JumpBlock to which the concerned SimpleBranchingBlock is placed for!",
                 "type": "SimpleBranchingBlock",
                 "title": "(Insert Text Here)",
                 "branches": [
@@ -4749,7 +5783,7 @@ You will Continue like this in your generated response:
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B3"
+                "proceedToBlock": "Room1"
             }},
             {{
                 "id": "B5",
@@ -4759,8 +5793,7 @@ You will Continue like this in your generated response:
                 "description": "(Insert Text Here)"
             }},
             {{
-                "id": "B6",
-                "label": "Room 2",
+                "id": "Room2",
                 "type": "MediaBlock",
                 "title": "(Insert Text Here)",
                 "mediaType": "Image/360",
@@ -4800,7 +5833,7 @@ You will Continue like this in your generated response:
                 "label": "Feedback Branch",
                 "type": "JumpBlock",
                 "title": "Reevaluate Your Choices",
-                "proceedToBlock": "B6"
+                "proceedToBlock": "Room2"
             }},     
             {{
                 "id": "B8",
@@ -4811,7 +5844,7 @@ You will Continue like this in your generated response:
             }},    
             {{
                 "id": "B9",
-                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block.",
+                "Purpose": "This Block type gives feedback as a whole to the whole scenario and not just one specific room. This Block also elaborates what has been learned and how exactly in this Escape Room scenario in context of the learning objectives mentioned. A mention of feedforward is also beneficial and important to player here in this block. This block ends and concludes the gamified escape room scenario",
                 "type": "PedagogicalBlock",
                 "title": "Reflective Learning Block",
                 "description": "(Insert Text about feedback, feedforward, and learning experience in context of learning objectives for this scenario here)"
@@ -4828,10 +5861,10 @@ You will Continue like this in your generated response:
             }},
             {{
                 "source": "B2",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
-                "source": "B3",
+                "source": "Room1",
                 "target": "SBB1"
             }},
             {{
@@ -4855,7 +5888,7 @@ You will Continue like this in your generated response:
             }},    
             {{
                 "source": "JB1",
-                "target": "B3"
+                "target": "Room1"
             }},
             {{
                 "source": "SBB1",
@@ -4864,10 +5897,10 @@ You will Continue like this in your generated response:
             }},
             {{
                 "source": "B5",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
-                "source": "B6",
+                "source": "Room2",
                 "target": "SBB2"
             }},
             {{
@@ -4886,7 +5919,7 @@ You will Continue like this in your generated response:
             }},    
             {{
                 "source": "JB2",
-                "target": "B6"
+                "target": "Room2"
             }},
             {{
                 "source": "SBB2",
@@ -4903,6 +5936,245 @@ You will Continue like this in your generated response:
 
     The SAMPLE EXAMPLE provided is simply a representation of how a typical Gamified Scenario is structured. You have the flexibility to choose the types and quantities of Media Blocks, Branching Blocks, and Pedagogy Blocks, as well as their content and usage.
 
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+take the student through fire escape room situation. Evaluate the student's knowledge on what action should you take on discovering a electric fire.
+    "Learning Objectives":
+Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step.
+Describe the conditions under which a fire extinguisher should be used.
+Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep).
+    "Content Areas":
+The 3 A's of fire safety: Activate, Assist, Attempt,
+P.A.S.S. method for fire extinguisher use.
+
+JSON OUTPUT:
+{{
+    "title": "Fire Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: Explain the 3 A's of fire safety (Activate, Assist, Attempt) and when to apply each step. Describe the conditions under which a fire extinguisher should be used. Demonstrate the proper use of a fire extinguisher using the P.A.S.S. method (Pull, Aim, Squeeze, Sweep). Content Areas: The 3 A's of fire safety: Activate, Assist, Attempt, Conditions for using a fire extinguisher, P.A.S.S. method for fire extinguisher use, Classes of fire"
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Scenario's Context",
+            "description": "You are trapped in a simulated office building experiencing a small fire. Your objective is to escape safely, demonstrating your understanding of fire safety procedures. This involves successfully navigating two \"rooms\" representing different stages of the emergency."
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Burning Office",
+            "mediaType": "Image",
+            "description": "A simulated office with a small fire in a wastebasket, a fire alarm, an overturned desk with a partially visible person, and a fire extinguisher.",
+            "overlayTags": [
+                "Fire Alarm: Activate the building's fire alarm system or call 911.",
+                "Overturned Desk: Assist those in immediate danger, prioritizing your own safety.",
+                "Small Fire: Attempt to extinguish only if the fire is small, contained, and you have a clear escape route. Never attempt to fight a fire if there is a heavy smoke condition.",
+                "Fire Extinguisher: Use only when the fire is contained, the extinguisher is available, you know how to use it, personal safety is not compromised, and there is a clear escape path."
+            ]
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 1",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Activate, then Assist, then Attempt"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Attempt, then Activate, then Assist"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Assist, then Activate, then Attempt"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Assist, then Attempt, then Activate"
+                }}
+            ]
+        }},
+        {{
+            "id": "B4",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember the 3 A's: Activate (alarm or 911), Assist (help others safely), then Attempt (extinguish if conditions are safe). The order is crucial for safety. Review the clues carefully. Try again."
+        }},
+        {{
+            "id": "JB1",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room1"
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Room 1 Consequence",
+            "description": "You successfully activated the alarm and assisted others before attempting to extinguish the fire. You are now ready to proceed to the escape route."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "The Escape Route",
+            "mediaType": "Image",
+            "description": "A hallway with a fire extinguisher and diagrams illustrating the P.A.S.S. method.",
+            "overlayTags": [
+                "Pull the pin.",
+                "Aim at the base of the fire.",
+                "Squeeze the handle.",
+                "Sweep back and forth at the base of the fire until it's out or the extinguisher is empty."
+            ]
+        }},
+        {{
+            "id": "SBB2",
+            "type": "SimpleBranchingBlock",
+            "title": "Escape Room 2",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Branch 1": "Pull, Aim, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "2",
+                    "Branch 2": "Aim, Pull, Squeeze, Sweep"
+                }},
+                {{
+                    "port": "3",
+                    "Branch 3": "Aim, Squeeze, Pull, Sweep"
+                }},
+                {{
+                    "port": "4",
+                    "Branch 4": "Squeeze, Aim, Pull, Sweep"
+                }}
+            ]
+        }},
+        {{
+            "id": "B7",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Remember P.A.S.S.: Pull the pin, Aim at the base of the fire, Squeeze the handle, Sweep from side to side. Review the diagrams and text carefully. The order is critical for effective fire suppression. Try again."
+        }},
+        {{
+            "id": "JB2",
+            "type": "JumpBlock",
+            "title": "Reevaluate Your Choices",
+            "proceedToBlock": "Room2"
+        }},
+        {{
+            "id": "B8",
+            "type": "PedagogicalBlock",
+            "title": "Room 2 Consequence",
+            "description": "You have successfully used the fire extinguisher following the P.A.S.S. method. You are now ready to escape."
+        }},
+        {{
+            "id": "B9",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "Congratulations! You successfully escaped the simulated fire situation, demonstrating a thorough understanding of fire safety procedures. You learned about the 3 A's of fire safety and the P.A.S.S. method for using a fire extinguisher.  Think about how these procedures can help you stay safe in real-life fire situations.  What other fire safety measures do you know?"
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B4",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "Room1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B5",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "4"
+        }},
+        {{
+            "source": "B7",
+            "target": "JB2"
+        }},
+        {{
+            "source": "JB2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "B9"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]
+    
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
     human will be using the generated code directly into the server side to run the JSON code.
@@ -4918,6 +6190,7 @@ You will Continue like this in your generated response:
     Just start the JSON response directly. 
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in SAMPLE EXAMPLE of Escape Room Scenario aka Gamified Scenario or Exit Game Scenario.
+    
     ]]]
 
     Chatbot:"""
@@ -4934,10 +6207,9 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
-    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
+    and choices from which the user uses prior knowledge to select a choice and face the consequences for it, just like in real life.
 
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
-
+    
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
 
@@ -4956,14 +6228,14 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     Block types include: 
     'TextBlock' with title, and description
     'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 (3 is preferred) choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
     'JumpBlock' with title, proceedToBlock
     All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Human Input". 
+    "Learning Objectives" and "Content Areas". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
     Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
     Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
@@ -4971,6 +6243,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
     Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
     have a chance to make things right after wrong choices, just like we do in real life.
+    THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path).
     ***
 
     ***YOU WILL BE REWARD IF:
@@ -4984,7 +6257,6 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     depending on the choice number.
     Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
     This will allow students to really ponder upon and critically think before selecting a choice.
-
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -4993,11 +6265,11 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     Scenario's Context (PedagogicalBlock)
     Pedagogical Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
-    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To select from a choice of choices (Branches). The number of choices may be 2 ir 3 (3 is preferred) )
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock. THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). )
     Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
-    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There frequent use is recommended. Please remember this block is only used for retry purpose only and jumps use back to a SimpleBranchingBlock.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -5026,6 +6298,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
     #####
 
     !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
+
         
     \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
@@ -5057,7 +6330,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "id": "B4",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. Mention array of relevant overlayTags for elaborating information on key areas in the image and give directions to the course instructor of how to shoot and prepare these Media Blocks. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -5066,10 +6339,10 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the Track 1, and Track 2 are the two branches. Track 2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is possible. Three choices are preferred and user is happy more that way."}},
         {{
             "id": "SBB1",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative. ",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -5084,25 +6357,41 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 }}
             ]
         }},
+        {{"_comment":"THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). Based on the GOLDEN RULE, you can clearly see that B5 block was related to the Track choice of WRONG nature, hence B5 then leads to JB1 which leads user to retry. While B6 block was related to Correct or PARTIALLY-WRONG Track choice, hence it lead to a TextBlock (B7 in this case) or it could have lead to MediaBlock, which further leads to SBB2 for continuing the simulation story or it could have also lead to Conclusion."}},
         {{
             "id": "B5",
-            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B6",
+            "id": "JB1",
+            "Purpose": "This block gives an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. The title string remains as constant for JumpBlock. JumpBlock always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
+            "type": "JumpBlock",
+            "title": "Retry!",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 2",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or PARTIALLY-WRONG consequences, users are either redirected back to SBB2 as a retry option or scneario is Concluded if criticall end happens due to completely failure choice. While for a correct choice when the Simulation path may continue further leading to TextBlock or MediaBlock (subject to MPV value). Track 5 in this example leads to MediaBlock."}},
         {{
             "id": "SBB2",
-            "label":"Track 1",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -5121,44 +6410,33 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             ]
         }},
         {{
-            "id": "B7",
+            "id": "B8",
             "label":"Track 3",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "JB1",
-            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "id": "JB2",
             "label":"Track 3",
             "type": "JumpBlock",
-            "title": "Rethink your choice!",
+            "title": "Retry!",
             "proceedToBlock": "SBB2"
-        }},
-        {{
-            "id": "B8",
-            "label":"Track 4",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B9",
             "label":"Track 4",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }}, 
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
         {{
-            "id": "JB2",
+            "id": "END1",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path. The user can only know that the simulation has ended, if you provide the Conclusion of PedagogicalBlock type, so it is necessary to provide a customized Conclusion of PedagogicalBlock type for the story's label's path when a story path ends.",
             "label":"Track 4",
-            "type": "JumpBlock",
-            "title": "Rethink your choice!",
-            "proceedToBlock": "SBB2"
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B10",
@@ -5170,28 +6448,6 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         {{
             "id": "B11",
             "label":"Track 5",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B12",
-            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
-            "label":"Track 5",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B13",
-            "label":"Track 2",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -5199,11 +6455,11 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},  
-        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
+        }},
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 2 more Tracks of Track 6 and 7. Each Track has its own Consequence. In this example you can see the two tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 3 track branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
             "id": "SBB3",
-            "label":"Track 2",
+            "label":"Track 5",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -5214,62 +6470,33 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
                 {{
                     "port": "2",
                     "Track 7": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "3",
-                    "Track 8": "(Insert Text Here)"
-                }},
+                }}
             ]
         }},
         {{
-            "id": "B15",
+            "id": "B12",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "END2",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B17",
+            "id": "B13",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
-        }},
+        }}, 
         {{
-            "id": "B18",
+            "id": "END3",
             "label":"Track 7",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},   
-        {{
-            "id": "B19",
-            "label":"Track 7",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B20",
-            "label":"Track 8",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B21",
-            "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
@@ -5303,41 +6530,46 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "source": "B5",
-            "target": "B6"
-        }},
-        {{
-            "source": "B6",
-            "target": "SBB2"
-        }},
-        {{
-            "source": "SBB2",
-            "target": "B7",
-            "sourceport": "1"
-        }},
-        {{
-            "source": "B7",
             "target": "JB1"
         }},
         {{
             "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B6",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B6",
+            "target": "B7"
+        }},
+        {{
+            "source": "B7",
             "target": "SBB2"
         }},
         {{
             "source": "SBB2",
             "target": "B8",
-            "sourceport": "2"
+            "sourceport": "1"
         }},
         {{
             "source": "B8",
-            "target": "B9"
-        }},
-        {{
-            "source": "B9",
             "target": "JB2"
         }},
         {{
             "source": "JB2",
             "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END1"
         }},
         {{
             "source": "SBB2",
@@ -5350,51 +6582,286 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
         }},
         {{
             "source": "B11",
-            "target": "B12"
+            "target": "SBB3"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
+            "target": "B12",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B12",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB3",
             "target": "B13",
-            "sourceport":"2"
+            "sourceport": "2"
         }},
         {{
             "source": "B13",
-            "target": "B14"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B15",
-            "sourceport":"1"
-        }},
-        {{
-            "source": "B15",
-            "target": "B16"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B17",
-            "sourceport":"2"
-        }},
-        {{
-            "source": "B17",
-            "target": "B18"
-        }},
-        {{
-            "source": "B18",
-            "target": "B19"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B20",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "B20",
-            "target": "B21"
+            "target": "END3"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+Simulation Scenario for training student to drive down a hill.
+    "Learning Objectives":
+Successfully complete a car driving simulation under slope conditions.,
+Demonstrate safe and effective driving techniques on inclines and declines.,
+Apply knowledge of gear selection and clutch control to navigate slopes.
+    "Content Areas":
+Use of gears in different slope conditions,
+Clutch control on slopes,
+Safe braking techniques on slopes,
+Speed control on slopes.
+
+JSON OUTPUT:
+{{
+    "title": "Driving Down a Hill Simulation",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Scenario Setup",
+            "description": "You are approaching a moderately steep downhill slope. Your speed is 30 KMPH. The road is dry, and visibility is good. You have a manual transmission car."
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. Successfully complete a car driving simulation under slope conditions 2. Demonstrate safe and effective driving techniques on inclines and declines 3. Apply knowledge of gear selection and clutch control to navigate slopes Content Areas: 1. Use of gears in different slope conditions 2. Clutch control on slopes and 3. Speed control on slopes"
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "Maintain 30 KMPH in 3rd gear"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "Brake hard and stay in 3rd gear"
+                }},
+                {{
+                    "port": "3",
+                    "Track 3": "Downshift to 2nd gear and gently brake"
+                }}
+            ]
+        }},
+        {{
+            "id": "B3",
+            "label": "Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Your speed increases rapidly, you lose control, and risk an accident. Retry!"
+        }},
+        {{
+            "id": "JB1",
+            "label": "Track 1",
+            "type": "JumpBlock",
+            "title": "Retry",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B4",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "When you apply hard braking, the intense force can cause the wheels of the car to lock up. This sudden stoppage of wheel rotation can lead to a loss of traction, preventing the tires from gripping the road effectively. As a result, the car becomes harder to steer and control, increasing the risk of it skidding or even flipping over. Understanding how a car’s stability responds to hard braking is crucial because it impacts how effectively you can maintain control during abrupt stops. This knowledge can be especially important in emergency situations where avoiding obstacles or hazards requires immediate braking. The stability of a car during such maneuvers largely depends on the vehicle's design, tire condition, and the road surface, among other factors."
+        }},
+        {{
+            "id": "END1",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You failed the simulation. A Downshift to 2nd gear and gently brake approach was the better choice."
+        }},
+        {{
+            "id": "B5",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Engine braking and gentle braking maintain control. Safe approach."
+        }},
+        {{
+            "id": "SBB2",
+            "label": "Track 3",
+            "type": "SimpleBranchingBlock",
+            "title": "Midway Down the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 4": "Continue engine braking and gentle braking"
+                }},
+                {{
+                    "port": "2",
+                    "Track 5": "Release brakes and rely on engine braking"
+                }}
+            ]
+        }},
+        {{
+            "id": "B6",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You successfully navigate the downhill slope. Excellent driving!"
+        }},
+        {{
+            "id": "END2",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "Congratulations! You demonstrated safe driving techniques."
+        }},
+        {{
+            "id": "B7",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Relying solely on engine braking might increase speed slightly more than desired, but it's not dangerous in this scenario."
+        }},
+        {{
+            "id": "SBB3",
+            "label": "Track 5",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Bottom of the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 6": "Gradually increase speed to 30 KMPH"
+                }},
+                {{
+                    "port": "2",
+                    "Track 7": "Maintain slightly higher speed"
+                }}
+            ]
+        }},
+        {{
+            "id": "B8",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom, but your approach was slightly less controlled. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END3",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but there's room for improvement in maintaining a consistently safe speed."
+        }},
+        {{
+            "id": "B9",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom safely, but your speed was slightly higher than ideal. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END4",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but consider refining your speed control techniques."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B3",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B3",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B4",
+            "target": "END1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "B5",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B6",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B6",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B7",
+            "target": "SBB3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "END3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END4"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]  
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -5422,9 +6889,9 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
-    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
+    and choices from which the user uses prior knowledge to select a choice and face the consequences for it, just like in real life.
 
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
+    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE. INCLUDING THE EDGES ARRAY IS MANDATORY BECAUSE WITHOUT IT, INTERCONNECTIONS BETWEEN NODE IDS IS NOT POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
@@ -5444,14 +6911,14 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     Block types include: 
     'TextBlock' with title, and description
     'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 (3 is preferred) choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
     'JumpBlock' with title, proceedToBlock
     All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Human Input". 
+    "Learning Objectives" and "Content Areas". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
     Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
     Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
@@ -5459,6 +6926,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
     Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
     have a chance to make things right after wrong choices, just like we do in real life.
+    THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path).
     ***
 
     ***YOU WILL BE REWARD IF:
@@ -5472,7 +6940,6 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     depending on the choice number.
     Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
     This will allow students to really ponder upon and critically think before selecting a choice.
-
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -5481,11 +6948,11 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     Scenario's Context (PedagogicalBlock)
     Pedagogical Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
-    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To select from a choice of choices (Branches). The number of choices may be 2 ir 3 (3 is preferred) )
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock. THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). )
     Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
-    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There frequent use is recommended. Please remember this block is only used for retry purpose only and jumps use back to a SimpleBranchingBlock.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -5514,6 +6981,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     #####
 
     !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
+
         
     \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
@@ -5545,7 +7013,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "id": "B4",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. Mention array of relevant overlayTags for elaborating information on key areas in the image and give directions to the course instructor of how to shoot and prepare these Media Blocks. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -5554,10 +7022,10 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the Track 1, and Track 2 are the two branches. Track 2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is possible. Three choices are preferred and user is happy more that way."}},
         {{
             "id": "SBB1",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative. ",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -5572,25 +7040,41 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 }}
             ]
         }},
+        {{"_comment":"THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). Based on the GOLDEN RULE, you can clearly see that B5 block was related to the Track choice of WRONG nature, hence B5 then leads to JB1 which leads user to retry. While B6 block was related to Correct or PARTIALLY-WRONG Track choice, hence it lead to a TextBlock (B7 in this case) or it could have lead to MediaBlock, which further leads to SBB2 for continuing the simulation story or it could have also lead to Conclusion."}},
         {{
             "id": "B5",
-            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B6",
+            "id": "JB1",
+            "Purpose": "This block gives an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. The title string remains as constant for JumpBlock. JumpBlock always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
+            "type": "JumpBlock",
+            "title": "Retry!",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 2",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or PARTIALLY-WRONG consequences, users are either redirected back to SBB2 as a retry option or scneario is Concluded if criticall end happens due to completely failure choice. While for a correct choice when the Simulation path may continue further leading to TextBlock or MediaBlock (subject to MPV value). Track 5 in this example leads to MediaBlock."}},
         {{
             "id": "SBB2",
-            "label":"Track 1",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -5609,44 +7093,33 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             ]
         }},
         {{
-            "id": "B7",
+            "id": "B8",
             "label":"Track 3",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "JB1",
-            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "id": "JB2",
             "label":"Track 3",
             "type": "JumpBlock",
-            "title": "Rethink your choice!",
+            "title": "Retry!",
             "proceedToBlock": "SBB2"
-        }},
-        {{
-            "id": "B8",
-            "label":"Track 4",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B9",
             "label":"Track 4",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }}, 
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
         {{
-            "id": "JB2",
+            "id": "END1",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path. The user can only know that the simulation has ended, if you provide the Conclusion of PedagogicalBlock type, so it is necessary to provide a customized Conclusion of PedagogicalBlock type for the story's label's path when a story path ends.",
             "label":"Track 4",
-            "type": "JumpBlock",
-            "title": "Rethink your choice!",
-            "proceedToBlock": "SBB2"
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B10",
@@ -5658,28 +7131,6 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         {{
             "id": "B11",
             "label":"Track 5",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B12",
-            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
-            "label":"Track 5",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B13",
-            "label":"Track 2",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -5687,11 +7138,11 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},  
-        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
+        }},
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 2 more Tracks of Track 6 and 7. Each Track has its own Consequence. In this example you can see the two tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 3 track branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
             "id": "SBB3",
-            "label":"Track 2",
+            "label":"Track 5",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -5702,62 +7153,33 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
                 {{
                     "port": "2",
                     "Track 7": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "3",
-                    "Track 8": "(Insert Text Here)"
-                }},
+                }}
             ]
         }},
         {{
-            "id": "B15",
+            "id": "B12",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "END2",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B17",
+            "id": "B13",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
-        }},
+        }}, 
         {{
-            "id": "B18",
+            "id": "END3",
             "label":"Track 7",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},   
-        {{
-            "id": "B19",
-            "label":"Track 7",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B20",
-            "label":"Track 8",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B21",
-            "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
@@ -5791,41 +7213,46 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "source": "B5",
-            "target": "B6"
-        }},
-        {{
-            "source": "B6",
-            "target": "SBB2"
-        }},
-        {{
-            "source": "SBB2",
-            "target": "B7",
-            "sourceport": "1"
-        }},
-        {{
-            "source": "B7",
             "target": "JB1"
         }},
         {{
             "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B6",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B6",
+            "target": "B7"
+        }},
+        {{
+            "source": "B7",
             "target": "SBB2"
         }},
         {{
             "source": "SBB2",
             "target": "B8",
-            "sourceport": "2"
+            "sourceport": "1"
         }},
         {{
             "source": "B8",
-            "target": "B9"
-        }},
-        {{
-            "source": "B9",
             "target": "JB2"
         }},
         {{
             "source": "JB2",
             "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END1"
         }},
         {{
             "source": "SBB2",
@@ -5838,51 +7265,286 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
         }},
         {{
             "source": "B11",
-            "target": "B12"
+            "target": "SBB3"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
+            "target": "B12",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B12",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB3",
             "target": "B13",
-            "sourceport":"2"
+            "sourceport": "2"
         }},
         {{
             "source": "B13",
-            "target": "B14"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B15",
-            "sourceport":"1"
-        }},
-        {{
-            "source": "B15",
-            "target": "B16"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B17",
-            "sourceport":"2"
-        }},
-        {{
-            "source": "B17",
-            "target": "B18"
-        }},
-        {{
-            "source": "B18",
-            "target": "B19"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B20",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "B20",
-            "target": "B21"
+            "target": "END3"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+Simulation Scenario for training student to drive down a hill.
+    "Learning Objectives":
+Successfully complete a car driving simulation under slope conditions.,
+Demonstrate safe and effective driving techniques on inclines and declines.,
+Apply knowledge of gear selection and clutch control to navigate slopes.
+    "Content Areas":
+Use of gears in different slope conditions,
+Clutch control on slopes,
+Safe braking techniques on slopes,
+Speed control on slopes.
+
+JSON OUTPUT:
+{{
+    "title": "Driving Down a Hill Simulation",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Scenario Setup",
+            "description": "You are approaching a moderately steep downhill slope. Your speed is 30 KMPH. The road is dry, and visibility is good. You have a manual transmission car."
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. Successfully complete a car driving simulation under slope conditions 2. Demonstrate safe and effective driving techniques on inclines and declines 3. Apply knowledge of gear selection and clutch control to navigate slopes Content Areas: 1. Use of gears in different slope conditions 2. Clutch control on slopes and 3. Speed control on slopes"
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "Maintain 30 KMPH in 3rd gear"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "Brake hard and stay in 3rd gear"
+                }},
+                {{
+                    "port": "3",
+                    "Track 3": "Downshift to 2nd gear and gently brake"
+                }}
+            ]
+        }},
+        {{
+            "id": "B3",
+            "label": "Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Your speed increases rapidly, you lose control, and risk an accident. Retry!"
+        }},
+        {{
+            "id": "JB1",
+            "label": "Track 1",
+            "type": "JumpBlock",
+            "title": "Retry",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B4",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "When you apply hard braking, the intense force can cause the wheels of the car to lock up. This sudden stoppage of wheel rotation can lead to a loss of traction, preventing the tires from gripping the road effectively. As a result, the car becomes harder to steer and control, increasing the risk of it skidding or even flipping over. Understanding how a car’s stability responds to hard braking is crucial because it impacts how effectively you can maintain control during abrupt stops. This knowledge can be especially important in emergency situations where avoiding obstacles or hazards requires immediate braking. The stability of a car during such maneuvers largely depends on the vehicle's design, tire condition, and the road surface, among other factors."
+        }},
+        {{
+            "id": "END1",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You failed the simulation. A Downshift to 2nd gear and gently brake approach was the better choice."
+        }},
+        {{
+            "id": "B5",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Engine braking and gentle braking maintain control. Safe approach."
+        }},
+        {{
+            "id": "SBB2",
+            "label": "Track 3",
+            "type": "SimpleBranchingBlock",
+            "title": "Midway Down the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 4": "Continue engine braking and gentle braking"
+                }},
+                {{
+                    "port": "2",
+                    "Track 5": "Release brakes and rely on engine braking"
+                }}
+            ]
+        }},
+        {{
+            "id": "B6",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You successfully navigate the downhill slope. Excellent driving!"
+        }},
+        {{
+            "id": "END2",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "Congratulations! You demonstrated safe driving techniques."
+        }},
+        {{
+            "id": "B7",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Relying solely on engine braking might increase speed slightly more than desired, but it's not dangerous in this scenario."
+        }},
+        {{
+            "id": "SBB3",
+            "label": "Track 5",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Bottom of the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 6": "Gradually increase speed to 30 KMPH"
+                }},
+                {{
+                    "port": "2",
+                    "Track 7": "Maintain slightly higher speed"
+                }}
+            ]
+        }},
+        {{
+            "id": "B8",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom, but your approach was slightly less controlled. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END3",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but there's room for improvement in maintaining a consistently safe speed."
+        }},
+        {{
+            "id": "B9",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom safely, but your speed was slightly higher than ideal. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END4",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but consider refining your speed control techniques."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B3",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B3",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B4",
+            "target": "END1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "B5",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B6",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B6",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B7",
+            "target": "SBB3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "END3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END4"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]  
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -5927,13 +7589,13 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
 
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     INSTRUCTION SET:
-    [
+    [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
-    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
+    and choices from which the user uses prior knowledge to select a choice and face the consequences for it, just like in real life.
 
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
@@ -5942,7 +7604,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     2. According to the "Learning Objectives" and "Content Areas", you will create the Simulation Scenario.
     You Prefer to make simulation such that a choice may lead to a consequnece that may lead to more choice or choices that may lead to more consequences, evetually reaching the end of the scenario.     
     3. Generate a JSON-formatted structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the content efficiently and logically.
-    
+
     ***WHAT TO DO END***
 
     
@@ -5950,14 +7612,14 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     Block types include: 
     'TextBlock' with title, and description
     'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 (3 is preferred) choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
     'JumpBlock' with title, proceedToBlock
     All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Human Input". 
+    "Learning Objectives" and "Content Areas". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
     Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
     Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
@@ -5965,6 +7627,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
     Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
     have a chance to make things right after wrong choices, just like we do in real life.
+    THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path).
     ***
 
     ***YOU WILL BE REWARD IF:
@@ -5978,7 +7641,6 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     depending on the choice number.
     Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
     This will allow students to really ponder upon and critically think before selecting a choice.
-
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -5987,11 +7649,11 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     Scenario's Context (PedagogicalBlock)
     Pedagogical Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
-    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To select from a choice of choices (Branches). The number of choices may be 2 ir 3 (3 is preferred) )
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock. THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). )
     Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
-    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There frequent use is recommended. Please remember this block is only used for retry purpose only and jumps use back to a SimpleBranchingBlock.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -6020,6 +7682,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     #####
 
     !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
+
         
     \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
@@ -6051,7 +7714,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "id": "B4",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. Mention array of relevant overlayTags for elaborating information on key areas in the image and give directions to the course instructor of how to shoot and prepare these Media Blocks. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -6060,10 +7723,10 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the Track 1, and Track 2 are the two branches. Track 2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is possible. Three choices are preferred and user is happy more that way."}},
         {{
             "id": "SBB1",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative. ",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -6078,25 +7741,41 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 }}
             ]
         }},
+        {{"_comment":"THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). Based on the GOLDEN RULE, you can clearly see that B5 block was related to the Track choice of WRONG nature, hence B5 then leads to JB1 which leads user to retry. While B6 block was related to Correct or PARTIALLY-WRONG Track choice, hence it lead to a TextBlock (B7 in this case) or it could have lead to MediaBlock, which further leads to SBB2 for continuing the simulation story or it could have also lead to Conclusion."}},
         {{
             "id": "B5",
-            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B6",
+            "id": "JB1",
+            "Purpose": "This block gives an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. The title string remains as constant for JumpBlock. JumpBlock always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
+            "type": "JumpBlock",
+            "title": "Retry!",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 2",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or PARTIALLY-WRONG consequences, users are either redirected back to SBB2 as a retry option or scneario is Concluded if criticall end happens due to completely failure choice. While for a correct choice when the Simulation path may continue further leading to TextBlock or MediaBlock (subject to MPV value). Track 5 in this example leads to MediaBlock."}},
         {{
             "id": "SBB2",
-            "label":"Track 1",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -6115,44 +7794,33 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             ]
         }},
         {{
-            "id": "B7",
+            "id": "B8",
             "label":"Track 3",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "JB1",
-            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "id": "JB2",
             "label":"Track 3",
             "type": "JumpBlock",
-            "title": "Rethink your choice!",
+            "title": "Retry!",
             "proceedToBlock": "SBB2"
-        }},
-        {{
-            "id": "B8",
-            "label":"Track 4",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B9",
             "label":"Track 4",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }}, 
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
         {{
-            "id": "JB2",
+            "id": "END1",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path. The user can only know that the simulation has ended, if you provide the Conclusion of PedagogicalBlock type, so it is necessary to provide a customized Conclusion of PedagogicalBlock type for the story's label's path when a story path ends.",
             "label":"Track 4",
-            "type": "JumpBlock",
-            "title": "Rethink your choice!",
-            "proceedToBlock": "SBB2"
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B10",
@@ -6164,28 +7832,6 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         {{
             "id": "B11",
             "label":"Track 5",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B12",
-            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
-            "label":"Track 5",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B13",
-            "label":"Track 2",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -6193,11 +7839,11 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},  
-        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
+        }},
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 2 more Tracks of Track 6 and 7. Each Track has its own Consequence. In this example you can see the two tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 3 track branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
             "id": "SBB3",
-            "label":"Track 2",
+            "label":"Track 5",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -6208,62 +7854,33 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
                 {{
                     "port": "2",
                     "Track 7": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "3",
-                    "Track 8": "(Insert Text Here)"
-                }},
+                }}
             ]
         }},
         {{
-            "id": "B15",
+            "id": "B12",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "END2",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B17",
+            "id": "B13",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
-        }},
+        }}, 
         {{
-            "id": "B18",
+            "id": "END3",
             "label":"Track 7",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},   
-        {{
-            "id": "B19",
-            "label":"Track 7",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B20",
-            "label":"Track 8",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B21",
-            "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
@@ -6297,41 +7914,46 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "source": "B5",
-            "target": "B6"
-        }},
-        {{
-            "source": "B6",
-            "target": "SBB2"
-        }},
-        {{
-            "source": "SBB2",
-            "target": "B7",
-            "sourceport": "1"
-        }},
-        {{
-            "source": "B7",
             "target": "JB1"
         }},
         {{
             "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B6",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B6",
+            "target": "B7"
+        }},
+        {{
+            "source": "B7",
             "target": "SBB2"
         }},
         {{
             "source": "SBB2",
             "target": "B8",
-            "sourceport": "2"
+            "sourceport": "1"
         }},
         {{
             "source": "B8",
-            "target": "B9"
-        }},
-        {{
-            "source": "B9",
             "target": "JB2"
         }},
         {{
             "source": "JB2",
             "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END1"
         }},
         {{
             "source": "SBB2",
@@ -6344,51 +7966,286 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
         }},
         {{
             "source": "B11",
-            "target": "B12"
+            "target": "SBB3"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
+            "target": "B12",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B12",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB3",
             "target": "B13",
-            "sourceport":"2"
+            "sourceport": "2"
         }},
         {{
             "source": "B13",
-            "target": "B14"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B15",
-            "sourceport":"1"
-        }},
-        {{
-            "source": "B15",
-            "target": "B16"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B17",
-            "sourceport":"2"
-        }},
-        {{
-            "source": "B17",
-            "target": "B18"
-        }},
-        {{
-            "source": "B18",
-            "target": "B19"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B20",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "B20",
-            "target": "B21"
+            "target": "END3"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+Simulation Scenario for training student to drive down a hill.
+    "Learning Objectives":
+Successfully complete a car driving simulation under slope conditions.,
+Demonstrate safe and effective driving techniques on inclines and declines.,
+Apply knowledge of gear selection and clutch control to navigate slopes.
+    "Content Areas":
+Use of gears in different slope conditions,
+Clutch control on slopes,
+Safe braking techniques on slopes,
+Speed control on slopes.
+
+JSON OUTPUT:
+{{
+    "title": "Driving Down a Hill Simulation",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Scenario Setup",
+            "description": "You are approaching a moderately steep downhill slope. Your speed is 30 KMPH. The road is dry, and visibility is good. You have a manual transmission car."
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. Successfully complete a car driving simulation under slope conditions 2. Demonstrate safe and effective driving techniques on inclines and declines 3. Apply knowledge of gear selection and clutch control to navigate slopes Content Areas: 1. Use of gears in different slope conditions 2. Clutch control on slopes and 3. Speed control on slopes"
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "Maintain 30 KMPH in 3rd gear"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "Brake hard and stay in 3rd gear"
+                }},
+                {{
+                    "port": "3",
+                    "Track 3": "Downshift to 2nd gear and gently brake"
+                }}
+            ]
+        }},
+        {{
+            "id": "B3",
+            "label": "Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Your speed increases rapidly, you lose control, and risk an accident. Retry!"
+        }},
+        {{
+            "id": "JB1",
+            "label": "Track 1",
+            "type": "JumpBlock",
+            "title": "Retry",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B4",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "When you apply hard braking, the intense force can cause the wheels of the car to lock up. This sudden stoppage of wheel rotation can lead to a loss of traction, preventing the tires from gripping the road effectively. As a result, the car becomes harder to steer and control, increasing the risk of it skidding or even flipping over. Understanding how a car’s stability responds to hard braking is crucial because it impacts how effectively you can maintain control during abrupt stops. This knowledge can be especially important in emergency situations where avoiding obstacles or hazards requires immediate braking. The stability of a car during such maneuvers largely depends on the vehicle's design, tire condition, and the road surface, among other factors."
+        }},
+        {{
+            "id": "END1",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You failed the simulation. A Downshift to 2nd gear and gently brake approach was the better choice."
+        }},
+        {{
+            "id": "B5",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Engine braking and gentle braking maintain control. Safe approach."
+        }},
+        {{
+            "id": "SBB2",
+            "label": "Track 3",
+            "type": "SimpleBranchingBlock",
+            "title": "Midway Down the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 4": "Continue engine braking and gentle braking"
+                }},
+                {{
+                    "port": "2",
+                    "Track 5": "Release brakes and rely on engine braking"
+                }}
+            ]
+        }},
+        {{
+            "id": "B6",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You successfully navigate the downhill slope. Excellent driving!"
+        }},
+        {{
+            "id": "END2",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "Congratulations! You demonstrated safe driving techniques."
+        }},
+        {{
+            "id": "B7",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Relying solely on engine braking might increase speed slightly more than desired, but it's not dangerous in this scenario."
+        }},
+        {{
+            "id": "SBB3",
+            "label": "Track 5",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Bottom of the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 6": "Gradually increase speed to 30 KMPH"
+                }},
+                {{
+                    "port": "2",
+                    "Track 7": "Maintain slightly higher speed"
+                }}
+            ]
+        }},
+        {{
+            "id": "B8",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom, but your approach was slightly less controlled. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END3",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but there's room for improvement in maintaining a consistently safe speed."
+        }},
+        {{
+            "id": "B9",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom safely, but your speed was slightly higher than ideal. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END4",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but consider refining your speed control techniques."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B3",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B3",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B4",
+            "target": "END1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "B5",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B6",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B6",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B7",
+            "target": "SBB3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "END3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END4"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]  
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -6406,7 +8263,12 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     Just start the JSON response directly. 
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Simulation Scenario.
-    """
+    
+    ]]]
+
+    !!!WARNING: KEEP YOUR RESPONSE AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE SINCE MAX TOKEN LIMIT IS ALREADY REACHED!!!
+
+    Chatbot:"""
 )
 
 
@@ -6451,12 +8313,12 @@ prompt_simulation_shadow_edges = PromptTemplate(
     BELOW IS THE INSTRUCTION SET BASED ON WHICH THE 'Incomplete Response' WAS CREATED ORIGINALLY:
     Instruction Set:
     [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
-    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
+    and choices from which the user uses prior knowledge to select a choice and face the consequences for it, just like in real life.
 
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
@@ -6473,14 +8335,14 @@ prompt_simulation_shadow_edges = PromptTemplate(
     Block types include: 
     'TextBlock' with title, and description
     'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 (3 is preferred) choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
     'JumpBlock' with title, proceedToBlock
     All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Human Input". 
+    "Learning Objectives" and "Content Areas". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
     Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
     Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
@@ -6488,6 +8350,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
     JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
     Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
     have a chance to make things right after wrong choices, just like we do in real life.
+    THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path).
     ***
 
     ***YOU WILL BE REWARD IF:
@@ -6501,7 +8364,6 @@ prompt_simulation_shadow_edges = PromptTemplate(
     depending on the choice number.
     Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
     This will allow students to really ponder upon and critically think before selecting a choice.
-
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -6510,11 +8372,11 @@ prompt_simulation_shadow_edges = PromptTemplate(
     Scenario's Context (PedagogicalBlock)
     Pedagogical Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
-    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To select from a choice of choices (Branches). The number of choices may be 2 ir 3 (3 is preferred) )
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock. THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). )
     Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
-    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There frequent use is recommended. Please remember this block is only used for retry purpose only and jumps use back to a SimpleBranchingBlock.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -6543,6 +8405,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
     #####
 
     !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
+
         
     \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
@@ -6574,7 +8437,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "id": "B4",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. Mention array of relevant overlayTags for elaborating information on key areas in the image and give directions to the course instructor of how to shoot and prepare these Media Blocks. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -6583,10 +8446,10 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the Track 1, and Track 2 are the two branches. Track 2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is possible. Three choices are preferred and user is happy more that way."}},
         {{
             "id": "SBB1",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative. ",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -6601,25 +8464,41 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 }}
             ]
         }},
+        {{"_comment":"THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). Based on the GOLDEN RULE, you can clearly see that B5 block was related to the Track choice of WRONG nature, hence B5 then leads to JB1 which leads user to retry. While B6 block was related to Correct or PARTIALLY-WRONG Track choice, hence it lead to a TextBlock (B7 in this case) or it could have lead to MediaBlock, which further leads to SBB2 for continuing the simulation story or it could have also lead to Conclusion."}},
         {{
             "id": "B5",
-            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B6",
+            "id": "JB1",
+            "Purpose": "This block gives an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. The title string remains as constant for JumpBlock. JumpBlock always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
+            "type": "JumpBlock",
+            "title": "Retry!",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 2",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or PARTIALLY-WRONG consequences, users are either redirected back to SBB2 as a retry option or scneario is Concluded if criticall end happens due to completely failure choice. While for a correct choice when the Simulation path may continue further leading to TextBlock or MediaBlock (subject to MPV value). Track 5 in this example leads to MediaBlock."}},
         {{
             "id": "SBB2",
-            "label":"Track 1",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -6638,44 +8517,33 @@ prompt_simulation_shadow_edges = PromptTemplate(
             ]
         }},
         {{
-            "id": "B7",
+            "id": "B8",
             "label":"Track 3",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "JB1",
-            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "id": "JB2",
             "label":"Track 3",
             "type": "JumpBlock",
-            "title": "Rethink your choice!",
+            "title": "Retry!",
             "proceedToBlock": "SBB2"
-        }},
-        {{
-            "id": "B8",
-            "label":"Track 4",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B9",
             "label":"Track 4",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }}, 
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
         {{
-            "id": "JB2",
+            "id": "END1",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path. The user can only know that the simulation has ended, if you provide the Conclusion of PedagogicalBlock type, so it is necessary to provide a customized Conclusion of PedagogicalBlock type for the story's label's path when a story path ends.",
             "label":"Track 4",
-            "type": "JumpBlock",
-            "title": "Rethink your choice!",
-            "proceedToBlock": "SBB2"
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B10",
@@ -6687,28 +8555,6 @@ prompt_simulation_shadow_edges = PromptTemplate(
         {{
             "id": "B11",
             "label":"Track 5",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B12",
-            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
-            "label":"Track 5",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B13",
-            "label":"Track 2",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -6716,11 +8562,11 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},  
-        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
+        }},
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 2 more Tracks of Track 6 and 7. Each Track has its own Consequence. In this example you can see the two tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 3 track branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
             "id": "SBB3",
-            "label":"Track 2",
+            "label":"Track 5",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -6731,62 +8577,33 @@ prompt_simulation_shadow_edges = PromptTemplate(
                 {{
                     "port": "2",
                     "Track 7": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "3",
-                    "Track 8": "(Insert Text Here)"
-                }},
+                }}
             ]
         }},
         {{
-            "id": "B15",
+            "id": "B12",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "END2",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B17",
+            "id": "B13",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
-        }},
+        }}, 
         {{
-            "id": "B18",
+            "id": "END3",
             "label":"Track 7",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},   
-        {{
-            "id": "B19",
-            "label":"Track 7",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B20",
-            "label":"Track 8",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B21",
-            "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
@@ -6820,41 +8637,46 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "source": "B5",
-            "target": "B6"
-        }},
-        {{
-            "source": "B6",
-            "target": "SBB2"
-        }},
-        {{
-            "source": "SBB2",
-            "target": "B7",
-            "sourceport": "1"
-        }},
-        {{
-            "source": "B7",
             "target": "JB1"
         }},
         {{
             "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B6",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B6",
+            "target": "B7"
+        }},
+        {{
+            "source": "B7",
             "target": "SBB2"
         }},
         {{
             "source": "SBB2",
             "target": "B8",
-            "sourceport": "2"
+            "sourceport": "1"
         }},
         {{
             "source": "B8",
-            "target": "B9"
-        }},
-        {{
-            "source": "B9",
             "target": "JB2"
         }},
         {{
             "source": "JB2",
             "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END1"
         }},
         {{
             "source": "SBB2",
@@ -6867,51 +8689,286 @@ prompt_simulation_shadow_edges = PromptTemplate(
         }},
         {{
             "source": "B11",
-            "target": "B12"
+            "target": "SBB3"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
+            "target": "B12",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B12",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB3",
             "target": "B13",
-            "sourceport":"2"
+            "sourceport": "2"
         }},
         {{
             "source": "B13",
-            "target": "B14"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B15",
-            "sourceport":"1"
-        }},
-        {{
-            "source": "B15",
-            "target": "B16"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B17",
-            "sourceport":"2"
-        }},
-        {{
-            "source": "B17",
-            "target": "B18"
-        }},
-        {{
-            "source": "B18",
-            "target": "B19"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B20",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "B20",
-            "target": "B21"
+            "target": "END3"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+Simulation Scenario for training student to drive down a hill.
+    "Learning Objectives":
+Successfully complete a car driving simulation under slope conditions.,
+Demonstrate safe and effective driving techniques on inclines and declines.,
+Apply knowledge of gear selection and clutch control to navigate slopes.
+    "Content Areas":
+Use of gears in different slope conditions,
+Clutch control on slopes,
+Safe braking techniques on slopes,
+Speed control on slopes.
+
+JSON OUTPUT:
+{{
+    "title": "Driving Down a Hill Simulation",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Scenario Setup",
+            "description": "You are approaching a moderately steep downhill slope. Your speed is 30 KMPH. The road is dry, and visibility is good. You have a manual transmission car."
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. Successfully complete a car driving simulation under slope conditions 2. Demonstrate safe and effective driving techniques on inclines and declines 3. Apply knowledge of gear selection and clutch control to navigate slopes Content Areas: 1. Use of gears in different slope conditions 2. Clutch control on slopes and 3. Speed control on slopes"
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "Maintain 30 KMPH in 3rd gear"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "Brake hard and stay in 3rd gear"
+                }},
+                {{
+                    "port": "3",
+                    "Track 3": "Downshift to 2nd gear and gently brake"
+                }}
+            ]
+        }},
+        {{
+            "id": "B3",
+            "label": "Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Your speed increases rapidly, you lose control, and risk an accident. Retry!"
+        }},
+        {{
+            "id": "JB1",
+            "label": "Track 1",
+            "type": "JumpBlock",
+            "title": "Retry",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B4",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "When you apply hard braking, the intense force can cause the wheels of the car to lock up. This sudden stoppage of wheel rotation can lead to a loss of traction, preventing the tires from gripping the road effectively. As a result, the car becomes harder to steer and control, increasing the risk of it skidding or even flipping over. Understanding how a car’s stability responds to hard braking is crucial because it impacts how effectively you can maintain control during abrupt stops. This knowledge can be especially important in emergency situations where avoiding obstacles or hazards requires immediate braking. The stability of a car during such maneuvers largely depends on the vehicle's design, tire condition, and the road surface, among other factors."
+        }},
+        {{
+            "id": "END1",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You failed the simulation. A Downshift to 2nd gear and gently brake approach was the better choice."
+        }},
+        {{
+            "id": "B5",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Engine braking and gentle braking maintain control. Safe approach."
+        }},
+        {{
+            "id": "SBB2",
+            "label": "Track 3",
+            "type": "SimpleBranchingBlock",
+            "title": "Midway Down the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 4": "Continue engine braking and gentle braking"
+                }},
+                {{
+                    "port": "2",
+                    "Track 5": "Release brakes and rely on engine braking"
+                }}
+            ]
+        }},
+        {{
+            "id": "B6",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You successfully navigate the downhill slope. Excellent driving!"
+        }},
+        {{
+            "id": "END2",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "Congratulations! You demonstrated safe driving techniques."
+        }},
+        {{
+            "id": "B7",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Relying solely on engine braking might increase speed slightly more than desired, but it's not dangerous in this scenario."
+        }},
+        {{
+            "id": "SBB3",
+            "label": "Track 5",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Bottom of the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 6": "Gradually increase speed to 30 KMPH"
+                }},
+                {{
+                    "port": "2",
+                    "Track 7": "Maintain slightly higher speed"
+                }}
+            ]
+        }},
+        {{
+            "id": "B8",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom, but your approach was slightly less controlled. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END3",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but there's room for improvement in maintaining a consistently safe speed."
+        }},
+        {{
+            "id": "B9",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom safely, but your speed was slightly higher than ideal. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END4",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but consider refining your speed control techniques."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B3",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B3",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B4",
+            "target": "END1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "B5",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B6",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B6",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B7",
+            "target": "SBB3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "END3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END4"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]  
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -6929,6 +8986,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
     Just start the JSON response directly. 
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Simulation Scenario.
+    
     ]]]
 
     Chatbot:"""
@@ -7001,12 +9059,12 @@ You will Continue like this in your generated response:
     BELOW IS THE HISTORY BASED ON WHICH THE 'OUTPUT' WAS CREATED ORIGINALLY:
     HISTORY:
     [[[
+    
     You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
-    and choices from which the user uses their knowledge to select a choice and face the consequences for it, just like in real life.
+    and choices from which the user uses prior knowledge to select a choice and face the consequences for it, just like in real life.
 
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE!!!
 
     ***WHAT TO DO***
     To accomplish Simulation Scenarios creation, YOU will:
@@ -7023,14 +9081,14 @@ You will Continue like this in your generated response:
     Block types include: 
     'TextBlock' with title, and description
     'MediaBlock' with title, Media Type (Image), Description of the Media used, Overlay tags (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
-    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
+    'Branching Block (Simple Branching)' with title, branches (an array having 2 or 3 (3 is preferred) choices which is given their own port numbers used to identify in edges array the interconnection of various blocks to the Tracks/ choices of the story progression using these Branching Blocks).
     'JumpBlock' with title, proceedToBlock
     All these blocks have label key as well, required mandatory after the first Branching Block (Simple Branching) is encountered, to help the user identify the blocks related to routes/track of a relevant story path.
 
     ***KEEP IN MIND THE LOGIC THAT OPERATES THIS SCENARIO IS IN:
     Simulation Pedagogy Scenario: A type of structure which takes the student on a simulated story where 
     the student is challenged in a simulation and is given choices based on which they face consequences. The simulation is based on the information in 
-    "Learning Objectives", "Content Areas" and "Human Input". 
+    "Learning Objectives" and "Content Areas". 
     The 'Branching Block (Simple Branching)' is designed to offer students a range of decision-making pathways, which then lead the 
     Simulation Scenario into various subsequent outcomes, like a role-playing game with multiple outcomes based on player choices. 
     Each outcome can further branch out into additional subdivisions, mapping out the entire narrative for scenario development. 
@@ -7038,6 +9096,7 @@ You will Continue like this in your generated response:
     JumpBlocks or they can face consequences. Some consequences will end up concluding the story simulation, so give a Conclusion there.
     Challenge the students and keep them judging what best choice they should make. You can put them in situations where they will still
     have a chance to make things right after wrong choices, just like we do in real life.
+    THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path).
     ***
 
     ***YOU WILL BE REWARD IF:
@@ -7051,7 +9110,6 @@ You will Continue like this in your generated response:
     depending on the choice number.
     Important point about the choices in SimpleBranchingBlock given to students are written such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
     This will allow students to really ponder upon and critically think before selecting a choice.
-
     ***
     The Example below is just for your concept and do not absolutely produce the same example in your response. 
     The 'Purpose' key in the below blocks are not meant to be reproduced in the response of yours and they are just for your information of what each block's function is about!
@@ -7060,11 +9118,11 @@ You will Continue like this in your generated response:
     Scenario's Context (PedagogicalBlock)
     Pedagogical Context (PedagogicalBlock)
     TextBlock/s (Content Carrier Block. Your medium of communicating the simulation scenario via text.)    
-    MediaBlock/s (Content Carrier Block. To give visualized option to select the choices given by Branching Blocks with pertinent overlayTags. You can also use MediaBlock/s to give illustrated way of dessiminating information to the user on the subject matter. USE YOUR IMAGINATION to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
-    SimpleBranchingBlock (To select from a choice of choices (Branches) )
-    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock)
+    MediaBlock/s (Content Carrier Block. Use your imagination to create a Media Block or Blocks relevant to the text in the scenario and mention the type of Media (Image) with description of its content and relevant overlay Tags for elaborating information and give directions to the course instructor of how to shoot and prepare these Media Blocks.)
+    SimpleBranchingBlock (To select from a choice of choices (Branches). The number of choices may be 2 ir 3 (3 is preferred) )
+    Consequence (PedagogicalBlock) (Gives consequence to each choice made in the SimpleBranchingBlock. THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). )
     Conclusion (PedagogicalBlock) (Used to conclude the end of the simulation story)
-    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There often use is recommended.)
+    JumpBlock (Gives an option to user to be directed back to a relevant SimpleBranchingBlock to retry another choice since the user has selected a wrong choice. You are creative to use this block wherever it makes sense to you. There frequent use is recommended. Please remember this block is only used for retry purpose only and jumps use back to a SimpleBranchingBlock.)
     \nEnd of Overview structure\n
 
     Problems to overcome: 
@@ -7093,6 +9151,7 @@ You will Continue like this in your generated response:
     #####
 
     !!!YOU ARE ALLOWED TO PRODUCE AT-MOST 5 SimpleBranchingBlock or less.!!!
+
         
     \nSAMPLE EXAMPLE START: SIMULATION SCENARIO:\n
 {{
@@ -7124,7 +9183,7 @@ You will Continue like this in your generated response:
         }},
         {{
             "id": "B4",
-            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. There frequencey of use is subject to the MPV.",
+            "Purpose": "Content Carrier Block. This block (In terms of either one Media Block or multiple or no Media Block per scenario. In case of no Media Block, Text Block use is Mandatory to give information about each and every aspect of the subject matter) is where you !Give students an illustrative experience that visulizes the information. Mention array of relevant overlayTags for elaborating information on key areas in the image and give directions to the course instructor of how to shoot and prepare these Media Blocks. There frequencey of use is subject to the MPV.",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -7133,10 +9192,10 @@ You will Continue like this in your generated response:
                 "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
             ]
         }},
-        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the SBB1_1, and SBB1_2 are the two branches. SBB1_2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is recommended."}},
+        {{"_comment":"The SBB1 below means SimpleBranchingBlock1. There are multiple such SimpleBranchingBlocks numbered sequentially like SBB1, SBB2 and so on. Here, the Track 1, and Track 2 are the two branches. Track 2 for example suggests it is the second choice branch from the SBB1 block. Two to Three choices per SimpleBranchingBlock is possible. Three choices are preferred and user is happy more that way."}},
         {{
             "id": "SBB1",
-            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative.",
+            "Purpose": "This block is where you !Divide the Simulation Game content into choices, that users can select and the corresponding divided branches leads to a consequence of the choice selected. The Track keyword is an identifier of the story being devided into path or progression of a narrative. ",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -7151,25 +9210,41 @@ You will Continue like this in your generated response:
                 }}
             ]
         }},
+        {{"_comment":"THE GOLDEN RULE YOU MUST REMEMBER FOR SUCCESSFULL SIMULATION SCENARIO : Track Selection in SimpleBranchingBlock leads to Consequence. In case of WRONG Consequence, it leads to JumpBlock [for allowing user to retry the selection of correct choice track in SimpleBranchingBlock]. In case of CORRECT OR PARTIALLY-WRONG Consequence, it leads to TextBlock or MediaBlock (as MPV suggests) or Conclusion (conclusion ends the relative simulation story path). Based on the GOLDEN RULE, you can clearly see that B5 block was related to the Track choice of WRONG nature, hence B5 then leads to JB1 which leads user to retry. While B6 block was related to Correct or PARTIALLY-WRONG Track choice, hence it lead to a TextBlock (B7 in this case) or it could have lead to MediaBlock, which further leads to SBB2 for continuing the simulation story or it could have also lead to Conclusion."}},
         {{
             "id": "B5",
-            "Purpose": "These blocks provide Consequence of the choice made, the Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
+            "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B6",
+            "id": "JB1",
+            "Purpose": "This block gives an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. The title string remains as constant for JumpBlock. JumpBlock always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
+            "type": "JumpBlock",
+            "title": "Retry!",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B6",
+            "label":"Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
+        {{
+            "id": "B7",
+            "label":"Track 2",
             "type": "TextBlock",
             "title": "(Insert Text Here)",
             "description": "(Insert Text Here)"
         }},
-        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or less better choices users are redirected for a retry at the SBB2 in this example. While for a correct choice when the Simulation path ends and there is nothing further to continue the story logically, then a Conclusion Pedagogical Block ends the scenario as in Track 5 in this example."}},
+        {{"_comment": "As you can see, the SBB2 continues and further devides the story simulation of Track 1 into 3 more Tracks of Track 3,4, and 5. Each Track has its own Consequence. For Wrong or PARTIALLY-WRONG consequences, users are either redirected back to SBB2 as a retry option or scneario is Concluded if criticall end happens due to completely failure choice. While for a correct choice when the Simulation path may continue further leading to TextBlock or MediaBlock (subject to MPV value). Track 5 in this example leads to MediaBlock."}},
         {{
             "id": "SBB2",
-            "label":"Track 1",
+            "label":"Track 2",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -7188,44 +9263,33 @@ You will Continue like this in your generated response:
             ]
         }},
         {{
-            "id": "B7",
+            "id": "B8",
             "label":"Track 3",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "JB1",
-            "Purpose": "This block gives an option for user to go back to for example the SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation",
+            "id": "JB2",
             "label":"Track 3",
             "type": "JumpBlock",
-            "title": "Rethink your choice!",
+            "title": "Retry!",
             "proceedToBlock": "SBB2"
-        }},
-        {{
-            "id": "B8",
-            "label":"Track 4",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B9",
             "label":"Track 4",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }}, 
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "(Insert Text Here)"
+        }},
         {{
-            "id": "JB2",
+            "id": "END1",
+            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path. The user can only know that the simulation has ended, if you provide the Conclusion of PedagogicalBlock type, so it is necessary to provide a customized Conclusion of PedagogicalBlock type for the story's label's path when a story path ends.",
             "label":"Track 4",
-            "type": "JumpBlock",
-            "title": "Rethink your choice!",
-            "proceedToBlock": "SBB2"
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "(Insert Text Here)"
         }},
         {{
             "id": "B10",
@@ -7237,28 +9301,6 @@ You will Continue like this in your generated response:
         {{
             "id": "B11",
             "label":"Track 5",
-            "type": "TextBlock",
-            "title": "(Insert Text Here)",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B12",
-            "Purpose":"This block is where a path of simulation story ends. It gives a conclusion to the path where simulation story ends. It gives a summary of what the user did relevant to the Track this choice belongs to. It also gives constructive feedback based on the choices and journey made through the relevant track path.",
-            "label":"Track 5",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B13",
-            "label":"Track 2",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B14",
-            "label":"Track 2",
             "type": "MediaBlock",
             "title": "(Insert Text Here)",
             "mediaType": "Image",
@@ -7266,11 +9308,11 @@ You will Continue like this in your generated response:
             "overlayTags": [
                 "(Insert Text Here)"
             ]
-        }},  
-        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 3 more Tracks of Track 6,7, and 8. Each Track has its own Consequence. In this example you can see the three tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 2 branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
+        }},
+        {{"_comment": "As you can see, the SBB3 continues and further devides the story simulation of Track 2 into 2 more Tracks of Track 6 and 7. Each Track has its own Consequence. In this example you can see the two tracks ends with Conclusion Pedagogical Block since to notify that story has ended with a good, bad, not so good ending. You can also use 3 track branches per SimpleBranchingBlock, so that is entirely upto the story simulation logic."}},
         {{
             "id": "SBB3",
-            "label":"Track 2",
+            "label":"Track 5",
             "type": "SimpleBranchingBlock",
             "title": "(Insert Text Here)",
             "branches": [
@@ -7281,62 +9323,33 @@ You will Continue like this in your generated response:
                 {{
                     "port": "2",
                     "Track 7": "(Insert Text Here)"
-                }},
-                {{
-                    "port": "3",
-                    "Track 8": "(Insert Text Here)"
-                }},
+                }}
             ]
         }},
         {{
-            "id": "B15",
+            "id": "B12",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B16",
+            "id": "END2",
             "label":"Track 6",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
         }},
         {{
-            "id": "B17",
+            "id": "B13",
             "label":"Track 7",
             "type": "PedagogicalBlock",
             "title": "Consequence",
             "description": "(Insert Text Here)"
-        }},
+        }}, 
         {{
-            "id": "B18",
+            "id": "END3",
             "label":"Track 7",
-            "type": "MediaBlock",
-            "title": "(Insert Text Here)",
-            "mediaType": "Image",
-            "description": "(Insert Text Here)",
-            "overlayTags": [
-                "(Insert Text Here)"
-            ]
-        }},   
-        {{
-            "id": "B19",
-            "label":"Track 7",
-            "type": "PedagogicalBlock",
-            "title": "Conclusion",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B20",
-            "label":"Track 8",
-            "type": "PedagogicalBlock",
-            "title": "Consequence",
-            "description": "(Insert Text Here)"
-        }},
-        {{
-            "id": "B21",
-            "label":"Track 8",
             "type": "PedagogicalBlock",
             "title": "Conclusion",
             "description": "(Insert Text Here)"
@@ -7370,41 +9383,46 @@ You will Continue like this in your generated response:
         }},
         {{
             "source": "B5",
-            "target": "B6"
-        }},
-        {{
-            "source": "B6",
-            "target": "SBB2"
-        }},
-        {{
-            "source": "SBB2",
-            "target": "B7",
-            "sourceport": "1"
-        }},
-        {{
-            "source": "B7",
             "target": "JB1"
         }},
         {{
             "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B6",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B6",
+            "target": "B7"
+        }},
+        {{
+            "source": "B7",
             "target": "SBB2"
         }},
         {{
             "source": "SBB2",
             "target": "B8",
-            "sourceport": "2"
+            "sourceport": "1"
         }},
         {{
             "source": "B8",
-            "target": "B9"
-        }},
-        {{
-            "source": "B9",
             "target": "JB2"
         }},
         {{
             "source": "JB2",
             "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END1"
         }},
         {{
             "source": "SBB2",
@@ -7417,51 +9435,286 @@ You will Continue like this in your generated response:
         }},
         {{
             "source": "B11",
-            "target": "B12"
+            "target": "SBB3"
         }},
         {{
-            "source": "SBB2",
+            "source": "SBB3",
+            "target": "B12",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B12",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB3",
             "target": "B13",
-            "sourceport":"2"
+            "sourceport": "2"
         }},
         {{
             "source": "B13",
-            "target": "B14"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B15",
-            "sourceport":"1"
-        }},
-        {{
-            "source": "B15",
-            "target": "B16"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B17",
-            "sourceport":"2"
-        }},
-        {{
-            "source": "B17",
-            "target": "B18"
-        }},
-        {{
-            "source": "B18",
-            "target": "B19"
-        }},
-        {{
-            "source": "SBB3",
-            "target": "B20",
-            "sourceport":"3"
-        }},
-        {{
-            "source": "B20",
-            "target": "B21"
+            "target": "END3"
         }}
     ]
 }}
     SAMPLE EXAMPLE END
+
+    Now that I have given you a theoretical example, I will give you a practical example as below:
+    [[
+    For a given "Human Input", "Learning Objectives" and "Content Areas" the AI outputs JSON OUTPUT in following way:
+    "Human Input":
+Simulation Scenario for training student to drive down a hill.
+    "Learning Objectives":
+Successfully complete a car driving simulation under slope conditions.,
+Demonstrate safe and effective driving techniques on inclines and declines.,
+Apply knowledge of gear selection and clutch control to navigate slopes.
+    "Content Areas":
+Use of gears in different slope conditions,
+Clutch control on slopes,
+Safe braking techniques on slopes,
+Speed control on slopes.
+
+JSON OUTPUT:
+{{
+    "title": "Driving Down a Hill Simulation",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Scenario Setup",
+            "description": "You are approaching a moderately steep downhill slope. Your speed is 30 KMPH. The road is dry, and visibility is good. You have a manual transmission car."
+        }},
+        {{
+            "id": "B2",
+            "type": "PedagogicalBlock",
+            "title": "Pedagogical Context",
+            "description": "Learning Objectives: 1. Successfully complete a car driving simulation under slope conditions 2. Demonstrate safe and effective driving techniques on inclines and declines 3. Apply knowledge of gear selection and clutch control to navigate slopes Content Areas: 1. Use of gears in different slope conditions 2. Clutch control on slopes and 3. Speed control on slopes"
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "Maintain 30 KMPH in 3rd gear"
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "Brake hard and stay in 3rd gear"
+                }},
+                {{
+                    "port": "3",
+                    "Track 3": "Downshift to 2nd gear and gently brake"
+                }}
+            ]
+        }},
+        {{
+            "id": "B3",
+            "label": "Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Your speed increases rapidly, you lose control, and risk an accident. Retry!"
+        }},
+        {{
+            "id": "JB1",
+            "label": "Track 1",
+            "type": "JumpBlock",
+            "title": "Retry",
+            "proceedToBlock": "SBB1"
+        }},
+        {{
+            "id": "B4",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "When you apply hard braking, the intense force can cause the wheels of the car to lock up. This sudden stoppage of wheel rotation can lead to a loss of traction, preventing the tires from gripping the road effectively. As a result, the car becomes harder to steer and control, increasing the risk of it skidding or even flipping over. Understanding how a car’s stability responds to hard braking is crucial because it impacts how effectively you can maintain control during abrupt stops. This knowledge can be especially important in emergency situations where avoiding obstacles or hazards requires immediate braking. The stability of a car during such maneuvers largely depends on the vehicle's design, tire condition, and the road surface, among other factors."
+        }},
+        {{
+            "id": "END1",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You failed the simulation. A Downshift to 2nd gear and gently brake approach was the better choice."
+        }},
+        {{
+            "id": "B5",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Engine braking and gentle braking maintain control. Safe approach."
+        }},
+        {{
+            "id": "SBB2",
+            "label": "Track 3",
+            "type": "SimpleBranchingBlock",
+            "title": "Midway Down the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 4": "Continue engine braking and gentle braking"
+                }},
+                {{
+                    "port": "2",
+                    "Track 5": "Release brakes and rely on engine braking"
+                }}
+            ]
+        }},
+        {{
+            "id": "B6",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You successfully navigate the downhill slope. Excellent driving!"
+        }},
+        {{
+            "id": "END2",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "Congratulations! You demonstrated safe driving techniques."
+        }},
+        {{
+            "id": "B7",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Relying solely on engine braking might increase speed slightly more than desired, but it's not dangerous in this scenario."
+        }},
+        {{
+            "id": "SBB3",
+            "label": "Track 5",
+            "type": "SimpleBranchingBlock",
+            "title": "Approaching the Bottom of the Hill",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 6": "Gradually increase speed to 30 KMPH"
+                }},
+                {{
+                    "port": "2",
+                    "Track 7": "Maintain slightly higher speed"
+                }}
+            ]
+        }},
+        {{
+            "id": "B8",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom, but your approach was slightly less controlled. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END3",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but there's room for improvement in maintaining a consistently safe speed."
+        }},
+        {{
+            "id": "B9",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You reached the bottom safely, but your speed was slightly higher than ideal. Maintain a consistent speed."
+        }},
+        {{
+            "id": "END4",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion",
+            "description": "You completed the simulation, but consider refining your speed control techniques."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B3",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B3",
+            "target": "JB1"
+        }},
+        {{
+            "source": "JB1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B4",
+            "target": "END1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "B5",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "B5",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B6",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B6",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "B7",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B7",
+            "target": "SBB3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B8",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "B8",
+            "target": "END3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "B9",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "B9",
+            "target": "END4"
+        }}
+    ]
+}}
+
+Remarks of the above JSON OUTPUT practical example: "All good. Just need to make the descriptions more detailed and elaborate!"
+    ]]  
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -7479,6 +9732,7 @@ You will Continue like this in your generated response:
     Just start the JSON response directly. 
 
     The 2 arrays of nodes and edges are mandatory and absolutely required to be produced by you as given in EXAMPLE of Simulation Scenario.
+    
     ]]]
 
     Chatbot:"""
