@@ -1935,6 +1935,25 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
         node_ids = {node['id'] for node in json_data['nodes']}
         error_flag = False
 
+        # SHADOW NODE deletion Starts
+        # Related to deleting Shadow Nodes (Nodes not found in the source and target ids of objects in edges array)
+        edge_ids_source = {edge['source'] for edge in json_data['edges']} # creates set of source ids {'element1', 'element2',...}
+        edge_ids_target = {edge['target'] for edge in json_data['edges']}
+        edge_ids_all = edge_ids_source.union(edge_ids_target) # union with no duplicates of the ids to compare with one set of node_ids
+        
+        node_ids = {node['id'] for node in json_data['nodes']}
+        filtered_nodes = [node for node in json_data['nodes'] if node['id'] in edge_ids_all] # a complete node array here iterated
+
+        # this loop only for displaying logs and not any effect on shadow node deletion
+        for node_id in node_ids:
+            if node_id not in edge_ids_all:
+                logger.info(f"SHADOW NODE found: '{node_id}' and deleted!")
+            else:
+                pass
+                    
+        json_data['nodes'] = filtered_nodes
+        # SHADOW NODE deletion Ends
+        
         for edge in json_data['edges']:
             source_exists = edge['source'] in node_ids
             target_exists = edge['target'] in node_ids
