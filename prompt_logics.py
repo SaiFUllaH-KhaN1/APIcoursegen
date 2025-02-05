@@ -2271,6 +2271,7 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
         logger.info(f"Since error_flag is {error_flag}, no shadow edges found!")
 
     def validate_nodes(json_data):
+        json_data = json.loads(json_data)  # Convert JSON string into dictionary
         # SHADOW NODE deletion Starts
         # Related to deleting Shadow Nodes (Nodes not found in the source and target ids of objects in edges array)
         edge_ids_source = {edge['source'] for edge in json_data['edges']} # creates set of source ids {'element1', 'element2',...}
