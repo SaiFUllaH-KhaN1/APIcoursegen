@@ -1908,7 +1908,6 @@ def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, query, llm
 
 
 def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language, mpv, repair_shadows_without_file='0'):
-    txt_output = None
 
     mpv_string = mpv_list[int(mpv)]
     logger.info(f"mpv list string is: {mpv_string}")
@@ -1935,25 +1934,26 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
         node_ids = {node['id'] for node in json_data['nodes']}
         error_flag = False
 
-        # SHADOW NODE deletion Starts
-        # Related to deleting Shadow Nodes (Nodes not found in the source and target ids of objects in edges array)
-        edge_ids_source = {edge['source'] for edge in json_data['edges']} # creates set of source ids {'element1', 'element2',...}
-        edge_ids_target = {edge['target'] for edge in json_data['edges']}
-        edge_ids_all = edge_ids_source.union(edge_ids_target) # union with no duplicates of the ids to compare with one set of node_ids
-        
-        node_ids = {node['id'] for node in json_data['nodes']}
-        filtered_nodes = [node for node in json_data['nodes'] if node['id'] in edge_ids_all] # a complete node array here iterated
 
-        # this loop only for displaying logs and not any effect on shadow node deletion
-        for node_id in node_ids:
-            if node_id not in edge_ids_all:
-                logger.info(f"SHADOW NODE found: '{node_id}' and deleted!")
-            else:
-                pass
-                    
-        json_data['nodes'] = filtered_nodes
-        # SHADOW NODE deletion Ends
+        # Duplicate edge Source ids START
+        edge_source_set = {edge['source'] for edge in json_data['edges'] if "sourceport" not in edge} # keeps only unique edges sources
+        edge_source_array = [edge['source'] for edge in json_data['edges'] if "sourceport" not in edge] # keeps all edges sources, for comparison (edge_compare element)!
         
+        for edge_source in edge_source_set:
+            count=0
+            for edge_compare in edge_source_array:
+                if edge_source==edge_compare:
+                    count+=1
+                    if count>1:
+                        logger.info(f"{edge_source} is duplicate edge source")
+                        for edge in json_data['edges']:
+                            if edge['source']==edge_source:
+                                edge['SHADOW EDGE BLOCK'] = 'SHADOW EDGES IN THIS BLOCK'  # Add error directly to the edge
+                                error_flag = True
+                    else:
+                        pass
+        # Duplicate edge Source ids END
+
         for edge in json_data['edges']:
             source_exists = edge['source'] in node_ids
             target_exists = edge['target'] in node_ids
@@ -2270,7 +2270,32 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
     else:
         logger.info(f"Since error_flag is {error_flag}, no shadow edges found!")
 
-    
+    def validate_nodes(json_data):
+        # SHADOW NODE deletion Starts
+        # Related to deleting Shadow Nodes (Nodes not found in the source and target ids of objects in edges array)
+        edge_ids_source = {edge['source'] for edge in json_data['edges']} # creates set of source ids {'element1', 'element2',...}
+        edge_ids_target = {edge['target'] for edge in json_data['edges']}
+        edge_ids_all = edge_ids_source.union(edge_ids_target) # union with no duplicates of the ids to compare with one set of node_ids
+        
+        node_ids = {node['id'] for node in json_data['nodes']}
+        filtered_nodes = [node for node in json_data['nodes'] if node['id'] in edge_ids_all] # a complete node array here iterated
+
+        # this loop only for displaying logs and not any effect on shadow node deletion
+        for node_id in node_ids:
+            if node_id not in edge_ids_all:
+                logger.info(f"SHADOW NODE found: '{node_id}' and deleted!")
+            else:
+                pass
+                    
+        json_data['nodes'] = filtered_nodes # array of nodes being replaced with new nodes array
+        # SHADOW NODE deletion Ends
+
+        shadow_result = json.dumps(json_data, indent=4)
+
+        return shadow_result
+
+    output = validate_nodes(original_txt)
+
     return output
 
 
