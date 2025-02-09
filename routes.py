@@ -660,6 +660,7 @@ def generate_course():
                     start_REPAIR_SHADOW_EDGES_time = time.time()
 
                     response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
+                    response = LCD.SHADOW_NODES(response)
 
                     end_REPAIR_SHADOW_EDGES_time = time.time()
                     execution_REPAIR_SHADOW_EDGES_time = end_REPAIR_SHADOW_EDGES_time - start_REPAIR_SHADOW_EDGES_time
@@ -741,6 +742,7 @@ def generate_course_without_file():
 
         if validity == True:
             response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
+            response = LCD.SHADOW_NODES(response)
         else:
             logger.error("JSON of original_txt is NOT VALID")
             return jsonify(error="Failed to complete the scenario. JSON is NOT VALID")
