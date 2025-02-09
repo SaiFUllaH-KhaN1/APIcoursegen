@@ -3616,7 +3616,7 @@ prompt_gamified_json = PromptTemplate(
             }},
             {{
                 "id": "QB2",
-                "type": "OpenQuestionBlock",
+                "type": "openQuestionBlock",
                 "questionText": "(Insert Text Here) Anser Format:(Insert Text Here)",
                 "answer": [
                     "(Insert correct answer code/ sequence string Here)"
@@ -4477,7 +4477,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
             }},
             {{
                 "id": "QB2",
-                "type": "OpenQuestionBlock",
+                "type": "openQuestionBlock",
                 "questionText": "(Insert Text Here) Anser Format:(Insert Text Here)",
                 "answer": [
                     "(Insert correct answer code/ sequence string Here)"
@@ -5323,7 +5323,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
             }},
             {{
                 "id": "QB2",
-                "type": "OpenQuestionBlock",
+                "type": "openQuestionBlock",
                 "questionText": "(Insert Text Here) Anser Format:(Insert Text Here)",
                 "answer": [
                     "(Insert correct answer code/ sequence string Here)"
@@ -6200,7 +6200,7 @@ prompt_gamify_shadow_edges = PromptTemplate(
             }},
             {{
                 "id": "QB2",
-                "type": "OpenQuestionBlock",
+                "type": "openQuestionBlock",
                 "questionText": "(Insert Text Here) Anser Format:(Insert Text Here)",
                 "answer": [
                     "(Insert correct answer code/ sequence string Here)"
@@ -7104,7 +7104,7 @@ You will Continue like this in your generated response:
             }},
             {{
                 "id": "QB2",
-                "type": "OpenQuestionBlock",
+                "type": "openQuestionBlock",
                 "questionText": "(Insert Text Here) Anser Format:(Insert Text Here)",
                 "answer": [
                     "(Insert correct answer code/ sequence string Here)"
