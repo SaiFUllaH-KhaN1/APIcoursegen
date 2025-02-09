@@ -651,6 +651,7 @@ def generate_course():
                 minutes, seconds = divmod(execution_TALK_WITH_RAG_time, 60)
                 formatted_TALK_WITH_RAG_time = f"{int(minutes):02}:{int(seconds):02}" # for docs JSON scenario response
 
+                logger.debug(type(response))
                 original_txt = response
 
                 validity, result = is_json_parseable(original_txt)
@@ -659,7 +660,7 @@ def generate_course():
                     start_REPAIR_SHADOW_EDGES_time = time.time()
 
                     response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
-                    
+
                     end_REPAIR_SHADOW_EDGES_time = time.time()
                     execution_REPAIR_SHADOW_EDGES_time = end_REPAIR_SHADOW_EDGES_time - start_REPAIR_SHADOW_EDGES_time
                     minutes, seconds = divmod(execution_REPAIR_SHADOW_EDGES_time, 60)
@@ -731,14 +732,15 @@ def generate_course_without_file():
             llm = AzureChatOpenAI(deployment_name=model_name, temperature=float(temp),
                                 openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"))
             
-        response = LCD.TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, prompt, llm, model_type, model_name, language, mpv)
+        response, scenario = LCD.TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, prompt, llm, model_type, model_name, language, mpv)
 
+        logger.debug(type(response))
         original_txt = response
 
         validity, result = is_json_parseable(original_txt)
 
         if validity == True:
-            response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv, repair_shadows_without_file)
+            response = LCD.REPAIR_SHADOW_EDGES(scenario, original_txt, model_type, model_name, language, mpv)
         else:
             logger.error("JSON of original_txt is NOT VALID")
             return jsonify(error="Failed to complete the scenario. JSON is NOT VALID")
