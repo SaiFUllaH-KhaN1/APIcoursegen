@@ -2342,6 +2342,11 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
     else:
         logger.info(f"Since error_flag is {error_flag}, no shadow edges found!")
 
+
+    return output
+
+def SHADOW_NODES(response):
+
     def validate_nodes(json_data):
         json_data = json.loads(json_data)  # Convert JSON string into dictionary
         # SHADOW NODE deletion Starts
@@ -2367,10 +2372,9 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
 
         return shadow_result
 
-    output = validate_nodes(original_txt)
+    output = validate_nodes(response)
 
     return output
-
 
 def ANSWER_IMG(response_text, llm,relevant_doc,language,model_type):
     # prompt_template_img =PromptTemplate( 
