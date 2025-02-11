@@ -2046,302 +2046,126 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
             return False, str(e)
         return True, json_object
 
-    def validate_edges(json_data):
-        # txt_string = json.dumps(json_data)  # Convert dictionary to JSON string
-        # json_data = json.loads(txt_string)  # Convert JSON string into dictionary
-        json_data = json.loads(json_data)  # Convert JSON string into dictionary
-        node_ids = {node['id'] for node in json_data['nodes']}
-        error_flag = False
+
+    try:
+        output = json.loads(original_txt)
+    except:
+        output = json.dumps(original_txt)
 
 
-        # Duplicate edge Source ids START
-        edge_source_set = {edge['source'] for edge in json_data['edges'] if "sourceport" not in edge} # keeps only unique edges sources
-        edge_source_array = [edge['source'] for edge in json_data['edges'] if "sourceport" not in edge] # keeps all edges sources, for comparison (edge_compare element)!
-        
-        for edge_source in edge_source_set:
-            count=0
-            for edge_compare in edge_source_array:
-                if edge_source==edge_compare:
-                    count+=1
-                    if count>1:
-                        logger.info(f"{edge_source} is duplicate edge source")
-                        for edge in json_data['edges']:
-                            if edge['source']==edge_source:
-                                edge['SHADOW EDGE BLOCK'] = 'SHADOW EDGES IN THIS BLOCK'  # Add error directly to the edge
-                                error_flag = True
-                    else:
-                        pass
-        # Duplicate edge Source ids END
+    if scenario == "linear":
 
-        for edge in json_data['edges']:
-            source_exists = edge['source'] in node_ids
-            target_exists = edge['target'] in node_ids
+        if model_type=="gemini":
+            # chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
+            chain = PROMPTS.prompt_linear_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
+        else:
+            # chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
+            chain = PROMPTS.prompt_linear_shadow_edges | llm.bind(response_format={"type": "json_object"})
 
-            if not source_exists or not target_exists:
-                logger.info(f"Error occured:\n{edge}")
-                edge['SHADOW EDGE BLOCK'] = 'SHADOW EDGES IN THIS BLOCK'  # Add error directly to the edge
-                error_flag = True
-                # If you want to find all errors, remove the break statement
-                # break
+        # output = json.loads(output)  # Convert JSON string into dictionary COMMENT IN VSCODE for this line
+        output['edges'] = []
+        logger.info(f"before invoking{output}")
+        shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
 
-        shadow_result = json.dumps(json_data, indent=4)
-        return shadow_result, error_flag
+        shadow_response = shadow_response.content
+        logger.info(f"shadow_response type before: {type(shadow_response)}")
+        logger.info(f"output type before: {type(output)}")
 
-    output, error_flag = validate_edges(original_txt)
-    logger.info(f"error_flag: {error_flag}")
+        shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
 
-    if error_flag == True:
+        logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
-        logger.info(f"Error flag is: {error_flag} and so output is:\n{output}")
-
-        if scenario == "linear":
-
-            if model_type=="gemini":
-                # chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))
-                chain = PROMPTS.prompt_linear_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
-            else:
-                # chain = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
-                chain = PROMPTS.prompt_linear_shadow_edges | llm.bind(response_format={"type": "json_object"})
-
-            shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
-            is_valid, result = is_json_parseable(shadow_response.content)
-            countd=0
-            while not is_valid and countd<=3:
-                txt = shadow_response.content
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.info(f"original:::\n{txt}")
-                logger.info(f"changed:::\n{modified_txt}")
-
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
-
-                # chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_linear_shadow_edges_retry, llm=llm)
-                chain_edges_retry = PROMPTS.prompt_linear_shadow_edges_retry | llm
-
-                response_retry = chain_edges_retry.invoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-                logger.info(f"response contd... is:\n{response_retry.content}",)
-
-                responses = modified_txt + response_retry.content #changed modified_text to responses
-                logger.info(f"responses+continued Combined is:\n{responses}",)
-                
-                shadow_response.content = responses
-
-                is_valid, result = is_json_parseable(shadow_response.content)
-                logger.info(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.info(f"contd count is:\n{countd}",)
-
-            logger.info("Success shadow repair!:",shadow_response.content)
-            shadow_response = shadow_response.content
-            logger.info(f"shadow_response type before: {type(shadow_response)}")
-            logger.info(f"output type before: {type(output)}")
-
-            shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
-            output = json.loads(output)  # Convert JSON string into dictionary
-
-            logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
-
-            output['edges']  = shadow_response['edges']  
-            logger.info(f"{output} of {type(output)}")
-            output = json.dumps(output, indent=2) # converts to dict to str
-            is_valid_output, result = is_json_parseable(output)
-
-            if is_valid_output == False:
-                output = original_txt
-                logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+        output['edges']  = shadow_response['edges']  
+        logger.info(f"{output} of {type(output)}")
+        output = json.dumps(output, indent=2) # converts to dict to str
 
 
-        elif scenario == "branched":
+    elif scenario == "branched":
 
-            if model_type=="gemini":
-                # chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
-                chain = PROMPTS.prompt_branched_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
+        if model_type=="gemini":
+            # chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
+            chain = PROMPTS.prompt_branched_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
 
-            else:
-                # chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
-                chain = PROMPTS.prompt_branched_shadow_edges | llm.bind(response_format={"type": "json_object"})
+        else:
+            # chain = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
+            chain = PROMPTS.prompt_branched_shadow_edges | llm.bind(response_format={"type": "json_object"})
 
-            shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
-            is_valid, result = is_json_parseable(shadow_response.content)
-            countd=0
-            while not is_valid and countd<=3:
-                txt = shadow_response.content
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.info(f"original:::\n{txt}")
-                logger.info(f"changed:::\n{modified_txt}")
+        # output = json.loads(output)  # Convert JSON string into dictionary COMMENT IN VSCODE for this line
+        output['edges'] = []
+        logger.info(f"before invoking{output}")
+        shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
 
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
+        shadow_response = shadow_response.content
+        logger.info(f"shadow_response type before: {type(shadow_response)}")
+        logger.info(f"output type before: {type(output)}")
 
-                # chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_branched_shadow_edges_retry, llm=llm)
-                chain_edges_retry = PROMPTS.prompt_branched_shadow_edges_retry | llm
-               
-                response_retry = chain_edges_retry.invoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-                logger.info(f"response contd... is:\n{response_retry.content}",)
+        shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
 
-                responses = modified_txt + response_retry.content #changed modified_text to responses
-                logger.info(f"responses+continued Combined is:\n{responses}",)
-                
-                shadow_response.content = responses
+        logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
-                is_valid, result = is_json_parseable(shadow_response.content)
-                logger.info(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.info(f"contd count is:\n{countd}",)
-
-            logger.info("Success shadow repair!:",shadow_response.content)
-            shadow_response = shadow_response.content
-            logger.info(f"shadow_response type before: {type(shadow_response)}")
-            logger.info(f"output type before: {type(output)}")
-
-            shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
-            output = json.loads(output)  # Convert JSON string into dictionary
-
-            logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
-
-            output['edges']  = shadow_response['edges']  
-            logger.info(f"{output} of {type(output)}")
-            output = json.dumps(output, indent=2) # converts to dict to str
-            is_valid_output, result = is_json_parseable(output)
-
-            if is_valid_output == False:
-                output = original_txt
-                logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+        output['edges']  = shadow_response['edges']  
+        logger.info(f"{output} of {type(output)}")
+        output = json.dumps(output, indent=2) # converts to dict to str
 
 
-        elif scenario == "simulation":
+    elif scenario == "simulation":
 
-            if model_type=="gemini":
-                # chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
-                chain = PROMPTS.prompt_simulation_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
-            else:
-                # chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
-                chain = PROMPTS.prompt_simulation_shadow_edges | llm.bind(response_format={"type": "json_object"})
+        if model_type=="gemini":
+            # chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
+            chain = PROMPTS.prompt_simulation_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
+        else:
+            # chain = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
+            chain = PROMPTS.prompt_simulation_shadow_edges | llm.bind(response_format={"type": "json_object"})
 
-            shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
-            is_valid, result = is_json_parseable(shadow_response.content)
-            countd=0
-            while not is_valid and countd<=3:
-                txt = shadow_response.content
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.info(f"original:::\n{txt}")
-                logger.info(f"changed:::\n{modified_txt}")
+        # output = json.loads(output)  # Convert JSON string into dictionary COMMENT IN VSCODE for this line
+        output['edges'] = []
+        logger.info(f"before invoking{output}")
+        shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
 
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
+        shadow_response = shadow_response.content
+        logger.info(f"shadow_response type before: {type(shadow_response)}")
+        logger.info(f"output type before: {type(output)}")
 
-                # chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_simulation_shadow_edges_retry, llm=llm)
-                chain_edges_retry = PROMPTS.prompt_simulation_shadow_edges_retry | llm
+        shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
 
-                response_retry = chain_edges_retry.invoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-                logger.info(f"response contd... is:\n{response_retry.content}",)
+        logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
-                responses = modified_txt + response_retry.content #changed modified_text to responses
-                logger.info(f"responses+continued Combined is:\n{responses}",)
-                
-                shadow_response.content = responses
-
-                is_valid, result = is_json_parseable(shadow_response.content)
-                logger.info(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.info(f"contd count is:\n{countd}",)
-
-            logger.info("Success shadow repair!:",shadow_response.content)
-            shadow_response = shadow_response.content
-            logger.info(f"shadow_response type before: {type(shadow_response)}")
-            logger.info(f"output type before: {type(output)}")
-
-            shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
-            output = json.loads(output)  # Convert JSON string into dictionary
-
-            logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
-
-            output['edges']  = shadow_response['edges']  
-            logger.info(f"{output} of {type(output)}")
-            output = json.dumps(output, indent=2) # converts to dict to str
-            is_valid_output, result = is_json_parseable(output)
-
-            if is_valid_output == False:
-                output = original_txt
-                logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+        output['edges']  = shadow_response['edges']  
+        logger.info(f"{output} of {type(output)}")
+        output = json.dumps(output, indent=2) # converts to dict to str
 
 
-        elif scenario == "gamified":
+    elif scenario == "gamified":
 
-            if model_type=="gemini":
-                # chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
-                chain = PROMPTS.prompt_gamify_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
-            else:
-                # chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
-                chain = PROMPTS.prompt_gamify_shadow_edges | llm.bind(response_format={"type": "json_object"})
+        if model_type=="gemini":
+            # chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(generation_config={"response_mime_type": "application/json"}))    
+            chain = PROMPTS.prompt_gamify_shadow_edges | llm.bind(generation_config={"response_mime_type": "application/json"})
+        else:
+            # chain = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges, llm=llm.bind(response_format={"type": "json_object"}))
+            chain = PROMPTS.prompt_gamify_shadow_edges | llm.bind(response_format={"type": "json_object"})
 
-            shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
-            is_valid, result = is_json_parseable(shadow_response.content)
-            countd=0
-            while not is_valid and countd<=3:
-                txt = shadow_response.content
-                modified_txt = re.findall(r'.*},', txt, re.DOTALL) # Finds last },
-                if modified_txt:
-                    modified_txt = modified_txt[0]  # Get the matched string
-                else:
-                    modified_txt = txt  # No match found, return original
-                logger.info(f"original:::\n{txt}")
-                logger.info(f"changed:::\n{modified_txt}")
+        # output = json.loads(output)  # Convert JSON string into dictionary COMMENT IN VSCODE for this line
+        output['edges'] = []
+        logger.info(f"before invoking{output}")
+        shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
 
-                responses = modified_txt + "\n[CONTINUE_EXACTLY_FROM_HERE]" #changed txt
-                logger.info(f"\nThe responses_modification to LLM is:\n{responses}",)
+        shadow_response = shadow_response.content
+        logger.info(f"shadow_response type before: {type(shadow_response)}")
+        logger.info(f"output type before: {type(output)}")
 
-                # chain_edges_retry = LLMChain(prompt=PROMPTS.prompt_gamify_shadow_edges_retry, llm=llm)
-                chain_edges_retry = PROMPTS.prompt_gamify_shadow_edges_retry | llm
+        shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
 
-                response_retry = chain_edges_retry.invoke({"incomplete_response": responses, "output":output, "language":language, "mpv":mpv, "mpv_string":mpv_string})
-                logger.info(f"response contd... is:\n{response_retry.content}",)
+        logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
 
-                responses = modified_txt + response_retry.content #changed modified_text to responses
-                logger.info(f"responses+continued Combined is:\n{responses}",)
-                
-                shadow_response.content = responses
-
-                is_valid, result = is_json_parseable(shadow_response.content)
-                logger.info(f"Parseability status:\n{result}", )
-                countd+=1
-                logger.info(f"contd count is:\n{countd}",)
-
-            logger.info("Success shadow repair!:",shadow_response.content)
-            shadow_response = shadow_response.content
-            logger.info(f"shadow_response type before: {type(shadow_response)}")
-            logger.info(f"output type before: {type(output)}")
-
-            shadow_response = json.loads(shadow_response)  # Convert JSON string into dictionary
-            output = json.loads(output)  # Convert JSON string into dictionary
-
-            logger.info(f"shadow_response type after: {type(shadow_response)} and output type after {type(output)}")
-
-            output['edges']  = shadow_response['edges']  
-            logger.info(f"{output} of {type(output)}")
-            output = json.dumps(output, indent=2) # converts to dict to str
-            is_valid_output, result = is_json_parseable(output)
-
-            if is_valid_output == False:
-                output = original_txt
-                logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
+        output['edges']  = shadow_response['edges']  
+        logger.info(f"{output} of {type(output)}")
+        output = json.dumps(output, indent=2) # converts to dict to str
  
         
-    else:
-        logger.info(f"Since error_flag is {error_flag}, no shadow edges found!")
-
+    is_valid_output, result = is_json_parseable(output)
+    if is_valid_output == False:
+        output = original_txt
+        logger.info(f"The output was not parseable hence reverting to original_txt to this response:\n{output}")
 
     return output
 
