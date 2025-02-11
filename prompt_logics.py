@@ -2064,7 +2064,7 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
 
         # output = json.loads(output)  # Convert JSON string into dictionary COMMENT IN VSCODE for this line
         output['edges'] = []
-        logger.info(f"before invoking{output}")
+        logger.info(f"before invoking{output['edges']}")
         shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
 
         shadow_response = shadow_response.content
@@ -2092,7 +2092,7 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
 
         # output = json.loads(output)  # Convert JSON string into dictionary COMMENT IN VSCODE for this line
         output['edges'] = []
-        logger.info(f"before invoking{output}")
+        logger.info(f"before invoking{output['edges']}")
         shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
 
         shadow_response = shadow_response.content
@@ -2119,7 +2119,7 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
 
         # output = json.loads(output)  # Convert JSON string into dictionary COMMENT IN VSCODE for this line
         output['edges'] = []
-        logger.info(f"before invoking{output}")
+        logger.info(f"before invoking{output['edges']}")
         shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
 
         shadow_response = shadow_response.content
@@ -2146,7 +2146,7 @@ def REPAIR_SHADOW_EDGES(scenario, original_txt,model_type, model_name, language,
 
         # output = json.loads(output)  # Convert JSON string into dictionary COMMENT IN VSCODE for this line
         output['edges'] = []
-        logger.info(f"before invoking{output}")
+        logger.info(f"before invoking{output['edges']}")
         shadow_response = chain.invoke({"output": output,"language":language, "mpv":mpv, "mpv_string":mpv_string})
 
         shadow_response = shadow_response.content
