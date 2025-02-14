@@ -54,7 +54,7 @@ promptSelector = PromptTemplate(
 prompt_linear = PromptTemplate(
     input_variables=["human_input","content_areas","learning_obj","language","mpv","mpv_string"],
     template="""
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
@@ -293,7 +293,7 @@ prompt_linear_retry = PromptTemplate(
     INSTRUCTION SET:
     [[[
     
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
@@ -512,7 +512,7 @@ prompt_linear_retry = PromptTemplate(
 prompt_linear_simplify = PromptTemplate(
     input_variables=["human_input","content_areas","learning_obj","language","mpv","mpv_string"],
     template="""
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging educational content in a Linear Scenario Format using
     a system of blocks. You give step-by-step detail information such that you are teaching a student.
 
@@ -816,7 +816,7 @@ prompt_branched_setup_continue = PromptTemplate(
 prompt_branched = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj","language","mpv","mpv_string"],
     template="""
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You provide information from 'Input Documents' such that you are teaching a student.
     !!!WARNING!!!
@@ -1206,7 +1206,7 @@ prompt_branched_retry = PromptTemplate(
     INSTRUCTION SET:
     [
     
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You provide information from 'Input Documents' such that you are teaching a student.
     !!!WARNING!!!
@@ -1569,7 +1569,7 @@ prompt_branched_retry = PromptTemplate(
 prompt_branched_simplify = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj","language","mpv","mpv_string"],
     template="""
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging educational and informative content in a Micro Learning Format using
     a system of blocks. You provide information from 'Input Documents' such that you are teaching a student.
     !!!WARNING!!!
@@ -2065,7 +2065,7 @@ prompt_gamified_setup_continue = PromptTemplate(
 prompt_gamified_json = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj","language","mpv","mpv_string"],
     template="""
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
     where you give a story situation to the student to escape from. You also give information in the form of
@@ -2930,7 +2930,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     INSTRUCTION SET:
     [
     
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
     where you give a story situation to the student to escape from. You also give information in the form of
@@ -3771,7 +3771,7 @@ Remarks of the above JSON OUTPUT practical example: "Again very good. Notice how
 prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj","language","mpv","mpv_string"],
     template="""
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are a Bot in the Education field that creates engaging Gamified Scenarios using a Format of
     a system of blocks. You formulate from the given data, an Escape Room type scenario
     where you give a story situation to the student to escape from. You also give information in the form of
@@ -4865,7 +4865,7 @@ prompt_simulation_pedagogy_setup_continue = PromptTemplate(
 prompt_simulation_pedagogy_gemini = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj","language","mpv","mpv_string"],
     template="""
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
     and choices from which the user uses prior knowledge to select a choice and face the consequences for it, just like in real life.
@@ -6092,7 +6092,7 @@ Remember: Every node id must be mentioned in the edges array block at least one 
 prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
     input_variables=["response_of_bot","human_input","content_areas","learning_obj","language","mpv","mpv_string"],
     template="""    
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
     and choices from which the user uses prior knowledge to select a choice and face the consequences for it, just like in real life.
@@ -7344,7 +7344,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
     INSTRUCTION SET:
     [
     
-    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}.
+    You respond in the language of "{language}", since your responses are given to {language} speakers and they can only understand the language of {language}. The key values in both nodes and edges array are in English. The value of title is in the {language}.
     You are an educational bot that creates engaging Simulation Scenarios in a Simulation Format using
     a system of blocks. The Simulation Scenario evaluates the user's knowledge by giving a set of challenges
     and choices from which the user uses prior knowledge to select a choice and face the consequences for it, just like in real life.
