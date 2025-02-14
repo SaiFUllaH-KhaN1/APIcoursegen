@@ -6631,7 +6631,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made. In this example, this is being used for retrying, so it is used as a retry Block by giving an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. Retry Blocks always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "(Insert Text Here) Contemplation question: (Insert question and its detailed answer Text Here)"
         }},
         {{
@@ -6673,7 +6673,7 @@ prompt_simulation_pedagogy_gemini = PromptTemplate(
             "id": "retry1_SBB2",
             "label":"Track 3",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "(Insert Text Here) Contemplation question: (Insert question and its detailed answer Text Here)"
         }},
         {{
@@ -6977,7 +6977,7 @@ JSON OUTPUT:
             "id": "retry1_SBB1",
             "label": "Track 2",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Your misinterpretation leads to a reckless approach, causing the mechanism to malfunction. The door remains sealed, and the situation becomes more complicated. The flawed understanding of the rune results in an even greater challenge. Retry. Contemplation question: How can errors in decoding symbols lead to unintended consequences in real-world problem-solving?"
         }},
         {{
@@ -7024,7 +7024,7 @@ JSON OUTPUT:
             "id": "retry1_SBB2",
             "label": "Track 5",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Choosing JERA leads to stagnation, as the lock mechanism requires immediate action rather than a long-term approach. The door remains locked. Retry. Contemplation question: When does long-term planning become ineffective in urgent problem-solving scenarios?"
         }},
         {{
@@ -7081,7 +7081,7 @@ JSON OUTPUT:
             "id": "retry1_SBB3",
             "label": "Track 7",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Your incorrect arrangement causes the mechanism to reset, requiring you to start over. Retry. Contemplation question: What risks arise when critical steps in problem-solving are misordered?"
         }},
         {{
@@ -7138,7 +7138,7 @@ JSON OUTPUT:
             "id": "retry1_SBB4",
             "label": "Track 9",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "This triggers a secondary locking mechanism, trapping you further. Retry. Contemplation question: What can be learned from reassessing a situation when the first approach fails?"
         }}
     ],
@@ -7255,11 +7255,10 @@ JSON OUTPUT:
     ]
 }}
 
-Remarks of the above JSON OUTPUT practical example: "All good. Users really loved the fact that
+Remarks of the above JSON OUTPUT practical example: "Mostly good. Users really loved the fact that
 you gave not only a correct and wrong option, but also a less desirable partially wrong option which took user on a
 different storyline/track to make things right. In this way success is reached but at some cost, less than idle conclusion. While the purely correct choice storyline leads to idle conclusion.
-One area of improvement you are constantly missing is that you Just need to make the descriptions more detailed and explain content more!"
-There should be 4 Conclusions per a whole scenario.
+One area of improvement you are constantly missing is that you Just need to make the descriptions more detailed and explain content more! The consequence and retry blocks have contemplation question but no detailed answer in the description!"
 Remember: After a consequence block, there is either retry, conclusion or TextBlock/MediaBlock leading to another SimpleBranchingBlock. 
     ]]
 
@@ -7434,7 +7433,7 @@ JSON OUTPUT:
             "id": "retry1_SBB3",
             "label": "Track 6",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's not the correct order. You need to put on the full body suit first, then the respirator, then the goggles, and finally the gloves. This ensures that you are fully protected and that the PPE is properly sealed. Retry. Contemplation question: What is the correct order for donning PPE to minimize contamination and maximize protection? Detailed answer: The correct order is typically full-body suit, respirator, goggles, and gloves. This sequence minimizes the risk of contaminating other PPE and ensures a proper seal for each item."
         }},
         {{
@@ -7455,7 +7454,7 @@ JSON OUTPUT:
             "id": "retry1_SBB2",
             "label": "Track 5",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's a dangerous attitude! Even with caution, accidental splashes and exposure can occur. You must protect all parts of your body from potential hazards. Go back and get the rest of the PPE. Retry. Contemplation question: Why is it insufficient to rely solely on caution when working with hazardous materials? Detailed answer: Accidents can happen even with the utmost care. PPE provides a critical barrier against unexpected splashes, spills, and exposures that caution alone cannot prevent."
         }},
         {{
@@ -7499,7 +7498,7 @@ JSON OUTPUT:
             "id": "retry1_SBB4",
             "label": "Track 8",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's not quite right. Putting on the gloves first can contaminate the other PPE and leave gaps in protection. Think about the order that minimizes contamination and maximizes coverage. Retry. Contemplation question: How can improper donning of PPE compromise its effectiveness? Detailed answer: Incorrect donning can lead to gaps in protection, contamination of PPE, and reduced comfort, all of which can increase the risk of exposure to hazards."
         }},
         {{
@@ -7529,7 +7528,7 @@ JSON OUTPUT:
             "id": "retry1_SBB5",
             "label": "Track 10",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Whoa there! Never skip the respirator check. Your life could depend on it. A faulty respirator is as good as no protection at all. Let's go over the correct procedure again. Retry. Contemplation question: What are the potential consequences of using a faulty respirator? Detailed answer: A faulty respirator can allow harmful contaminants to enter the respiratory system, leading to immediate health effects such as dizziness and nausea, as well as long-term health problems such as lung disease and cancer."
         }},
         {{
@@ -7668,7 +7667,7 @@ JSON OUTPUT:
 
 Remarks of the above JSON OUTPUT practical example: SIMPLY PERFECT! Because it has good amount of detailed description keys for all blocks.
 The Consequence blocks correctly either allows retry, End of story (Conclusion) or Propagates story (via subsequent TextBlock/MediaBlock leading to SimpleBranchingBlock).
-Furthermore, the each Consequence block has detailed contemplation question and answer, while Conclusion blocks (ENDX) has detailed feedback.
+Furthermore, the each Consequence block has detailed contemplation question and detailed answer, while Conclusion blocks (ENDX) has detailed feedback.
 Another good thing is that the edges array has mentioned the interconnection of all the node ids properly.
 Remember: Every node id must be mentioned in the edges array block at least one time as source and at least one time as target. 
     ]]
@@ -7859,7 +7858,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made. In this example, this is being used for retrying, so it is used as a retry Block by giving an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. Retry Blocks always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "(Insert Text Here) Contemplation question: (Insert question and its detailed answer Text Here)"
         }},
         {{
@@ -7901,7 +7900,7 @@ prompt_simulation_pedagogy_gemini_simplify = PromptTemplate(
             "id": "retry1_SBB2",
             "label":"Track 3",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "(Insert Text Here) Contemplation question: (Insert question and its detailed answer Text Here)"
         }},
         {{
@@ -8205,7 +8204,7 @@ JSON OUTPUT:
             "id": "retry1_SBB1",
             "label": "Track 2",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Your misinterpretation leads to a reckless approach, causing the mechanism to malfunction. The door remains sealed, and the situation becomes more complicated. The flawed understanding of the rune results in an even greater challenge. Retry. Contemplation question: How can errors in decoding symbols lead to unintended consequences in real-world problem-solving?"
         }},
         {{
@@ -8252,7 +8251,7 @@ JSON OUTPUT:
             "id": "retry1_SBB2",
             "label": "Track 5",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Choosing JERA leads to stagnation, as the lock mechanism requires immediate action rather than a long-term approach. The door remains locked. Retry. Contemplation question: When does long-term planning become ineffective in urgent problem-solving scenarios?"
         }},
         {{
@@ -8309,7 +8308,7 @@ JSON OUTPUT:
             "id": "retry1_SBB3",
             "label": "Track 7",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Your incorrect arrangement causes the mechanism to reset, requiring you to start over. Retry. Contemplation question: What risks arise when critical steps in problem-solving are misordered?"
         }},
         {{
@@ -8366,7 +8365,7 @@ JSON OUTPUT:
             "id": "retry1_SBB4",
             "label": "Track 9",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "This triggers a secondary locking mechanism, trapping you further. Retry. Contemplation question: What can be learned from reassessing a situation when the first approach fails?"
         }}
     ],
@@ -8483,11 +8482,10 @@ JSON OUTPUT:
     ]
 }}
 
-Remarks of the above JSON OUTPUT practical example: "All good. Users really loved the fact that
+Remarks of the above JSON OUTPUT practical example: "Mostly good. Users really loved the fact that
 you gave not only a correct and wrong option, but also a less desirable partially wrong option which took user on a
 different storyline/track to make things right. In this way success is reached but at some cost, less than idle conclusion. While the purely correct choice storyline leads to idle conclusion.
-One area of improvement you are constantly missing is that you Just need to make the descriptions more detailed and explain content more!"
-There should be 4 Conclusions per a whole scenario.
+One area of improvement you are constantly missing is that you Just need to make the descriptions more detailed and explain content more! The consequence and retry blocks have contemplation question but no detailed answer in the description!"
 Remember: After a consequence block, there is either retry, conclusion or TextBlock/MediaBlock leading to another SimpleBranchingBlock. 
     ]]
 
@@ -8662,7 +8660,7 @@ JSON OUTPUT:
             "id": "retry1_SBB3",
             "label": "Track 6",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's not the correct order. You need to put on the full body suit first, then the respirator, then the goggles, and finally the gloves. This ensures that you are fully protected and that the PPE is properly sealed. Retry. Contemplation question: What is the correct order for donning PPE to minimize contamination and maximize protection? Detailed answer: The correct order is typically full-body suit, respirator, goggles, and gloves. This sequence minimizes the risk of contaminating other PPE and ensures a proper seal for each item."
         }},
         {{
@@ -8683,7 +8681,7 @@ JSON OUTPUT:
             "id": "retry1_SBB2",
             "label": "Track 5",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's a dangerous attitude! Even with caution, accidental splashes and exposure can occur. You must protect all parts of your body from potential hazards. Go back and get the rest of the PPE. Retry. Contemplation question: Why is it insufficient to rely solely on caution when working with hazardous materials? Detailed answer: Accidents can happen even with the utmost care. PPE provides a critical barrier against unexpected splashes, spills, and exposures that caution alone cannot prevent."
         }},
         {{
@@ -8727,7 +8725,7 @@ JSON OUTPUT:
             "id": "retry1_SBB4",
             "label": "Track 8",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's not quite right. Putting on the gloves first can contaminate the other PPE and leave gaps in protection. Think about the order that minimizes contamination and maximizes coverage. Retry. Contemplation question: How can improper donning of PPE compromise its effectiveness? Detailed answer: Incorrect donning can lead to gaps in protection, contamination of PPE, and reduced comfort, all of which can increase the risk of exposure to hazards."
         }},
         {{
@@ -8757,7 +8755,7 @@ JSON OUTPUT:
             "id": "retry1_SBB5",
             "label": "Track 10",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Whoa there! Never skip the respirator check. Your life could depend on it. A faulty respirator is as good as no protection at all. Let's go over the correct procedure again. Retry. Contemplation question: What are the potential consequences of using a faulty respirator? Detailed answer: A faulty respirator can allow harmful contaminants to enter the respiratory system, leading to immediate health effects such as dizziness and nausea, as well as long-term health problems such as lung disease and cancer."
         }},
         {{
@@ -8896,7 +8894,7 @@ JSON OUTPUT:
 
 Remarks of the above JSON OUTPUT practical example: SIMPLY PERFECT! Because it has good amount of detailed description keys for all blocks.
 The Consequence blocks correctly either allows retry, End of story (Conclusion) or Propagates story (via subsequent TextBlock/MediaBlock leading to SimpleBranchingBlock).
-Furthermore, the each Consequence block has detailed contemplation question and answer, while Conclusion blocks (ENDX) has detailed feedback.
+Furthermore, the each Consequence block has detailed contemplation question and detailed answer, while Conclusion blocks (ENDX) has detailed feedback.
 Another good thing is that the edges array has mentioned the interconnection of all the node ids properly.
 Remember: Every node id must be mentioned in the edges array block at least one time as source and at least one time as target. 
     ]]
@@ -9106,7 +9104,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made. In this example, this is being used for retrying, so it is used as a retry Block by giving an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. Retry Blocks always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "(Insert Text Here) Contemplation question: (Insert question and its detailed answer Text Here)"
         }},
         {{
@@ -9148,7 +9146,7 @@ prompt_simulation_pedagogy_retry_gemini = PromptTemplate(
             "id": "retry1_SBB2",
             "label":"Track 3",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "(Insert Text Here) Contemplation question: (Insert question and its detailed answer Text Here)"
         }},
         {{
@@ -9452,7 +9450,7 @@ JSON OUTPUT:
             "id": "retry1_SBB1",
             "label": "Track 2",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Your misinterpretation leads to a reckless approach, causing the mechanism to malfunction. The door remains sealed, and the situation becomes more complicated. The flawed understanding of the rune results in an even greater challenge. Retry. Contemplation question: How can errors in decoding symbols lead to unintended consequences in real-world problem-solving?"
         }},
         {{
@@ -9499,7 +9497,7 @@ JSON OUTPUT:
             "id": "retry1_SBB2",
             "label": "Track 5",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Choosing JERA leads to stagnation, as the lock mechanism requires immediate action rather than a long-term approach. The door remains locked. Retry. Contemplation question: When does long-term planning become ineffective in urgent problem-solving scenarios?"
         }},
         {{
@@ -9556,7 +9554,7 @@ JSON OUTPUT:
             "id": "retry1_SBB3",
             "label": "Track 7",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Your incorrect arrangement causes the mechanism to reset, requiring you to start over. Retry. Contemplation question: What risks arise when critical steps in problem-solving are misordered?"
         }},
         {{
@@ -9613,7 +9611,7 @@ JSON OUTPUT:
             "id": "retry1_SBB4",
             "label": "Track 9",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "This triggers a secondary locking mechanism, trapping you further. Retry. Contemplation question: What can be learned from reassessing a situation when the first approach fails?"
         }}
     ],
@@ -9730,11 +9728,10 @@ JSON OUTPUT:
     ]
 }}
 
-Remarks of the above JSON OUTPUT practical example: "All good. Users really loved the fact that
+Remarks of the above JSON OUTPUT practical example: "Mostly good. Users really loved the fact that
 you gave not only a correct and wrong option, but also a less desirable partially wrong option which took user on a
 different storyline/track to make things right. In this way success is reached but at some cost, less than idle conclusion. While the purely correct choice storyline leads to idle conclusion.
-One area of improvement you are constantly missing is that you Just need to make the descriptions more detailed and explain content more!"
-There should be 4 Conclusions per a whole scenario.
+One area of improvement you are constantly missing is that you Just need to make the descriptions more detailed and explain content more! The consequence and retry blocks have contemplation question but no detailed answer in the description!"
 Remember: After a consequence block, there is either retry, conclusion or TextBlock/MediaBlock leading to another SimpleBranchingBlock. 
     ]]
 
@@ -9909,7 +9906,7 @@ JSON OUTPUT:
             "id": "retry1_SBB3",
             "label": "Track 6",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's not the correct order. You need to put on the full body suit first, then the respirator, then the goggles, and finally the gloves. This ensures that you are fully protected and that the PPE is properly sealed. Retry. Contemplation question: What is the correct order for donning PPE to minimize contamination and maximize protection? Detailed answer: The correct order is typically full-body suit, respirator, goggles, and gloves. This sequence minimizes the risk of contaminating other PPE and ensures a proper seal for each item."
         }},
         {{
@@ -9930,7 +9927,7 @@ JSON OUTPUT:
             "id": "retry1_SBB2",
             "label": "Track 5",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's a dangerous attitude! Even with caution, accidental splashes and exposure can occur. You must protect all parts of your body from potential hazards. Go back and get the rest of the PPE. Retry. Contemplation question: Why is it insufficient to rely solely on caution when working with hazardous materials? Detailed answer: Accidents can happen even with the utmost care. PPE provides a critical barrier against unexpected splashes, spills, and exposures that caution alone cannot prevent."
         }},
         {{
@@ -9974,7 +9971,7 @@ JSON OUTPUT:
             "id": "retry1_SBB4",
             "label": "Track 8",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's not quite right. Putting on the gloves first can contaminate the other PPE and leave gaps in protection. Think about the order that minimizes contamination and maximizes coverage. Retry. Contemplation question: How can improper donning of PPE compromise its effectiveness? Detailed answer: Incorrect donning can lead to gaps in protection, contamination of PPE, and reduced comfort, all of which can increase the risk of exposure to hazards."
         }},
         {{
@@ -10004,7 +10001,7 @@ JSON OUTPUT:
             "id": "retry1_SBB5",
             "label": "Track 10",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Whoa there! Never skip the respirator check. Your life could depend on it. A faulty respirator is as good as no protection at all. Let's go over the correct procedure again. Retry. Contemplation question: What are the potential consequences of using a faulty respirator? Detailed answer: A faulty respirator can allow harmful contaminants to enter the respiratory system, leading to immediate health effects such as dizziness and nausea, as well as long-term health problems such as lung disease and cancer."
         }},
         {{
@@ -10143,7 +10140,7 @@ JSON OUTPUT:
 
 Remarks of the above JSON OUTPUT practical example: SIMPLY PERFECT! Because it has good amount of detailed description keys for all blocks.
 The Consequence blocks correctly either allows retry, End of story (Conclusion) or Propagates story (via subsequent TextBlock/MediaBlock leading to SimpleBranchingBlock).
-Furthermore, the each Consequence block has detailed contemplation question and answer, while Conclusion blocks (ENDX) has detailed feedback.
+Furthermore, the each Consequence block has detailed contemplation question and detailed answer, while Conclusion blocks (ENDX) has detailed feedback.
 Another good thing is that the edges array has mentioned the interconnection of all the node ids properly.
 Remember: Every node id must be mentioned in the edges array block at least one time as source and at least one time as target. 
     ]]
@@ -10370,7 +10367,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "Purpose": "These blocks provide Consequence of the Track choice made. It gives Feedback, and Contemplate the player about the Repercussions in case of wrong choices made and explain significance in case of right choice made. In this example, this is being used for retrying, so it is used as a retry Block by giving an option for user to go back to the concerned label's SimpleBranchingBlock. For example in this specific case it is being used to reroute the user to SBB2 SimpleBranchingBlock to rethink and retry with correct or better choice in a given situation. As you can observe, both Track 3 and Track 4 were either incorrect or partially correct answers and lead the user back to SBB2, in other words, to the concerned label's SimpleBranchingBlock. Retry Blocks always leads back to the concerned label's SimpleBranchingBlock if a label's Track is incorrect or partially correct.",
             "label":"Track 1",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "(Insert Text Here) Contemplation question: (Insert question and its detailed answer Text Here)"
         }},
         {{
@@ -10412,7 +10409,7 @@ prompt_simulation_shadow_edges = PromptTemplate(
             "id": "retry1_SBB2",
             "label":"Track 3",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "(Insert Text Here) Contemplation question: (Insert question and its detailed answer Text Here)"
         }},
         {{
@@ -10716,7 +10713,7 @@ JSON OUTPUT:
             "id": "retry1_SBB1",
             "label": "Track 2",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Your misinterpretation leads to a reckless approach, causing the mechanism to malfunction. The door remains sealed, and the situation becomes more complicated. The flawed understanding of the rune results in an even greater challenge. Retry. Contemplation question: How can errors in decoding symbols lead to unintended consequences in real-world problem-solving?"
         }},
         {{
@@ -10763,7 +10760,7 @@ JSON OUTPUT:
             "id": "retry1_SBB2",
             "label": "Track 5",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Choosing JERA leads to stagnation, as the lock mechanism requires immediate action rather than a long-term approach. The door remains locked. Retry. Contemplation question: When does long-term planning become ineffective in urgent problem-solving scenarios?"
         }},
         {{
@@ -10820,7 +10817,7 @@ JSON OUTPUT:
             "id": "retry1_SBB3",
             "label": "Track 7",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Your incorrect arrangement causes the mechanism to reset, requiring you to start over. Retry. Contemplation question: What risks arise when critical steps in problem-solving are misordered?"
         }},
         {{
@@ -10877,7 +10874,7 @@ JSON OUTPUT:
             "id": "retry1_SBB4",
             "label": "Track 9",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "This triggers a secondary locking mechanism, trapping you further. Retry. Contemplation question: What can be learned from reassessing a situation when the first approach fails?"
         }}
     ],
@@ -10994,11 +10991,10 @@ JSON OUTPUT:
     ]
 }}
 
-Remarks of the above JSON OUTPUT practical example: "All good. Users really loved the fact that
+Remarks of the above JSON OUTPUT practical example: "Mostly good. Users really loved the fact that
 you gave not only a correct and wrong option, but also a less desirable partially wrong option which took user on a
 different storyline/track to make things right. In this way success is reached but at some cost, less than idle conclusion. While the purely correct choice storyline leads to idle conclusion.
-One area of improvement you are constantly missing is that you Just need to make the descriptions more detailed and explain content more!"
-There should be 4 Conclusions per a whole scenario.
+One area of improvement you are constantly missing is that you Just need to make the descriptions more detailed and explain content more! The consequence and retry blocks have contemplation question but no detailed answer in the description!"
 Remember: After a consequence block, there is either retry, conclusion or TextBlock/MediaBlock leading to another SimpleBranchingBlock. 
     ]]
 
@@ -11173,7 +11169,7 @@ JSON OUTPUT:
             "id": "retry1_SBB3",
             "label": "Track 6",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's not the correct order. You need to put on the full body suit first, then the respirator, then the goggles, and finally the gloves. This ensures that you are fully protected and that the PPE is properly sealed. Retry. Contemplation question: What is the correct order for donning PPE to minimize contamination and maximize protection? Detailed answer: The correct order is typically full-body suit, respirator, goggles, and gloves. This sequence minimizes the risk of contaminating other PPE and ensures a proper seal for each item."
         }},
         {{
@@ -11194,7 +11190,7 @@ JSON OUTPUT:
             "id": "retry1_SBB2",
             "label": "Track 5",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's a dangerous attitude! Even with caution, accidental splashes and exposure can occur. You must protect all parts of your body from potential hazards. Go back and get the rest of the PPE. Retry. Contemplation question: Why is it insufficient to rely solely on caution when working with hazardous materials? Detailed answer: Accidents can happen even with the utmost care. PPE provides a critical barrier against unexpected splashes, spills, and exposures that caution alone cannot prevent."
         }},
         {{
@@ -11238,7 +11234,7 @@ JSON OUTPUT:
             "id": "retry1_SBB4",
             "label": "Track 8",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "That's not quite right. Putting on the gloves first can contaminate the other PPE and leave gaps in protection. Think about the order that minimizes contamination and maximizes coverage. Retry. Contemplation question: How can improper donning of PPE compromise its effectiveness? Detailed answer: Incorrect donning can lead to gaps in protection, contamination of PPE, and reduced comfort, all of which can increase the risk of exposure to hazards."
         }},
         {{
@@ -11268,7 +11264,7 @@ JSON OUTPUT:
             "id": "retry1_SBB5",
             "label": "Track 10",
             "type": "PedagogicalBlock",
-            "title": "Consequence",
+            "title": "Retry",
             "description": "Whoa there! Never skip the respirator check. Your life could depend on it. A faulty respirator is as good as no protection at all. Let's go over the correct procedure again. Retry. Contemplation question: What are the potential consequences of using a faulty respirator? Detailed answer: A faulty respirator can allow harmful contaminants to enter the respiratory system, leading to immediate health effects such as dizziness and nausea, as well as long-term health problems such as lung disease and cancer."
         }},
         {{
@@ -11407,7 +11403,7 @@ JSON OUTPUT:
 
 Remarks of the above JSON OUTPUT practical example: SIMPLY PERFECT! Because it has good amount of detailed description keys for all blocks.
 The Consequence blocks correctly either allows retry, End of story (Conclusion) or Propagates story (via subsequent TextBlock/MediaBlock leading to SimpleBranchingBlock).
-Furthermore, the each Consequence block has detailed contemplation question and answer, while Conclusion blocks (ENDX) has detailed feedback.
+Furthermore, the each Consequence block has detailed contemplation question and detailed answer, while Conclusion blocks (ENDX) has detailed feedback.
 Another good thing is that the edges array has mentioned the interconnection of all the node ids properly.
 Remember: Every node id must be mentioned in the edges array block at least one time as source and at least one time as target. 
     ]]
