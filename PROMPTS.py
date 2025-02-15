@@ -2660,7 +2660,7 @@ prompt_gamified_setup = PromptTemplate(
     The player can proceed when he clicks on all the overlaid text labels on the image. These overlayTags tell the player
     information about all the point-of-interests in the image. This way describing the image. Then, the overlayTags
     also give clues or knowledge to the player. The player then is given a question asking for a code that the player needs to put.
-    This code is based on the information in the overlayTags.)
+    This code is based on the information in the overlayTags. One element of the overlayTags is the "Story" element, which is mandatory part of the overlayTags JSON array. This array consists of clues and Story element to give in detail the situation of the Room and what is happening and the context of the story as it progresses Room by Room.)
     Format of answering is similar to below:
     Description and visualization of Escape Room Scenario (Context Room. The tags explains the context. The image sets the scene. This room softly introduces to the escape room gamified scenario. The real escape room begins from the next room. The overlayTags here are just information carrying, story telling text entities and not clues. For example: A sunny day where a person is shown to be walking on a track in park. Overlay tags elaborates on hotspots in the image. For example "Person: Jogging happily and enjoying the sun.","Park: A lush green park with trees in the background.")
     Room 1 (Clues to Explore player can form a sequence by learning these clues. The clues are never directly in the image. The image is a seperate entity. For example an image of a bedroom with 1 bed and computer desk. The clues are overlaid on top of this image. For examlpe the bed object in the image is hotspot and the clue/description of it would be overlaid on top of it as clickable text. The text will reveal more details of the bed for example its color, structure, make, style etc. For example a Room would be: The Person sitting on the park bench clenching chest in distress.)
@@ -2675,6 +2675,20 @@ prompt_gamified_setup = PromptTemplate(
         End the Scenario with Reflective learning block (in great detail overview of the whole scenario for Lesson objectives and how they were achieved using this story. Discuss in great detail the feedback and feedforward of the whole scenario.)
 
     Human would love to have atleast 3 fully detailed rooms and at most 5 fully detailed rooms. If 'Human Input' explicitly suggests a number of rooms, then give that to the human.         
+
+    A typical Room may look like this (Note that this example is not detailed, and I need incredible detailed rooms, meaning the overlayTags will be very detailed in text):
+    [[
+Room 3
+
+The image shows you pushing your motorcycle uphill. Overlay tags appear:
+
+* **Uphill Section:** "The uphill section is short but steep.  It requires more effort to push the motorcycle."
+* **Rest:** "Take short breaks if needed to avoid exhaustion."
+* **Technique:** "Use your legs and body weight to assist in pushing uphill."
+* **Momentum:** "Try to maintain momentum to make the uphill section easier."
+* **Safety:** "Be mindful of your surroundings and potential hazards."
+* **Story:** "After you reach a nearby hill, the road is across that hill and you need to go uphill with the bike to reach the road."
+    ]]
 
     Human requires that you explain the clues or knowledge in as much detail as possible and available in the 'Input Documents'. The Human
     finds it easy that you do not tell him to visit a page in document, but rather you explain it to the fullest to him in your output.
@@ -2739,7 +2753,7 @@ prompt_gamified_setup_continue = PromptTemplate(
     The player can proceed when he clicks on all the overlaid text labels on the image. These overlayTags tell the player
     information about all the point-of-interests in the image. This way describing the image. Then, the overlayTags
     also give clues or knowledge to the player. The player then is given a question asking for a code that the player needs to put.
-    This code is based on the information in the overlayTags.)
+    This code is based on the information in the overlayTags. One element of the overlayTags is the "Story" element, which is mandatory part of the overlayTags JSON array. This array consists of clues and Story element to give in detail the situation of the Room and what is happening and the context of the story as it progresses Room by Room.)
     Format of answering is similar to below:
     Description and visualization of Escape Room Scenario (Context Room. The tags explains the context. The image sets the scene. This room softly introduces to the escape room gamified scenario. The real escape room begins from the next room. The overlayTags here are just information carrying, story telling text entities and not clues. For example: A sunny day where a person is shown to be walking on a track in park. Overlay tags elaborates on hotspots in the image. For example "Person: Jogging happily and enjoying the sun.","Park: A lush green park with trees in the background.")
     Room 1 (Clues to Explore player can form a sequence by learning these clues. The clues are never directly in the image. The image is a seperate entity. For example an image of a bedroom with 1 bed and computer desk. The clues are overlaid on top of this image. For examlpe the bed object in the image is hotspot and the clue/description of it would be overlaid on top of it as clickable text. The text will reveal more details of the bed for example its color, structure, make, style etc. For example a Room would be: The Person sitting on the park bench clenching chest in distress.)
@@ -2754,6 +2768,20 @@ prompt_gamified_setup_continue = PromptTemplate(
         End the Scenario with Reflective learning block (in great detail overview of the whole scenario for Lesson objectives and how they were achieved using this story. Discuss in great detail the feedback and feedforward of the whole scenario.)
 
     Human would love to have atleast 3 fully detailed rooms and at most 5 fully detailed rooms. If 'Human Input' explicitly suggests a number of rooms, then give that to the human.         
+
+    A typical Room may look like this (Note that this example is not detailed, and I need incredible detailed rooms, meaning the overlayTags will be very detailed in text):
+    [[
+Room 3
+
+The image shows you pushing your motorcycle uphill. Overlay tags appear:
+
+* **Uphill Section:** "The uphill section is short but steep.  It requires more effort to push the motorcycle."
+* **Rest:** "Take short breaks if needed to avoid exhaustion."
+* **Technique:** "Use your legs and body weight to assist in pushing uphill."
+* **Momentum:** "Try to maintain momentum to make the uphill section easier."
+* **Safety:** "Be mindful of your surroundings and potential hazards."
+* **Story:** "After you reach a nearby hill, the road is across that hill and you need to go uphill with the bike to reach the road."
+    ]]
 
     Human requires that you explain the clues or knowledge in as much detail as possible and available in the 'Input Documents'. The Human
     finds it easy that you do not tell him to visit a page in document, but rather you explain it to the fullest to him in your output.
@@ -2778,7 +2806,7 @@ prompt_gamified_setup_continue = PromptTemplate(
     'Content Areas': {content_areas};
 
     WARNING: After completing your Output Response generation, give the following ending tag so that I know the response has finished:
-    [END_OF_RESPONSE]
+    [END_OF_RESPONSE] 
 
     ]
 
@@ -2814,7 +2842,7 @@ prompt_gamified_json = PromptTemplate(
     
     The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
-    'MediaBlock': with title, Media Type (Image or 360), Description of the Media used, Overlay tags array with no key value pair, rather a string object only (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'MediaBlock': with title, Media Type (Image or 360), Description of the Media used, Overlay tags array with no key value pair, rather a string object only (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area. Include a "Story" element in the overlayTags array as well for giving an explaination of what is happening in the scene).
     'openQuestionBlock': with questionText, answer, correctAnswer (exactly equal to answer), wrongAnswerMessage
     'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning Objectives, and Feedback (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. Encouraging Remarks in reflective detailed tone with emphasis on detailed 
@@ -2914,7 +2942,8 @@ prompt_gamified_json = PromptTemplate(
                 "overlayTags": [
                     "Clue 1: Ensure the patient remains calm and comfortable by providing reassurance and loosening any tight clothing that might restrict breathing.",
                     "Clue 2: If the patient has been prescribed angina medication, assist them in taking it as per medical guidance.",
-                    "Clue 3: Stay vigilant, closely monitoring the patients condition, and be prepared to administer CPR if the situation demands immediate intervention."
+                    "Clue 3: Stay vigilant, closely monitoring the patients condition, and be prepared to administer CPR if the situation demands immediate intervention.",
+                    "Story: You have called the ambulance and waiting now for their arrival."
                 ]
             }}
 
@@ -2931,7 +2960,8 @@ prompt_gamified_json = PromptTemplate(
                 "overlayTags": [
                     "(Insert Text Here, Multiple Overlay Tags' with extremely detailed descriptions here are preffered in all MediaBlocks)",
                     "(overlayTags are points or labels, which are overlayed on top of points-of-interests of an image or 360 image. The user clicks on these points and get details of the part of the image point-of-interests. User gets clues to solve the question asked after the Room/Situation to successfully escape it.)",
-                    "(In case of ContextRoom, we need to introduce user to the Escape Room Gamified Scenario and what further lies ahead and give the user a starting point so no clues are needed. Here we give Context, and Setting of the Escape Room Scenario. The clues for challenging rooms starting from Room1 and corresponding questions will come after this node.)"
+                    "(In case of ContextRoom, we need to introduce user to the Escape Room Gamified Scenario and what further lies ahead and give the user a starting point so no clues are needed. Here we give Context, and Setting of the Escape Room Scenario. The clues for challenging rooms starting from Room1 and corresponding questions will come after this node.)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -2941,7 +2971,8 @@ prompt_gamified_json = PromptTemplate(
                 "mediaType": "Image/360",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks which give detailed description of highlights of the image)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -2977,7 +3008,8 @@ prompt_gamified_json = PromptTemplate(
                 "mediaType": "Image/360",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks which give detailed description of highlights of the image)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -3606,6 +3638,304 @@ Remarks of the above JSON OUTPUT practical example: "Again very good. Notice how
     You correctly remembered that You do not solely rely on Input Documents structure to create that exact JSON strucure. You only treat the Input Documents as your guidance
     information bank. And then you mold that information to your use case, as you can see in the Practical Example.
     ]]
+
+    PRACTICAL EXAMPLE 2: [[
+    For a given "Input Documents" the AI outputs JSON OUTPUT in following way:
+    "Input Documents":
+Description and visualization of Escape Room Scenario (Context Room):
+
+The scene opens with a 360° image of a sunny road.  Your CD70 motorcycle sits beside you, stubbornly refusing to start.  The overlay tags provide basic information: "Road: A quiet, sunny road leading towards a town in the distance.", "Motorcycle: Your CD70 motorcycle, currently out of fuel.", "You:
+Feeling frustrated but determined to reach the nearest petrol station."  This room serves as an introduction to the scenario.
+
+
+Room 1:  The Fuel Petcock
+
+The image shows a close-up of your CD70 motorcycle's fuel tank and petcock (fuel valve).  Overlay tags provide clues:
+
+* **Fuel Petcock:** "This valve controls the fuel flow from the tank to the carburetor. It typically has three positions: 'ON,' 'RES' (reserve), and 'OFF.'"
+* **Fuel Tank:** "Check the fuel level.  If the tank is nearly empty, the problem is likely low fuel."
+* **Fuel Line:** "Inspect the fuel line connecting the petcock to the carburetor for any kinks, cracks, or blockages.  A clogged line can restrict fuel flow."
+* **Story:** "Your bike sputtered and died, leaving you stranded.  You suspect a fuel problem, but you need to systematically check each component to
+diagnose the issue."
+
+
+Question about Sequence to Exit the Room:  What is the correct order of steps to check the fuel system?
+
+1. Check the fuel level in the tank.
+2. Inspect the fuel line for blockages or damage.
+3. Examine the fuel petcock and ensure it's in the correct position ('ON' or 'RES').
+
+Answer format: 123
+
+
+If correct:
+
+Feedback: Correct! You correctly identified the logical sequence for checking the fuel system.  Starting with the most obvious (fuel level) and progressing to more complex components (fuel line and petcock) is efficient troubleshooting.
+
+Next Room Context:  After confirming the fuel level is low, you decide to check the fuel petcock.  You notice some debris near the petcock.
+
+
+Room 2: Cleaning the Fuel Petcock
+
+The image shows you carefully removing the fuel petcock from the fuel tank.  Overlay tags provide clues:
+
+* **Debris:** "You find some dirt and debris near the petcock. This could be obstructing the fuel flow."
+* **Cleaning:** "Use compressed air or a small brush to carefully clean the petcock and its jets.  Ensure all passages are clear."
+* **Fuel Key Jets:** "The fuel key has two jets, one for the 'ON' position and one for 'RES'.  Clean both jets thoroughly."
+* **Low-Grade Fuel:** "Using low-quality fuel can lead to clogged fuel lines and petcocks. Consider using higher-quality fuel in the future."
+* **Story:** "The initial inspection reveals potential blockages.  You need to clean the petcock to ensure smooth fuel flow."
+
+
+Question about Sequence to Exit the Room: What is the correct procedure for cleaning the fuel petcock?
+
+1. Remove the fuel petcock from the fuel tank.
+2. Clean the petcock jets and passages using compressed air or a small brush.
+3. Reinstall the fuel petcock.
+4. Check for fuel flow.
+
+Answer format: 1234
+
+
+If correct:
+
+Feedback: Excellent! You followed the correct procedure for cleaning the fuel petcock.  Thorough cleaning of the jets and passages is crucial for restoring proper fuel flow.
+
+Next Room Context: After cleaning the petcock, you carefully reinstall it and turn the fuel tap to 'ON'.  You still hear nothing. You decide to check
+the fuel line.
+
+
+Room 3: Inspecting the Fuel Line
+
+The image shows you inspecting the fuel line running from the petcock to the carburetor. Overlay tags provide clues:
+
+* **Fuel Line Inspection:** "Carefully examine the fuel line for any kinks, cracks, or blockages.  A damaged or clogged line can prevent fuel from reaching the carburetor."
+* **Compressed Air:** "Use compressed air to clear any blockages in the fuel line.  Be gentle to avoid damaging the line."
+* **Visual Inspection:** "Look closely for any signs of damage, such as cracks or holes, that could be causing a fuel leak."
+* **Story:** "Despite cleaning the petcock, the bike still won't start.  You suspect a problem with the fuel line."
+
+
+Question about Sequence to Exit the Room: What is the correct procedure for inspecting and clearing a blocked fuel line?
+
+1. Visually inspect the fuel line for damage.
+2. Use compressed air to clear any blockages.
+3. If damage is found, replace the fuel line.
+
+Answer format: 123
+
+
+If correct:
+
+Feedback: Well done! You systematically checked the fuel line for damage and cleared any potential blockages.  This ensures a clear path for fuel to reach the carburetor.
+
+Next Room Context:  With the fuel line clear, you try starting the bike again.  It starts! You are now able to reach the nearest petrol station.
+
+
+End of Scenario: Reflective Learning Block
+
+This escape room scenario simulated troubleshooting a common fuel-related problem on a CD70 motorcycle.  You successfully learned to diagnose the problem by systematically checking the fuel level, petcock, and fuel line.  The scenario reinforced the importance of methodical troubleshooting and the use of basic motorcycle maintenance techniques.  The learning objectives were achieved through a hands-on, interactive experience, making the learning
+process engaging and memorable.  The feedback provided at each stage guided you towards the correct solution, reinforcing your understanding of the concepts involved.  This approach is effective for training new employees or providing virtual tours, as it combines information delivery with an interactive problem-solving experience.
+
+
+[END_OF_RESPONSE]
+    
+    JSON OUTPUT:
+{{
+    "title": "CD70 Motorcycle Fuel Troubleshooting Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Learning Objectives",
+            "description": "1. Troubleshoot a fuel-related issue on a CD 70 motorcycle. 2. Safely restart the motorcycle and reach the nearest gas station. 3. Identify potential causes of fuel delivery problems."
+        }},
+        {{
+            "id": "ContextRoom",
+            "type": "MediaBlock",
+            "title": "Stranded CD70",
+            "mediaType": "360",
+            "description": "A 360° view of a sunny road. Your CD70 motorcycle sits beside you, stubbornly refusing to start.",
+            "overlayTags": [
+                "Road: A quiet, sunny road leading towards a town in the distance.",
+                "Motorcycle: Your CD70 motorcycle, currently out of fuel.",
+                "You: Feeling frustrated but determined to reach the nearest petrol station.",
+                "Story: Your motorcycle has stopped due to lack of fuel, leaving you stranded on a sunny road."
+            ]
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Fuel Petcock",
+            "mediaType": "Image",
+            "description": "A close-up of your CD70 motorcycle's fuel tank and petcock (fuel valve).",
+            "overlayTags": [
+                "Fuel Petcock: This valve controls the fuel flow from the tank to the carburetor. It typically has three positions: 'ON', 'RES' (reserve), and 'OFF'.",
+                "Fuel Tank: Check the fuel level. If the tank is nearly empty, the problem is likely low fuel.",
+                "Fuel Line: Inspect the fuel line connecting the petcock to the carburetor for any kinks, cracks, or blockages. A clogged line can restrict fuel flow.",
+                "Story: Your bike sputtered and died, leaving you stranded. You suspect a fuel problem, but you need to systematically check each component to diagnose the issue."
+            ]
+        }},
+        {{
+            "id": "QB1",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct order of steps to check the fuel system? 1. Check the fuel level in the tank. 2. Inspect the fuel line for blockages or damage. 3. Examine the fuel petcock and ensure it's in the correct position ('ON' or 'RES'). Answer format: 123",
+            "answer": [
+                "132"
+            ],
+            "correctAnswer": "132",
+            "wrongAnswerMessage": "Incorrect sequence. Review the clues and try again. Start with the most obvious cause (fuel level) before checking more complex components."
+        }},
+        {{
+            "id": "FB1",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Correct! You correctly identified the logical sequence for checking the fuel system. Starting with the most obvious (fuel level) and progressing to more complex components (fuel line and petcock) is efficient troubleshooting."
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Checking the Petcock",
+            "description": "After confirming the fuel level is low, you decide to check the fuel petcock. You notice some debris near the petcock. The image shows you carefully removing the fuel petcock from the fuel tank."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "Cleaning the Fuel Petcock",
+            "mediaType": "Image",
+            "description": "A detailed image showing the process of cleaning the fuel petcock, including removing it from the tank, cleaning the jets with compressed air or a brush, and reinstalling it.",
+            "overlayTags": [
+                "Debris: You find some dirt and debris near the petcock. This could be obstructing the fuel flow.",
+                "Cleaning: Use compressed air or a small brush to carefully clean the petcock and its jets. Ensure all passages are clear.",
+                "Fuel Key Jets: The fuel key has two jets, one for the 'ON' position and one for 'RES'. Clean both jets thoroughly.",
+                "Low-Grade Fuel: Using low-quality fuel can lead to clogged fuel lines and petcocks. Consider using higher-quality fuel in the future.",
+                "Story: The initial inspection reveals potential blockages. You need to clean the petcock to ensure smooth fuel flow."
+            ]
+        }},
+        {{
+            "id": "QB2",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct procedure for cleaning the fuel petcock? 1. Remove the fuel petcock from the fuel tank. 2. Clean the petcock jets and passages using compressed air or a small brush. 3. Reinstall the fuel petcock. 4. Check for fuel flow. Answer format: 1234",
+            "answer": [
+                "1234"
+            ],
+            "correctAnswer": "1234",
+            "wrongAnswerMessage": "Incorrect procedure. Review the steps for cleaning the fuel petcock and try again. Ensure thorough cleaning of all passages."
+        }},
+        {{
+            "id": "FB2",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Excellent! You followed the correct procedure for cleaning the fuel petcock. Thorough cleaning of the jets and passages is crucial for restoring proper fuel flow."
+        }},
+        {{
+            "id": "B3",
+            "type": "TextBlock",
+            "title": "Inspecting the Fuel Line",
+            "description": "After cleaning the petcock, you carefully reinstall it and turn the fuel tap to 'ON'. You still hear nothing. You decide to check the fuel line. The image shows you inspecting the fuel line running from the petcock to the carburetor."
+        }},
+        {{
+            "id": "Room3",
+            "type": "MediaBlock",
+            "title": "Inspecting the Fuel Line",
+            "mediaType": "Image",
+            "description": "A detailed image showing the inspection of the fuel line, including visual inspection for damage and using compressed air to clear blockages.",
+            "overlayTags": [
+                "Fuel Line Inspection: Carefully examine the fuel line for any kinks, cracks, or blockages. A damaged or clogged line can prevent fuel from reaching the carburetor.",
+                "Compressed Air: Use compressed air to clear any blockages in the fuel line. Be gentle to avoid damaging the line.",
+                "Visual Inspection: Look closely for any signs of damage, such as cracks or holes, that could be causing a fuel leak.",
+                "Story: Despite cleaning the petcock, the bike still won't start. You suspect a problem with the fuel line."
+            ]
+        }},
+        {{
+            "id": "QB3",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct procedure for inspecting and clearing a blocked fuel line? 1. Visually inspect the fuel line for damage. 2. Use compressed air to clear any blockages. 3. If damage is found, replace the fuel line. Answer format: 123",
+            "answer": [
+                "123"
+            ],
+            "correctAnswer": "123",
+            "wrongAnswerMessage": "Incorrect procedure. Review the steps for inspecting and clearing a blocked fuel line and try again. Ensure a thorough check for damage before attempting to clear blockages."
+        }},
+        {{
+            "id": "FB3",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Well done! You systematically checked the fuel line for damage and cleared any potential blockages. This ensures a clear path for fuel to reach the carburetor."
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "This escape room scenario simulated troubleshooting a common fuel-related problem on a CD70 motorcycle. You successfully learned to diagnose the problem by systematically checking the fuel level, petcock, and fuel line. The scenario reinforced the importance of methodical troubleshooting and the use of basic motorcycle maintenance techniques. The learning objectives were achieved through a hands-on, interactive experience, making the learning process engaging and memorable. The feedback provided at each stage guided you towards the correct solution, reinforcing your understanding of the concepts involved. This approach is effective for training new employees or providing virtual tours, as it combines information delivery with an interactive problem-solving experience."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "ContextRoom"
+        }},
+        {{
+            "source": "ContextRoom",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "QB1"
+        }},
+        {{
+            "source": "QB1",
+            "target": "FB1"
+        }},
+        {{
+            "source": "FB1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "QB2"
+        }},
+        {{
+            "source": "QB2",
+            "target": "FB2"
+        }},
+        {{
+            "source": "FB2",
+            "target": "B3"
+        }},
+        {{
+            "source": "B3",
+            "target": "Room3"
+        }},
+        {{
+            "source": "Room3",
+            "target": "QB3"
+        }},
+        {{
+            "source": "QB3",
+            "target": "FB3"
+        }},
+        {{
+            "source": "FB3",
+            "target": "B5"
+        }}
+    ]
+}}
+    
+Remarks of the above JSON OUTPUT practical example: "A good practical example response you generated. It has even the "story" in the overlayTags array which is needed to elaborate the situation of already describe MediaBlock description and the story in the overlayTags array also tells the context and present situation of the story progression"
+    You correctly remembered that You do not solely rely on Input Documents structure to create that exact JSON strucure. You only treat the Input Documents as your guidance
+    information bank. And then you mold that information to your use case, as you can see in the Practical Example.
+    ]]    
 
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
@@ -3675,7 +4005,7 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
     
     The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
-    'MediaBlock': with title, Media Type (Image or 360), Description of the Media used, Overlay tags array with no key value pair, rather a string object only (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'MediaBlock': with title, Media Type (Image or 360), Description of the Media used, Overlay tags array with no key value pair, rather a string object only (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area. Include a "Story" element in the overlayTags array as well for giving an explaination of what is happening in the scene).
     'openQuestionBlock': with questionText, answer, correctAnswer (exactly equal to answer), wrongAnswerMessage
     'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning Objectives, and Feedback (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. Encouraging Remarks in reflective detailed tone with emphasis on detailed 
@@ -3775,7 +4105,8 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "overlayTags": [
                     "Clue 1: Ensure the patient remains calm and comfortable by providing reassurance and loosening any tight clothing that might restrict breathing.",
                     "Clue 2: If the patient has been prescribed angina medication, assist them in taking it as per medical guidance.",
-                    "Clue 3: Stay vigilant, closely monitoring the patients condition, and be prepared to administer CPR if the situation demands immediate intervention."
+                    "Clue 3: Stay vigilant, closely monitoring the patients condition, and be prepared to administer CPR if the situation demands immediate intervention.",
+                    "Story: You have called the ambulance and waiting now for their arrival."
                 ]
             }}
 
@@ -3792,7 +4123,8 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "overlayTags": [
                     "(Insert Text Here, Multiple Overlay Tags' with extremely detailed descriptions here are preffered in all MediaBlocks)",
                     "(overlayTags are points or labels, which are overlayed on top of points-of-interests of an image or 360 image. The user clicks on these points and get details of the part of the image point-of-interests. User gets clues to solve the question asked after the Room/Situation to successfully escape it.)",
-                    "(In case of ContextRoom, we need to introduce user to the Escape Room Gamified Scenario and what further lies ahead and give the user a starting point so no clues are needed. Here we give Context, and Setting of the Escape Room Scenario. The clues for challenging rooms starting from Room1 and corresponding questions will come after this node.)"
+                    "(In case of ContextRoom, we need to introduce user to the Escape Room Gamified Scenario and what further lies ahead and give the user a starting point so no clues are needed. Here we give Context, and Setting of the Escape Room Scenario. The clues for challenging rooms starting from Room1 and corresponding questions will come after this node.)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -3802,7 +4134,8 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "mediaType": "Image/360",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks which give detailed description of highlights of the image)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -3838,7 +4171,8 @@ prompt_gamified_pedagogy_retry_gemini = PromptTemplate(
                 "mediaType": "Image/360",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks which give detailed description of highlights of the image)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -4468,6 +4802,304 @@ Remarks of the above JSON OUTPUT practical example: "Again very good. Notice how
     information bank. And then you mold that information to your use case, as you can see in the Practical Example.
     ]]
 
+    PRACTICAL EXAMPLE 2: [[
+    For a given "Input Documents" the AI outputs JSON OUTPUT in following way:
+    "Input Documents":
+Description and visualization of Escape Room Scenario (Context Room):
+
+The scene opens with a 360° image of a sunny road.  Your CD70 motorcycle sits beside you, stubbornly refusing to start.  The overlay tags provide basic information: "Road: A quiet, sunny road leading towards a town in the distance.", "Motorcycle: Your CD70 motorcycle, currently out of fuel.", "You:
+Feeling frustrated but determined to reach the nearest petrol station."  This room serves as an introduction to the scenario.
+
+
+Room 1:  The Fuel Petcock
+
+The image shows a close-up of your CD70 motorcycle's fuel tank and petcock (fuel valve).  Overlay tags provide clues:
+
+* **Fuel Petcock:** "This valve controls the fuel flow from the tank to the carburetor. It typically has three positions: 'ON,' 'RES' (reserve), and 'OFF.'"
+* **Fuel Tank:** "Check the fuel level.  If the tank is nearly empty, the problem is likely low fuel."
+* **Fuel Line:** "Inspect the fuel line connecting the petcock to the carburetor for any kinks, cracks, or blockages.  A clogged line can restrict fuel flow."
+* **Story:** "Your bike sputtered and died, leaving you stranded.  You suspect a fuel problem, but you need to systematically check each component to
+diagnose the issue."
+
+
+Question about Sequence to Exit the Room:  What is the correct order of steps to check the fuel system?
+
+1. Check the fuel level in the tank.
+2. Inspect the fuel line for blockages or damage.
+3. Examine the fuel petcock and ensure it's in the correct position ('ON' or 'RES').
+
+Answer format: 123
+
+
+If correct:
+
+Feedback: Correct! You correctly identified the logical sequence for checking the fuel system.  Starting with the most obvious (fuel level) and progressing to more complex components (fuel line and petcock) is efficient troubleshooting.
+
+Next Room Context:  After confirming the fuel level is low, you decide to check the fuel petcock.  You notice some debris near the petcock.
+
+
+Room 2: Cleaning the Fuel Petcock
+
+The image shows you carefully removing the fuel petcock from the fuel tank.  Overlay tags provide clues:
+
+* **Debris:** "You find some dirt and debris near the petcock. This could be obstructing the fuel flow."
+* **Cleaning:** "Use compressed air or a small brush to carefully clean the petcock and its jets.  Ensure all passages are clear."
+* **Fuel Key Jets:** "The fuel key has two jets, one for the 'ON' position and one for 'RES'.  Clean both jets thoroughly."
+* **Low-Grade Fuel:** "Using low-quality fuel can lead to clogged fuel lines and petcocks. Consider using higher-quality fuel in the future."
+* **Story:** "The initial inspection reveals potential blockages.  You need to clean the petcock to ensure smooth fuel flow."
+
+
+Question about Sequence to Exit the Room: What is the correct procedure for cleaning the fuel petcock?
+
+1. Remove the fuel petcock from the fuel tank.
+2. Clean the petcock jets and passages using compressed air or a small brush.
+3. Reinstall the fuel petcock.
+4. Check for fuel flow.
+
+Answer format: 1234
+
+
+If correct:
+
+Feedback: Excellent! You followed the correct procedure for cleaning the fuel petcock.  Thorough cleaning of the jets and passages is crucial for restoring proper fuel flow.
+
+Next Room Context: After cleaning the petcock, you carefully reinstall it and turn the fuel tap to 'ON'.  You still hear nothing. You decide to check
+the fuel line.
+
+
+Room 3: Inspecting the Fuel Line
+
+The image shows you inspecting the fuel line running from the petcock to the carburetor. Overlay tags provide clues:
+
+* **Fuel Line Inspection:** "Carefully examine the fuel line for any kinks, cracks, or blockages.  A damaged or clogged line can prevent fuel from reaching the carburetor."
+* **Compressed Air:** "Use compressed air to clear any blockages in the fuel line.  Be gentle to avoid damaging the line."
+* **Visual Inspection:** "Look closely for any signs of damage, such as cracks or holes, that could be causing a fuel leak."
+* **Story:** "Despite cleaning the petcock, the bike still won't start.  You suspect a problem with the fuel line."
+
+
+Question about Sequence to Exit the Room: What is the correct procedure for inspecting and clearing a blocked fuel line?
+
+1. Visually inspect the fuel line for damage.
+2. Use compressed air to clear any blockages.
+3. If damage is found, replace the fuel line.
+
+Answer format: 123
+
+
+If correct:
+
+Feedback: Well done! You systematically checked the fuel line for damage and cleared any potential blockages.  This ensures a clear path for fuel to reach the carburetor.
+
+Next Room Context:  With the fuel line clear, you try starting the bike again.  It starts! You are now able to reach the nearest petrol station.
+
+
+End of Scenario: Reflective Learning Block
+
+This escape room scenario simulated troubleshooting a common fuel-related problem on a CD70 motorcycle.  You successfully learned to diagnose the problem by systematically checking the fuel level, petcock, and fuel line.  The scenario reinforced the importance of methodical troubleshooting and the use of basic motorcycle maintenance techniques.  The learning objectives were achieved through a hands-on, interactive experience, making the learning
+process engaging and memorable.  The feedback provided at each stage guided you towards the correct solution, reinforcing your understanding of the concepts involved.  This approach is effective for training new employees or providing virtual tours, as it combines information delivery with an interactive problem-solving experience.
+
+
+[END_OF_RESPONSE]
+    
+    JSON OUTPUT:
+{{
+    "title": "CD70 Motorcycle Fuel Troubleshooting Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Learning Objectives",
+            "description": "1. Troubleshoot a fuel-related issue on a CD 70 motorcycle. 2. Safely restart the motorcycle and reach the nearest gas station. 3. Identify potential causes of fuel delivery problems."
+        }},
+        {{
+            "id": "ContextRoom",
+            "type": "MediaBlock",
+            "title": "Stranded CD70",
+            "mediaType": "360",
+            "description": "A 360° view of a sunny road. Your CD70 motorcycle sits beside you, stubbornly refusing to start.",
+            "overlayTags": [
+                "Road: A quiet, sunny road leading towards a town in the distance.",
+                "Motorcycle: Your CD70 motorcycle, currently out of fuel.",
+                "You: Feeling frustrated but determined to reach the nearest petrol station.",
+                "Story: Your motorcycle has stopped due to lack of fuel, leaving you stranded on a sunny road."
+            ]
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Fuel Petcock",
+            "mediaType": "Image",
+            "description": "A close-up of your CD70 motorcycle's fuel tank and petcock (fuel valve).",
+            "overlayTags": [
+                "Fuel Petcock: This valve controls the fuel flow from the tank to the carburetor. It typically has three positions: 'ON', 'RES' (reserve), and 'OFF'.",
+                "Fuel Tank: Check the fuel level. If the tank is nearly empty, the problem is likely low fuel.",
+                "Fuel Line: Inspect the fuel line connecting the petcock to the carburetor for any kinks, cracks, or blockages. A clogged line can restrict fuel flow.",
+                "Story: Your bike sputtered and died, leaving you stranded. You suspect a fuel problem, but you need to systematically check each component to diagnose the issue."
+            ]
+        }},
+        {{
+            "id": "QB1",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct order of steps to check the fuel system? 1. Check the fuel level in the tank. 2. Inspect the fuel line for blockages or damage. 3. Examine the fuel petcock and ensure it's in the correct position ('ON' or 'RES'). Answer format: 123",
+            "answer": [
+                "132"
+            ],
+            "correctAnswer": "132",
+            "wrongAnswerMessage": "Incorrect sequence. Review the clues and try again. Start with the most obvious cause (fuel level) before checking more complex components."
+        }},
+        {{
+            "id": "FB1",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Correct! You correctly identified the logical sequence for checking the fuel system. Starting with the most obvious (fuel level) and progressing to more complex components (fuel line and petcock) is efficient troubleshooting."
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Checking the Petcock",
+            "description": "After confirming the fuel level is low, you decide to check the fuel petcock. You notice some debris near the petcock. The image shows you carefully removing the fuel petcock from the fuel tank."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "Cleaning the Fuel Petcock",
+            "mediaType": "Image",
+            "description": "A detailed image showing the process of cleaning the fuel petcock, including removing it from the tank, cleaning the jets with compressed air or a brush, and reinstalling it.",
+            "overlayTags": [
+                "Debris: You find some dirt and debris near the petcock. This could be obstructing the fuel flow.",
+                "Cleaning: Use compressed air or a small brush to carefully clean the petcock and its jets. Ensure all passages are clear.",
+                "Fuel Key Jets: The fuel key has two jets, one for the 'ON' position and one for 'RES'. Clean both jets thoroughly.",
+                "Low-Grade Fuel: Using low-quality fuel can lead to clogged fuel lines and petcocks. Consider using higher-quality fuel in the future.",
+                "Story: The initial inspection reveals potential blockages. You need to clean the petcock to ensure smooth fuel flow."
+            ]
+        }},
+        {{
+            "id": "QB2",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct procedure for cleaning the fuel petcock? 1. Remove the fuel petcock from the fuel tank. 2. Clean the petcock jets and passages using compressed air or a small brush. 3. Reinstall the fuel petcock. 4. Check for fuel flow. Answer format: 1234",
+            "answer": [
+                "1234"
+            ],
+            "correctAnswer": "1234",
+            "wrongAnswerMessage": "Incorrect procedure. Review the steps for cleaning the fuel petcock and try again. Ensure thorough cleaning of all passages."
+        }},
+        {{
+            "id": "FB2",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Excellent! You followed the correct procedure for cleaning the fuel petcock. Thorough cleaning of the jets and passages is crucial for restoring proper fuel flow."
+        }},
+        {{
+            "id": "B3",
+            "type": "TextBlock",
+            "title": "Inspecting the Fuel Line",
+            "description": "After cleaning the petcock, you carefully reinstall it and turn the fuel tap to 'ON'. You still hear nothing. You decide to check the fuel line. The image shows you inspecting the fuel line running from the petcock to the carburetor."
+        }},
+        {{
+            "id": "Room3",
+            "type": "MediaBlock",
+            "title": "Inspecting the Fuel Line",
+            "mediaType": "Image",
+            "description": "A detailed image showing the inspection of the fuel line, including visual inspection for damage and using compressed air to clear blockages.",
+            "overlayTags": [
+                "Fuel Line Inspection: Carefully examine the fuel line for any kinks, cracks, or blockages. A damaged or clogged line can prevent fuel from reaching the carburetor.",
+                "Compressed Air: Use compressed air to clear any blockages in the fuel line. Be gentle to avoid damaging the line.",
+                "Visual Inspection: Look closely for any signs of damage, such as cracks or holes, that could be causing a fuel leak.",
+                "Story: Despite cleaning the petcock, the bike still won't start. You suspect a problem with the fuel line."
+            ]
+        }},
+        {{
+            "id": "QB3",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct procedure for inspecting and clearing a blocked fuel line? 1. Visually inspect the fuel line for damage. 2. Use compressed air to clear any blockages. 3. If damage is found, replace the fuel line. Answer format: 123",
+            "answer": [
+                "123"
+            ],
+            "correctAnswer": "123",
+            "wrongAnswerMessage": "Incorrect procedure. Review the steps for inspecting and clearing a blocked fuel line and try again. Ensure a thorough check for damage before attempting to clear blockages."
+        }},
+        {{
+            "id": "FB3",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Well done! You systematically checked the fuel line for damage and cleared any potential blockages. This ensures a clear path for fuel to reach the carburetor."
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "This escape room scenario simulated troubleshooting a common fuel-related problem on a CD70 motorcycle. You successfully learned to diagnose the problem by systematically checking the fuel level, petcock, and fuel line. The scenario reinforced the importance of methodical troubleshooting and the use of basic motorcycle maintenance techniques. The learning objectives were achieved through a hands-on, interactive experience, making the learning process engaging and memorable. The feedback provided at each stage guided you towards the correct solution, reinforcing your understanding of the concepts involved. This approach is effective for training new employees or providing virtual tours, as it combines information delivery with an interactive problem-solving experience."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "ContextRoom"
+        }},
+        {{
+            "source": "ContextRoom",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "QB1"
+        }},
+        {{
+            "source": "QB1",
+            "target": "FB1"
+        }},
+        {{
+            "source": "FB1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "QB2"
+        }},
+        {{
+            "source": "QB2",
+            "target": "FB2"
+        }},
+        {{
+            "source": "FB2",
+            "target": "B3"
+        }},
+        {{
+            "source": "B3",
+            "target": "Room3"
+        }},
+        {{
+            "source": "Room3",
+            "target": "QB3"
+        }},
+        {{
+            "source": "QB3",
+            "target": "FB3"
+        }},
+        {{
+            "source": "FB3",
+            "target": "B5"
+        }}
+    ]
+}}
+    
+Remarks of the above JSON OUTPUT practical example: "A good practical example response you generated. It has even the "story" in the overlayTags array which is needed to elaborate the situation of already describe MediaBlock description and the story in the overlayTags array also tells the context and present situation of the story progression"
+    You correctly remembered that You do not solely rely on Input Documents structure to create that exact JSON strucure. You only treat the Input Documents as your guidance
+    information bank. And then you mold that information to your use case, as you can see in the Practical Example.
+    ]]
+
     !!!ATTENTION!!!
     Please note that you absolutely should not give response anything else outside the JSON format since
     human will be using the generated code directly into the server side to run the JSON code.
@@ -4502,8 +5134,6 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     student will be able to escape the situations by entering correct sequence/code in openQuestionBlock. This type of game is
     also known as Exit Game and you are tasked with making Exit Game Scenarios.  
     
-    !!!KEEP YOUR OUTPUT RESPONSE GENERATION AS SHORT, BRIEF, CONCISE AND COMPREHENSIVE AS POSSIBLE. INCLUDING THE EDGES ARRAY IS MANDATORY BECAUSE WITHOUT IT, INTERCONNECTIONS BETWEEN NODE IDS IS NOT POSSIBLE!!!
-
     ***WHAT TO DO***
     To accomplish Exit Game creation, YOU will:
 
@@ -4522,7 +5152,7 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
     
     The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
-    'MediaBlock': with title, Media Type (Image or 360), Description of the Media used, Overlay tags array with no key value pair, rather a string object only (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'MediaBlock': with title, Media Type (Image or 360), Description of the Media used, Overlay tags array with no key value pair, rather a string object only (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area. Include a "Story" element in the overlayTags array as well for giving an explaination of what is happening in the scene).
     'openQuestionBlock': with questionText, answer, correctAnswer (exactly equal to answer), wrongAnswerMessage
     'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning Objectives, and Feedback (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. Encouraging Remarks in reflective detailed tone with emphasis on detailed 
@@ -4622,7 +5252,8 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "overlayTags": [
                     "Clue 1: Ensure the patient remains calm and comfortable by providing reassurance and loosening any tight clothing that might restrict breathing.",
                     "Clue 2: If the patient has been prescribed angina medication, assist them in taking it as per medical guidance.",
-                    "Clue 3: Stay vigilant, closely monitoring the patients condition, and be prepared to administer CPR if the situation demands immediate intervention."
+                    "Clue 3: Stay vigilant, closely monitoring the patients condition, and be prepared to administer CPR if the situation demands immediate intervention.",
+                    "Story: You have called the ambulance and waiting now for their arrival."
                 ]
             }}
 
@@ -4639,7 +5270,8 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "overlayTags": [
                     "(Insert Text Here, Multiple Overlay Tags' with extremely detailed descriptions here are preffered in all MediaBlocks)",
                     "(overlayTags are points or labels, which are overlayed on top of points-of-interests of an image or 360 image. The user clicks on these points and get details of the part of the image point-of-interests. User gets clues to solve the question asked after the Room/Situation to successfully escape it.)",
-                    "(In case of ContextRoom, we need to introduce user to the Escape Room Gamified Scenario and what further lies ahead and give the user a starting point so no clues are needed. Here we give Context, and Setting of the Escape Room Scenario. The clues for challenging rooms starting from Room1 and corresponding questions will come after this node.)"
+                    "(In case of ContextRoom, we need to introduce user to the Escape Room Gamified Scenario and what further lies ahead and give the user a starting point so no clues are needed. Here we give Context, and Setting of the Escape Room Scenario. The clues for challenging rooms starting from Room1 and corresponding questions will come after this node.)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -4649,7 +5281,8 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "mediaType": "Image/360",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks which give detailed description of highlights of the image)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -4685,7 +5318,8 @@ prompt_gamify_pedagogy_gemini_simplify = PromptTemplate(
                 "mediaType": "Image/360",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks which give detailed description of highlights of the image)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -5311,6 +5945,304 @@ reinforce correct procedures and highlight the consequences of incorrect actions
 }}
     
 Remarks of the above JSON OUTPUT practical example: "Again very good. Notice how you creatively molded the information in the Input Documents to your structure as it was told to you. You followed exactly how to create a good scenario. The Input Documents were just a content bank, which you molded to your use case creatively!"
+    You correctly remembered that You do not solely rely on Input Documents structure to create that exact JSON strucure. You only treat the Input Documents as your guidance
+    information bank. And then you mold that information to your use case, as you can see in the Practical Example.
+    ]]
+
+    PRACTICAL EXAMPLE 2: [[
+    For a given "Input Documents" the AI outputs JSON OUTPUT in following way:
+    "Input Documents":
+Description and visualization of Escape Room Scenario (Context Room):
+
+The scene opens with a 360° image of a sunny road.  Your CD70 motorcycle sits beside you, stubbornly refusing to start.  The overlay tags provide basic information: "Road: A quiet, sunny road leading towards a town in the distance.", "Motorcycle: Your CD70 motorcycle, currently out of fuel.", "You:
+Feeling frustrated but determined to reach the nearest petrol station."  This room serves as an introduction to the scenario.
+
+
+Room 1:  The Fuel Petcock
+
+The image shows a close-up of your CD70 motorcycle's fuel tank and petcock (fuel valve).  Overlay tags provide clues:
+
+* **Fuel Petcock:** "This valve controls the fuel flow from the tank to the carburetor. It typically has three positions: 'ON,' 'RES' (reserve), and 'OFF.'"
+* **Fuel Tank:** "Check the fuel level.  If the tank is nearly empty, the problem is likely low fuel."
+* **Fuel Line:** "Inspect the fuel line connecting the petcock to the carburetor for any kinks, cracks, or blockages.  A clogged line can restrict fuel flow."
+* **Story:** "Your bike sputtered and died, leaving you stranded.  You suspect a fuel problem, but you need to systematically check each component to
+diagnose the issue."
+
+
+Question about Sequence to Exit the Room:  What is the correct order of steps to check the fuel system?
+
+1. Check the fuel level in the tank.
+2. Inspect the fuel line for blockages or damage.
+3. Examine the fuel petcock and ensure it's in the correct position ('ON' or 'RES').
+
+Answer format: 123
+
+
+If correct:
+
+Feedback: Correct! You correctly identified the logical sequence for checking the fuel system.  Starting with the most obvious (fuel level) and progressing to more complex components (fuel line and petcock) is efficient troubleshooting.
+
+Next Room Context:  After confirming the fuel level is low, you decide to check the fuel petcock.  You notice some debris near the petcock.
+
+
+Room 2: Cleaning the Fuel Petcock
+
+The image shows you carefully removing the fuel petcock from the fuel tank.  Overlay tags provide clues:
+
+* **Debris:** "You find some dirt and debris near the petcock. This could be obstructing the fuel flow."
+* **Cleaning:** "Use compressed air or a small brush to carefully clean the petcock and its jets.  Ensure all passages are clear."
+* **Fuel Key Jets:** "The fuel key has two jets, one for the 'ON' position and one for 'RES'.  Clean both jets thoroughly."
+* **Low-Grade Fuel:** "Using low-quality fuel can lead to clogged fuel lines and petcocks. Consider using higher-quality fuel in the future."
+* **Story:** "The initial inspection reveals potential blockages.  You need to clean the petcock to ensure smooth fuel flow."
+
+
+Question about Sequence to Exit the Room: What is the correct procedure for cleaning the fuel petcock?
+
+1. Remove the fuel petcock from the fuel tank.
+2. Clean the petcock jets and passages using compressed air or a small brush.
+3. Reinstall the fuel petcock.
+4. Check for fuel flow.
+
+Answer format: 1234
+
+
+If correct:
+
+Feedback: Excellent! You followed the correct procedure for cleaning the fuel petcock.  Thorough cleaning of the jets and passages is crucial for restoring proper fuel flow.
+
+Next Room Context: After cleaning the petcock, you carefully reinstall it and turn the fuel tap to 'ON'.  You still hear nothing. You decide to check
+the fuel line.
+
+
+Room 3: Inspecting the Fuel Line
+
+The image shows you inspecting the fuel line running from the petcock to the carburetor. Overlay tags provide clues:
+
+* **Fuel Line Inspection:** "Carefully examine the fuel line for any kinks, cracks, or blockages.  A damaged or clogged line can prevent fuel from reaching the carburetor."
+* **Compressed Air:** "Use compressed air to clear any blockages in the fuel line.  Be gentle to avoid damaging the line."
+* **Visual Inspection:** "Look closely for any signs of damage, such as cracks or holes, that could be causing a fuel leak."
+* **Story:** "Despite cleaning the petcock, the bike still won't start.  You suspect a problem with the fuel line."
+
+
+Question about Sequence to Exit the Room: What is the correct procedure for inspecting and clearing a blocked fuel line?
+
+1. Visually inspect the fuel line for damage.
+2. Use compressed air to clear any blockages.
+3. If damage is found, replace the fuel line.
+
+Answer format: 123
+
+
+If correct:
+
+Feedback: Well done! You systematically checked the fuel line for damage and cleared any potential blockages.  This ensures a clear path for fuel to reach the carburetor.
+
+Next Room Context:  With the fuel line clear, you try starting the bike again.  It starts! You are now able to reach the nearest petrol station.
+
+
+End of Scenario: Reflective Learning Block
+
+This escape room scenario simulated troubleshooting a common fuel-related problem on a CD70 motorcycle.  You successfully learned to diagnose the problem by systematically checking the fuel level, petcock, and fuel line.  The scenario reinforced the importance of methodical troubleshooting and the use of basic motorcycle maintenance techniques.  The learning objectives were achieved through a hands-on, interactive experience, making the learning
+process engaging and memorable.  The feedback provided at each stage guided you towards the correct solution, reinforcing your understanding of the concepts involved.  This approach is effective for training new employees or providing virtual tours, as it combines information delivery with an interactive problem-solving experience.
+
+
+[END_OF_RESPONSE]
+    
+    JSON OUTPUT:
+{{
+    "title": "CD70 Motorcycle Fuel Troubleshooting Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Learning Objectives",
+            "description": "1. Troubleshoot a fuel-related issue on a CD 70 motorcycle. 2. Safely restart the motorcycle and reach the nearest gas station. 3. Identify potential causes of fuel delivery problems."
+        }},
+        {{
+            "id": "ContextRoom",
+            "type": "MediaBlock",
+            "title": "Stranded CD70",
+            "mediaType": "360",
+            "description": "A 360° view of a sunny road. Your CD70 motorcycle sits beside you, stubbornly refusing to start.",
+            "overlayTags": [
+                "Road: A quiet, sunny road leading towards a town in the distance.",
+                "Motorcycle: Your CD70 motorcycle, currently out of fuel.",
+                "You: Feeling frustrated but determined to reach the nearest petrol station.",
+                "Story: Your motorcycle has stopped due to lack of fuel, leaving you stranded on a sunny road."
+            ]
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Fuel Petcock",
+            "mediaType": "Image",
+            "description": "A close-up of your CD70 motorcycle's fuel tank and petcock (fuel valve).",
+            "overlayTags": [
+                "Fuel Petcock: This valve controls the fuel flow from the tank to the carburetor. It typically has three positions: 'ON', 'RES' (reserve), and 'OFF'.",
+                "Fuel Tank: Check the fuel level. If the tank is nearly empty, the problem is likely low fuel.",
+                "Fuel Line: Inspect the fuel line connecting the petcock to the carburetor for any kinks, cracks, or blockages. A clogged line can restrict fuel flow.",
+                "Story: Your bike sputtered and died, leaving you stranded. You suspect a fuel problem, but you need to systematically check each component to diagnose the issue."
+            ]
+        }},
+        {{
+            "id": "QB1",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct order of steps to check the fuel system? 1. Check the fuel level in the tank. 2. Inspect the fuel line for blockages or damage. 3. Examine the fuel petcock and ensure it's in the correct position ('ON' or 'RES'). Answer format: 123",
+            "answer": [
+                "132"
+            ],
+            "correctAnswer": "132",
+            "wrongAnswerMessage": "Incorrect sequence. Review the clues and try again. Start with the most obvious cause (fuel level) before checking more complex components."
+        }},
+        {{
+            "id": "FB1",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Correct! You correctly identified the logical sequence for checking the fuel system. Starting with the most obvious (fuel level) and progressing to more complex components (fuel line and petcock) is efficient troubleshooting."
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Checking the Petcock",
+            "description": "After confirming the fuel level is low, you decide to check the fuel petcock. You notice some debris near the petcock. The image shows you carefully removing the fuel petcock from the fuel tank."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "Cleaning the Fuel Petcock",
+            "mediaType": "Image",
+            "description": "A detailed image showing the process of cleaning the fuel petcock, including removing it from the tank, cleaning the jets with compressed air or a brush, and reinstalling it.",
+            "overlayTags": [
+                "Debris: You find some dirt and debris near the petcock. This could be obstructing the fuel flow.",
+                "Cleaning: Use compressed air or a small brush to carefully clean the petcock and its jets. Ensure all passages are clear.",
+                "Fuel Key Jets: The fuel key has two jets, one for the 'ON' position and one for 'RES'. Clean both jets thoroughly.",
+                "Low-Grade Fuel: Using low-quality fuel can lead to clogged fuel lines and petcocks. Consider using higher-quality fuel in the future.",
+                "Story: The initial inspection reveals potential blockages. You need to clean the petcock to ensure smooth fuel flow."
+            ]
+        }},
+        {{
+            "id": "QB2",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct procedure for cleaning the fuel petcock? 1. Remove the fuel petcock from the fuel tank. 2. Clean the petcock jets and passages using compressed air or a small brush. 3. Reinstall the fuel petcock. 4. Check for fuel flow. Answer format: 1234",
+            "answer": [
+                "1234"
+            ],
+            "correctAnswer": "1234",
+            "wrongAnswerMessage": "Incorrect procedure. Review the steps for cleaning the fuel petcock and try again. Ensure thorough cleaning of all passages."
+        }},
+        {{
+            "id": "FB2",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Excellent! You followed the correct procedure for cleaning the fuel petcock. Thorough cleaning of the jets and passages is crucial for restoring proper fuel flow."
+        }},
+        {{
+            "id": "B3",
+            "type": "TextBlock",
+            "title": "Inspecting the Fuel Line",
+            "description": "After cleaning the petcock, you carefully reinstall it and turn the fuel tap to 'ON'. You still hear nothing. You decide to check the fuel line. The image shows you inspecting the fuel line running from the petcock to the carburetor."
+        }},
+        {{
+            "id": "Room3",
+            "type": "MediaBlock",
+            "title": "Inspecting the Fuel Line",
+            "mediaType": "Image",
+            "description": "A detailed image showing the inspection of the fuel line, including visual inspection for damage and using compressed air to clear blockages.",
+            "overlayTags": [
+                "Fuel Line Inspection: Carefully examine the fuel line for any kinks, cracks, or blockages. A damaged or clogged line can prevent fuel from reaching the carburetor.",
+                "Compressed Air: Use compressed air to clear any blockages in the fuel line. Be gentle to avoid damaging the line.",
+                "Visual Inspection: Look closely for any signs of damage, such as cracks or holes, that could be causing a fuel leak.",
+                "Story: Despite cleaning the petcock, the bike still won't start. You suspect a problem with the fuel line."
+            ]
+        }},
+        {{
+            "id": "QB3",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct procedure for inspecting and clearing a blocked fuel line? 1. Visually inspect the fuel line for damage. 2. Use compressed air to clear any blockages. 3. If damage is found, replace the fuel line. Answer format: 123",
+            "answer": [
+                "123"
+            ],
+            "correctAnswer": "123",
+            "wrongAnswerMessage": "Incorrect procedure. Review the steps for inspecting and clearing a blocked fuel line and try again. Ensure a thorough check for damage before attempting to clear blockages."
+        }},
+        {{
+            "id": "FB3",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Well done! You systematically checked the fuel line for damage and cleared any potential blockages. This ensures a clear path for fuel to reach the carburetor."
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "This escape room scenario simulated troubleshooting a common fuel-related problem on a CD70 motorcycle. You successfully learned to diagnose the problem by systematically checking the fuel level, petcock, and fuel line. The scenario reinforced the importance of methodical troubleshooting and the use of basic motorcycle maintenance techniques. The learning objectives were achieved through a hands-on, interactive experience, making the learning process engaging and memorable. The feedback provided at each stage guided you towards the correct solution, reinforcing your understanding of the concepts involved. This approach is effective for training new employees or providing virtual tours, as it combines information delivery with an interactive problem-solving experience."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "ContextRoom"
+        }},
+        {{
+            "source": "ContextRoom",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "QB1"
+        }},
+        {{
+            "source": "QB1",
+            "target": "FB1"
+        }},
+        {{
+            "source": "FB1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "QB2"
+        }},
+        {{
+            "source": "QB2",
+            "target": "FB2"
+        }},
+        {{
+            "source": "FB2",
+            "target": "B3"
+        }},
+        {{
+            "source": "B3",
+            "target": "Room3"
+        }},
+        {{
+            "source": "Room3",
+            "target": "QB3"
+        }},
+        {{
+            "source": "QB3",
+            "target": "FB3"
+        }},
+        {{
+            "source": "FB3",
+            "target": "B5"
+        }}
+    ]
+}}
+    
+Remarks of the above JSON OUTPUT practical example: "A good practical example response you generated. It has even the "story" in the overlayTags array which is needed to elaborate the situation of already describe MediaBlock description and the story in the overlayTags array also tells the context and present situation of the story progression"
     You correctly remembered that You do not solely rely on Input Documents structure to create that exact JSON strucure. You only treat the Input Documents as your guidance
     information bank. And then you mold that information to your use case, as you can see in the Practical Example.
     ]]
@@ -5392,12 +6324,12 @@ prompt_gamify_shadow_edges = PromptTemplate(
     The educational content in the Exit Game Scenario Format generated by you is only limited to the educational content of 'Input Documents', since
     'Input Documents' is the verified source of information.  
     3. Generate a JSON-formatted Exit Game structure. This JSON structure will be crafted following the guidelines and format exemplified in the provided examples, which serve as a template for organizing the course content efficiently and logically.
-    
+
     ***WHAT TO DO END***
     
     The Exit Game are built using blocks, each having its own parameters.
     Block types include: 
-    'MediaBlock': with title, Media Type (Image or 360), Description of the Media used, Overlay tags array with no key value pair, rather a string object only (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area).
+    'MediaBlock': with title, Media Type (Image or 360), Description of the Media used, Overlay tags array with no key value pair, rather a string object only (serves as annotated markers on the image, each pinpointing and elaborating on key aspects or features shown in the image, offering an in-depth understanding of each highlighted area. Include a "Story" element in the overlayTags array as well for giving an explaination of what is happening in the scene).
     'openQuestionBlock': with questionText, answer, correctAnswer (exactly equal to answer), wrongAnswerMessage
     'PedagogicalBlock' with title, and description. The PedagogicalBlock is used to
     dessiminate information regarding titles of Learning Objectives, and Feedback (FEEDBACK: Is a detailed evaluative and corrective information about a person's performance in the scenario, which is used as a basis for improvement. Encouraging Remarks in reflective detailed tone with emphasis on detailed 
@@ -5497,7 +6429,8 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "overlayTags": [
                     "Clue 1: Ensure the patient remains calm and comfortable by providing reassurance and loosening any tight clothing that might restrict breathing.",
                     "Clue 2: If the patient has been prescribed angina medication, assist them in taking it as per medical guidance.",
-                    "Clue 3: Stay vigilant, closely monitoring the patients condition, and be prepared to administer CPR if the situation demands immediate intervention."
+                    "Clue 3: Stay vigilant, closely monitoring the patients condition, and be prepared to administer CPR if the situation demands immediate intervention.",
+                    "Story: You have called the ambulance and waiting now for their arrival."
                 ]
             }}
 
@@ -5514,7 +6447,8 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "overlayTags": [
                     "(Insert Text Here, Multiple Overlay Tags' with extremely detailed descriptions here are preffered in all MediaBlocks)",
                     "(overlayTags are points or labels, which are overlayed on top of points-of-interests of an image or 360 image. The user clicks on these points and get details of the part of the image point-of-interests. User gets clues to solve the question asked after the Room/Situation to successfully escape it.)",
-                    "(In case of ContextRoom, we need to introduce user to the Escape Room Gamified Scenario and what further lies ahead and give the user a starting point so no clues are needed. Here we give Context, and Setting of the Escape Room Scenario. The clues for challenging rooms starting from Room1 and corresponding questions will come after this node.)"
+                    "(In case of ContextRoom, we need to introduce user to the Escape Room Gamified Scenario and what further lies ahead and give the user a starting point so no clues are needed. Here we give Context, and Setting of the Escape Room Scenario. The clues for challenging rooms starting from Room1 and corresponding questions will come after this node.)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -5524,7 +6458,8 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "mediaType": "Image/360",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks which give detailed description of highlights of the image)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -5560,7 +6495,8 @@ prompt_gamify_shadow_edges = PromptTemplate(
                 "mediaType": "Image/360",
                 "description": "(Insert Text Here)",
                 "overlayTags": [
-                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks)"
+                    "(Insert Text Here, Multiple Overlay Tags' detailed description here are preffered in all MediaBlocks which give detailed description of highlights of the image)",
+                    "(Story: A mandatory part of the overlayTag is the "Story" element which is the narrative hook explaining the situation or what is happening in the scene.)"
                 ]
             }},
             {{
@@ -6186,6 +7122,304 @@ reinforce correct procedures and highlight the consequences of incorrect actions
 }}
     
 Remarks of the above JSON OUTPUT practical example: "Again very good. Notice how you creatively molded the information in the Input Documents to your structure as it was told to you. You followed exactly how to create a good scenario. The Input Documents were just a content bank, which you molded to your use case creatively!"
+    You correctly remembered that You do not solely rely on Input Documents structure to create that exact JSON strucure. You only treat the Input Documents as your guidance
+    information bank. And then you mold that information to your use case, as you can see in the Practical Example.
+    ]]
+
+    PRACTICAL EXAMPLE 2: [[
+    For a given "Input Documents" the AI outputs JSON OUTPUT in following way:
+    "Input Documents":
+Description and visualization of Escape Room Scenario (Context Room):
+
+The scene opens with a 360° image of a sunny road.  Your CD70 motorcycle sits beside you, stubbornly refusing to start.  The overlay tags provide basic information: "Road: A quiet, sunny road leading towards a town in the distance.", "Motorcycle: Your CD70 motorcycle, currently out of fuel.", "You:
+Feeling frustrated but determined to reach the nearest petrol station."  This room serves as an introduction to the scenario.
+
+
+Room 1:  The Fuel Petcock
+
+The image shows a close-up of your CD70 motorcycle's fuel tank and petcock (fuel valve).  Overlay tags provide clues:
+
+* **Fuel Petcock:** "This valve controls the fuel flow from the tank to the carburetor. It typically has three positions: 'ON,' 'RES' (reserve), and 'OFF.'"
+* **Fuel Tank:** "Check the fuel level.  If the tank is nearly empty, the problem is likely low fuel."
+* **Fuel Line:** "Inspect the fuel line connecting the petcock to the carburetor for any kinks, cracks, or blockages.  A clogged line can restrict fuel flow."
+* **Story:** "Your bike sputtered and died, leaving you stranded.  You suspect a fuel problem, but you need to systematically check each component to
+diagnose the issue."
+
+
+Question about Sequence to Exit the Room:  What is the correct order of steps to check the fuel system?
+
+1. Check the fuel level in the tank.
+2. Inspect the fuel line for blockages or damage.
+3. Examine the fuel petcock and ensure it's in the correct position ('ON' or 'RES').
+
+Answer format: 123
+
+
+If correct:
+
+Feedback: Correct! You correctly identified the logical sequence for checking the fuel system.  Starting with the most obvious (fuel level) and progressing to more complex components (fuel line and petcock) is efficient troubleshooting.
+
+Next Room Context:  After confirming the fuel level is low, you decide to check the fuel petcock.  You notice some debris near the petcock.
+
+
+Room 2: Cleaning the Fuel Petcock
+
+The image shows you carefully removing the fuel petcock from the fuel tank.  Overlay tags provide clues:
+
+* **Debris:** "You find some dirt and debris near the petcock. This could be obstructing the fuel flow."
+* **Cleaning:** "Use compressed air or a small brush to carefully clean the petcock and its jets.  Ensure all passages are clear."
+* **Fuel Key Jets:** "The fuel key has two jets, one for the 'ON' position and one for 'RES'.  Clean both jets thoroughly."
+* **Low-Grade Fuel:** "Using low-quality fuel can lead to clogged fuel lines and petcocks. Consider using higher-quality fuel in the future."
+* **Story:** "The initial inspection reveals potential blockages.  You need to clean the petcock to ensure smooth fuel flow."
+
+
+Question about Sequence to Exit the Room: What is the correct procedure for cleaning the fuel petcock?
+
+1. Remove the fuel petcock from the fuel tank.
+2. Clean the petcock jets and passages using compressed air or a small brush.
+3. Reinstall the fuel petcock.
+4. Check for fuel flow.
+
+Answer format: 1234
+
+
+If correct:
+
+Feedback: Excellent! You followed the correct procedure for cleaning the fuel petcock.  Thorough cleaning of the jets and passages is crucial for restoring proper fuel flow.
+
+Next Room Context: After cleaning the petcock, you carefully reinstall it and turn the fuel tap to 'ON'.  You still hear nothing. You decide to check
+the fuel line.
+
+
+Room 3: Inspecting the Fuel Line
+
+The image shows you inspecting the fuel line running from the petcock to the carburetor. Overlay tags provide clues:
+
+* **Fuel Line Inspection:** "Carefully examine the fuel line for any kinks, cracks, or blockages.  A damaged or clogged line can prevent fuel from reaching the carburetor."
+* **Compressed Air:** "Use compressed air to clear any blockages in the fuel line.  Be gentle to avoid damaging the line."
+* **Visual Inspection:** "Look closely for any signs of damage, such as cracks or holes, that could be causing a fuel leak."
+* **Story:** "Despite cleaning the petcock, the bike still won't start.  You suspect a problem with the fuel line."
+
+
+Question about Sequence to Exit the Room: What is the correct procedure for inspecting and clearing a blocked fuel line?
+
+1. Visually inspect the fuel line for damage.
+2. Use compressed air to clear any blockages.
+3. If damage is found, replace the fuel line.
+
+Answer format: 123
+
+
+If correct:
+
+Feedback: Well done! You systematically checked the fuel line for damage and cleared any potential blockages.  This ensures a clear path for fuel to reach the carburetor.
+
+Next Room Context:  With the fuel line clear, you try starting the bike again.  It starts! You are now able to reach the nearest petrol station.
+
+
+End of Scenario: Reflective Learning Block
+
+This escape room scenario simulated troubleshooting a common fuel-related problem on a CD70 motorcycle.  You successfully learned to diagnose the problem by systematically checking the fuel level, petcock, and fuel line.  The scenario reinforced the importance of methodical troubleshooting and the use of basic motorcycle maintenance techniques.  The learning objectives were achieved through a hands-on, interactive experience, making the learning
+process engaging and memorable.  The feedback provided at each stage guided you towards the correct solution, reinforcing your understanding of the concepts involved.  This approach is effective for training new employees or providing virtual tours, as it combines information delivery with an interactive problem-solving experience.
+
+
+[END_OF_RESPONSE]
+    
+    JSON OUTPUT:
+{{
+    "title": "CD70 Motorcycle Fuel Troubleshooting Escape Room",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Learning Objectives",
+            "description": "1. Troubleshoot a fuel-related issue on a CD 70 motorcycle. 2. Safely restart the motorcycle and reach the nearest gas station. 3. Identify potential causes of fuel delivery problems."
+        }},
+        {{
+            "id": "ContextRoom",
+            "type": "MediaBlock",
+            "title": "Stranded CD70",
+            "mediaType": "360",
+            "description": "A 360° view of a sunny road. Your CD70 motorcycle sits beside you, stubbornly refusing to start.",
+            "overlayTags": [
+                "Road: A quiet, sunny road leading towards a town in the distance.",
+                "Motorcycle: Your CD70 motorcycle, currently out of fuel.",
+                "You: Feeling frustrated but determined to reach the nearest petrol station.",
+                "Story: Your motorcycle has stopped due to lack of fuel, leaving you stranded on a sunny road."
+            ]
+        }},
+        {{
+            "id": "Room1",
+            "type": "MediaBlock",
+            "title": "The Fuel Petcock",
+            "mediaType": "Image",
+            "description": "A close-up of your CD70 motorcycle's fuel tank and petcock (fuel valve).",
+            "overlayTags": [
+                "Fuel Petcock: This valve controls the fuel flow from the tank to the carburetor. It typically has three positions: 'ON', 'RES' (reserve), and 'OFF'.",
+                "Fuel Tank: Check the fuel level. If the tank is nearly empty, the problem is likely low fuel.",
+                "Fuel Line: Inspect the fuel line connecting the petcock to the carburetor for any kinks, cracks, or blockages. A clogged line can restrict fuel flow.",
+                "Story: Your bike sputtered and died, leaving you stranded. You suspect a fuel problem, but you need to systematically check each component to diagnose the issue."
+            ]
+        }},
+        {{
+            "id": "QB1",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct order of steps to check the fuel system? 1. Check the fuel level in the tank. 2. Inspect the fuel line for blockages or damage. 3. Examine the fuel petcock and ensure it's in the correct position ('ON' or 'RES'). Answer format: 123",
+            "answer": [
+                "132"
+            ],
+            "correctAnswer": "132",
+            "wrongAnswerMessage": "Incorrect sequence. Review the clues and try again. Start with the most obvious cause (fuel level) before checking more complex components."
+        }},
+        {{
+            "id": "FB1",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Correct! You correctly identified the logical sequence for checking the fuel system. Starting with the most obvious (fuel level) and progressing to more complex components (fuel line and petcock) is efficient troubleshooting."
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Checking the Petcock",
+            "description": "After confirming the fuel level is low, you decide to check the fuel petcock. You notice some debris near the petcock. The image shows you carefully removing the fuel petcock from the fuel tank."
+        }},
+        {{
+            "id": "Room2",
+            "type": "MediaBlock",
+            "title": "Cleaning the Fuel Petcock",
+            "mediaType": "Image",
+            "description": "A detailed image showing the process of cleaning the fuel petcock, including removing it from the tank, cleaning the jets with compressed air or a brush, and reinstalling it.",
+            "overlayTags": [
+                "Debris: You find some dirt and debris near the petcock. This could be obstructing the fuel flow.",
+                "Cleaning: Use compressed air or a small brush to carefully clean the petcock and its jets. Ensure all passages are clear.",
+                "Fuel Key Jets: The fuel key has two jets, one for the 'ON' position and one for 'RES'. Clean both jets thoroughly.",
+                "Low-Grade Fuel: Using low-quality fuel can lead to clogged fuel lines and petcocks. Consider using higher-quality fuel in the future.",
+                "Story: The initial inspection reveals potential blockages. You need to clean the petcock to ensure smooth fuel flow."
+            ]
+        }},
+        {{
+            "id": "QB2",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct procedure for cleaning the fuel petcock? 1. Remove the fuel petcock from the fuel tank. 2. Clean the petcock jets and passages using compressed air or a small brush. 3. Reinstall the fuel petcock. 4. Check for fuel flow. Answer format: 1234",
+            "answer": [
+                "1234"
+            ],
+            "correctAnswer": "1234",
+            "wrongAnswerMessage": "Incorrect procedure. Review the steps for cleaning the fuel petcock and try again. Ensure thorough cleaning of all passages."
+        }},
+        {{
+            "id": "FB2",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Excellent! You followed the correct procedure for cleaning the fuel petcock. Thorough cleaning of the jets and passages is crucial for restoring proper fuel flow."
+        }},
+        {{
+            "id": "B3",
+            "type": "TextBlock",
+            "title": "Inspecting the Fuel Line",
+            "description": "After cleaning the petcock, you carefully reinstall it and turn the fuel tap to 'ON'. You still hear nothing. You decide to check the fuel line. The image shows you inspecting the fuel line running from the petcock to the carburetor."
+        }},
+        {{
+            "id": "Room3",
+            "type": "MediaBlock",
+            "title": "Inspecting the Fuel Line",
+            "mediaType": "Image",
+            "description": "A detailed image showing the inspection of the fuel line, including visual inspection for damage and using compressed air to clear blockages.",
+            "overlayTags": [
+                "Fuel Line Inspection: Carefully examine the fuel line for any kinks, cracks, or blockages. A damaged or clogged line can prevent fuel from reaching the carburetor.",
+                "Compressed Air: Use compressed air to clear any blockages in the fuel line. Be gentle to avoid damaging the line.",
+                "Visual Inspection: Look closely for any signs of damage, such as cracks or holes, that could be causing a fuel leak.",
+                "Story: Despite cleaning the petcock, the bike still won't start. You suspect a problem with the fuel line."
+            ]
+        }},
+        {{
+            "id": "QB3",
+            "type": "openQuestionBlock",
+            "questionText": "What is the correct procedure for inspecting and clearing a blocked fuel line? 1. Visually inspect the fuel line for damage. 2. Use compressed air to clear any blockages. 3. If damage is found, replace the fuel line. Answer format: 123",
+            "answer": [
+                "123"
+            ],
+            "correctAnswer": "123",
+            "wrongAnswerMessage": "Incorrect procedure. Review the steps for inspecting and clearing a blocked fuel line and try again. Ensure a thorough check for damage before attempting to clear blockages."
+        }},
+        {{
+            "id": "FB3",
+            "type": "PedagogicalBlock",
+            "title": "Feedback",
+            "description": "Well done! You systematically checked the fuel line for damage and cleared any potential blockages. This ensures a clear path for fuel to reach the carburetor."
+        }},
+        {{
+            "id": "B5",
+            "type": "PedagogicalBlock",
+            "title": "Reflective Learning Block",
+            "description": "This escape room scenario simulated troubleshooting a common fuel-related problem on a CD70 motorcycle. You successfully learned to diagnose the problem by systematically checking the fuel level, petcock, and fuel line. The scenario reinforced the importance of methodical troubleshooting and the use of basic motorcycle maintenance techniques. The learning objectives were achieved through a hands-on, interactive experience, making the learning process engaging and memorable. The feedback provided at each stage guided you towards the correct solution, reinforcing your understanding of the concepts involved. This approach is effective for training new employees or providing virtual tours, as it combines information delivery with an interactive problem-solving experience."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "ContextRoom"
+        }},
+        {{
+            "source": "ContextRoom",
+            "target": "Room1"
+        }},
+        {{
+            "source": "Room1",
+            "target": "QB1"
+        }},
+        {{
+            "source": "QB1",
+            "target": "FB1"
+        }},
+        {{
+            "source": "FB1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "Room2"
+        }},
+        {{
+            "source": "Room2",
+            "target": "QB2"
+        }},
+        {{
+            "source": "QB2",
+            "target": "FB2"
+        }},
+        {{
+            "source": "FB2",
+            "target": "B3"
+        }},
+        {{
+            "source": "B3",
+            "target": "Room3"
+        }},
+        {{
+            "source": "Room3",
+            "target": "QB3"
+        }},
+        {{
+            "source": "QB3",
+            "target": "FB3"
+        }},
+        {{
+            "source": "FB3",
+            "target": "B5"
+        }}
+    ]
+}}
+    
+Remarks of the above JSON OUTPUT practical example: "A good practical example response you generated. It has even the "story" in the overlayTags array which is needed to elaborate the situation of already describe MediaBlock description and the story in the overlayTags array also tells the context and present situation of the story progression"
     You correctly remembered that You do not solely rely on Input Documents structure to create that exact JSON strucure. You only treat the Input Documents as your guidance
     information bank. And then you mold that information to your use case, as you can see in the Practical Example.
     ]]
