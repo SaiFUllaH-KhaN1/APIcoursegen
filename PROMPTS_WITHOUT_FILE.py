@@ -45,10 +45,6 @@ promptSelector = PromptTemplate(
     """
 )
 
-### IMPORTANT: ONLY LINEAR scenario needs changing in regards to Input Documents, while other
-### formats only need to change their setups in context of Input Documents changing. All prompts of except linear
-### and setups are equal in both PROMPTS and PROMPTS_WITHOUT_FILE.
-### Shadows repair prompts are found only in PROMPTS file since all the instructio prompts are equal for both PROMPTS and PROMPTS_WITHOUT_FILE.### 
 
 ### Linear Prompts
 prompt_linear = PromptTemplate(
@@ -4639,7 +4635,7 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
     students in simulations are specific and grounded in the training materials provided. For example, in a CPR scenario based on the 
     Input Parameters, the branching points should ask students to perform steps that lead to successful CPR outcomes, with each choice 
     impacting the patient's condition realistically (specific steps causes specific consequences). Similarly, when teaching how to change spark plugs, the choices should test students 
-    on detailed techical steps involved, reflecting the actual consequences of correct or incorrect or partially correct actions as encountered in actual practice. 
+    on detailed techical steps involved, reflecting the actual consequences of correct or incorrect or partially correct actions as encountered in actual practice.
     The primary goal is for the simulation to challenge students with realistic scenarios that test and reinforce their practical skills, 
     mirroring the outcomes they would face in real life.
 
@@ -4649,7 +4645,6 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
     Furthermore, you can also allow retry option where for certain branching points, if a student selects wrong answer, the student
     is routed back to the relevant branching point to choose the correct option again. But before giving retry option, a consequence be explained
     to the student of the choice made. Similarly, for every choice made, the consequences should be explained to the student.
-    You are only allowed to use at maximum 5 branching points depending on Input Parameters requirements. 
     The choices given to students are such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
     This will allow students to really ponder upon, before selecting a choice.   
 
@@ -4662,7 +4657,7 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
 
     Cover as much details as possible for the simulation story relevant to 
     the Input Parameters requirements.
-     
+
     Input Paramters:
     'Human Input': {human_input};
     'Learning Objectives': {learning_obj};
@@ -4670,50 +4665,66 @@ prompt_simulation_pedagogy_setup = PromptTemplate(
     A MINDMAP EXAMPLE FORMAT, which is an indentation based heirarchy structure, is given to you as an example guideline for you to strucuture your reponse to 
     give a Simulation Scenario that is flexible and adaptive to the content. Please use the indentation correctly for each concept (Branching Points, Tracks, Consequences, Retries, Conclusions)
     You do not need to produce the same example, it is just for your guideline. You respond in the manner of a Simulation story with Branching Points, Tracks, Consequences, Retries, Conclusions
-    placed in an indentation based heirarchichal structure. Each Branching Point has atleast 2 Tracks by definition and 3 Tracks also possible.
+    placed in an indentation based heirarchichal structure. Each Branching Point has MINIMUM THRESHOLD OF 2 Tracks by definition and MAXIMUM THRESHOLD OF 3 Tracks also possible.
+    So you have to creatively cater the problem that each Branching Point has at MINIMUM 2 Tracks, and at MAXIMUM 3 Tracks. 
 
     (Follow the syntax! An indentation represents one thing is related and connected to it's above parent.
-    For example in below example, Track 1 and Track 7 have same level implying that they belong to parent Branching Point 1.
-    Branching Point 2 similary has Track 2,5, and 6 as they are on same level.
-    Each Branching Point has Tracks, and each Track has consequence block. A consequence block can either be Retry type or a consequence block can lead
-    to either Conclusion (Story End) block or another Branching Point (story continued).)
+    For example in below example, Track 1-1, 1-2 and 1-3 have same level implying that they belong to parent Branching Point 1.
+    Branching Point 2 similary has Track 2-1 and 2-2 as they are on same level.
+    Each Branching Point has Tracks, and each Track has consequence block. A consequence block can either be itself act as a single Retry type block or a consequence block can lead to blocks
+    of either Conclusion (story ending case) block or another Branching Point (story continued case).)
 
     Branching Point 1
-        Track 1 (Correct)
-            Consequence 
-                Branching Point 2
-                    Track 2
-                        Consequence
-                            Branching Point 3
-                                Track 3
-                                    Consequence (Retry) 
-                                Track 4
-                                    Consequence
-                                        Conclusion
-                    Track 5
-                        Consequence (Retry)
-                    Track 6
-                        Consequence
-                            Conclusion
-        Track 7 (Partially Wrong (It is harder Track since partially wrong choice selected and has negative consequence but can be turn in user's favour!))
-            Consequence 
+        Track 1-1 (Correct)
+            Consequence (Insert IMAGE to visualize the Consequence)
+                    Branching Point 2
+                        Track 2-1
+                            Consequence (Insert IMAGE to visualize the Consequence)
+                                Branching Point 3
+                                    Track 3-1
+                                        Consequence (Retry) 
+                                    Track 3-2
+                                        Consequence (Insert IMAGE to visualize the Consequence)
+                                            Conclusion (Ending 1, The desirable ending)
+                        Track 2-2
+                            Consequence (Retry)
+        Track 1-2 (Partially Wrong) (It is a harder Track since partially wrong choice selected and has negative conclusion ending. However, the ending is still satisfactory but not as good as the Correct Branching point choice of Track 1-1 in this case.)
+            Consequence (Insert IMAGE to visualize the Consequence) 
                 Branching Point 4
-                    Track 8
-                        Consequence
+                    Track 4-1
+                        Consequence (Insert IMAGE to visualize the Consequence)
                             Branching Point 5
-                                Track 9
-                                    Consequence
-                                        Conclusion
-                                Track 10
-                                    Consequence (Retry) 
-                    Track 11 
+                                Track 5-1
+                                    Consequence (Insert IMAGE to visualize the Consequence)               
+                                        Conclusion (Ending 2, The not so desirable but still satisfactory ending)
+                                Track 5-2
+                                    Consequence (Insert IMAGE to visualize the Consequence)
+                                        Branching Point 6
+                                            Track 6-1
+                                                Consequence (Insert IMAGE to visualize the Consequence)
+                                                    Conclusion (Ending 3, The not so desirable but still satisfactory ending)
+                                            Track 6-2
+                                                Consequence (Retry)
+                    Track 4-2
+                        Consequence (Retry)
+        Track 1-3 (Wrong) (It leads to the wrong and unsatisfactory conclusion ending.)
+            Consequence (Insert IMAGE to visualize the Consequence) 
+                Branching Point 7
+                    Track 7-1
+                        Consequence
+                            Conclusion (Ending 4, The Undesirable ending)
+                    Track 7-2
                         Consequence (Retry) 
 
     MY AIM:
     Pedagogically the idea of the Simulation is that you can practise same thing multiple times, take different approaches and learn by doing different decisions each time
-    There could be one right choice in the branching that is storyline 1, one partially correct answer that would you take you to storyline 2, and one incorrect answer that would make you retry
-    Storyline 2 could evolve into to storyline 2 and 3, and so on that would lead to different scenario outcomes, so at the end you could have 3-5 different outcomes for the scenario.
+    There could be one right choice in the branching that is storyline 1-1 in above example case, one partially correct answer that would you take you to storyline 1-2 in above example case, and one incorrect answer that would lead to an undesirable outcome as in storyline 1-3 in above example case.
+    You have 3-5 endings in a whole story. You are creative to sequence the above tracks. By that I mean Track 1-2 can be Wrong and the Track 1-3 can be Partially-Wrong type so the user cannot predict which option is the wrong, partially-wrong or the correct one. However, please do mention which
+    option is which(correct, wrong, partially-wrong) so I as a course intructor can see and will amend later.
         
+    Note: The string "Insert IMAGE to visualize the Consequence" is a description of Image that will be fed to AI image generator to allow Consequence text to benefit from visualization. The users love IMAGES for visualization. You need to describe the IMAGE in detail and being related to the Consequence text.
+    The Consequence (Retry) does not require any IMAGE for it.
+    
     !CAUTION!:
     You should give a complete response with the complete story, writing all the possible challenges, 
     the choices needed to overcome them or that can lead to failure, and the consequences of all those choices.
@@ -4770,7 +4781,7 @@ prompt_simulation_pedagogy_setup_continue = PromptTemplate(
     students in simulations are specific and grounded in the training materials provided. For example, in a CPR scenario based on the 
     Input Parameters, the branching points should ask students to perform steps that lead to successful CPR outcomes, with each choice 
     impacting the patient's condition realistically (specific steps causes specific consequences). Similarly, when teaching how to change spark plugs, the choices should test students 
-    on detailed techical steps involved, reflecting the actual consequences of correct or incorrect or partially correct actions as encountered in actual practice. 
+    on detailed techical steps involved, reflecting the actual consequences of correct or incorrect or partially correct actions as encountered in actual practice.
     The primary goal is for the simulation to challenge students with realistic scenarios that test and reinforce their practical skills, 
     mirroring the outcomes they would face in real life.
 
@@ -4780,7 +4791,6 @@ prompt_simulation_pedagogy_setup_continue = PromptTemplate(
     Furthermore, you can also allow retry option where for certain branching points, if a student selects wrong answer, the student
     is routed back to the relevant branching point to choose the correct option again. But before giving retry option, a consequence be explained
     to the student of the choice made. Similarly, for every choice made, the consequences should be explained to the student.
-    You are only allowed to use at maximum 5 branching points depending on Input Parameters requirements. 
     The choices given to students are such that it does not give away clearly if the choice written is correct, incorrect or partially correct.
     This will allow students to really ponder upon, before selecting a choice.   
 
@@ -4793,7 +4803,7 @@ prompt_simulation_pedagogy_setup_continue = PromptTemplate(
 
     Cover as much details as possible for the simulation story relevant to 
     the Input Parameters requirements.
-     
+
     Input Paramters:
     'Human Input': {human_input};
     'Learning Objectives': {learning_obj};
@@ -4801,50 +4811,66 @@ prompt_simulation_pedagogy_setup_continue = PromptTemplate(
     A MINDMAP EXAMPLE FORMAT, which is an indentation based heirarchy structure, is given to you as an example guideline for you to strucuture your reponse to 
     give a Simulation Scenario that is flexible and adaptive to the content. Please use the indentation correctly for each concept (Branching Points, Tracks, Consequences, Retries, Conclusions)
     You do not need to produce the same example, it is just for your guideline. You respond in the manner of a Simulation story with Branching Points, Tracks, Consequences, Retries, Conclusions
-    placed in an indentation based heirarchichal structure. Each Branching Point has atleast 2 Tracks by definition and 3 Tracks also possible.
+    placed in an indentation based heirarchichal structure. Each Branching Point has MINIMUM THRESHOLD OF 2 Tracks by definition and MAXIMUM THRESHOLD OF 3 Tracks also possible.
+    So you have to creatively cater the problem that each Branching Point has at MINIMUM 2 Tracks, and at MAXIMUM 3 Tracks. 
 
     (Follow the syntax! An indentation represents one thing is related and connected to it's above parent.
-    For example in below example, Track 1 and Track 7 have same level implying that they belong to parent Branching Point 1.
-    Branching Point 2 similary has Track 2,5, and 6 as they are on same level.
-    Each Branching Point has Tracks, and each Track has consequence block. A consequence block can either be Retry type or a consequence block can lead
-    to either Conclusion (Story End) block or another Branching Point (story continued).)
+    For example in below example, Track 1-1, 1-2 and 1-3 have same level implying that they belong to parent Branching Point 1.
+    Branching Point 2 similary has Track 2-1 and 2-2 as they are on same level.
+    Each Branching Point has Tracks, and each Track has consequence block. A consequence block can either be itself act as a single Retry type block or a consequence block can lead to blocks
+    of either Conclusion (story ending case) block or another Branching Point (story continued case).)
 
     Branching Point 1
-        Track 1 (Correct)
-            Consequence 
-                Branching Point 2
-                    Track 2
-                        Consequence
-                            Branching Point 3
-                                Track 3
-                                    Consequence (Retry) 
-                                Track 4
-                                    Consequence
-                                        Conclusion
-                    Track 5
-                        Consequence (Retry)
-                    Track 6
-                        Consequence
-                            Conclusion
-        Track 7 (Partially Wrong (It is harder Track since partially wrong choice selected and has negative consequence but can be turn in user's favour!))
-            Consequence 
+        Track 1-1 (Correct)
+            Consequence (Insert IMAGE to visualize the Consequence)
+                    Branching Point 2
+                        Track 2-1
+                            Consequence (Insert IMAGE to visualize the Consequence)
+                                Branching Point 3
+                                    Track 3-1
+                                        Consequence (Retry) 
+                                    Track 3-2
+                                        Consequence (Insert IMAGE to visualize the Consequence)
+                                            Conclusion (Ending 1, The desirable ending)
+                        Track 2-2
+                            Consequence (Retry)
+        Track 1-2 (Partially Wrong) (It is a harder Track since partially wrong choice selected and has negative conclusion ending. However, the ending is still satisfactory but not as good as the Correct Branching point choice of Track 1-1 in this case.)
+            Consequence (Insert IMAGE to visualize the Consequence) 
                 Branching Point 4
-                    Track 8
-                        Consequence
+                    Track 4-1
+                        Consequence (Insert IMAGE to visualize the Consequence)
                             Branching Point 5
-                                Track 9
-                                    Consequence
-                                        Conclusion
-                                Track 10
-                                    Consequence (Retry) 
-                    Track 11 
+                                Track 5-1
+                                    Consequence (Insert IMAGE to visualize the Consequence)               
+                                        Conclusion (Ending 2, The not so desirable but still satisfactory ending)
+                                Track 5-2
+                                    Consequence (Insert IMAGE to visualize the Consequence)
+                                        Branching Point 6
+                                            Track 6-1
+                                                Consequence (Insert IMAGE to visualize the Consequence)
+                                                    Conclusion (Ending 3, The not so desirable but still satisfactory ending)
+                                            Track 6-2
+                                                Consequence (Retry)
+                    Track 4-2
+                        Consequence (Retry)
+        Track 1-3 (Wrong) (It leads to the wrong and unsatisfactory conclusion ending.)
+            Consequence (Insert IMAGE to visualize the Consequence) 
+                Branching Point 7
+                    Track 7-1
+                        Consequence
+                            Conclusion (Ending 4, The Undesirable ending)
+                    Track 7-2
                         Consequence (Retry) 
 
     MY AIM:
     Pedagogically the idea of the Simulation is that you can practise same thing multiple times, take different approaches and learn by doing different decisions each time
-    There could be one right choice in the branching that is storyline 1, one partially correct answer that would you take you to storyline 2, and one incorrect answer that would make you retry
-    Storyline 2 could evolve into to storyline 2 and 3, and so on that would lead to different scenario outcomes, so at the end you could have 3-5 different outcomes for the scenario.
+    There could be one right choice in the branching that is storyline 1-1 in above example case, one partially correct answer that would you take you to storyline 1-2 in above example case, and one incorrect answer that would lead to an undesirable outcome as in storyline 1-3 in above example case.
+    You have 3-5 endings in a whole story. You are creative to sequence the above tracks. By that I mean Track 1-2 can be Wrong and the Track 1-3 can be Partially-Wrong type so the user cannot predict which option is the wrong, partially-wrong or the correct one. However, please do mention which
+    option is which(correct, wrong, partially-wrong) so I as a course intructor can see and will amend later.
         
+    Note: The string "Insert IMAGE to visualize the Consequence" is a description of Image that will be fed to AI image generator to allow Consequence text to benefit from visualization. The users love IMAGES for visualization. You need to describe the IMAGE in detail and being related to the Consequence text.
+    The Consequence (Retry) does not require any IMAGE for it.
+    
     !CAUTION!:
     You should give a complete response with the complete story, writing all the possible challenges, 
     the choices needed to overcome them or that can lead to failure, and the consequences of all those choices.
@@ -6066,6 +6092,417 @@ The Consequence blocks correctly either allows retry, End of story (Conclusion) 
 Furthermore, the each Consequence block has detailed contemplation question and detailed answer, while Conclusion blocks (ENDX) has detailed feedback.
 Another good thing is that the edges array has mentioned the interconnection of all the node ids properly.
 Remember: Every node id must be mentioned in the edges array block at least one time as source and at least one time as target. 
+    ]]
+
+    PRACTICAL EXAMPLE 3: [[
+    For a given "Input Documents" the AI outputs JSON OUTPUT in following way:
+    "Input Documents":
+Branching Point 1:  A fire breaks out in your kitchen. You smell smoke and see flames near the stove. What is your immediate action?
+
+    Track 1-1 (Correct):  You immediately grab your pre-planned escape route map (which you created after reviewing your home's layout and identifying all exits),  and calmly call emergency services (999 in the UK).  You then proceed to close the kitchen door to contain the fire's spread.
+
+        Consequence:  The fire is contained to the kitchen, giving emergency services valuable time to arrive.  The quick thinking and preparation significantly reduce the risk to yourself and your property.  "Insert IMAGE to visualize the Consequence: A calm individual using a pre-planned escape route map, while a firefighter is shown in the background arriving at the scene, with the fire contained to the kitchen."
+
+            Branching Point 2:  Emergency services are on their way. While waiting, you hear a smoke alarm in another room. What do you do?
+
+                Track 2-1 (Correct): You check if anyone else is in the house and assist them in evacuating according to your pre-planned escape route.
+
+                    Consequence: Everyone escapes safely.  "Insert IMAGE to visualize the Consequence: A family safely evacuating their home, guided by a pre-planned escape route map, with emergency vehicles arriving in the background."
+
+                        Conclusion (Ending 1, The desirable ending):  Congratulations! Your quick thinking, preparation, and adherence to fire safety
+procedures ensured a successful outcome.  Your actions minimized the damage and ensured the safety of everyone in the house.  You demonstrated excellent knowledge of fire safety procedures.
+
+                Track 2-2 (Partially Wrong): You attempt to put out the fire in the other room yourself using a fire extinguisher, delaying your evacuation.
+
+                    Consequence: You waste precious time and risk further injury. While you manage to partially extinguish the fire, you are slightly
+injured in the process.  "Insert IMAGE to visualize the Consequence: A person attempting to put out a fire with a fire extinguisher, sustaining a minor burn injury. Smoke is visible in the background."
+
+                        Conclusion (Ending 2, The not so desirable but still satisfactory ending): You successfully evacuated, but your delay in leaving the house resulted in minor injuries and increased property damage.  Remember, your safety is paramount.  Always prioritize evacuation over attempting to fight a fire unless you are trained to do so.
+
+
+    Track 1-2 (Partially Wrong): You attempt to put out the kitchen fire with water before calling emergency services.
+
+        Consequence:  Throwing water on a grease fire can cause the flames to spread rapidly. The fire intensifies, filling your kitchen with smoke. "Insert IMAGE to visualize the Consequence: A kitchen engulfed in flames after water was thrown onto a grease fire.  Smoke fills the room."
+
+            Branching Point 3:  The fire has spread beyond the kitchen. What's your next step?
+
+                Track 3-1 (Correct): You immediately evacuate the house and call emergency services from a safe location.
+
+                    Consequence:  You escape the house safely, but significant property damage occurs. "Insert IMAGE to visualize the Consequence: A house with significant fire damage, with emergency vehicles present. A person is shown safely away from the house, calling emergency services on their
+phone."
+
+                        Conclusion (Ending 3, The not so desirable but still satisfactory ending):  You prioritized your safety and escaped the house, but the fire caused significant property damage.  Remember, your life is more important than possessions.  Early evacuation is crucial.
+
+                Track 3-2 (Wrong): You try to retrieve valuable items from the house before evacuating.
+
+                    Consequence: You are severely injured in the attempt. "Insert IMAGE to visualize the Consequence: A person severely injured and trapped in a burning house.  Flames and smoke are visible."
+
+                        Conclusion (Ending 4, The Undesirable ending):  Your attempt to retrieve valuables resulted in severe injuries.  Never risk your life for material possessions during a fire.  Prioritize your safety and the safety of others.
+
+
+    Track 1-3 (Wrong): You panic and freeze, unable to take any action.
+
+        Consequence: The fire spreads rapidly, trapping you in the house.  "Insert IMAGE to visualize the Consequence: A person trapped and panicked in a smoke-filled room of a burning house. Flames are visible in the background."
+
+            Conclusion (Ending 5, The Undesirable ending):  Your inaction resulted in a dangerous situation.  In a fire emergency, quick thinking and
+decisive action are crucial for survival.  Remember to create and practice a fire escape plan.
+
+[END_OF_RESPONSE]
+
+JSON OUTPUT:
+{{
+    "title": "House Fire Emergency Simulation",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Learning Objectives",
+            "description": "1. Identify the correct steps to take during a house fire. 2. Demonstrate knowledge of fire safety procedures. 3. Make appropriate decisions in a fire emergency scenario."
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Scenario's Context",
+            "description": "A fire breaks out in your kitchen. You smell smoke and see flames near the stove. What is your immediate action?"
+        }},
+        {{
+            "id": "M1",
+            "type": "MediaBlock",
+            "title": "Kitchen Fire",
+            "mediaType": "Image",
+            "description": "An image depicting a small kitchen fire near the stove.",
+            "overlayTags": [
+                "Smoke is visible.",
+                "Flames are near the stove.",
+                "A potential escape route is visible."
+            ]
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 1",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "Immediately call emergency services (999 in the UK) and grab your pre-planned escape route map."
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "Attempt to put out the kitchen fire with water before calling emergency services."
+                }},
+                {{
+                    "port": "3",
+                    "Track 3": "Panic and freeze, unable to take any action."
+                }}
+            ]
+        }},
+        {{
+            "id": "C1",
+            "label": "Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "The fire is contained to the kitchen, giving emergency services valuable time to arrive. Your quick thinking and preparation significantly reduce the risk to yourself and your property. Contemplation question: Why is having a pre-planned escape route crucial in a fire emergency? Detailed answer: A pre-planned escape route ensures you know the safest and quickest way out of your home in case of a fire, minimizing the risk of injury or getting trapped."
+        }},
+        {{
+            "id": "M2",
+            "label": "Track 1",
+            "type": "MediaBlock",
+            "title": "Contained Fire",
+            "mediaType": "Image",
+            "description": "An image showing a fire contained to the kitchen with firefighters arriving.",
+            "overlayTags": [
+                "Firefighters are arriving.",
+                "The fire is contained to the kitchen.",
+                "A person is calmly using an escape route map."
+            ]
+        }},
+        {{
+            "id": "SBB2",
+            "label": "Track 1",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 2",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 4": "Check if anyone else is in the house and assist them in evacuating according to your pre-planned escape route."
+                }},
+                {{
+                    "port": "2",
+                    "Track 5": "Attempt to put out the fire in another room yourself using a fire extinguisher, delaying your evacuation."
+                }}
+            ]
+        }},
+        {{
+            "id": "C2",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Everyone escapes safely. Contemplation question: Why is assisting others in evacuating crucial during a fire? Detailed answer: Assisting others ensures everyone's safety and prevents potential injuries or fatalities. It demonstrates teamwork and responsibility in a crisis."
+        }},
+        {{
+            "id": "END1",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 1",
+            "description": "Congratulations! Your quick thinking, preparation, and adherence to fire safety procedures ensured a successful outcome. Your actions minimized the damage and ensured the safety of everyone in the house. You demonstrated excellent knowledge of fire safety procedures. Feedback: Always prioritize safety and have a plan in place for emergencies."
+        }},
+        {{
+            "id": "C3",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You waste precious time and risk further injury. While you manage to partially extinguish the fire, you are slightly injured in the process. Contemplation question: Why is it generally not recommended to fight a fire yourself unless you are trained to do so? Detailed answer: Fighting a fire without proper training can lead to serious injuries, further spread of the fire, and wasted time that could have been used for evacuation."
+        }},
+        {{
+            "id": "M3",
+            "label": "Track 5",
+            "type": "MediaBlock",
+            "title": "Injured Person",
+            "mediaType": "Image",
+            "description": "An image showing a person with a minor burn injury.",
+            "overlayTags": [
+                "A person has a minor burn injury.",
+                "Smoke is visible in the background.",
+                "The fire is partially extinguished."
+            ]
+        }},
+        {{
+            "id": "END2",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 2",
+            "description": "You successfully evacuated, but your delay in leaving the house resulted in minor injuries and increased property damage. Remember, your safety is paramount. Always prioritize evacuation over attempting to fight a fire unless you are trained to do so. Feedback: Prioritize your safety and evacuate immediately. Attempting to fight a fire without training can be dangerous."
+        }},
+        {{
+            "id": "C4",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Throwing water on a grease fire can cause the flames to spread rapidly. The fire intensifies, filling your kitchen with smoke. Contemplation question: Why is it dangerous to throw water on a grease fire? Detailed answer: Water reacts violently with grease, causing the flames to spread rapidly and potentially causing severe burns and injuries."
+        }},
+        {{
+            "id": "M4",
+            "label": "Track 2",
+            "type": "MediaBlock",
+            "title": "Intensified Fire",
+            "mediaType": "Image",
+            "description": "An image showing a kitchen engulfed in flames after water was thrown onto a grease fire.",
+            "overlayTags": [
+                "Flames are spreading rapidly.",
+                "Smoke is filling the room.",
+                "The fire is out of control."
+            ]
+        }},
+        {{
+            "id": "SBB3",
+            "label": "Track 2",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 3",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 6": "Immediately evacuate the house and call emergency services from a safe location."
+                }},
+                {{
+                    "port": "2",
+                    "Track 7": "Try to retrieve valuable items from the house before evacuating."
+                }}
+            ]
+        }},
+        {{
+            "id": "C5",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You escape the house safely, but significant property damage occurs. Contemplation question: Why is it important to prioritize your safety over material possessions during a fire? Detailed answer: Your life is more valuable than material possessions. Attempting to retrieve valuables during a fire puts your life at risk."
+        }},
+        {{
+            "id": "M5",
+            "label": "Track 6",
+            "type": "MediaBlock",
+            "title": "Evacuated House",
+            "mediaType": "Image",
+            "description": "An image showing a house with significant fire damage.",
+            "overlayTags": [
+                "The house has significant fire damage.",
+                "Emergency vehicles are present.",
+                "A person is safely away from the house."
+            ]
+        }},
+        {{
+            "id": "END3",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 3",
+            "description": "You prioritized your safety and escaped the house, but the fire caused significant property damage. Remember, your life is more important than possessions. Early evacuation is crucial. Feedback: Prioritize your safety and evacuate immediately. Material possessions can be replaced, but lives cannot."
+        }},
+        {{
+            "id": "C6",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You are severely injured in the attempt. Contemplation question: What are the potential dangers of attempting to retrieve valuables during a fire? Detailed answer: Attempting to retrieve valuables during a fire exposes you to intense heat, smoke inhalation, collapsing structures, and other hazards that can cause severe injuries or death."
+        }},
+        {{
+            "id": "M6",
+            "label": "Track 7",
+            "type": "MediaBlock",
+            "title": "Trapped Person",
+            "mediaType": "Image",
+            "description": "An image showing a person trapped and injured in a burning house.",
+            "overlayTags": [
+                "A person is trapped and injured.",
+                "Flames and smoke are visible.",
+                "The situation is critical."
+            ]
+        }},
+        {{
+            "id": "END4",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 4",
+            "description": "Your attempt to retrieve valuables resulted in severe injuries. Never risk your life for material possessions during a fire. Prioritize your safety and the safety of others. Feedback: Never risk your life for material possessions during a fire. Your safety and the safety of others should always be the top priority."
+        }},
+        {{
+            "id": "C7",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "The fire spreads rapidly, trapping you in the house. Contemplation question: Why is quick thinking and decisive action crucial in a fire emergency? Detailed answer: Quick thinking and decisive action can save lives and minimize damage. Panicking and freezing can lead to serious injuries or death."
+        }},
+        {{
+            "id": "M7",
+            "label": "Track 3",
+            "type": "MediaBlock",
+            "title": "Trapped in Fire",
+            "mediaType": "Image",
+            "description": "An image showing a person trapped and panicked in a smoke-filled room of a burning house.",
+            "overlayTags": [
+                "A person is trapped and panicked.",
+                "Flames and smoke are visible.",
+                "The situation is critical."
+            ]
+        }},
+        {{
+            "id": "END5",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 5",
+            "description": "Your inaction resulted in a dangerous situation. In a fire emergency, quick thinking and decisive action are crucial for survival. Remember to create and practice a fire escape plan. Feedback: Create and practice a fire escape plan. Quick thinking and decisive action are crucial in a fire emergency."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "M1"
+        }},
+        {{
+            "source": "M1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C1",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C1",
+            "target": "M2"
+        }},
+        {{
+            "source": "M2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "C2",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C2",
+            "target": "END1"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "C3",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C3",
+            "target": "M3"
+        }},
+        {{
+            "source": "M3",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C4",
+            "target": "M4"
+        }},
+        {{
+            "source": "M4",
+            "target": "SBB3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "C5",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C5",
+            "target": "M5"
+        }},
+        {{
+            "source": "M5",
+            "target": "END3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "C6",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C6",
+            "target": "M6"
+        }},
+        {{
+            "source": "M6",
+            "target": "END4"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C7",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "C7",
+            "target": "M7"
+        }},
+        {{
+            "source": "M7",
+            "target": "END5"
+        }}
+    ]
+}}
+        
+Remarks of the above JSON OUTPUT practical example: The best example is PRACTICAL EXAMPLE 3.
     ]]
 
     !!!ATTENTION!!!
@@ -7293,6 +7730,417 @@ The Consequence blocks correctly either allows retry, End of story (Conclusion) 
 Furthermore, the each Consequence block has detailed contemplation question and detailed answer, while Conclusion blocks (ENDX) has detailed feedback.
 Another good thing is that the edges array has mentioned the interconnection of all the node ids properly.
 Remember: Every node id must be mentioned in the edges array block at least one time as source and at least one time as target. 
+    ]]
+
+    PRACTICAL EXAMPLE 3: [[
+    For a given "Input Documents" the AI outputs JSON OUTPUT in following way:
+    "Input Documents":
+Branching Point 1:  A fire breaks out in your kitchen. You smell smoke and see flames near the stove. What is your immediate action?
+
+    Track 1-1 (Correct):  You immediately grab your pre-planned escape route map (which you created after reviewing your home's layout and identifying all exits),  and calmly call emergency services (999 in the UK).  You then proceed to close the kitchen door to contain the fire's spread.
+
+        Consequence:  The fire is contained to the kitchen, giving emergency services valuable time to arrive.  The quick thinking and preparation significantly reduce the risk to yourself and your property.  "Insert IMAGE to visualize the Consequence: A calm individual using a pre-planned escape route map, while a firefighter is shown in the background arriving at the scene, with the fire contained to the kitchen."
+
+            Branching Point 2:  Emergency services are on their way. While waiting, you hear a smoke alarm in another room. What do you do?
+
+                Track 2-1 (Correct): You check if anyone else is in the house and assist them in evacuating according to your pre-planned escape route.
+
+                    Consequence: Everyone escapes safely.  "Insert IMAGE to visualize the Consequence: A family safely evacuating their home, guided by a pre-planned escape route map, with emergency vehicles arriving in the background."
+
+                        Conclusion (Ending 1, The desirable ending):  Congratulations! Your quick thinking, preparation, and adherence to fire safety
+procedures ensured a successful outcome.  Your actions minimized the damage and ensured the safety of everyone in the house.  You demonstrated excellent knowledge of fire safety procedures.
+
+                Track 2-2 (Partially Wrong): You attempt to put out the fire in the other room yourself using a fire extinguisher, delaying your evacuation.
+
+                    Consequence: You waste precious time and risk further injury. While you manage to partially extinguish the fire, you are slightly
+injured in the process.  "Insert IMAGE to visualize the Consequence: A person attempting to put out a fire with a fire extinguisher, sustaining a minor burn injury. Smoke is visible in the background."
+
+                        Conclusion (Ending 2, The not so desirable but still satisfactory ending): You successfully evacuated, but your delay in leaving the house resulted in minor injuries and increased property damage.  Remember, your safety is paramount.  Always prioritize evacuation over attempting to fight a fire unless you are trained to do so.
+
+
+    Track 1-2 (Partially Wrong): You attempt to put out the kitchen fire with water before calling emergency services.
+
+        Consequence:  Throwing water on a grease fire can cause the flames to spread rapidly. The fire intensifies, filling your kitchen with smoke. "Insert IMAGE to visualize the Consequence: A kitchen engulfed in flames after water was thrown onto a grease fire.  Smoke fills the room."
+
+            Branching Point 3:  The fire has spread beyond the kitchen. What's your next step?
+
+                Track 3-1 (Correct): You immediately evacuate the house and call emergency services from a safe location.
+
+                    Consequence:  You escape the house safely, but significant property damage occurs. "Insert IMAGE to visualize the Consequence: A house with significant fire damage, with emergency vehicles present. A person is shown safely away from the house, calling emergency services on their
+phone."
+
+                        Conclusion (Ending 3, The not so desirable but still satisfactory ending):  You prioritized your safety and escaped the house, but the fire caused significant property damage.  Remember, your life is more important than possessions.  Early evacuation is crucial.
+
+                Track 3-2 (Wrong): You try to retrieve valuable items from the house before evacuating.
+
+                    Consequence: You are severely injured in the attempt. "Insert IMAGE to visualize the Consequence: A person severely injured and trapped in a burning house.  Flames and smoke are visible."
+
+                        Conclusion (Ending 4, The Undesirable ending):  Your attempt to retrieve valuables resulted in severe injuries.  Never risk your life for material possessions during a fire.  Prioritize your safety and the safety of others.
+
+
+    Track 1-3 (Wrong): You panic and freeze, unable to take any action.
+
+        Consequence: The fire spreads rapidly, trapping you in the house.  "Insert IMAGE to visualize the Consequence: A person trapped and panicked in a smoke-filled room of a burning house. Flames are visible in the background."
+
+            Conclusion (Ending 5, The Undesirable ending):  Your inaction resulted in a dangerous situation.  In a fire emergency, quick thinking and
+decisive action are crucial for survival.  Remember to create and practice a fire escape plan.
+
+[END_OF_RESPONSE]
+
+JSON OUTPUT:
+{{
+    "title": "House Fire Emergency Simulation",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Learning Objectives",
+            "description": "1. Identify the correct steps to take during a house fire. 2. Demonstrate knowledge of fire safety procedures. 3. Make appropriate decisions in a fire emergency scenario."
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Scenario's Context",
+            "description": "A fire breaks out in your kitchen. You smell smoke and see flames near the stove. What is your immediate action?"
+        }},
+        {{
+            "id": "M1",
+            "type": "MediaBlock",
+            "title": "Kitchen Fire",
+            "mediaType": "Image",
+            "description": "An image depicting a small kitchen fire near the stove.",
+            "overlayTags": [
+                "Smoke is visible.",
+                "Flames are near the stove.",
+                "A potential escape route is visible."
+            ]
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 1",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "Immediately call emergency services (999 in the UK) and grab your pre-planned escape route map."
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "Attempt to put out the kitchen fire with water before calling emergency services."
+                }},
+                {{
+                    "port": "3",
+                    "Track 3": "Panic and freeze, unable to take any action."
+                }}
+            ]
+        }},
+        {{
+            "id": "C1",
+            "label": "Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "The fire is contained to the kitchen, giving emergency services valuable time to arrive. Your quick thinking and preparation significantly reduce the risk to yourself and your property. Contemplation question: Why is having a pre-planned escape route crucial in a fire emergency? Detailed answer: A pre-planned escape route ensures you know the safest and quickest way out of your home in case of a fire, minimizing the risk of injury or getting trapped."
+        }},
+        {{
+            "id": "M2",
+            "label": "Track 1",
+            "type": "MediaBlock",
+            "title": "Contained Fire",
+            "mediaType": "Image",
+            "description": "An image showing a fire contained to the kitchen with firefighters arriving.",
+            "overlayTags": [
+                "Firefighters are arriving.",
+                "The fire is contained to the kitchen.",
+                "A person is calmly using an escape route map."
+            ]
+        }},
+        {{
+            "id": "SBB2",
+            "label": "Track 1",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 2",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 4": "Check if anyone else is in the house and assist them in evacuating according to your pre-planned escape route."
+                }},
+                {{
+                    "port": "2",
+                    "Track 5": "Attempt to put out the fire in another room yourself using a fire extinguisher, delaying your evacuation."
+                }}
+            ]
+        }},
+        {{
+            "id": "C2",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Everyone escapes safely. Contemplation question: Why is assisting others in evacuating crucial during a fire? Detailed answer: Assisting others ensures everyone's safety and prevents potential injuries or fatalities. It demonstrates teamwork and responsibility in a crisis."
+        }},
+        {{
+            "id": "END1",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 1",
+            "description": "Congratulations! Your quick thinking, preparation, and adherence to fire safety procedures ensured a successful outcome. Your actions minimized the damage and ensured the safety of everyone in the house. You demonstrated excellent knowledge of fire safety procedures. Feedback: Always prioritize safety and have a plan in place for emergencies."
+        }},
+        {{
+            "id": "C3",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You waste precious time and risk further injury. While you manage to partially extinguish the fire, you are slightly injured in the process. Contemplation question: Why is it generally not recommended to fight a fire yourself unless you are trained to do so? Detailed answer: Fighting a fire without proper training can lead to serious injuries, further spread of the fire, and wasted time that could have been used for evacuation."
+        }},
+        {{
+            "id": "M3",
+            "label": "Track 5",
+            "type": "MediaBlock",
+            "title": "Injured Person",
+            "mediaType": "Image",
+            "description": "An image showing a person with a minor burn injury.",
+            "overlayTags": [
+                "A person has a minor burn injury.",
+                "Smoke is visible in the background.",
+                "The fire is partially extinguished."
+            ]
+        }},
+        {{
+            "id": "END2",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 2",
+            "description": "You successfully evacuated, but your delay in leaving the house resulted in minor injuries and increased property damage. Remember, your safety is paramount. Always prioritize evacuation over attempting to fight a fire unless you are trained to do so. Feedback: Prioritize your safety and evacuate immediately. Attempting to fight a fire without training can be dangerous."
+        }},
+        {{
+            "id": "C4",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Throwing water on a grease fire can cause the flames to spread rapidly. The fire intensifies, filling your kitchen with smoke. Contemplation question: Why is it dangerous to throw water on a grease fire? Detailed answer: Water reacts violently with grease, causing the flames to spread rapidly and potentially causing severe burns and injuries."
+        }},
+        {{
+            "id": "M4",
+            "label": "Track 2",
+            "type": "MediaBlock",
+            "title": "Intensified Fire",
+            "mediaType": "Image",
+            "description": "An image showing a kitchen engulfed in flames after water was thrown onto a grease fire.",
+            "overlayTags": [
+                "Flames are spreading rapidly.",
+                "Smoke is filling the room.",
+                "The fire is out of control."
+            ]
+        }},
+        {{
+            "id": "SBB3",
+            "label": "Track 2",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 3",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 6": "Immediately evacuate the house and call emergency services from a safe location."
+                }},
+                {{
+                    "port": "2",
+                    "Track 7": "Try to retrieve valuable items from the house before evacuating."
+                }}
+            ]
+        }},
+        {{
+            "id": "C5",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You escape the house safely, but significant property damage occurs. Contemplation question: Why is it important to prioritize your safety over material possessions during a fire? Detailed answer: Your life is more valuable than material possessions. Attempting to retrieve valuables during a fire puts your life at risk."
+        }},
+        {{
+            "id": "M5",
+            "label": "Track 6",
+            "type": "MediaBlock",
+            "title": "Evacuated House",
+            "mediaType": "Image",
+            "description": "An image showing a house with significant fire damage.",
+            "overlayTags": [
+                "The house has significant fire damage.",
+                "Emergency vehicles are present.",
+                "A person is safely away from the house."
+            ]
+        }},
+        {{
+            "id": "END3",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 3",
+            "description": "You prioritized your safety and escaped the house, but the fire caused significant property damage. Remember, your life is more important than possessions. Early evacuation is crucial. Feedback: Prioritize your safety and evacuate immediately. Material possessions can be replaced, but lives cannot."
+        }},
+        {{
+            "id": "C6",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You are severely injured in the attempt. Contemplation question: What are the potential dangers of attempting to retrieve valuables during a fire? Detailed answer: Attempting to retrieve valuables during a fire exposes you to intense heat, smoke inhalation, collapsing structures, and other hazards that can cause severe injuries or death."
+        }},
+        {{
+            "id": "M6",
+            "label": "Track 7",
+            "type": "MediaBlock",
+            "title": "Trapped Person",
+            "mediaType": "Image",
+            "description": "An image showing a person trapped and injured in a burning house.",
+            "overlayTags": [
+                "A person is trapped and injured.",
+                "Flames and smoke are visible.",
+                "The situation is critical."
+            ]
+        }},
+        {{
+            "id": "END4",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 4",
+            "description": "Your attempt to retrieve valuables resulted in severe injuries. Never risk your life for material possessions during a fire. Prioritize your safety and the safety of others. Feedback: Never risk your life for material possessions during a fire. Your safety and the safety of others should always be the top priority."
+        }},
+        {{
+            "id": "C7",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "The fire spreads rapidly, trapping you in the house. Contemplation question: Why is quick thinking and decisive action crucial in a fire emergency? Detailed answer: Quick thinking and decisive action can save lives and minimize damage. Panicking and freezing can lead to serious injuries or death."
+        }},
+        {{
+            "id": "M7",
+            "label": "Track 3",
+            "type": "MediaBlock",
+            "title": "Trapped in Fire",
+            "mediaType": "Image",
+            "description": "An image showing a person trapped and panicked in a smoke-filled room of a burning house.",
+            "overlayTags": [
+                "A person is trapped and panicked.",
+                "Flames and smoke are visible.",
+                "The situation is critical."
+            ]
+        }},
+        {{
+            "id": "END5",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 5",
+            "description": "Your inaction resulted in a dangerous situation. In a fire emergency, quick thinking and decisive action are crucial for survival. Remember to create and practice a fire escape plan. Feedback: Create and practice a fire escape plan. Quick thinking and decisive action are crucial in a fire emergency."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "M1"
+        }},
+        {{
+            "source": "M1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C1",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C1",
+            "target": "M2"
+        }},
+        {{
+            "source": "M2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "C2",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C2",
+            "target": "END1"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "C3",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C3",
+            "target": "M3"
+        }},
+        {{
+            "source": "M3",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C4",
+            "target": "M4"
+        }},
+        {{
+            "source": "M4",
+            "target": "SBB3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "C5",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C5",
+            "target": "M5"
+        }},
+        {{
+            "source": "M5",
+            "target": "END3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "C6",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C6",
+            "target": "M6"
+        }},
+        {{
+            "source": "M6",
+            "target": "END4"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C7",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "C7",
+            "target": "M7"
+        }},
+        {{
+            "source": "M7",
+            "target": "END5"
+        }}
+    ]
+}}
+        
+Remarks of the above JSON OUTPUT practical example: The best example is PRACTICAL EXAMPLE 3.
     ]]
 
     !!!ATTENTION!!!
@@ -8539,6 +9387,417 @@ The Consequence blocks correctly either allows retry, End of story (Conclusion) 
 Furthermore, the each Consequence block has detailed contemplation question and detailed answer, while Conclusion blocks (ENDX) has detailed feedback.
 Another good thing is that the edges array has mentioned the interconnection of all the node ids properly.
 Remember: Every node id must be mentioned in the edges array block at least one time as source and at least one time as target. 
+    ]]
+
+    PRACTICAL EXAMPLE 3: [[
+    For a given "Input Documents" the AI outputs JSON OUTPUT in following way:
+    "Input Documents":
+Branching Point 1:  A fire breaks out in your kitchen. You smell smoke and see flames near the stove. What is your immediate action?
+
+    Track 1-1 (Correct):  You immediately grab your pre-planned escape route map (which you created after reviewing your home's layout and identifying all exits),  and calmly call emergency services (999 in the UK).  You then proceed to close the kitchen door to contain the fire's spread.
+
+        Consequence:  The fire is contained to the kitchen, giving emergency services valuable time to arrive.  The quick thinking and preparation significantly reduce the risk to yourself and your property.  "Insert IMAGE to visualize the Consequence: A calm individual using a pre-planned escape route map, while a firefighter is shown in the background arriving at the scene, with the fire contained to the kitchen."
+
+            Branching Point 2:  Emergency services are on their way. While waiting, you hear a smoke alarm in another room. What do you do?
+
+                Track 2-1 (Correct): You check if anyone else is in the house and assist them in evacuating according to your pre-planned escape route.
+
+                    Consequence: Everyone escapes safely.  "Insert IMAGE to visualize the Consequence: A family safely evacuating their home, guided by a pre-planned escape route map, with emergency vehicles arriving in the background."
+
+                        Conclusion (Ending 1, The desirable ending):  Congratulations! Your quick thinking, preparation, and adherence to fire safety
+procedures ensured a successful outcome.  Your actions minimized the damage and ensured the safety of everyone in the house.  You demonstrated excellent knowledge of fire safety procedures.
+
+                Track 2-2 (Partially Wrong): You attempt to put out the fire in the other room yourself using a fire extinguisher, delaying your evacuation.
+
+                    Consequence: You waste precious time and risk further injury. While you manage to partially extinguish the fire, you are slightly
+injured in the process.  "Insert IMAGE to visualize the Consequence: A person attempting to put out a fire with a fire extinguisher, sustaining a minor burn injury. Smoke is visible in the background."
+
+                        Conclusion (Ending 2, The not so desirable but still satisfactory ending): You successfully evacuated, but your delay in leaving the house resulted in minor injuries and increased property damage.  Remember, your safety is paramount.  Always prioritize evacuation over attempting to fight a fire unless you are trained to do so.
+
+
+    Track 1-2 (Partially Wrong): You attempt to put out the kitchen fire with water before calling emergency services.
+
+        Consequence:  Throwing water on a grease fire can cause the flames to spread rapidly. The fire intensifies, filling your kitchen with smoke. "Insert IMAGE to visualize the Consequence: A kitchen engulfed in flames after water was thrown onto a grease fire.  Smoke fills the room."
+
+            Branching Point 3:  The fire has spread beyond the kitchen. What's your next step?
+
+                Track 3-1 (Correct): You immediately evacuate the house and call emergency services from a safe location.
+
+                    Consequence:  You escape the house safely, but significant property damage occurs. "Insert IMAGE to visualize the Consequence: A house with significant fire damage, with emergency vehicles present. A person is shown safely away from the house, calling emergency services on their
+phone."
+
+                        Conclusion (Ending 3, The not so desirable but still satisfactory ending):  You prioritized your safety and escaped the house, but the fire caused significant property damage.  Remember, your life is more important than possessions.  Early evacuation is crucial.
+
+                Track 3-2 (Wrong): You try to retrieve valuable items from the house before evacuating.
+
+                    Consequence: You are severely injured in the attempt. "Insert IMAGE to visualize the Consequence: A person severely injured and trapped in a burning house.  Flames and smoke are visible."
+
+                        Conclusion (Ending 4, The Undesirable ending):  Your attempt to retrieve valuables resulted in severe injuries.  Never risk your life for material possessions during a fire.  Prioritize your safety and the safety of others.
+
+
+    Track 1-3 (Wrong): You panic and freeze, unable to take any action.
+
+        Consequence: The fire spreads rapidly, trapping you in the house.  "Insert IMAGE to visualize the Consequence: A person trapped and panicked in a smoke-filled room of a burning house. Flames are visible in the background."
+
+            Conclusion (Ending 5, The Undesirable ending):  Your inaction resulted in a dangerous situation.  In a fire emergency, quick thinking and
+decisive action are crucial for survival.  Remember to create and practice a fire escape plan.
+
+[END_OF_RESPONSE]
+
+JSON OUTPUT:
+{{
+    "title": "House Fire Emergency Simulation",
+    "nodes": [
+        {{
+            "id": "StartBlock",
+            "type": "StartBlock"
+        }},
+        {{
+            "id": "B1",
+            "type": "PedagogicalBlock",
+            "title": "Learning Objectives",
+            "description": "1. Identify the correct steps to take during a house fire. 2. Demonstrate knowledge of fire safety procedures. 3. Make appropriate decisions in a fire emergency scenario."
+        }},
+        {{
+            "id": "B2",
+            "type": "TextBlock",
+            "title": "Scenario's Context",
+            "description": "A fire breaks out in your kitchen. You smell smoke and see flames near the stove. What is your immediate action?"
+        }},
+        {{
+            "id": "M1",
+            "type": "MediaBlock",
+            "title": "Kitchen Fire",
+            "mediaType": "Image",
+            "description": "An image depicting a small kitchen fire near the stove.",
+            "overlayTags": [
+                "Smoke is visible.",
+                "Flames are near the stove.",
+                "A potential escape route is visible."
+            ]
+        }},
+        {{
+            "id": "SBB1",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 1",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 1": "Immediately call emergency services (999 in the UK) and grab your pre-planned escape route map."
+                }},
+                {{
+                    "port": "2",
+                    "Track 2": "Attempt to put out the kitchen fire with water before calling emergency services."
+                }},
+                {{
+                    "port": "3",
+                    "Track 3": "Panic and freeze, unable to take any action."
+                }}
+            ]
+        }},
+        {{
+            "id": "C1",
+            "label": "Track 1",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "The fire is contained to the kitchen, giving emergency services valuable time to arrive. Your quick thinking and preparation significantly reduce the risk to yourself and your property. Contemplation question: Why is having a pre-planned escape route crucial in a fire emergency? Detailed answer: A pre-planned escape route ensures you know the safest and quickest way out of your home in case of a fire, minimizing the risk of injury or getting trapped."
+        }},
+        {{
+            "id": "M2",
+            "label": "Track 1",
+            "type": "MediaBlock",
+            "title": "Contained Fire",
+            "mediaType": "Image",
+            "description": "An image showing a fire contained to the kitchen with firefighters arriving.",
+            "overlayTags": [
+                "Firefighters are arriving.",
+                "The fire is contained to the kitchen.",
+                "A person is calmly using an escape route map."
+            ]
+        }},
+        {{
+            "id": "SBB2",
+            "label": "Track 1",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 2",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 4": "Check if anyone else is in the house and assist them in evacuating according to your pre-planned escape route."
+                }},
+                {{
+                    "port": "2",
+                    "Track 5": "Attempt to put out the fire in another room yourself using a fire extinguisher, delaying your evacuation."
+                }}
+            ]
+        }},
+        {{
+            "id": "C2",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Everyone escapes safely. Contemplation question: Why is assisting others in evacuating crucial during a fire? Detailed answer: Assisting others ensures everyone's safety and prevents potential injuries or fatalities. It demonstrates teamwork and responsibility in a crisis."
+        }},
+        {{
+            "id": "END1",
+            "label": "Track 4",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 1",
+            "description": "Congratulations! Your quick thinking, preparation, and adherence to fire safety procedures ensured a successful outcome. Your actions minimized the damage and ensured the safety of everyone in the house. You demonstrated excellent knowledge of fire safety procedures. Feedback: Always prioritize safety and have a plan in place for emergencies."
+        }},
+        {{
+            "id": "C3",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You waste precious time and risk further injury. While you manage to partially extinguish the fire, you are slightly injured in the process. Contemplation question: Why is it generally not recommended to fight a fire yourself unless you are trained to do so? Detailed answer: Fighting a fire without proper training can lead to serious injuries, further spread of the fire, and wasted time that could have been used for evacuation."
+        }},
+        {{
+            "id": "M3",
+            "label": "Track 5",
+            "type": "MediaBlock",
+            "title": "Injured Person",
+            "mediaType": "Image",
+            "description": "An image showing a person with a minor burn injury.",
+            "overlayTags": [
+                "A person has a minor burn injury.",
+                "Smoke is visible in the background.",
+                "The fire is partially extinguished."
+            ]
+        }},
+        {{
+            "id": "END2",
+            "label": "Track 5",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 2",
+            "description": "You successfully evacuated, but your delay in leaving the house resulted in minor injuries and increased property damage. Remember, your safety is paramount. Always prioritize evacuation over attempting to fight a fire unless you are trained to do so. Feedback: Prioritize your safety and evacuate immediately. Attempting to fight a fire without training can be dangerous."
+        }},
+        {{
+            "id": "C4",
+            "label": "Track 2",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "Throwing water on a grease fire can cause the flames to spread rapidly. The fire intensifies, filling your kitchen with smoke. Contemplation question: Why is it dangerous to throw water on a grease fire? Detailed answer: Water reacts violently with grease, causing the flames to spread rapidly and potentially causing severe burns and injuries."
+        }},
+        {{
+            "id": "M4",
+            "label": "Track 2",
+            "type": "MediaBlock",
+            "title": "Intensified Fire",
+            "mediaType": "Image",
+            "description": "An image showing a kitchen engulfed in flames after water was thrown onto a grease fire.",
+            "overlayTags": [
+                "Flames are spreading rapidly.",
+                "Smoke is filling the room.",
+                "The fire is out of control."
+            ]
+        }},
+        {{
+            "id": "SBB3",
+            "label": "Track 2",
+            "type": "SimpleBranchingBlock",
+            "title": "Branching Point 3",
+            "branches": [
+                {{
+                    "port": "1",
+                    "Track 6": "Immediately evacuate the house and call emergency services from a safe location."
+                }},
+                {{
+                    "port": "2",
+                    "Track 7": "Try to retrieve valuable items from the house before evacuating."
+                }}
+            ]
+        }},
+        {{
+            "id": "C5",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You escape the house safely, but significant property damage occurs. Contemplation question: Why is it important to prioritize your safety over material possessions during a fire? Detailed answer: Your life is more valuable than material possessions. Attempting to retrieve valuables during a fire puts your life at risk."
+        }},
+        {{
+            "id": "M5",
+            "label": "Track 6",
+            "type": "MediaBlock",
+            "title": "Evacuated House",
+            "mediaType": "Image",
+            "description": "An image showing a house with significant fire damage.",
+            "overlayTags": [
+                "The house has significant fire damage.",
+                "Emergency vehicles are present.",
+                "A person is safely away from the house."
+            ]
+        }},
+        {{
+            "id": "END3",
+            "label": "Track 6",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 3",
+            "description": "You prioritized your safety and escaped the house, but the fire caused significant property damage. Remember, your life is more important than possessions. Early evacuation is crucial. Feedback: Prioritize your safety and evacuate immediately. Material possessions can be replaced, but lives cannot."
+        }},
+        {{
+            "id": "C6",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "You are severely injured in the attempt. Contemplation question: What are the potential dangers of attempting to retrieve valuables during a fire? Detailed answer: Attempting to retrieve valuables during a fire exposes you to intense heat, smoke inhalation, collapsing structures, and other hazards that can cause severe injuries or death."
+        }},
+        {{
+            "id": "M6",
+            "label": "Track 7",
+            "type": "MediaBlock",
+            "title": "Trapped Person",
+            "mediaType": "Image",
+            "description": "An image showing a person trapped and injured in a burning house.",
+            "overlayTags": [
+                "A person is trapped and injured.",
+                "Flames and smoke are visible.",
+                "The situation is critical."
+            ]
+        }},
+        {{
+            "id": "END4",
+            "label": "Track 7",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 4",
+            "description": "Your attempt to retrieve valuables resulted in severe injuries. Never risk your life for material possessions during a fire. Prioritize your safety and the safety of others. Feedback: Never risk your life for material possessions during a fire. Your safety and the safety of others should always be the top priority."
+        }},
+        {{
+            "id": "C7",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Consequence",
+            "description": "The fire spreads rapidly, trapping you in the house. Contemplation question: Why is quick thinking and decisive action crucial in a fire emergency? Detailed answer: Quick thinking and decisive action can save lives and minimize damage. Panicking and freezing can lead to serious injuries or death."
+        }},
+        {{
+            "id": "M7",
+            "label": "Track 3",
+            "type": "MediaBlock",
+            "title": "Trapped in Fire",
+            "mediaType": "Image",
+            "description": "An image showing a person trapped and panicked in a smoke-filled room of a burning house.",
+            "overlayTags": [
+                "A person is trapped and panicked.",
+                "Flames and smoke are visible.",
+                "The situation is critical."
+            ]
+        }},
+        {{
+            "id": "END5",
+            "label": "Track 3",
+            "type": "PedagogicalBlock",
+            "title": "Conclusion 5",
+            "description": "Your inaction resulted in a dangerous situation. In a fire emergency, quick thinking and decisive action are crucial for survival. Remember to create and practice a fire escape plan. Feedback: Create and practice a fire escape plan. Quick thinking and decisive action are crucial in a fire emergency."
+        }}
+    ],
+    "edges": [
+        {{
+            "source": "StartBlock",
+            "target": "B1"
+        }},
+        {{
+            "source": "B1",
+            "target": "B2"
+        }},
+        {{
+            "source": "B2",
+            "target": "M1"
+        }},
+        {{
+            "source": "M1",
+            "target": "SBB1"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C1",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C1",
+            "target": "M2"
+        }},
+        {{
+            "source": "M2",
+            "target": "SBB2"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "C2",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C2",
+            "target": "END1"
+        }},
+        {{
+            "source": "SBB2",
+            "target": "C3",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C3",
+            "target": "M3"
+        }},
+        {{
+            "source": "M3",
+            "target": "END2"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C4",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C4",
+            "target": "M4"
+        }},
+        {{
+            "source": "M4",
+            "target": "SBB3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "C5",
+            "sourceport": "1"
+        }},
+        {{
+            "source": "C5",
+            "target": "M5"
+        }},
+        {{
+            "source": "M5",
+            "target": "END3"
+        }},
+        {{
+            "source": "SBB3",
+            "target": "C6",
+            "sourceport": "2"
+        }},
+        {{
+            "source": "C6",
+            "target": "M6"
+        }},
+        {{
+            "source": "M6",
+            "target": "END4"
+        }},
+        {{
+            "source": "SBB1",
+            "target": "C7",
+            "sourceport": "3"
+        }},
+        {{
+            "source": "C7",
+            "target": "M7"
+        }},
+        {{
+            "source": "M7",
+            "target": "END5"
+        }}
+    ]
+}}
+        
+Remarks of the above JSON OUTPUT practical example: The best example is PRACTICAL EXAMPLE 3.
     ]]
 
     !!!ATTENTION!!!
