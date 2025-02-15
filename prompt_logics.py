@@ -1231,6 +1231,11 @@ def TALK_WITH_RAG(scenario, content_areas, learning_obj, query, docs_main, llm, 
 
     elif scenario == "simulation":
         logger.info(f"SCENARIO ====prompt_simulation_pedagogy : {scenario}",)
+        # we set mpv static at 3 to force produce mediablocks as it lacks this needed behaviour
+        mpv = 3
+        mpv_string = mpv_list[int(mpv)]
+        logger.info(f"mpv ({mpv}) list string for Simulation Scenario is: {mpv_string}")
+
         # summarized first, then response
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
@@ -1770,6 +1775,11 @@ def TALK_WITH_RAG_WITHOUT_FILE(scenario, content_areas, learning_obj, query, llm
 
     elif scenario == "simulation":
         logger.info(f"SCENARIO ====prompt_simulation_pedagogy : {scenario}",)
+        # we set mpv static at 3 to force produce mediablocks as it lacks this needed behaviour
+        mpv = 3
+        mpv_string = mpv_list[int(mpv)]
+        logger.info(f"mpv ({mpv}) list string for Simulation Scenario is: {mpv_string}")
+        
         # summarized first, then response
         if model_type == 'gemini':
             llm_setup = ChatGoogleGenerativeAI(model=model_name,temperature=0.3)
